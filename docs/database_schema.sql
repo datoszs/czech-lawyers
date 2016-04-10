@@ -90,13 +90,15 @@ COMMENT ON COLUMN document.inserted IS 'Timestamp of insertion of the document i
 
 CREATE TABLE document_supreme_court (
   document_id BIGINT REFERENCES document(id_document) ON UPDATE CASCADE ON DELETE RESTRICT,
-  ecli VARCHAR(255) NOT NULL UNIQUE
+  ecli VARCHAR(255) NOT NULL UNIQUE,
+  decision_type TEXT NULL
 );
 
 CREATE UNIQUE INDEX ON document_supreme_court(document_id);
 
 COMMENT ON TABLE document_supreme_court IS 'Extra information about the document relevant only to supreme court documents.';
 COMMENT ON COLUMN document_supreme_court.ecli IS 'ECLI identification of the document.';
+COMMENT ON COLUMN document_supreme_court.decision_type IS 'Type of decision of the document.';
 
 CREATE TABLE document_law_court (
   document_id BIGINT REFERENCES document(id_document) ON UPDATE CASCADE ON DELETE RESTRICT,
