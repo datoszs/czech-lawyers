@@ -10,7 +10,7 @@ Each crawler should return data with following structure and format:
     - Registry mark (there can be multiple lines with the same registry mark).  
       Name: "registry_mark"
     - Decision date in YYYY-mm-dd format (e.g. 2016-01-12).  
-      Name: "decision_name"
+      Name: "decision_date"
     - Absolute path of the document on the web (e.g. source document)  
       Name: "web_path"
     - Relative path to downloaded document inside the `document` folder.  
