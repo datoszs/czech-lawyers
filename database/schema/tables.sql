@@ -127,19 +127,22 @@ COMMENT ON COLUMN document_supreme_administrative_court.decision IS 'Type of dec
 ------------------- Advocates -------------------
 CREATE TABLE advocate_name (
   id_advocate_name BIGSERIAL PRIMARY KEY,
+  advocate_id BIGINT NOT NULL,
   name TEXT NOT NULL,
   surname TEXT NOT NULL,
   degree_before TEXT,
   degree_after TEXT,
-  email TEXT,
+  email TEXT[],
   identification_number TEXT,
   inserted TIMESTAMP NOT NULL DEFAULT NOW(),
   inserted_by BIGINT NOT NULL REFERENCES "user"(id_user) ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
 CREATE INDEX ON advocate_name(inserted_by);
+CREATE INDEX ON advocate_name(advocate_id);
 
 COMMENT ON TABLE advocate_name IS 'List of all relevant/synonym names which were/are used by the advocates.';
+COMMENT ON COLUMN advocate_name.advocate_id IS 'To which advocate this information belongs.';
 COMMENT ON COLUMN advocate_name.name IS 'First name of advocate.';
 COMMENT ON COLUMN advocate_name.surname IS 'Surname of advocate.';
 COMMENT ON COLUMN advocate_name.degree_before IS 'Degree before name.';
@@ -150,8 +153,9 @@ COMMENT ON COLUMN advocate_name.inserted IS 'Timestamp of creation of this tuple
 
 CREATE TABLE advocate (
   id_advocate BIGSERIAL PRIMARY KEY,
-  advocate_name_id BIGINT NOT NULL REFERENCES advocate_name(id_advocate_name) ON UPDATE CASCADE ON DELETE RESTRICT,
+  advocate_name_id BIGINT NULL REFERENCES advocate_name(id_advocate_name) ON UPDATE CASCADE ON DELETE RESTRICT,
   inserted TIMESTAMP NOT NULL DEFAULT NOW(),
+  inserted_by BIGINT NOT NULL REFERENCES "user"(id_user) ON UPDATE CASCADE ON DELETE RESTRICT,
   updated TIMESTAMP
 );
 
@@ -159,6 +163,8 @@ COMMENT ON TABLE advocate IS 'List of advocates which was or can be found inside
 COMMENT ON COLUMN advocate.advocate_name_id IS 'Active (most up to date) tuple with details.';
 COMMENT ON COLUMN advocate.inserted IS 'Timestamp of introduction of advocate into our system.';
 COMMENT ON COLUMN advocate.updated IS 'Timestamp of last change of  advocate';
+
+ALTER TABLE advocate_name ADD FOREIGN KEY (advocate_id) REFERENCES advocate(id_advocate) ON UPDATE CASCADE ON DELETE RESTRICT;
 
 ------------------- Tagging -------------------
 
