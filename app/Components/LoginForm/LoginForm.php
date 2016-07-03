@@ -50,6 +50,7 @@ class LoginForm extends Control
 				} else {
 					$form->addError('Přihlášení se nezdařilo. Kontaktujte správce.');
 				}
+				return;
 			}
 			if (isset($this->getPresenter()->backlink) && $this->getPresenter()->backlink) {
 				$this->getPresenter()->restoreRequest($this->getPresenter()->backlink);
