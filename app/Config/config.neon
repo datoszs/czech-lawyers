@@ -34,6 +34,12 @@ extensions:
 	dbal: Nextras\Dbal\Bridges\NetteDI\DbalExtension
 	orm: Nextras\Orm\Bridges\NetteDI\OrmExtension
 	console: Kdyby\Console\DI\ConsoleExtension
+	migrations: Nextras\Migrations\Bridges\NetteDI\MigrationsExtension
+
+migrations:
+	dir: %appDir%/../database/migrations
+	driver: pgsql
+	dbal: nextras
 
 console:
 	commands:

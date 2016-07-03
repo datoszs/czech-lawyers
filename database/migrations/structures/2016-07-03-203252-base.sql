@@ -5,26 +5,26 @@
 
 ------------------- Users -------------------
 CREATE TYPE user_type AS ENUM (
-  'person', /* Human */
-  'system' /* Automated users, e.g. subpart of system */
+	'person', /* Human */
+	'system' /* Automated users, e.g. subpart of system */
 );
 
 CREATE TYPE user_role AS ENUM (
-  'guest' /* All non privilege users */,
-  'viewer' /* Users with privilege to see administration but not modify anything */,
-  'admin' /* Omnipotent users */
+	'guest' /* All non privilege users */,
+	'viewer' /* Users with privilege to see administration but not modify anything */,
+	'admin' /* Omnipotent users */
 );
 
 CREATE TABLE "user" (
-  id_user BIGSERIAL PRIMARY KEY,
-  type user_type,
-  username VARCHAR(255) NOT NULL UNIQUE,
-  password TEXT NULL,
-  role user_role NULL,
-  is_active BOOLEAN NOT NULL DEFAULT FALSE,
-  is_login_allowed BOOLEAN NOT NULL DEFAULT FALSE,
-  inserted TIMESTAMP NOT NULL DEFAULT now(),
-  updated TIMESTAMP NULL
+	id_user BIGSERIAL PRIMARY KEY,
+	type user_type,
+	username VARCHAR(255) NOT NULL UNIQUE,
+	password TEXT NULL,
+	role user_role NULL,
+	is_active BOOLEAN NOT NULL DEFAULT FALSE,
+	is_login_allowed BOOLEAN NOT NULL DEFAULT FALSE,
+	inserted TIMESTAMP NOT NULL DEFAULT now(),
+	updated TIMESTAMP NULL
 );
 
 CREATE UNIQUE INDEX ON "user"(username);
@@ -44,8 +44,8 @@ COMMENT ON COLUMN "user".updated IS 'Timestamp when the user was updated.';
 
 ------------------- Courts -------------------
 CREATE TABLE court (
-  id_court BIGINT PRIMARY KEY,
-  name TEXT NOT NULL
+	id_court BIGINT PRIMARY KEY,
+	name TEXT NOT NULL
 );
 
 INSERT INTO court (id_court, name) VALUES (1, 'Nejvyšší správní soud');
@@ -58,15 +58,15 @@ COMMENT ON COLUMN court.name IS 'Human readable name of the court.';
 ------------------- Cases -------------------
 /* Our results of cases (beware these are not true results of cases, only their projection) */
 CREATE TYPE case_result AS ENUM (
-  'neutral', /* Not knowing, the case was stopped for some reason. */
-  'positive', /* The court has taken the case into account (The advocate is not an idiot.) */
-  'negative', /* The court hasn't taken the case into account (The advocate is an idiot.) */
-  'unknown' /* The result could not be determined. */
+	'neutral', /* Not knowing, the case was stopped for some reason. */
+	'positive', /* The court has taken the case into account (The advocate is not an idiot.) */
+	'negative', /* The court hasn't taken the case into account (The advocate is an idiot.) */
+	'unknown' /* The result could not be determined. */
 );
 CREATE TABLE "case" (
-  id_case BIGSERIAL PRIMARY KEY,
-  registry_sign VARCHAR(255) NOT NULL UNIQUE,
-  inserted TIMESTAMP DEFAULT NOW() NOT NULL
+	id_case BIGSERIAL PRIMARY KEY,
+	registry_sign VARCHAR(255) NOT NULL UNIQUE,
+	inserted TIMESTAMP DEFAULT NOW() NOT NULL
 );
 
 COMMENT ON TABLE "case" IS 'List of cases';
@@ -76,13 +76,13 @@ COMMENT ON COLUMN "case".inserted IS 'Timestamp of insertion of this case into o
 
 ------------------- Documents -------------------
 CREATE TABLE document (
-  id_document BIGSERIAL PRIMARY KEY,
-  court_id BIGINT NOT NULL REFERENCES court(id_court) ON UPDATE CASCADE ON DELETE RESTRICT,
-  case_id BIGINT NOT NULL REFERENCES "case"(id_case) ON UPDATE CASCADE ON DELETE RESTRICT,
-  decision_date DATE NOT NULL,
-  local_path TEXT,
-  web_path TEXT,
-  inserted TIMESTAMP DEFAULT NOW() NOT NULL
+	id_document BIGSERIAL PRIMARY KEY,
+	court_id BIGINT NOT NULL REFERENCES court(id_court) ON UPDATE CASCADE ON DELETE RESTRICT,
+	case_id BIGINT NOT NULL REFERENCES "case"(id_case) ON UPDATE CASCADE ON DELETE RESTRICT,
+	decision_date DATE NOT NULL,
+	local_path TEXT,
+	web_path TEXT,
+	inserted TIMESTAMP DEFAULT NOW() NOT NULL
 );
 
 CREATE INDEX ON document(court_id);
@@ -97,9 +97,9 @@ COMMENT ON COLUMN document.web_path IS 'Absolute path to the document on the web
 COMMENT ON COLUMN document.inserted IS 'Timestamp of insertion of the document into our database.';
 
 CREATE TABLE document_supreme_court (
-  document_id BIGINT REFERENCES document(id_document) ON UPDATE CASCADE ON DELETE RESTRICT,
-  ecli VARCHAR(255) NOT NULL UNIQUE,
-  decision_type TEXT NULL
+	document_id BIGINT REFERENCES document(id_document) ON UPDATE CASCADE ON DELETE RESTRICT,
+	ecli VARCHAR(255) NOT NULL UNIQUE,
+	decision_type TEXT NULL
 );
 
 CREATE UNIQUE INDEX ON document_supreme_court(document_id);
@@ -109,8 +109,8 @@ COMMENT ON COLUMN document_supreme_court.ecli IS 'ECLI identification of the doc
 COMMENT ON COLUMN document_supreme_court.decision_type IS 'Type of decision of the document.';
 
 CREATE TABLE document_law_court (
-  document_id BIGINT REFERENCES document(id_document) ON UPDATE CASCADE ON DELETE RESTRICT,
-  ecli VARCHAR(255) NOT NULL UNIQUE
+	document_id BIGINT REFERENCES document(id_document) ON UPDATE CASCADE ON DELETE RESTRICT,
+	ecli VARCHAR(255) NOT NULL UNIQUE
 );
 
 CREATE UNIQUE INDEX ON document_law_court(document_id);
@@ -119,9 +119,9 @@ COMMENT ON TABLE document_law_court IS 'Extra information about the document rel
 COMMENT ON COLUMN document_law_court.ecli IS 'ECLI identification of the document';
 
 CREATE TABLE document_supreme_administrative_court (
-  document_id BIGINT REFERENCES document(id_document) ON UPDATE CASCADE ON DELETE RESTRICT,
-  order_number VARCHAR(255) NOT NULL UNIQUE,
-  decision VARCHAR(255)
+	document_id BIGINT REFERENCES document(id_document) ON UPDATE CASCADE ON DELETE RESTRICT,
+	order_number VARCHAR(255) NOT NULL UNIQUE,
+	decision VARCHAR(255)
 );
 
 CREATE UNIQUE INDEX ON document_supreme_administrative_court(document_id);
@@ -134,16 +134,16 @@ COMMENT ON COLUMN document_supreme_administrative_court.decision IS 'Type of dec
 
 ------------------- Advocates -------------------
 CREATE TABLE advocate_name (
-  id_advocate_name BIGSERIAL PRIMARY KEY,
-  advocate_id BIGINT NOT NULL,
-  name TEXT NOT NULL,
-  surname TEXT NOT NULL,
-  degree_before TEXT,
-  degree_after TEXT,
-  email TEXT[],
-  identification_number TEXT,
-  inserted TIMESTAMP NOT NULL DEFAULT NOW(),
-  inserted_by BIGINT NOT NULL REFERENCES "user"(id_user) ON UPDATE CASCADE ON DELETE RESTRICT
+	id_advocate_name BIGSERIAL PRIMARY KEY,
+	advocate_id BIGINT NOT NULL,
+	name TEXT NOT NULL,
+	surname TEXT NOT NULL,
+	degree_before TEXT,
+	degree_after TEXT,
+	email TEXT[],
+	identification_number TEXT,
+	inserted TIMESTAMP NOT NULL DEFAULT NOW(),
+	inserted_by BIGINT NOT NULL REFERENCES "user"(id_user) ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
 CREATE INDEX ON advocate_name(inserted_by);
@@ -160,11 +160,11 @@ COMMENT ON COLUMN advocate_name.identification_number IS 'IČ of the advocate fo
 COMMENT ON COLUMN advocate_name.inserted IS 'Timestamp of creation of this tuple.';
 
 CREATE TABLE advocate (
-  id_advocate BIGSERIAL PRIMARY KEY,
-  advocate_name_id BIGINT NULL REFERENCES advocate_name(id_advocate_name) ON UPDATE CASCADE ON DELETE RESTRICT,
-  inserted TIMESTAMP NOT NULL DEFAULT NOW(),
-  inserted_by BIGINT NOT NULL REFERENCES "user"(id_user) ON UPDATE CASCADE ON DELETE RESTRICT,
-  updated TIMESTAMP
+	id_advocate BIGSERIAL PRIMARY KEY,
+	advocate_name_id BIGINT NULL REFERENCES advocate_name(id_advocate_name) ON UPDATE CASCADE ON DELETE RESTRICT,
+	inserted TIMESTAMP NOT NULL DEFAULT NOW(),
+	inserted_by BIGINT NOT NULL REFERENCES "user"(id_user) ON UPDATE CASCADE ON DELETE RESTRICT,
+	updated TIMESTAMP
 );
 
 COMMENT ON TABLE advocate IS 'List of advocates which was or can be found inside documents.';
@@ -177,20 +177,20 @@ ALTER TABLE advocate_name ADD FOREIGN KEY (advocate_id) REFERENCES advocate(id_a
 ------------------- Tagging -------------------
 
 CREATE TYPE tagging_status AS ENUM (
-  'failed', /* processing failed due to some error state (exception, missing file etc.) */
-  'ignored' /* document skipped as not relevant */,
-  'processed' /* document was successfulLy tagged */,
-  'fuzzy' /* document was tagged but the result is uncertain (can be switched here unless the last tagging was done by user type person) */
+	'failed', /* processing failed due to some error state (exception, missing file etc.) */
+	'ignored' /* document skipped as not relevant */,
+	'processed' /* document was successfulLy tagged */,
+	'fuzzy' /* document was tagged but the result is uncertain (can be switched here unless the last tagging was done by user type person) */
 );
 
 CREATE TABLE tagging (
-  document_id BIGINT NOT NULL REFERENCES document(id_document) ON UPDATE CASCADE ON DELETE RESTRICT,
-  status tagging_status NOT NULL,
-  is_final BOOLEAN NULL,
-  advocate_id BIGINT NULL REFERENCES advocate(id_advocate)  ON UPDATE CASCADE ON DELETE RESTRICT,
-  case_result case_result NULL,
-  inserted TIMESTAMP NOT NULL DEFAULT NOW(),
-  inserted_by BIGINT NOT NULL REFERENCES "user"(id_user) ON UPDATE CASCADE ON DELETE RESTRICT
+	document_id BIGINT NOT NULL REFERENCES document(id_document) ON UPDATE CASCADE ON DELETE RESTRICT,
+	status tagging_status NOT NULL,
+	is_final BOOLEAN NULL,
+	advocate_id BIGINT NULL REFERENCES advocate(id_advocate)  ON UPDATE CASCADE ON DELETE RESTRICT,
+	case_result case_result NULL,
+	inserted TIMESTAMP NOT NULL DEFAULT NOW(),
+	inserted_by BIGINT NOT NULL REFERENCES "user"(id_user) ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
 CREATE UNIQUE INDEX ON tagging(document_id);
@@ -204,9 +204,9 @@ COMMENT ON COLUMN tagging.is_final IS '';
 ------------------- Jobs -------------------
 
 CREATE TABLE job (
-  id_job BIGSERIAL PRIMARY KEY,
-  name TEXT,
-  description TEXT
+	id_job BIGSERIAL PRIMARY KEY,
+	name TEXT,
+	description TEXT
 );
 
 COMMENT ON TABLE job IS 'Entries of every automatic job associated with the system.';
@@ -214,12 +214,12 @@ COMMENT ON COLUMN job.name IS 'Name of the job.';
 COMMENT ON COLUMN job.description IS 'Description of the job.';
 
 CREATE TABLE job_run (
-  id_job_run BIGSERIAL PRIMARY KEY,
-  job_id BIGINT NOT NULL REFERENCES job(id_job) ON UPDATE CASCADE ON DELETE RESTRICT,
-  return_code SMALLINT NOT NULL,
-  output TEXT NULL,
-  executed TIMESTAMP NOT NULL,
-  finished TIMESTAMP NOT NULL
+	id_job_run BIGSERIAL PRIMARY KEY,
+	job_id BIGINT NOT NULL REFERENCES job(id_job) ON UPDATE CASCADE ON DELETE RESTRICT,
+	return_code SMALLINT NOT NULL,
+	output TEXT NULL,
+	executed TIMESTAMP NOT NULL,
+	finished TIMESTAMP NOT NULL
 );
 
 COMMENT ON TABLE job_run IS 'Trace of every job execution with complete status usable for potential debugging.';
