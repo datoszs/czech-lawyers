@@ -1,0 +1,8 @@
+{layout '../@admin.latte'}
+{var $pageTitle = "Profil uživatele"}
+
+{block content}
+    <h1 class="page-header">Profil uživatele</h1>
+    {include ../flashes.latte}
+    {control profileForm}
+{/block}

@@ -1,0 +1,8 @@
+{layout '../@admin.latte'}
+{var $pageTitle = "Smazání uživatele: " . $entity->username}
+
+{block content}
+    <h1 class="page-header">Smazání uživatele: {$entity->username}</h1>
+    <p>Opravdu chcete smazat tohoto uživatele? Tento krok je nevratný!</p>
+    {control deleteForm}
+{/block}

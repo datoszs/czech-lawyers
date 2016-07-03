@@ -1,0 +1,43 @@
+#
+# WARNING: it is CRITICAL that this file & directory are NOT accessible directly via a web browser!
+# https://nette.org/security-warning
+#
+parameters:
+
+
+php:
+	date.timezone: Europe/Prague
+
+
+application:
+	errorPresenter: Error
+	mapping:
+		*: App\*Module\Presenters\*Presenter
+
+
+session:
+	expiration: 14 days
+
+
+services:
+	# Utils
+	router: App\Router\RouterFactory::createRouter
+	- App\Utils\Authorizator
+	# Services
+	- App\Model\Services\UserService
+	# Factories
+	- App\Components\LoginForm\LoginFormFactory
+	- App\Components\UserForm\UserFormFactory
+	- App\Components\ProfileForm\ProfileFormFactory
+
+extensions:
+	dbal: Nextras\Dbal\Bridges\NetteDI\DbalExtension
+	orm: Nextras\Orm\Bridges\NetteDI\OrmExtension
+	console: Kdyby\Console\DI\ConsoleExtension
+
+console:
+	commands:
+		- App\Commands\Import
+
+orm:
+	model: App\Model\Orm

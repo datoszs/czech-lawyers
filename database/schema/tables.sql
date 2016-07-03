@@ -9,11 +9,18 @@ CREATE TYPE user_type AS ENUM (
   'system' /* Automated users, e.g. subpart of system */
 );
 
+CREATE TYPE user_role AS ENUM (
+  'guest' /* All non privilege users */,
+  'viewer' /* Users with privilege to see administration but not modify anything */,
+  'admin' /* Omnipotent users */
+);
+
 CREATE TABLE "user" (
   id_user BIGSERIAL PRIMARY KEY,
   type user_type,
   username VARCHAR(255) NOT NULL UNIQUE,
   password TEXT NULL,
+  role user_role NULL,
   is_active BOOLEAN NOT NULL DEFAULT FALSE,
   is_login_allowed BOOLEAN NOT NULL DEFAULT FALSE,
   inserted TIMESTAMP NOT NULL DEFAULT now(),
@@ -29,6 +36,7 @@ COMMENT ON TABLE "user" IS 'Table with system users.';
 COMMENT ON COLUMN "user".type IS 'Type of the user account to distinguish between users, especially the automated ones.';
 COMMENT ON COLUMN "user".username IS 'Unique username in the system.';
 COMMENT ON COLUMN "user".password IS 'Password of user salted and hashed.';
+COMMENT ON COLUMN "user".role IS 'Role of given user. Applies to entities of type person only.';
 COMMENT ON COLUMN "user".is_active IS 'States if user account is active (actions under account are allowed).';
 COMMENT ON COLUMN "user".is_login_allowed IS 'States whether the user account is allowed to login (e.g. system accounts are not allowed to login).';
 COMMENT ON COLUMN "user".inserted IS 'Timestamp when the user was created.';

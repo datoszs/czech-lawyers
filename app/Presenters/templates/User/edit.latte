@@ -1,0 +1,7 @@
+{layout '../@admin.latte'}
+{var $pageTitle = "Úprava uživatele: " . $entity->username}
+
+{block content}
+    <h1 class="page-header">Úprava uživatele: {$entity->username}</h1>
+    {control editForm}
+{/block}

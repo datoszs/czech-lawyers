@@ -1,4 +1,10 @@
-.idea
-.gradle
-build
-out
+log/*
+temp/*
+vendor/*
+!.gitignore
+!.htaccess
+!web.config
+app/Config/config.local.neon
+node_modules
+www/assets
+vendor
