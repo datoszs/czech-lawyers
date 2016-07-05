@@ -1,5 +1,7 @@
 log/*
 temp/*
+temp/sessions/*
+!temp/sessions
 vendor/*
 !.gitignore
 !.htaccess
