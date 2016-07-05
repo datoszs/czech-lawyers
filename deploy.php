@@ -47,7 +47,7 @@ if ($state !== 0) {
 
 // Run database migrations
 $state = 0;
-system('php www/index.php migrations:continue');
+system('php www/index.php migrations:continue --production');
 if ($state !== 0) {
 	die("Error: Database migrations failed.\n");
 }
