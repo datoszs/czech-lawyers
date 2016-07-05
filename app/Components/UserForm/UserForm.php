@@ -62,7 +62,7 @@ class UserForm extends BaseControl
 		$form->addGroup('Přilašovací údaje');
 		$form->addText('username', 'Přihlašovací jméno')
 			->setRequired('Zadejte, prosím, přihlašovací jméno nového uživatele.')
-			->addRule(Form::PATTERN, 'Povolené jsou pouze malá písmena, čísla, spojovník a podtržítko o alespoň jednom znaku.', '[a-z0-9_\-]{1,}')
+			->addRule(Form::PATTERN, 'Povolené jsou pouze malá písmena, čísla, spojovník, tečku, zavináč a podtržítko o alespoň jednom znaku.', '[a-z0-9_\-\.@]{1,}')
 			->addRule(function (TextInput $input) {
 				$value = $input->getValue();
 				$entity = $this->userService->findByUsername($value);
