@@ -15,8 +15,9 @@ Installation
 2. Run `composer install` to install backend dependencies.
 3. Run `npm update` to install runtime dependencies.
 4. Run `gulp`
-5. Migrate database by running `php index.php migrate-database`
-6. Open page at web server.
+5. Create local config `app/Config/config.local.neon` (see example file `config.local.neon.example`).
+6. Migrate database by running `php index.php migrate-database`
+7. Open page at web server.
 
 It is CRITICAL that whole `app/`, `log/` and `temp/` directories are not accessible directly
 via a web browser. See [security warning](https://nette.org/security-warning).
