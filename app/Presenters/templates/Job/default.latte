@@ -1,0 +1,39 @@
+{layout '../@admin.latte'}
+{var $pageTitle = 'Pravidelné úlohy'}
+
+{block content}
+    <h1 class="page-header">Pravidelné úlohy</h1>
+    {include ../flashes.latte}
+    <table class="table table-responsive table-striped table-condensed table-hover">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Třída</th>
+            <th>Popis</th>
+            <th>Uživatel</th>
+            <th>Poslední běh</th>
+            <th>Běhy</th>
+        </tr>
+        </thead>
+       {foreach $jobs as $jobEntity}
+            <tr>
+                <td><b>{$jobEntity->id}</b></td>
+                <td>{$jobEntity->name}</td>
+                <td>{$jobEntity->description}</td>
+                <td><i>{$jobEntity->databaseUser->username}</i></td>
+                <td>
+                    {if count($jobEntity->runs) > 0}
+                        {foreach $jobEntity->runs as $run}
+                            {breakIf $iterator->counter > 1}
+                            <span class="{if $run->returnCode === 0}text-success{else}text-danger{/if}">
+                                {$run->executed|date: 'j. n. Y H:i'}
+                            </span>
+                        {/foreach}
+                    {/if}
+                </td>
+                <td><a href="{link runs, $jobEntity->id}"><span class="glyphicon glyphicon-search"></span></a></td>
+            </tr>
+        {/foreach}
+    </table>
+
+{/block}

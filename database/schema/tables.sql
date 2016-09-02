@@ -31,6 +31,7 @@ CREATE UNIQUE INDEX ON "user"(username);
 
 INSERT INTO "user" (id_user, type, username, password, is_active, is_login_allowed) VALUES (1, 'system', 'system-import', NULL, TRUE, FALSE);
 INSERT INTO "user" (id_user, type, username, password, is_active, is_login_allowed) VALUES (2, 'system', 'system-tagging', NULL, TRUE, FALSE);
+INSERT INTO "user" (id_user, type, username, password, is_active, is_login_allowed) VALUES (3, 'system', 'system-crawler', NULL, TRUE, FALSE);
 
 COMMENT ON TABLE "user" IS 'Table with system users.';
 COMMENT ON COLUMN "user".type IS 'Type of the user account to distinguish between users, especially the automated ones.';
@@ -97,6 +98,7 @@ COMMENT ON COLUMN document.web_path IS 'Absolute path to the document on the web
 COMMENT ON COLUMN document.inserted IS 'Timestamp of insertion of the document into our database.';
 
 CREATE TABLE document_supreme_court (
+  id_document_supreme_court BIGSERIAL PRIMARY KEY,
   document_id BIGINT REFERENCES document(id_document) ON UPDATE CASCADE ON DELETE RESTRICT,
   ecli VARCHAR(255) NOT NULL UNIQUE,
   decision_type TEXT NULL
@@ -109,6 +111,7 @@ COMMENT ON COLUMN document_supreme_court.ecli IS 'ECLI identification of the doc
 COMMENT ON COLUMN document_supreme_court.decision_type IS 'Type of decision of the document.';
 
 CREATE TABLE document_law_court (
+  id_document_law_court BIGSERIAL PRIMARY KEY,
   document_id BIGINT REFERENCES document(id_document) ON UPDATE CASCADE ON DELETE RESTRICT,
   ecli VARCHAR(255) NOT NULL UNIQUE
 );
@@ -119,6 +122,7 @@ COMMENT ON TABLE document_law_court IS 'Extra information about the document rel
 COMMENT ON COLUMN document_law_court.ecli IS 'ECLI identification of the document';
 
 CREATE TABLE document_supreme_administrative_court (
+  id_document_supreme_administrative_court BIGSERIAL PRIMARY KEY,
   document_id BIGINT REFERENCES document(id_document) ON UPDATE CASCADE ON DELETE RESTRICT,
   order_number VARCHAR(255) NOT NULL UNIQUE,
   decision VARCHAR(255)
@@ -205,27 +209,32 @@ COMMENT ON COLUMN tagging.is_final IS '';
 
 CREATE TABLE job (
   id_job BIGSERIAL PRIMARY KEY,
-  name TEXT,
-  description TEXT
+  name TEXT UNIQUE,
+  description TEXT,
+  database_user_id BIGINT NOT NULL REFERENCES "user"(id_user) ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
 COMMENT ON TABLE job IS 'Entries of every automatic job associated with the system.';
-COMMENT ON COLUMN job.name IS 'Name of the job.';
+COMMENT ON COLUMN job.name IS 'Name of the job matching the fully qualified name of the command class.';
 COMMENT ON COLUMN job.description IS 'Description of the job.';
+COMMENT ON COLUMN job.database_user_id IS 'User ID used for database operations in the job.';
 
 CREATE TABLE job_run (
   id_job_run BIGSERIAL PRIMARY KEY,
   job_id BIGINT NOT NULL REFERENCES job(id_job) ON UPDATE CASCADE ON DELETE RESTRICT,
-  return_code SMALLINT NOT NULL,
+  return_code SMALLINT NULL,
   output TEXT NULL,
+  message TEXT NULL,
   executed TIMESTAMP NOT NULL,
-  finished TIMESTAMP NOT NULL
+  finished TIMESTAMP NULL
 );
 
 COMMENT ON TABLE job_run IS 'Trace of every job execution with complete status usable for potential debugging.';
 COMMENT ON COLUMN job_run.job_id IS 'ID of job which was executed';
 COMMENT ON COLUMN job_run.return_code IS 'Returned code';
 COMMENT ON COLUMN job_run.output IS 'Console output';
+COMMENT ON COLUMN job_run.message IS 'Message from the job wrapper, such as error messages about error states etc.';
 COMMENT ON COLUMN job_run.executed IS 'Time when the execution was started.';
 COMMENT ON COLUMN job_run.finished IS 'Time when the execution was finished.';
 
+INSERT INTO job (name, description, database_user_id) VALUES ('App\Commands\NSCrawler', 'Supreme Court Crawler', 3);

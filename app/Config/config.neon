@@ -26,6 +26,10 @@ services:
 	- App\Utils\Authorizator
 	# Services
 	- App\Model\Services\UserService
+	- App\Model\Services\JobService
+	- App\Model\Services\CourtService
+	- App\Model\Services\DocumentService
+	- App\Model\Services\CauseService
 	# Factories
 	- App\Components\LoginForm\LoginFormFactory
 	- App\Components\UserForm\UserFormFactory
@@ -44,7 +48,8 @@ migrations:
 
 console:
 	commands:
-		- App\Commands\Import
+		- App\Commands\NSImport
+		- App\Commands\NSCrawler
 
 orm:
 	model: App\Model\Orm

@@ -34,6 +34,8 @@
 		"nextras/orm": "^2.0",
 		"kdyby/console": "^2.6",
 		"nextras/mail-panel": "^2.3",
-		"nextras/migrations": "^3.0"
+		"nextras/migrations": "^3.0",
+		"league/csv": "^8.0",
+		"ipub/visual-paginator": "^1.0"
 	}
 }

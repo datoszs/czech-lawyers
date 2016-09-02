@@ -13,5 +13,6 @@ class Resources
 	const TAGGING = 'tagging';
 
 	const LOGS = 'logs';
+	const JOBS = 'jobs';
 
 }

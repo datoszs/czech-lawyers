@@ -1,0 +1,35 @@
+{layout '../@admin.latte'}
+{var $pageTitle = 'Běh úlohy ' . $run->job->name}
+
+{block content}
+    <h1 class="page-header">Běh úlohy {$run->job->name}</h1>
+
+    <table class="table table-responsive table-striped table-condensed table-hover">
+        <tr>
+            <th>ID</th><td><b>{$run->id}</b></td>
+        </tr>
+        <tr>
+            <th>Návratový kód</th><td class="{if $run->returnCode === 0}text-success{else}text-danger{/if}"><b>{$run->returnCode}</b></td>
+        </tr>
+        <tr>
+            <th>Zpráva</th><td>{$run->message}</td>
+        </tr>
+        <tr>
+            <th>Čas spuštění</th><td>{$run->executed|date: 'j. n. Y H:i'}</td>
+        </tr>
+        <tr>
+            <th>Čas dokončení</th><td>{if !$run->finished}<span class="text-danger"><b>FAIL</b></span>{else}{$run->finished|date: 'j. n. Y H:i'}{/if}</td>
+        </tr>
+        <tr>
+            <th>Doba běhu</th>
+            <td>
+                {if $run->finished}
+                    {var $interval = $run->finished->diff($run->executed)}
+                    {$interval->format('%h:%i:%s')}
+                {/if}
+            </td>
+        </tr>
+    </table>
+    <pre>{$run->output}</pre>
+
+{/block}
