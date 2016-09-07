@@ -60,10 +60,10 @@ Doing update: just run `php deploy.php` in proper folder (see the configuration 
 * VPS server with PostgreSQL and Apache with `mod_itk` (to run web under given user):
   * Users `foo`, `bar` with sudo access to `cestiadvokati.cz`
   * User `cestiadvokati.cz`
-    * Web 
+    * Web
   	   * `web-devel` = branch `develop` in production mode for testing before going live.
   	   * `web-production` = branch `master` in production mode for live and public instance.
-    * Crawlers - data (working and result directories). 
+    * Crawlers - data (working and result directories).
 
 
 ## Developing
