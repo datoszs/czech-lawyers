@@ -15,7 +15,7 @@
 3. Run `npm update` to install runtime dependencies.
 4. Run `gulp`
 5. Create local config `app/Config/config.local.neon` (see example file `config.local.neon.example`).
-6. Migrate database by running `php index.php migrate-database`
+6. Migrate database by running `php www/index.php migrations:continue`
 7. Open page at web server.
 
 It is CRITICAL that whole `app/`, `log/` and `temp/` directories are not accessible directly
