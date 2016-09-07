@@ -8,6 +8,10 @@
  - Comopser
  - Web server and hosting site configured to allow Nette applications
 
+## On Ubuntu
+
+ - Install packages ``php-pgsql`` and ``php-xml``.
+
 ## Installation
 
 1. Make directories `temp/` and `log/` writable.
@@ -20,6 +24,11 @@
 
 It is CRITICAL that whole `app/`, `log/` and `temp/` directories are not accessible directly
 via a web browser. See [security warning](https://nette.org/security-warning).
+
+### Troubleshooting
+
+1. ``ERROR:  schema "public" already exists in ...``
+  - comment out a line 100 in ``vendor/nextras/migrations/src/Drivers/PgSqlDriver.php``
 
 ## Environment
 
