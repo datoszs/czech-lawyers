@@ -8,6 +8,7 @@ use App\Model\Services\UserService;
 use App\Model\Users\User;
 use App\Utils\BaseControl;
 use App\Utils\BootstrapForm;
+use App\Utils\Normalize;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\TextInput;
 use Nette\Security\Passwords;
@@ -127,7 +128,7 @@ class UserForm extends BaseControl
 			$form['type']->addError('Systémové účty nemohou být spravovány skrze administraci.');
 			return;
 		}
-		$user->username = $values->username;
+		$user->username = Normalize::username($values->username);
 		if (isset($values->password) && $values->password) {
 			$user->password = Passwords::hash($values->password);
 		}

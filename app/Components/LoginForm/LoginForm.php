@@ -4,6 +4,7 @@ namespace App\Components\LoginForm;
 
 use App\Model\Services\UserService;
 use App\Utils\BootstrapForm;
+use App\Utils\Normalize;
 use App\Utils\Templated;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
@@ -37,7 +38,7 @@ class LoginForm extends Control
 		$form->onSuccess[] = function (Form $form) {
 			$values = $form->getValues();
 			try {
-				$this->user->login($values->username, $values->password);
+				$this->user->login(Normalize::username($values->username), $values->password);
 			} catch (AuthenticationException $ex) {
 				if ($ex->getCode() == IAuthenticator::IDENTITY_NOT_FOUND) {
 					$form->addError('Uživatel s tímto přihlašovacím jménem neexistuje.');

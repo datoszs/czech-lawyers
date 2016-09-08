@@ -50,6 +50,7 @@ console:
 	commands:
 		- App\Commands\NSImport
 		- App\Commands\NSCrawler
+		- App\Commands\UserCreate
 
 orm:
 	model: App\Model\Orm

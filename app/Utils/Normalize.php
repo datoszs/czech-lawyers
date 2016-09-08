@@ -13,4 +13,9 @@ class Normalize
 		$registryMark = preg_replace('!\s+!', ' ', $registryMark);
 		return $registryMark;
 	}
+
+	public static function username($input)
+	{
+		return Strings::lower($input);
+	}
 }
