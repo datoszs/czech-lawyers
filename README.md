@@ -8,6 +8,10 @@
  - Comopser
  - Web server and hosting site configured to allow Nette applications
 
+## On Ubuntu
+
+ - Install packages ``php-pgsql`` and ``php-xml``.
+
 ## Installation
 
 1. Make directories `temp/` and `log/` writable.
@@ -15,11 +19,16 @@
 3. Run `npm update` to install runtime dependencies.
 4. Run `gulp`
 5. Create local config `app/Config/config.local.neon` (see example file `config.local.neon.example`).
-6. Migrate database by running `php index.php migrate-database`
+6. Migrate database by running `php www/index.php migrations:continue`
 7. Open page at web server.
 
 It is CRITICAL that whole `app/`, `log/` and `temp/` directories are not accessible directly
 via a web browser. See [security warning](https://nette.org/security-warning).
+
+### Troubleshooting
+
+1. ``ERROR:  schema "public" already exists in ...``
+  - comment out a line 100 in ``vendor/nextras/migrations/src/Drivers/PgSqlDriver.php``
 
 ## Environment
 
@@ -60,10 +69,10 @@ Doing update: just run `php deploy.php` in proper folder (see the configuration 
 * VPS server with PostgreSQL and Apache with `mod_itk` (to run web under given user):
   * Users `foo`, `bar` with sudo access to `cestiadvokati.cz`
   * User `cestiadvokati.cz`
-    * Web 
+    * Web
   	   * `web-devel` = branch `develop` in production mode for testing before going live.
   	   * `web-production` = branch `master` in production mode for live and public instance.
-    * Crawlers - data (working and result directories). 
+    * Crawlers - data (working and result directories).
 
 
 ## Developing
