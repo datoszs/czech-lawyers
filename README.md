@@ -29,6 +29,9 @@ via a web browser. See [security warning](https://nette.org/security-warning).
 
 1. ``ERROR:  schema "public" already exists in ...``
   - comment out a line 100 in ``vendor/nextras/migrations/src/Drivers/PgSqlDriver.php``
+  
+2. No user in the database
+  - use  `php www/index.php app:user-create` command to create new ordinary user.
 
 ## Environment
 
