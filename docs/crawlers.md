@@ -33,6 +33,8 @@ Each crawler should return data with following structure and format:
 
     - Court name (e.g. Nejvyšší soud).  
       Name: `court_name`
+    - Record ID uniquely identifying the document  
+      Name: `record_id`
     - Registry mark (there can be multiple lines with the same registry mark).  
       Name: `registry_mark`
     - Decision date in YYYY-mm-dd format (e.g. 2016-01-12).  

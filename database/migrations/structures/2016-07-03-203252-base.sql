@@ -55,6 +55,34 @@ INSERT INTO court (id_court, name) VALUES (3, 'Ústavní soud');
 COMMENT ON TABLE court IS 'List of all (relevant) courts for reference purposes within our system.';
 COMMENT ON COLUMN court.name IS 'Human readable name of the court.';
 
+------------------- Jobs -------------------
+
+CREATE TABLE job (
+	id_job BIGSERIAL PRIMARY KEY,
+	name TEXT,
+	description TEXT
+);
+
+COMMENT ON TABLE job IS 'Entries of every automatic job associated with the system.';
+COMMENT ON COLUMN job.name IS 'Name of the job.';
+COMMENT ON COLUMN job.description IS 'Description of the job.';
+
+CREATE TABLE job_run (
+	id_job_run BIGSERIAL PRIMARY KEY,
+	job_id BIGINT NOT NULL REFERENCES job(id_job) ON UPDATE CASCADE ON DELETE RESTRICT,
+	return_code SMALLINT NOT NULL,
+	output TEXT NULL,
+	executed TIMESTAMP NOT NULL,
+	finished TIMESTAMP NOT NULL
+);
+
+COMMENT ON TABLE job_run IS 'Trace of every job execution with complete status usable for potential debugging.';
+COMMENT ON COLUMN job_run.job_id IS 'ID of job which was executed';
+COMMENT ON COLUMN job_run.return_code IS 'Returned code';
+COMMENT ON COLUMN job_run.output IS 'Console output';
+COMMENT ON COLUMN job_run.executed IS 'Time when the execution was started.';
+COMMENT ON COLUMN job_run.finished IS 'Time when the execution was finished.';
+
 ------------------- Cases -------------------
 /* Our results of cases (beware these are not true results of cases, only their projection) */
 CREATE TYPE case_result AS ENUM (
@@ -66,23 +94,27 @@ CREATE TYPE case_result AS ENUM (
 CREATE TABLE "case" (
 	id_case BIGSERIAL PRIMARY KEY,
 	registry_sign VARCHAR(255) NOT NULL UNIQUE,
-	inserted TIMESTAMP DEFAULT NOW() NOT NULL
+	inserted TIMESTAMP DEFAULT NOW() NOT NULL,
+	job_run_id BIGINT NULL REFERENCES job_run(id_job_run) ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
 COMMENT ON TABLE "case" IS 'List of cases';
 COMMENT ON COLUMN "case".registry_sign IS 'Unique sign under which the case is managed.';
 COMMENT ON COLUMN "case".inserted IS 'Timestamp of insertion of this case into our database.';
+COMMENT ON COLUMN "case".job_run_id IS 'ID of job run which added this case.';
 
 
 ------------------- Documents -------------------
 CREATE TABLE document (
 	id_document BIGSERIAL PRIMARY KEY,
+	record_id VARCHAR(255) NOT NULL UNIQUE,
 	court_id BIGINT NOT NULL REFERENCES court(id_court) ON UPDATE CASCADE ON DELETE RESTRICT,
 	case_id BIGINT NOT NULL REFERENCES "case"(id_case) ON UPDATE CASCADE ON DELETE RESTRICT,
 	decision_date DATE NOT NULL,
 	local_path TEXT,
 	web_path TEXT,
-	inserted TIMESTAMP DEFAULT NOW() NOT NULL
+	inserted TIMESTAMP DEFAULT NOW() NOT NULL,
+	job_run_id BIGINT NULL REFERENCES job_run(id_job_run) ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
 CREATE INDEX ON document(court_id);
@@ -95,6 +127,7 @@ COMMENT ON COLUMN document.decision_date IS 'Date of decision, obtained from the
 COMMENT ON COLUMN document.local_path IS 'Relative path to file within our document folder.';
 COMMENT ON COLUMN document.web_path IS 'Absolute path to the document on the webpage of the court.';
 COMMENT ON COLUMN document.inserted IS 'Timestamp of insertion of the document into our database.';
+COMMENT ON COLUMN document.job_run_id IS 'ID of job run which added this document.';
 
 CREATE TABLE document_supreme_court (
 	document_id BIGINT REFERENCES document(id_document) ON UPDATE CASCADE ON DELETE RESTRICT,
@@ -190,7 +223,8 @@ CREATE TABLE tagging (
 	advocate_id BIGINT NULL REFERENCES advocate(id_advocate)  ON UPDATE CASCADE ON DELETE RESTRICT,
 	case_result case_result NULL,
 	inserted TIMESTAMP NOT NULL DEFAULT NOW(),
-	inserted_by BIGINT NOT NULL REFERENCES "user"(id_user) ON UPDATE CASCADE ON DELETE RESTRICT
+	inserted_by BIGINT NOT NULL REFERENCES "user"(id_user) ON UPDATE CASCADE ON DELETE RESTRICT,
+	job_run_id BIGINT NULL REFERENCES job_run(id_job_run) ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
 CREATE UNIQUE INDEX ON tagging(document_id);
@@ -200,32 +234,4 @@ CREATE UNIQUE INDEX ON tagging(inserted_by);
 COMMENT ON TABLE tagging IS 'Entries containing taggings of documents with their history (last inserted tagging of certain document is considered valid).';
 COMMENT ON COLUMN tagging.status IS 'Status of tagging, see its states.';
 COMMENT ON COLUMN tagging.is_final IS '';
-
-------------------- Jobs -------------------
-
-CREATE TABLE job (
-	id_job BIGSERIAL PRIMARY KEY,
-	name TEXT,
-	description TEXT
-);
-
-COMMENT ON TABLE job IS 'Entries of every automatic job associated with the system.';
-COMMENT ON COLUMN job.name IS 'Name of the job.';
-COMMENT ON COLUMN job.description IS 'Description of the job.';
-
-CREATE TABLE job_run (
-	id_job_run BIGSERIAL PRIMARY KEY,
-	job_id BIGINT NOT NULL REFERENCES job(id_job) ON UPDATE CASCADE ON DELETE RESTRICT,
-	return_code SMALLINT NOT NULL,
-	output TEXT NULL,
-	executed TIMESTAMP NOT NULL,
-	finished TIMESTAMP NOT NULL
-);
-
-COMMENT ON TABLE job_run IS 'Trace of every job execution with complete status usable for potential debugging.';
-COMMENT ON COLUMN job_run.job_id IS 'ID of job which was executed';
-COMMENT ON COLUMN job_run.return_code IS 'Returned code';
-COMMENT ON COLUMN job_run.output IS 'Console output';
-COMMENT ON COLUMN job_run.executed IS 'Time when the execution was started.';
-COMMENT ON COLUMN job_run.finished IS 'Time when the execution was finished.';
-
+COMMENT ON COLUMN tagging.job_run_id IS 'ID of job run which added this tagging.';

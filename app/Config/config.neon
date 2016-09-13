@@ -48,9 +48,9 @@ migrations:
 
 console:
 	commands:
-		- App\Commands\NSImport
-		- App\Commands\NSCrawler
 		- App\Commands\UserCreate
+		- App\Commands\NSCrawler
+		- App\Commands\CausaImport
 
 orm:
 	model: App\Model\Orm

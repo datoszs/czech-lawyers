@@ -18,4 +18,9 @@ class Normalize
 	{
 		return Strings::lower($input);
 	}
+
+	public static function recordId($input)
+	{
+		return Strings::trim(Strings::upper($input));
+	}
 }

@@ -78,6 +78,7 @@ COMMENT ON COLUMN "case".inserted IS 'Timestamp of insertion of this case into o
 ------------------- Documents -------------------
 CREATE TABLE document (
   id_document BIGSERIAL PRIMARY KEY,
+  record_id VARCHAR(255) NOT NULL UNIQUE,
   court_id BIGINT NOT NULL REFERENCES court(id_court) ON UPDATE CASCADE ON DELETE RESTRICT,
   case_id BIGINT NOT NULL REFERENCES "case"(id_case) ON UPDATE CASCADE ON DELETE RESTRICT,
   decision_date DATE NOT NULL,
@@ -90,6 +91,7 @@ CREATE INDEX ON document(court_id);
 CREATE INDEX ON document(case_id);
 
 COMMENT ON TABLE document IS 'All downloaded documents which are processed by our system.';
+COMMENT ON COLUMN document.record_id IS 'System wide-unique identificator of document.';
 COMMENT ON COLUMN document.court_id IS 'Court from which the document was obtained.';
 COMMENT ON COLUMN document.case_id IS 'Reference to relevant case.';
 COMMENT ON COLUMN document.decision_date IS 'Date of decision, obtained from the document.';

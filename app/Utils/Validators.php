@@ -28,7 +28,6 @@ trait Validators
 		$metadataFile = $directory . '/metadata.csv';
 		$documentsDir = $directory . '/documents';
 		$count = Finder::find()->exclude('.*')->in($directory)->count();
-		echo $count;
 
 		return is_dir($documentsDir)
 			&& is_readable($documentsDir)

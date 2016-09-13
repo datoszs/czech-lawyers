@@ -5,6 +5,7 @@ namespace App\Model\Services;
 use App\Model\Documents\Document;
 use App\Model\Documents\DocumentSupremeCourt;
 use App\Model\Orm;
+use Nextras\Orm\Entity\Entity;
 
 class DocumentService
 {
@@ -17,9 +18,23 @@ class DocumentService
 		$this->orm = $orm;
 	}
 
-	public function insert(Document $document, DocumentSupremeCourt $document2)
+	public function insert(Document $document, $document2 = null, $flush = false)
 	{
-		$this->orm->persistAndFlush($document);
-		$this->orm->persistAndFlush($document2);
+		$this->orm->persist($document);
+		if ($document2) {
+			$this->orm->persist($document2);
+		}
+		if ($flush) {
+			$this->orm->flush();
+		}
+	}
+	public function flush()
+	{
+		$this->orm->flush();
+	}
+
+	public function findByRecordId($recordId)
+	{
+		return $this->orm->documents->findBy(['recordId' => $recordId])->fetch();
 	}
 }

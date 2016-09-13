@@ -15,6 +15,11 @@ class CourtService
 		$this->orm = $orm;
 	}
 
+	public function getById($court)
+	{
+		return $this->orm->courts->getById($court);
+	}
+
 	public function getNS()
 	{
 		return $this->orm->courts->getById(Court::TYPE_NS);

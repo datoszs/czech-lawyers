@@ -11,3 +11,9 @@ node_modules
 www/assets
 vendor
 composer.lock
+storage/documents/ns/*
+!storage/documents/ns/.keep
+storage/documents/nss/*
+!storage/documents/nss/.keep
+storage/documents/us/*
+!storage/documents/us/.keep

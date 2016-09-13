@@ -3,7 +3,9 @@ namespace App\Model;
 
 use App\Model\Cause\CausesRepository;
 use App\Model\Court\CourtsRepository;
+use App\Model\Documents\DocumentsLawCourtRepository;
 use App\Model\Documents\DocumentsRepository;
+use App\Model\Documents\DocumentsSupremeAdministrativeCourtRepository;
 use App\Model\Documents\DocumentsSupremeCourtRepository;
 use App\Model\Jobs\JobRunsRepository;
 use App\Model\Jobs\JobsRepository;
@@ -18,6 +20,8 @@ use Nextras\Orm\Model\Model;
  * @property-read CausesRepository $causes
  * @property-read DocumentsRepository $documents
  * @property-read DocumentsSupremeCourtRepository $documentsSupremeCourt
+ * @property-read DocumentsSupremeAdministrativeCourtRepository $documentsSupremeAdministrativeCourt
+ * @property-read DocumentsLawCourtRepository $documentsLawCourt
  */
 class Orm extends Model
 {
