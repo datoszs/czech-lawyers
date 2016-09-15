@@ -130,6 +130,7 @@ COMMENT ON COLUMN document.inserted IS 'Timestamp of insertion of the document i
 COMMENT ON COLUMN document.job_run_id IS 'ID of job run which added this document.';
 
 CREATE TABLE document_supreme_court (
+	id_document_supreme_court BIGSERIAL PRIMARY KEY,
 	document_id BIGINT REFERENCES document(id_document) ON UPDATE CASCADE ON DELETE RESTRICT,
 	ecli VARCHAR(255) NOT NULL UNIQUE,
 	decision_type TEXT NULL
@@ -142,6 +143,7 @@ COMMENT ON COLUMN document_supreme_court.ecli IS 'ECLI identification of the doc
 COMMENT ON COLUMN document_supreme_court.decision_type IS 'Type of decision of the document.';
 
 CREATE TABLE document_law_court (
+	id_document_law_court BIGSERIAL PRIMARY KEY,
 	document_id BIGINT REFERENCES document(id_document) ON UPDATE CASCADE ON DELETE RESTRICT,
 	ecli VARCHAR(255) NOT NULL UNIQUE
 );
@@ -152,6 +154,7 @@ COMMENT ON TABLE document_law_court IS 'Extra information about the document rel
 COMMENT ON COLUMN document_law_court.ecli IS 'ECLI identification of the document';
 
 CREATE TABLE document_supreme_administrative_court (
+	id_document_supreme_administrative_court BIGSERIAL PRIMARY KEY,
 	document_id BIGINT REFERENCES document(id_document) ON UPDATE CASCADE ON DELETE RESTRICT,
 	order_number VARCHAR(255) NOT NULL UNIQUE,
 	decision VARCHAR(255)
