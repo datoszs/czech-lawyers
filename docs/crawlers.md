@@ -44,7 +44,7 @@ Each crawler should return data with following structure and format:
     - Relative path to downloaded document inside the `document` folder.    
       Name: `local_path`
     - Extra columns (court dependent) properly named.  
-      Name: `<as needed>`
+      Name: `<as needed>`    
 
 2. Folder with documents (named: `documents`). This directory contains downloaded documents such as PDF, HTML, TXT. We should always store the originals!
 
@@ -54,6 +54,7 @@ Notes:
  - `web_path` a `local_path` are the same documents (one remotely, one localy).
  - OCR, tagging or lematization should be done inside the tagger (in the system).
  - Example of extra columns: additional metadata present when crawling (such as in NSS).
+ - __Each value has to be wrapped in `"..."`__ (when using `"` they should be escaped by another `"`)
 
 Advocates crawler output format
 -------------------------------
