@@ -21,6 +21,6 @@ class Normalize
 
 	public static function recordId($input)
 	{
-		return Strings::trim(Strings::upper($input));
+		return preg_replace('!\s+!', ' ', Strings::trim(Strings::upper($input)));
 	}
 }

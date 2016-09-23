@@ -10,7 +10,8 @@ use Nextras\Orm\Entity\Entity;
  * @property int				$id					{primary}
  * @property Document			$document			{m:1 Document, oneSided=true}
  * @property string				$orderNumber
- * @property string|null		$decision
+ * @property string				$decision
+ * @property string				$decision_type
  */
 class DocumentSupremeAdministrativeCourt extends Entity
 {

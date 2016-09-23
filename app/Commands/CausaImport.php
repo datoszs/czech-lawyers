@@ -79,6 +79,7 @@ class CausaImport extends Command
 	public function processDirectory(OutputInterface $consoleOutput, $courtId, $directory, $overwrite)
 	{
 		$csv = Reader::createFromPath($directory . '/metadata.csv');
+		$csv->setDelimiter(';');
 		$court = $this->courtService->getById($courtId);
 		$destinationDir = static::getCourtDirectory($courtId);
 		$destinationDirRelative = static::getCourtDirectory($courtId, true);
@@ -116,10 +117,13 @@ class CausaImport extends Command
 				$extras->document = $document;
 				$extras->orderNumber = $row['order_number'];
 				$extras->decision = $row['decision'];
+				$extras->decision_type = $row['decision_type'];
 			} elseif ($courtId == Court::TYPE_US) {
 				$extras = new DocumentLawCourt();
 				$extras->document = $document;
 				$extras->ecli = $row['ecli'];
+				$extras->form_decision = $row['form_decision'];
+				$extras->decision_result = $row['decision_result'];
 			}
 			// Store to database
 			$this->documentService->insert($document, $extras);
@@ -204,9 +208,9 @@ class CausaImport extends Command
 			case Court::TYPE_NS:
 				return ['court_name', 'record_id', 'registry_mark', 'decision_date', 'web_path', 'local_path', 'ecli', 'decision_type'];
 			case Court::TYPE_NSS:
-				return ['court_name', 'record_id', 'registry_mark', 'decision_date', 'web_path', 'local_path', 'order_number', 'decision'];
+				return ['court_name', 'record_id', 'registry_mark', 'decision_date', 'web_path', 'local_path', 'decision_type', 'decision', 'order_number'];
 			case Court::TYPE_US:
-				return ['court_name', 'record_id', 'registry_mark', 'decision_date', 'web_path', 'local_path', 'ecli'];
+				return ['court_name', 'record_id', 'registry_mark', 'decision_date', 'web_path', 'local_path', 'form_decision', 'decision_result', 'ecli'];
 		}
 	}
 }

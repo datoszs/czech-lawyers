@@ -145,18 +145,23 @@ COMMENT ON COLUMN document_supreme_court.decision_type IS 'Type of decision of t
 CREATE TABLE document_law_court (
 	id_document_law_court BIGSERIAL PRIMARY KEY,
 	document_id BIGINT REFERENCES document(id_document) ON UPDATE CASCADE ON DELETE RESTRICT,
-	ecli VARCHAR(255) NOT NULL UNIQUE
+	ecli VARCHAR(255) NOT NULL UNIQUE,
+	form_decision TEXT NULL,
+	decision_result TEXT NULL
 );
 
 CREATE UNIQUE INDEX ON document_law_court(document_id);
 
 COMMENT ON TABLE document_law_court IS 'Extra information about the document relevant only to law court documents.';
 COMMENT ON COLUMN document_law_court.ecli IS 'ECLI identification of the document';
+COMMENT ON COLUMN document_law_court.form_decision IS 'Form of decision parsed from document metadata.';
+COMMENT ON COLUMN document_law_court.decision_result IS 'Result(s) of decision of the document (in JSON).';
 
 CREATE TABLE document_supreme_administrative_court (
 	id_document_supreme_administrative_court BIGSERIAL PRIMARY KEY,
 	document_id BIGINT REFERENCES document(id_document) ON UPDATE CASCADE ON DELETE RESTRICT,
 	order_number VARCHAR(255) NOT NULL UNIQUE,
+	decision_type TEXT NULL,
 	decision VARCHAR(255)
 );
 
@@ -164,7 +169,8 @@ CREATE UNIQUE INDEX ON document_supreme_administrative_court(document_id);
 
 COMMENT ON TABLE document_supreme_administrative_court IS 'Extra information about the document relevant only to supreme administrative court documents.';
 COMMENT ON COLUMN document_supreme_administrative_court.order_number IS 'Order number of the document.';
-COMMENT ON COLUMN document_supreme_administrative_court.decision IS 'Type of decision parsed from document metadata.';
+COMMENT ON COLUMN document_supreme_administrative_court.decision_type IS 'Type of decision parsed from document metadata.';
+COMMENT ON COLUMN document_supreme_administrative_court.decision IS 'Result of decision of the document.';
 
 
 

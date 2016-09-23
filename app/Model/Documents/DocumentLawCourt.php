@@ -10,6 +10,8 @@ use Nextras\Orm\Entity\Entity;
  * @property int				$id					{primary}
  * @property Document			$document			{m:1 Document, oneSided=true}
  * @property string				$ecli
+ * @property string				$form_decision
+ * @property string				$decision_result
  */
 class DocumentLawCourt extends Entity
 {

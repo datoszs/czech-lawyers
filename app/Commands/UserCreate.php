@@ -49,9 +49,9 @@ class UserCreate extends Command
 			exit(2);
 		}
 		printf("%s: ", 'Enter password');
-		$password = mb_substr(fgets(STDIN), 0, -1);
+		$password = mb_substr(fgets(STDIN), 0, -2);
 		printf("%s: ", 'Enter password (again)');
-		$password2 = mb_substr(fgets(STDIN), 0, -1);
+		$password2 = mb_substr(fgets(STDIN), 0, -2);
 		if (mb_strlen($password) == 0 || $password != $password2) {
 			$consoleOutput->writeln('Error: Password mismatch or empty. Cannot continue.');
 			exit(3);
