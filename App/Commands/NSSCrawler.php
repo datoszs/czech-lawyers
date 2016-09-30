@@ -22,19 +22,11 @@ class NSSCrawler extends CauseCrawler
 
 	public function getCommand($directory)
 	{
-        echo sprintf(
-			'workon cestiadvokati.cz && python %s --output-directory=%s %s --date-from="%s" --date-to="%s" 2>&1 && deactivate',
-			__DIR__ . '/../../externals/nss-crawler.py',
-			escapeshellarg($directory),
-			'-w -n',
-			(new DateTime('Monday previous week'))->format('d. m. Y'),
-			(new DateTime("Sunday previous week"))->format('d. m. Y')
-		);
 		return sprintf(
-			'workon cestiadvokati.cz && python %s --output-directory %s %s --date-from "%s" --date-to "%s" 2>&1 && deactivate',
+			'workon staging-crawler-nss && python3 %s --output-directory %s %s --date-from "%s" --date-to "%s" 2>&1 && deactivate',
 			__DIR__ . '/../../externals/nss-crawler.py',
 			escapeshellarg($directory),
-			'-w -n',
+			'-n',
 			(new DateTime('Monday previous week'))->format('d. m. Y'),
 			(new DateTime("Sunday previous week"))->format('d. m. Y')
 		);
