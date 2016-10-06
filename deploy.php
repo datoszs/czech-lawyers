@@ -19,7 +19,7 @@ if ($state !== 0) {
 }
 // Update PHP dependencies
 $state = 0;
-system('php composer.phar update', $state);
+system('php composer.phar install', $state);
 if ($state !== 0) {
 	die("Error: Update of PHP dependencies via Composer failed.\n");
 }

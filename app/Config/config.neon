@@ -50,6 +50,7 @@ console:
 	commands:
 		- App\Commands\UserCreate
 		- App\Commands\NSCrawler
+		- App\Commands\NSSCrawler
 		- App\Commands\CausaImport
 
 orm:
