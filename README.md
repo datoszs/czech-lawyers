@@ -88,6 +88,14 @@ Warning: do not change scripts that are already applied on production!
 
 See its documentation: https://nextras.org/migrations/docs/3.0/
 
+Types:
+
+  * Structure (s)
+  * Basic data (b)
+  * Dummy data (d)
+
+Label: short label/tag/name of the change
+
 ### Console applications
 
 For execution from command line (for crawlers...) we use Kdyby\Console (using Symphony\Console).

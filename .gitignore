@@ -10,7 +10,6 @@ app/Config/config.local.neon
 node_modules
 www/assets
 vendor
-composer.lock
 storage/documents/ns/*
 !storage/documents/ns/.keep
 storage/documents/nss/*
