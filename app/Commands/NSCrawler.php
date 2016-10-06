@@ -5,30 +5,31 @@ use Nette\Utils\DateTime;
 use Symfony\Component\Console\Input\InputArgument;
 
 /**
- * Crawler of Supreme Administrative Court.
+ * Crawler of Supreme Court.
  */
-class NSSCrawler extends CauseCrawler
+class NSCrawler extends CauseCrawler
 {
 	protected function configure()
 	{
-		$this->setName('app:nss-crawler')
-			->setDescription('Crawls data from Supreme Administrative Court.')
+		$this->setName('app:ns-crawler')
+			->setDescription('Crawls data from Supreme Court.')
 			->addArgument(
 				static::ARGUMENT_DIRECTORY,
 				InputArgument::REQUIRED,
-				'Directory where data crawler will be available for import.'
+				'Directory where crawler data are ready for import.'
 			);
 	}
 
 	public function getCommand($directory)
 	{
 		return sprintf(
-			'workon staging-crawler-nss && python3 %s --output-directory %s %s --date-from "%s" --date-to "%s" 2>&1 && deactivate',
-			__DIR__ . '/../../externals/nss-crawler.py',
-			escapeshellarg($directory),
-			'-n',
-			(new DateTime('Monday previous week'))->format('d. m. Y'),
-			(new DateTime("Sunday previous week"))->format('d. m. Y')
+			'java -jar %s --publication-date --directory %s --fetch-attempts %s --from %s --to %s --registry-marks %s 2>&1',
+			__DIR__ . '/../../externals/cz-supreme-court-crawler-all-1.1.jar',
+			escapeshellarg($directory . '/working'),
+			3,
+			(new DateTime('Monday previous week'))->format('Y-m-d'),
+			(new DateTime("Sunday previous week"))->format('Y-m-d'),
+			'CDO,NSČR,ICDO'
 		);
 	}
 
