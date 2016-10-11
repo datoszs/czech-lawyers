@@ -448,7 +448,7 @@ def main():
             logger.info("Not found new records")
         logger.info("Extract information...")
         result = extract_information(records)
-        if result:
+        if result and os.path.exists(join(out_dir, "current_page.ini")):
             logger.info("DONE - extraction")
             os.remove(join(out_dir, "current_page.ini"))
 
