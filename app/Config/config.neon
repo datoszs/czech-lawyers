@@ -51,6 +51,7 @@ console:
 		- App\Commands\UserCreate
 		- App\Commands\NSCrawler
 		- App\Commands\NSSCrawler
+		- App\Commands\USCrawler
 		- App\Commands\CausaImport
 
 orm:

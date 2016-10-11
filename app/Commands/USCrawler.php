@@ -7,12 +7,12 @@ use Symfony\Component\Console\Input\InputArgument;
 /**
  * Crawler of Supreme Administrative Court.
  */
-class NSSCrawler extends CauseCrawler
+class USCrawler extends CauseCrawler
 {
 	protected function configure()
 	{
-		$this->setName('app:nss-crawler')
-			->setDescription('Crawls data from Supreme Administrative Court.')
+		$this->setName('app:us-crawler')
+			->setDescription('Crawls data from Constitutional Court.')
 			->addArgument(
 				static::ARGUMENT_DIRECTORY,
 				InputArgument::REQUIRED,
@@ -23,9 +23,9 @@ class NSSCrawler extends CauseCrawler
 	public function getCommand($directory)
 	{
 		return sprintf(
-			'%s %s --output-directory %s %s --date-from "%s" --date-to "%s" 2>&1 && deactivate',
-            '/usr/local/share/.virtualenvs/staging-crawler-nss/bin/python',
-			__DIR__ . '/../../externals/nss-crawler.py',
+			'%s %s --output-directory %s %s --date-from="%s" --date-to="%s" 2>&1 && deactivate',
+            '/usr/local/share/.virtualenvs/staging-crawler-us/bin/python',
+			__DIR__ . '/../../externals/us-crawler.py',
 			escapeshellarg($directory),
 			'-n',
 			(new DateTime('Monday previous week'))->format('d. m. Y'),

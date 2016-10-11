@@ -38,6 +38,7 @@ screens_dir = "screens_" + hash_id
 documents_dir = "documents"
 txt_dir = "txt"
 html_dir = "html"
+log_dir = "log_nss"
 
 main_timeout = 100000
 global_ncols = 90
@@ -55,10 +56,10 @@ def set_logging():
     global logger
     logger = logging.getLogger(__file__)
     logger.setLevel(logging.DEBUG)
-    fh_d = logging.FileHandler(join(out_dir, __file__[0:-3] + "_" + hash_id + "_log_debug.txt"),
+    fh_d = logging.FileHandler(join(log_dir, __file__[0:-3] + "_" + hash_id + "_log_debug.txt"),
                                mode="w", encoding='utf-8')
     fh_d.setLevel(logging.DEBUG)
-    fh_i = logging.FileHandler(join(out_dir, __file__[0:-3] + "_" + hash_id + "_log.txt"),
+    fh_i = logging.FileHandler(join(log_dir, __file__[0:-3] + "_" + hash_id + "_log.txt"),
                                mode="w", encoding='utf-8')
     fh_i.setLevel(logging.INFO)
     # create console handler
@@ -210,10 +211,8 @@ extract relevant data from page
         if link_elem is not None:
             link = link_elem['href']
             link = urljoin(base_url, link)
-        """else:
-            # write list of links for next processing
-            #writer_links.writerow({"case_number":case_number, "link":link, "decision_result" : decision_result})
-            continue # case without document"""
+        else:
+            continue  # case without document
 
         mark = case_number.split("-")[0].strip()  # registry mark isn't case number
 
