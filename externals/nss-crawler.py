@@ -563,6 +563,7 @@ if __name__ == "__main__":
                     logger.debug("I remove working directory")
                     #logging_process(["rm", "-rf", out_dir])
                     shutil.rmtree(out_dir)
+                    os.makedirs(out_dir, exist_ok=True)
             else:
                 logger.error("Result directory isn't empty.")
                 sys.exit(-1)
