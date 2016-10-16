@@ -5,9 +5,14 @@ echo "--------------------------------\n";
 if (!file_exists('./.git')) {
 	die("Error: This deployment script should be executed only from the project root. Terminating now.\n");
 }
+if (!isset($argv[1]) || !in_array($argv[1], ['production', 'development'])) {
+	die("Error: The deployment environment is empty or invalid.\n");
+}
 if (file_exists('.deployment-in-progress')) {
 	die("Error: There was already deployment outgoing, fix issues and remove the ./.deployment-in-progress file.\n");
 }
+
+$environment = $argv[1];
 
 touch('.deployment-in-progress');
 
@@ -33,27 +38,44 @@ if ($state !== 0) {
 
 // Remove Nette cache
 $state = 0;
-system('rm -rf temp/cache/*', $state);
+if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') { // Windows systems
+	system('rmdir /s/q temp\cache', $state);
+	system('mkdir temp\cache');
+} else {
+	system('rm -rf temp/cache/*', $state); // Linux systems
+}
 if ($state !== 0) {
 	die("Error: Nette cache could not been deleted, please do it manually.\n");
 }
 
 // Regenerate files via Gulp
 $state = 0;
-system('gulp production', $state);
+if ($environment === 'production') {
+	system('gulp production', $state);
+} else {
+	system('gulp default', $state);
+}
 if ($state !== 0) {
 	die("Error: Update of production files could not been finished.\n");
 }
 
 // Run database migrations
 $state = 0;
-system('php www/index.php migrations:continue --production');
+if ($environment === 'production') {
+	system('php www/index.php migrations:continue --production', $state);
+} else {
+	system('php www/index.php migrations:continue', $state);
+}
 if ($state !== 0) {
 	die("Error: Database migrations failed.\n");
 }
 
 if (file_exists('.deployment-in-progress')) {
 	unlink('.deployment-in-progress');
+}
+
+if ($environment === 'development') {
+	echo "Info: If you want to automatically rebuild assets please run $ gulp development\n";
 }
 
 echo "Info: Finished successfully\n";
