@@ -23,13 +23,11 @@ class USCrawler extends CauseCrawler
 	public function getCommand($directory)
 	{
 		return sprintf(
-			'%s %s --output-directory %s %s --date-from="%s" --date-to="%s" 2>&1 && deactivate',
-            '/usr/local/share/.virtualenvs/staging-crawler-us/bin/python',
+			'%s %s --output-directory %s -l %s 2>&1 && deactivate',
+            'workon staging-crawler-us && python3',
 			__DIR__ . '/../../externals/us-crawler.py',
 			escapeshellarg($directory),
-			'-n',
-			(new DateTime('Monday previous week'))->format('d. m. Y'),
-			(new DateTime("Sunday previous week"))->format('d. m. Y')
+			7
 		);
 	}
 
