@@ -56,6 +56,44 @@ INSERT INTO court (id_court, name) VALUES (3, 'Ústavní soud');
 COMMENT ON TABLE court IS 'List of all (relevant) courts for reference purposes within our system.';
 COMMENT ON COLUMN court.name IS 'Human readable name of the court.';
 
+
+------------------- Jobs -------------------
+
+CREATE TABLE job (
+  id_job BIGSERIAL PRIMARY KEY,
+  name TEXT UNIQUE,
+  description TEXT,
+  database_user_id BIGINT NOT NULL REFERENCES "user"(id_user) ON UPDATE CASCADE ON DELETE RESTRICT
+);
+
+COMMENT ON TABLE job IS 'Entries of every automatic job associated with the system.';
+COMMENT ON COLUMN job.name IS 'Name of the job matching the fully qualified name of the command class.';
+COMMENT ON COLUMN job.description IS 'Description of the job.';
+COMMENT ON COLUMN job.database_user_id IS 'User ID used for database operations in the job.';
+
+CREATE TABLE job_run (
+  id_job_run BIGSERIAL PRIMARY KEY,
+  job_id BIGINT NOT NULL REFERENCES job(id_job) ON UPDATE CASCADE ON DELETE RESTRICT,
+  return_code SMALLINT NULL,
+  output TEXT NULL,
+  message TEXT NULL,
+  executed TIMESTAMP NOT NULL,
+  finished TIMESTAMP NULL
+);
+
+COMMENT ON TABLE job_run IS 'Trace of every job execution with complete status usable for potential debugging.';
+COMMENT ON COLUMN job_run.job_id IS 'ID of job which was executed';
+COMMENT ON COLUMN job_run.return_code IS 'Returned code';
+COMMENT ON COLUMN job_run.output IS 'Console output';
+COMMENT ON COLUMN job_run.message IS 'Message from the job wrapper, such as error messages about error states etc.';
+COMMENT ON COLUMN job_run.executed IS 'Time when the execution was started.';
+COMMENT ON COLUMN job_run.finished IS 'Time when the execution was finished.';
+
+INSERT INTO job (name, description, database_user_id) VALUES ('App\Commands\NSCrawler', 'Supreme Court Crawler', 1);
+INSERT INTO job (name, description, database_user_id) VALUES ('App\Commands\NSSCrawler', 'Supreme Administrative Court Crawler', 2);
+INSERT INTO job (name, description, database_user_id) VALUES ('App\Commands\CausaImport', 'Universal Court Crawler Data Import', 3);
+INSERT INTO job (name, description, database_user_id) VALUES ('App\Commands\USCrawler', 'Constitutional Court Crawler', 4);
+
 ------------------- Cases -------------------
 /* Our results of cases (beware these are not true results of cases, only their projection) */
 CREATE TYPE case_result AS ENUM (
@@ -84,7 +122,8 @@ CREATE TABLE document (
   decision_date DATE NOT NULL,
   local_path TEXT,
   web_path TEXT,
-  inserted TIMESTAMP DEFAULT NOW() NOT NULL
+  inserted TIMESTAMP DEFAULT NOW() NOT NULL,
+  job_run_id BIGINT NULL REFERENCES job_run(id_job_run) ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
 CREATE INDEX ON document(court_id);
@@ -98,6 +137,7 @@ COMMENT ON COLUMN document.decision_date IS 'Date of decision, obtained from the
 COMMENT ON COLUMN document.local_path IS 'Relative path to file within our document folder.';
 COMMENT ON COLUMN document.web_path IS 'Absolute path to the document on the webpage of the court.';
 COMMENT ON COLUMN document.inserted IS 'Timestamp of insertion of the document into our database.';
+COMMENT ON COLUMN document.job_run_id IS 'ID of job run which added this document.';
 
 CREATE TABLE document_supreme_court (
   id_document_supreme_court BIGSERIAL PRIMARY KEY,
@@ -139,46 +179,72 @@ COMMENT ON COLUMN document_supreme_administrative_court.decision IS 'Type of dec
 
 
 ------------------- Advocates -------------------
-CREATE TABLE advocate_name (
-  id_advocate_name BIGSERIAL PRIMARY KEY,
+CREATE TABLE advocate_info (
+  id_advocate_info BIGSERIAL PRIMARY KEY,
   advocate_id BIGINT NOT NULL,
+  hash VARCHAR(128) NOT NULL,
   name TEXT NOT NULL,
   surname TEXT NOT NULL,
   degree_before TEXT,
   degree_after TEXT,
   email TEXT[],
-  identification_number TEXT,
+  street TEXT NULL,
+  city TEXT NULL,
+  postal_area TEXT NULL,
+  specialization TEXT[],
+  local_path TEXT,
+  valid_from TIMESTAMP NOT NULL,
+  valid_to TIMESTAMP NULL,
   inserted TIMESTAMP NOT NULL DEFAULT NOW(),
-  inserted_by BIGINT NOT NULL REFERENCES "user"(id_user) ON UPDATE CASCADE ON DELETE RESTRICT
+  inserted_by BIGINT NOT NULL REFERENCES "user"(id_user) ON UPDATE CASCADE ON DELETE RESTRICT,
+  job_run_id BIGINT NULL REFERENCES job_run(id_job_run) ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
-CREATE INDEX ON advocate_name(inserted_by);
-CREATE INDEX ON advocate_name(advocate_id);
+CREATE INDEX ON advocate_info(advocate_id);
+CREATE INDEX ON advocate_info(hash);
 
-COMMENT ON TABLE advocate_name IS 'List of all relevant/synonym names which were/are used by the advocates.';
-COMMENT ON COLUMN advocate_name.advocate_id IS 'To which advocate this information belongs.';
-COMMENT ON COLUMN advocate_name.name IS 'First name of advocate.';
-COMMENT ON COLUMN advocate_name.surname IS 'Surname of advocate.';
-COMMENT ON COLUMN advocate_name.degree_before IS 'Degree before name.';
-COMMENT ON COLUMN advocate_name.degree_after IS 'Degree after name.';
-COMMENT ON COLUMN advocate_name.email IS 'E-mail address.';
-COMMENT ON COLUMN advocate_name.identification_number IS 'IČ of the advocate for future purposes.';
-COMMENT ON COLUMN advocate_name.inserted IS 'Timestamp of creation of this tuple.';
+COMMENT ON TABLE advocate_info IS 'Contains tuples of volatile advocate data in time.';
+COMMENT ON COLUMN advocate_info.advocate_id IS 'To which advocate this information belongs.';
+COMMENT ON COLUMN advocate_info.hash IS 'Hash of all fields of this info to provide faster interface for duplicate lookup.';
+COMMENT ON COLUMN advocate_info.name IS 'First name of advocate.';
+COMMENT ON COLUMN advocate_info.surname IS 'Surname of advocate.';
+COMMENT ON COLUMN advocate_info.degree_before IS 'Degree before name.';
+COMMENT ON COLUMN advocate_info.degree_after IS 'Degree after name.';
+COMMENT ON COLUMN advocate_info.email IS 'E-mail address.';
+COMMENT ON COLUMN advocate_info.inserted IS 'Timestamp of creation of this tuple.';
+COMMENT ON COLUMN advocate_info.valid_from IS 'Since when the tuple is valid.';
+COMMENT ON COLUMN advocate_info.valid_to IS 'Until the tuple is valid, or null when to infinity.';
+COMMENT ON COLUMN advocate_info.job_run_id IS 'ID of job run which added this advocate.';
+
+CREATE TYPE advocate_status AS ENUM (
+  'active', /* Advocate is active. */
+  'suspended', /* Advocates activity is suspended. */
+  'removed' /* Advocate was removed or is inactive. */
+);
 
 CREATE TABLE advocate (
   id_advocate BIGSERIAL PRIMARY KEY,
+  remote_identificator VARCHAR(255) UNIQUE NOT NULL,
+  identification_number VARCHAR(40) UNIQUE NULL,
+  registration_number VARCHAR(40) NOT NULL,
+  advocate_state advocate_status,
   advocate_name_id BIGINT NULL REFERENCES advocate_name(id_advocate_name) ON UPDATE CASCADE ON DELETE RESTRICT,
   inserted TIMESTAMP NOT NULL DEFAULT NOW(),
   inserted_by BIGINT NOT NULL REFERENCES "user"(id_user) ON UPDATE CASCADE ON DELETE RESTRICT,
-  updated TIMESTAMP
+  job_run_id BIGINT NULL REFERENCES job_run(id_job_run) ON UPDATE CASCADE ON DELETE RESTRICT,
+  updated TIMESTAMP NULL
 );
 
 COMMENT ON TABLE advocate IS 'List of advocates which was or can be found inside documents.';
+COMMENT ON COLUMN advocate.remote_identificator IS 'ID used by the advocate association.';
+COMMENT ON COLUMN advocate.identification_number IS 'Number of advocate.';
+COMMENT ON COLUMN advocate.registration_number IS 'Registration number of advocate by the advocate association.';
 COMMENT ON COLUMN advocate.advocate_name_id IS 'Active (most up to date) tuple with details.';
 COMMENT ON COLUMN advocate.inserted IS 'Timestamp of introduction of advocate into our system.';
+COMMENT ON COLUMN advocate.job_run_id IS 'ID of job run which added this advocate.';
 COMMENT ON COLUMN advocate.updated IS 'Timestamp of last change of  advocate';
 
-ALTER TABLE advocate_name ADD FOREIGN KEY (advocate_id) REFERENCES advocate(id_advocate) ON UPDATE CASCADE ON DELETE RESTRICT;
+ALTER TABLE advocate_info ADD FOREIGN KEY (advocate_id) REFERENCES advocate(id_advocate) ON UPDATE CASCADE ON DELETE RESTRICT;
 
 ------------------- Tagging -------------------
 
@@ -189,54 +255,41 @@ CREATE TYPE tagging_status AS ENUM (
   'fuzzy' /* document was tagged but the result is uncertain (can be switched here unless the last tagging was done by user type person) */
 );
 
-CREATE TABLE tagging (
+CREATE TABLE tagging_advocate (
+  id_tagging_advocate BIGSERIAL PRIMARY KEY,
   document_id BIGINT NOT NULL REFERENCES document(id_document) ON UPDATE CASCADE ON DELETE RESTRICT,
+  advocate_id BIGINT NULL REFERENCES advocate(id_advocate)  ON UPDATE CASCADE ON DELETE RESTRICT,
   status tagging_status NOT NULL,
   is_final BOOLEAN NULL,
-  advocate_id BIGINT NULL REFERENCES advocate(id_advocate)  ON UPDATE CASCADE ON DELETE RESTRICT,
-  case_result case_result NULL,
+  debug TEXT NULL,
   inserted TIMESTAMP NOT NULL DEFAULT NOW(),
-  inserted_by BIGINT NOT NULL REFERENCES "user"(id_user) ON UPDATE CASCADE ON DELETE RESTRICT
+  inserted_by BIGINT NOT NULL REFERENCES "user"(id_user) ON UPDATE CASCADE ON DELETE RESTRICT,
+  job_run_id BIGINT NULL REFERENCES job_run(id_job_run) ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
-CREATE UNIQUE INDEX ON tagging(document_id);
-CREATE UNIQUE INDEX ON tagging(advocate_id);
-CREATE UNIQUE INDEX ON tagging(inserted_by);
+CREATE UNIQUE INDEX ON tagging_advocate(document_id);
+CREATE UNIQUE INDEX ON tagging_advocate(advocate_id);
 
-COMMENT ON TABLE tagging IS 'Entries containing taggings of documents with their history (last inserted tagging of certain document is considered valid).';
-COMMENT ON COLUMN tagging.status IS 'Status of tagging, see its states.';
-COMMENT ON COLUMN tagging.is_final IS '';
+COMMENT ON TABLE tagging_advocate IS 'Entries containing tagging of documents to advocates with their history (last inserted tagging of certain document is considered valid).';
+COMMENT ON COLUMN tagging_advocate.status IS 'Status of tagging, see its states.';
+COMMENT ON COLUMN tagging_advocate.is_final IS 'Set to true when created by flawless human.';
+COMMENT ON COLUMN tagging_advocate.job_run_id IS 'ID of job run which added this tagging.';
 
-------------------- Jobs -------------------
-
-CREATE TABLE job (
-  id_job BIGSERIAL PRIMARY KEY,
-  name TEXT UNIQUE,
-  description TEXT,
-  database_user_id BIGINT NOT NULL REFERENCES "user"(id_user) ON UPDATE CASCADE ON DELETE RESTRICT
+CREATE TABLE tagging_case_result (
+  id_tagging_case_result BIGSERIAL PRIMARY KEY,
+  document_id BIGINT NOT NULL REFERENCES document(id_document) ON UPDATE CASCADE ON DELETE RESTRICT,
+  case_result case_result NULL,
+  status tagging_status NOT NULL,
+  is_final BOOLEAN NULL,
+  debug TEXT NULL,
+  inserted TIMESTAMP NOT NULL DEFAULT NOW(),
+  inserted_by BIGINT NOT NULL REFERENCES "user"(id_user) ON UPDATE CASCADE ON DELETE RESTRICT,
+  job_run_id BIGINT NULL REFERENCES job_run(id_job_run) ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
-COMMENT ON TABLE job IS 'Entries of every automatic job associated with the system.';
-COMMENT ON COLUMN job.name IS 'Name of the job matching the fully qualified name of the command class.';
-COMMENT ON COLUMN job.description IS 'Description of the job.';
-COMMENT ON COLUMN job.database_user_id IS 'User ID used for database operations in the job.';
+CREATE UNIQUE INDEX ON tagging_case_result(document_id);
 
-CREATE TABLE job_run (
-  id_job_run BIGSERIAL PRIMARY KEY,
-  job_id BIGINT NOT NULL REFERENCES job(id_job) ON UPDATE CASCADE ON DELETE RESTRICT,
-  return_code SMALLINT NULL,
-  output TEXT NULL,
-  message TEXT NULL,
-  executed TIMESTAMP NOT NULL,
-  finished TIMESTAMP NULL
-);
-
-COMMENT ON TABLE job_run IS 'Trace of every job execution with complete status usable for potential debugging.';
-COMMENT ON COLUMN job_run.job_id IS 'ID of job which was executed';
-COMMENT ON COLUMN job_run.return_code IS 'Returned code';
-COMMENT ON COLUMN job_run.output IS 'Console output';
-COMMENT ON COLUMN job_run.message IS 'Message from the job wrapper, such as error messages about error states etc.';
-COMMENT ON COLUMN job_run.executed IS 'Time when the execution was started.';
-COMMENT ON COLUMN job_run.finished IS 'Time when the execution was finished.';
-
-INSERT INTO job (name, description, database_user_id) VALUES ('App\Commands\NSCrawler', 'Supreme Court Crawler', 3);
+COMMENT ON TABLE tagging_case_result IS 'Entries containing tagging of documents with their case result with their history (last inserted tagging of certain document is considered valid).';
+COMMENT ON COLUMN tagging_case_result.status IS 'Status of tagging, see its states.';
+COMMENT ON COLUMN tagging_case_result.is_final IS 'Set to true when created by flawless human.';
+COMMENT ON COLUMN tagging_advocate.job_run_id IS 'ID of job run which added this tagging.';
