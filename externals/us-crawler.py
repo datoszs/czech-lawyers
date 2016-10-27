@@ -41,6 +41,7 @@ hash_id = datetime.now().strftime("%d-%m-%Y")
 working_dir = "working"
 screens_dir = "screens"
 documents_dir = "documents"
+log_dir = "log_us"
 
 global_ncols = 120
 main_timeout = 10000
@@ -51,10 +52,10 @@ def set_logging():
     global logger
     logger = logging.getLogger(__file__)
     logger.setLevel(logging.DEBUG)
-    fh_d = logging.FileHandler(join(out_dir, __file__[0:-3] + "_" + hash_id + "_log_debug.txt"),
+    fh_d = logging.FileHandler(join(log_dir, __file__[0:-3] + "_" + hash_id + "_log_debug.txt"),
                                mode="w", encoding='utf-8')
     fh_d.setLevel(logging.DEBUG)
-    fh_i = logging.FileHandler(join(out_dir, __file__[0:-3] + "_" + hash_id + "_log.txt"),
+    fh_i = logging.FileHandler(join(log_dir, __file__[0:-3] + "_" + hash_id + "_log.txt"),
                                mode="w", encoding='utf-8')
     fh_i.setLevel(logging.INFO)
     # create console handler
@@ -107,8 +108,10 @@ def parameters():
                       help="Not delete working directory")
     parser.add_option("-d", "--output-directory", action="store", type="string", dest="dir", default="output_dir",
                       help="Path to output directory")
-    parser.add_option("-f", "--date-from", action="store", type="string", dest="date_from", default='1. 1. 1992',
+    parser.add_option("-f", "--date-from", action="store", type="string", dest="date_from", default='1. 1. 2007',
                       help="Start date of range (d. m. yyyy)")
+    parser.add_option("-l", "--last-days", action="store", type="string", dest="last", default=None,
+                      help="Increments for the last N days (N in <1,60>)")
     parser.add_option("-t", "--date-to", action="store", type="string", dest="date_to", default=None,
                       help="End date of range (d. m. yyyy)")
     parser.add_option("-c", "--capture", action="store_true", dest="screens", default=False,
@@ -123,7 +126,7 @@ def parameters():
     return run_options
 
 
-def view_data(date_from, records_per_page, date_to=None):
+def view_data(date_from, records_per_page, date_to=None, days=None):
     """set form for searching
 
     :date_from: start date of range
@@ -131,24 +134,33 @@ def view_data(date_from, records_per_page, date_to=None):
     :records_per_page: how many records is on one page
     :return: Bool
     """
-    if session.exists("#ctl00_MainContent_decidedFrom"):
-        logger.debug("Set date_from '%s'" % date_from)
-        session.set_field_value(
-            "#ctl00_MainContent_decidedFrom",
-            datetime.strptime(date_from, '%d. %m. %Y').strftime('%Y/%m/%d'))
-        if b_screens:
-            session.capture_to(join(screens_dir_path, "set_from.png"))
-        if date_to is not None:  # ctl00_MainContent_decidedFrom
-            logger.debug("Set date_to '%s'" % date_to)
-            session.set_field_value("#ctl00_MainContent_decidedTo",
-                                    datetime.strptime(date_to, '%d. %m. %Y').strftime('%Y/%m/%d'))
+    if days and session.exists("#ctl00_MainContent_dle_data_zpristupneni"):
+        logger.debug("Select check button")
+        #session.set_field_value("#ctl00_MainContent_dle_data_zpristupneni", True)
+        session.click("#ctl00_MainContent_dle_data_zpristupneni", expect_loading=False)
+        if session.exists("#ctl00_MainContent_zpristupneno_pred"):
+            logger.info("Select last %s days" % days)
+            session.set_field_value("#ctl00_MainContent_zpristupneno_pred", days)
+    else:
+        if session.exists("#ctl00_MainContent_availableFrom"):
+            logger.debug("Set date_from '%s'" % date_from)
+            session.set_field_value(
+                "#ctl00_MainContent_availableFrom",
+                datetime.strptime(date_from, '%d. %m. %Y').strftime('%Y/%m/%d'))
+            if b_screens:
+                session.capture_to(join(screens_dir_path, "set_from.png"))
+            if date_to is not None:  # ctl00_MainContent_decidedFrom
+                logger.debug("Set date_to '%s'" % date_to)
+                session.set_field_value("#ctl00_MainContent_availableTo",
+                                        datetime.strptime(date_to, '%d. %m. %Y').strftime('%Y/%m/%d'))
+            logger.info("Records from the period %s -> %s", date_from, date_to)
             if b_screens:
                 session.capture_to(join(screens_dir_path, "set_to.png"))
-        logger.debug("Set sorting criteria")
-        session.set_field_value("#ctl00_MainContent_razeni", "3")
-        logger.debug("Set counter records per page")
-        session.set_field_value(
-            "#ctl00_MainContent_resultsPageSize", str(records_per_page))
+    logger.debug("Set sorting criteria")
+    session.set_field_value("#ctl00_MainContent_razeni", "3")
+    logger.debug("Set counter records per page")
+    session.set_field_value(
+        "#ctl00_MainContent_resultsPageSize", str(records_per_page))
     if b_screens:
         session.capture_to(join(screens_dir_path, "set_form.png"))
 
@@ -159,6 +171,8 @@ def view_data(date_from, records_per_page, date_to=None):
         except Exception:
             logger.warning("Exception")
             return False
+    if b_screens:
+        session.capture_to(join(screens_dir_path, "result.png"))
     return True
 
 
@@ -408,7 +422,7 @@ def main():
     session.open(search_url)
     # print(session.content)
     records_per_page = 20
-    if view_data(date_from, records_per_page, date_to):
+    if view_data(date_from, records_per_page, date_to, days):
         response = session.content
         if b_screens:
             session.capture_to(
@@ -463,6 +477,7 @@ if __name__ == "__main__":
     b_screens = options["screens"]
     b_delete = options["delete"]
     output_file = options["filename"]
+    days = options["last"]
 
     if ".csv" not in output_file:
         output_file += ".csv"
@@ -501,6 +516,6 @@ if __name__ == "__main__":
             else:
                 logger.error("Result directory isn't empty.")
                 sys.exit(-1)
-            sys.exit(42)
+            sys.exit(0)
         else:
             sys.exit(-1)

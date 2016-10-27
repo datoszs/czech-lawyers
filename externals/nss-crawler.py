@@ -120,6 +120,8 @@ def parameters():
                       help="Not delete working directory")
     parser.add_option("-d", "--output-directory", action="store", type="string", dest="dir", default="output_dir",
                       help="Path to output directory")
+    parser.add_option("-l", "--last-days", action="store", type="string", dest="last", default=None,
+                      help="Increments for the last N days (N in <1,60>)")
     parser.add_option("-f", "--date-from", action="store", type="string", dest="date_from", default=None,
                       help="Start date of range (d. m. yyyy)")
     parser.add_option("-t", "--date-to", action="store", type="string", dest="date_to", default=None,
@@ -186,6 +188,7 @@ extract relevant data from page
     table = soup.find("table", id="_ctl0_ContentPlaceMasterPage__ctl0_grwA")
     rows = table.findAll("tr")
     logger.debug("Records on pages: %d" % len(rows[1:]))
+    count_records_with_document = 0
 
     for record in rows[1:]:
         columns = record.findAll("td")  # columns of table in the row
@@ -211,6 +214,7 @@ extract relevant data from page
         if link_elem is not None:
             link = link_elem['href']
             link = urljoin(base_url, link)
+            count_records_with_document += 1
         else:
             continue  # case without document
 
@@ -243,6 +247,8 @@ extract relevant data from page
 
         writer_records.writerow(item)  # write item to CSV
         logger.debug(case_number)
+    logger.debug("Find %s records with document on this page" % count_records_with_document)
+    return count_records_with_document
 
 
 #-----------------------------------------------------------------------
@@ -266,22 +272,23 @@ extract informations from HTML files and write to CSVs
         writer_records.writeheader()
 
         t = tqdm(html_files, ncols=global_ncols)
+        count_documents = 0
         for html_f in t:
             logger.debug(html_f)
-            make_record(make_soup(html_f))
+            count_documents += make_record(make_soup(html_f))
             t.update()
             #print(i)
             """i += 1
             if i==80:
                 break"""
-
+        logger.info("%s records had a document" % count_documents)
         csv_records.close()
     else:
         logger.warning("len(html_files) == saved_pages = %s" % len(html_files) == saved_pages)
 
 
 #-----------------------------------------------------------------------
-def view_data(row_count, mark_type, value, date_from=None, date_to=None):
+def view_data(row_count, mark_type, value, date_from=None, date_to=None, last=None):
     """
 sets forms parameters for viewing data
 :mark_type: text identificator of mark type
@@ -289,16 +296,24 @@ sets forms parameters for viewing data
 :date_from: start date of range
 :date_to: end date of range
 """
-    if date_from is not None:
-        # setting range search
-        logger.info("Records from the period %s -> %s", date_from, date_to)
-        # id (input - text) = _ctl0_ContentPlaceMasterPage__ctl0_txtDatumOd
-        if session.exists("#_ctl0_ContentPlaceMasterPage__ctl0_txtDatumOd"):
-            session.set_field_value("#_ctl0_ContentPlaceMasterPage__ctl0_txtDatumOd", date_from)
-    if date_to is not None:
-        # id (input - text) = _ctl0_ContentPlaceMasterPage__ctl0_txtDatumDo
-        if session.exists("#_ctl0_ContentPlaceMasterPage__ctl0_txtDatumDo"):
-            session.set_field_value("#_ctl0_ContentPlaceMasterPage__ctl0_txtDatumDo", date_to)
+    if last and session.exists("#_ctl0_ContentPlaceMasterPage__ctl0_chkPrirustky"):
+        logger.debug("Select check button")
+        session.set_field_value("#_ctl0_ContentPlaceMasterPage__ctl0_chkPrirustky", True)
+        if session.exists("#_ctl0_ContentPlaceMasterPage__ctl0_ddlPosledniDny"):
+            logger.info("Select last %s days" % last)
+            session.set_field_value("#_ctl0_ContentPlaceMasterPage__ctl0_ddlPosledniDny", last)
+
+    else:
+        if date_from is not None:
+            # setting range search
+            logger.info("Records from the period %s -> %s", date_from, date_to)
+            # id (input - text) = _ctl0_ContentPlaceMasterPage__ctl0_txtDatumOd
+            if session.exists("#_ctl0_ContentPlaceMasterPage__ctl0_txtDatumOd"):
+                session.set_field_value("#_ctl0_ContentPlaceMasterPage__ctl0_txtDatumOd", date_from)
+        if date_to is not None:
+            # id (input - text) = _ctl0_ContentPlaceMasterPage__ctl0_txtDatumDo
+            if session.exists("#_ctl0_ContentPlaceMasterPage__ctl0_txtDatumDo"):
+                session.set_field_value("#_ctl0_ContentPlaceMasterPage__ctl0_txtDatumDo", date_to)
 
     # shows several first records
     if session.exists("#_ctl0_ContentPlaceMasterPage__ctl0_ddlRejstrik"):  # change mark type in select
@@ -413,7 +428,7 @@ creates files for processing and saving data, start point for processing
     for case_type in case_types.keys():
         logger.info("-----------------------------------------------------")
         logger.info(case_type)
-        view_data(row_count, case_type, case_types[case_type], date_from=date_from, date_to=date_to)
+        view_data(row_count, case_type, case_types[case_type], date_from=date_from, date_to=date_to, last=last)
         number_of_records, resources = session.evaluate(
             "document.getElementById('_ctl0_ContentPlaceMasterPage__ctl0_ddlRowCount').value")
         #number_of_records = "30" #hack pro testovani
@@ -526,6 +541,7 @@ if __name__ == "__main__":
     date_to = options["date_to"]
     b_screens = options["screens"]
     b_delete = options["delete"]
+    last = options["last"]
     output_file = options["filename"]
 
     if ".csv" not in output_file:
@@ -567,6 +583,6 @@ if __name__ == "__main__":
             else:
                 logger.error("Result directory isn't empty.")
                 sys.exit(-1)
-            sys.exit(42)
+            sys.exit(0)
         else:
             sys.exit(-1)
