@@ -52,6 +52,7 @@ console:
 		- App\Commands\NSCrawler
 		- App\Commands\NSSCrawler
 		- App\Commands\USCrawler
+		- App\Commands\CAKCrawler
 		- App\Commands\CausaImport
 
 orm:

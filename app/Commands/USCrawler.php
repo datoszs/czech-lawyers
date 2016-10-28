@@ -23,8 +23,8 @@ class USCrawler extends CauseCrawler
 	public function getCommand($directory)
 	{
 		return sprintf(
-			'%s %s --output-directory %s -l %s 2>&1 && deactivate',
-            'workon staging-crawler-us && python3',
+			'%s %s --output-directory %s -l %s 2>&1',
+            'python3',
 			__DIR__ . '/../../externals/us-crawler.py',
 			escapeshellarg($directory),
 			7

@@ -5,14 +5,14 @@ use Nette\Utils\DateTime;
 use Symfony\Component\Console\Input\InputArgument;
 
 /**
- * Crawler of Supreme Administrative Court.
+ * Crawler of the Czech Bar Association
  */
-class NSSCrawler extends CauseCrawler
+class CAKCrawler extends CauseCrawler
 {
 	protected function configure()
 	{
-		$this->setName('app:nss-crawler')
-			->setDescription('Crawls data from Supreme Administrative Court.')
+		$this->setName('app:cak-crawler')
+			->setDescription('Crawls data from Czech bar Association.')
 			->addArgument(
 				static::ARGUMENT_DIRECTORY,
 				InputArgument::REQUIRED,
@@ -23,11 +23,10 @@ class NSSCrawler extends CauseCrawler
 	public function getCommand($directory)
 	{
 		return sprintf(
-			'%s %s --output-directory %s -l %s 2>&1',
+			'%s %s --output-directory %s 2>&1',
             'python3',
-			__DIR__ . '/../../externals/nss-crawler.py',
-			escapeshellarg($directory),
-			7
+			__DIR__ . '/../../externals/cak-crawler.py',
+			escapeshellarg($directory)
 		);
 	}
 
