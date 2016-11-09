@@ -421,6 +421,6 @@ if __name__ == "__main__":
             logger.info("Moving files")
             shutil.move(documents_dir_path, result_dir_path)
             shutil.move(join(out_dir, output_file), result_dir_path)
-            return 0
+            sys.exit(0)
         else:
-            return -1
+            sys.exit(-1)
