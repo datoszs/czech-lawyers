@@ -17,6 +17,8 @@ import logging
 import math
 import os
 import re
+import sys
+import shutil
 from datetime import datetime
 from optparse import OptionParser
 from bs4 import BeautifulSoup, SoupStrainer
