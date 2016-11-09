@@ -22,7 +22,6 @@ from optparse import OptionParser
 from bs4 import BeautifulSoup, SoupStrainer
 from ghost import Ghost
 from tqdm import tqdm
-from os.path import join
 
 try:
     from urllib.parse import urljoin
@@ -31,10 +30,8 @@ except ImportError:
 
 base_url = "http://vyhledavac.cak.cz/"
 url = "http://vyhledavac.cak.cz/Units/_Search/search.aspx"
-hash_id = datetime.now().strftime("%d-%m-%Y")
-working_dir = "working"
-documents_dir = "documents"
-log_dir = "log_cak"
+screens_dir = "screens"
+html_dir = "html"
 
 main_timeout = 5000
 only_a_tags = SoupStrainer("td > a")
@@ -53,10 +50,10 @@ def set_logging():
     logger = logging.getLogger(__file__)
     logger.setLevel(logging.DEBUG)
     hash_id = datetime.now().strftime("%d-%m-%Y")
-    fh_d = logging.FileHandler(join(log_dir, __file__[0:-3] + "_" + hash_id + "_log_debug.txt"), mode="w",
+    fh_d = logging.FileHandler(os.path.join(out_dir, __file__[0:-3] + "_" + hash_id + "_log_debug.txt"), mode="w",
                                encoding='utf-8')
     fh_d.setLevel(logging.DEBUG)
-    fh_i = logging.FileHandler(join(log_dir, __file__[0:-3] + "_" + hash_id + "_log.txt"), mode="w",
+    fh_i = logging.FileHandler(os.path.join(out_dir, __file__[0:-3] + "_" + hash_id + "_log.txt"), mode="w",
                                encoding='utf-8')
     fh_i.setLevel(logging.INFO)
     # create console handler
@@ -81,26 +78,17 @@ def parameters():
     usage = "usage: %prog [options]"
     parser = OptionParser(usage)
 
-    parser.add_option("-o", "--output-file", action="store", type="string", dest="filename", default="metadata.csv",
+    parser.add_option("-o", "--output-file", action="store", type="string", dest="filename", default="cak_csv.csv",
                       help="Name of output CSV file")
     parser.add_option("-e", "--extraction", action="store_true", dest="extraction", default=False,
                       help="Make only extraction without download new data")
-    parser.add_option("-d", "--output-directory", action="store", type="string", dest="dir", default="output_dir",
+    parser.add_option("-d", "--output-directory", action="store", type="string", dest="dir", default=".",
                       help="Path to output directory")
     (options, args) = parser.parse_args()
     options = vars(options)
 
     #print(args,options,type(options))
     return options
-
-
-def create_directories():
-    """
-create working directories
-"""
-    for directory in [out_dir, documents_dir_path, result_dir_path]:
-        os.makedirs(directory, exist_ok=True)
-        logger.info("Folder was created '" + directory + "'")
 
 
 def make_soup(path):
@@ -125,7 +113,6 @@ def make_record(soup, html_file):
         surname = "unknown"
         after = "unknown"
         before = "unknown"
-        state = "unknown"
         #print("\nname:",name_label.find_next().prettify())
         if name_label is not None:
             name_str = name_label.find_next().getText().strip()
@@ -198,10 +185,6 @@ def make_record(soup, html_file):
         if evidence_label is not None:
             evidence_number = evidence_label.find_next().getText().strip()
 
-        state_label = soup.find("td", string=re.compile(u"Stav", re.UNICODE))
-        if state_label is not None:
-            state = state_label.find_next().getText().strip()
-
         city = "unknown"
         street = "unknown"
         location_label = soup.find("td", string=re.compile(u"Adresa", re.UNICODE))
@@ -219,7 +202,6 @@ def make_record(soup, html_file):
             "surname": surname,
             "before": before,
             "after": after,
-            "state": state,
             "email": email,
             "ic": ic,
             "evidence_number": evidence_number,
@@ -252,23 +234,23 @@ def check_records(page_from, pages):
             for link in links:
                 #print(U"%s" % link.text.encode("utf-8"))
                 original_link = link["href"]
-                id = original_link.split("?")[1][3:]
+                id = original_link.split("?")[1][3:] + ".html"
 
-                #if not os.path.exists(join(documents_dir_path, id)):
-                jmeno = link.text.strip()
-                if jmeno != "":
-                    #logger.debug(U"%s" % jmeno)
-                    list_of_links.append({"url": urljoin(base_url, original_link), "id": id, "text": jmeno})
+                if not os.path.exists(os.path.join(html_dir_path, id)):
+                    jmeno = link.text.strip()
+                    if jmeno != "":
+                        #logger.debug(U"%s" % jmeno)
+                        list_of_links.append({"url": urljoin(base_url, original_link), "id": id, "text": jmeno})
         session.evaluate("javascript:__doPostBack('ctl00$mainContent$gridResult','Page$" + str(page + 1) + "')",
                          expect_loading=True)  #  go to next page
-    #logger.info("New records %s" % len(list_of_links))
+    logger.info("New records %s" % len(list_of_links))
     return list_of_links
 
 
 def extract_data(response, html_file):
     """save current page as HTML file for later extraction"""
     logger.debug("Save file '%s'" % html_file)
-    with codecs.open(join(documents_dir_path, html_file), "w", encoding="utf-8") as f:
+    with codecs.open(os.path.join(html_dir_path, html_file), "w", encoding="utf-8") as f:
         f.write(response)
 
 
@@ -283,7 +265,7 @@ def how_many(str_info, displayed_records):
     if m is not None:
         part_1 = m.group(1)
         part_2 = m.group(2)
-        number_of_records = int(part_1) + int(part_2)  # advocates are not in order
+        number_of_records = int(part_1) + int(part_2)
         count_of_pages = math.ceil(number_of_records / int(displayed_records))
         logger.info("records: %s => pages: %s", number_of_records, count_of_pages)
     return number_of_records, count_of_pages
@@ -294,24 +276,24 @@ def extract_information(list_of_links):
     Choosing relevant files for extraction
     :param list_of_links:
     """
-    fieldnames = ['before', 'name', 'surname', 'after', 'state', 'ic', 'evidence_number', 'email', 'street', 'city', 'file']
+    fieldnames = ['before', 'name', 'surname', 'after', 'ic', 'evidence_number', 'email', 'street', 'city', 'file']
 
     global writer_records
 
-    csv_records = open(join(out_dir, output_file), 'w', newline='', encoding="utf-8")
+    csv_records = open(os.path.join(out_dir, output_file), 'w', newline='', encoding="utf-8")
 
     writer_records = csv.DictWriter(csv_records, fieldnames=fieldnames, delimiter=";")
     writer_records.writeheader()
 
     if list_of_links is None:  # all records in directory
-        list_of_links = [fn for fn in next(os.walk(documents_dir_path))[2]]
+        list_of_links = [fn for fn in next(os.walk(html_dir_path))[2]]
         for html_file in tqdm(list_of_links):
             logger.debug(html_file)
-            make_record(make_soup(join(documents_dir_path, html_file)), join(documents_dir_path, html_file))
+            make_record(make_soup(os.path.join(html_dir_path, html_file)), os.path.join(html_dir_path, html_file))
     else:  # only new records
         for html_file in tqdm(list_of_links):
-            make_record(make_soup(join(documents_dir_path, html_file["id"]+".html")),
-                        join(documents_dir_path, html_file["id"]+".html"))
+            make_record(make_soup(os.path.join(html_dir_path, html_file["id"])),
+                        os.path.join(html_dir_path, html_file["id"]))
 
 
 def main():
@@ -335,19 +317,16 @@ def main():
                 records, pages = how_many(value, 50)
                 #pages = 99 # hack for testing
                 page_from = 1
-                logger.info("Checking records...")
+                logger.info("Checking new records...")
                 list_of_links = check_records(page_from, pages)
         if len(list_of_links) > 0:
             logger.info("Dowload new records")
             for record in tqdm(list_of_links):
                 #print(record)#,record["url"],record["id"])
-                # may it be wget?
-                import urllib.request
-                urllib.request.urlretrieve(record["url"], join(documents_dir_path, record["id"]+".html"))
-                #session.open(record["url"])
+                session.open(record["url"])
                 #response = str(urlopen(record["url"]).read())
-                #response = session.content
-                #extract_data(response, record["id"]+".html")
+                response = session.content
+                extract_data(response, record["id"])
 
             logger.info("Download  - DONE")
             session.exit()
@@ -375,20 +354,14 @@ if __name__ == "__main__":
     if ".csv" not in output_file:
         output_file += ".csv"
 
+    html_dir_path = os.path.join(out_dir, html_dir)
+
     if not os.path.exists(out_dir):
         os.mkdir(out_dir)
         print("Folder was created '" + out_dir + "'")
+    if not os.path.exists(html_dir_path):
+        os.mkdir(html_dir_path)
+        print("Folder was created '" + html_dir_path + "'")
     set_logging()
     logger.debug(options)
-
-    result_dir_path = join(out_dir, "result")
-    out_dir = join(out_dir, working_dir)  # new outdir is working directory
-    documents_dir_path = join(out_dir, documents_dir)
-    create_directories()
-
-    if main():
-        # move results of crawling
-        if not os.listdir(result_dir_path):
-            logger.info("Moving files")
-            shutil.move(documents_dir_path, result_dir_path)
-            shutil.move(join(out_dir, output_file), result_dir_path)
+    main()
