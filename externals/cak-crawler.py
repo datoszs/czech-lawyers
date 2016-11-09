@@ -422,5 +422,5 @@ if __name__ == "__main__":
             shutil.move(documents_dir_path, result_dir_path)
             shutil.move(join(out_dir, output_file), result_dir_path)
             return 0
-        else
+        else:
             return -1
