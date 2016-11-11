@@ -1,7 +1,7 @@
 <?php
 namespace App\Model\Taggings;
 
-use App\Model\Documents\Advocate;
+use App\Model\Advocates\Advocate;
 use App\Model\Documents\Document;
 use App\Model\Jobs\JobRun;
 use App\Model\Users\User;

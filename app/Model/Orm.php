@@ -3,8 +3,8 @@ namespace App\Model;
 
 use App\Model\Cause\CausesRepository;
 use App\Model\Court\CourtsRepository;
-use App\Model\Documents\AdvocateInfosRepository;
-use App\Model\Documents\AdvocatesRepository;
+use App\Model\Advocates\AdvocateInfosRepository;
+use App\Model\Advocates\AdvocatesRepository;
 use App\Model\Documents\DocumentsLawCourtRepository;
 use App\Model\Documents\DocumentsRepository;
 use App\Model\Documents\DocumentsSupremeAdministrativeCourtRepository;

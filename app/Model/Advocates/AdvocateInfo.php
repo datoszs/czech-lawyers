@@ -1,5 +1,5 @@
 <?php
-namespace App\Model\Documents;
+namespace App\Model\Advocates;
 
 use App\Model\Jobs\JobRun;
 use App\Model\Users\User;

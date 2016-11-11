@@ -1,5 +1,5 @@
 <?php
-namespace App\Model\Documents;
+namespace App\Model\Advocates;
 
 use Nextras\Orm\Mapper\Mapper;
 
