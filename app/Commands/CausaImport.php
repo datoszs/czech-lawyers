@@ -49,7 +49,7 @@ class CausaImport extends Command
 
 	protected function configure()
 	{
-		$this->setName('app:import')
+		$this->setName('app:import-documents')
 			->setDescription('Imports data from one crawler at the time.')
 			->addOption(
 				static::OVERWRITE_FILES,
