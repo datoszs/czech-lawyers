@@ -30,6 +30,7 @@ services:
 	- App\Model\Services\CourtService
 	- App\Model\Services\DocumentService
 	- App\Model\Services\CauseService
+	- App\Model\Services\AdvocateService
 	# Factories
 	- App\Components\LoginForm\LoginFormFactory
 	- App\Components\UserForm\UserFormFactory
@@ -54,6 +55,7 @@ console:
 		- App\Commands\USCrawler
 		- App\Commands\CAKCrawler
 		- App\Commands\CausaImport
+		- App\Commands\AdvocatesImport
 
 orm:
 	model: App\Model\Orm

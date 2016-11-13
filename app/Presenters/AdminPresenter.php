@@ -3,6 +3,10 @@
 namespace App\Presenters;
 
 use App\Components\LoginForm\LoginFormFactory;
+use App\Enums\AdvocateStatus;
+use App\Model\Advocates\Advocate;
+use App\Model\Advocates\AdvocateInfo;
+use App\Model\Orm;
 use App\Model\Services\UserService;
 use Nette;
 use App\Utils\Resources;
@@ -16,6 +20,9 @@ class AdminPresenter extends SecuredPresenter
 
 	/** @var UserService @inject */
 	public $userService;
+
+	/** @var Orm @inject */
+	public $orm;
 
 	/** @persistent */
 	public $backlink = '';

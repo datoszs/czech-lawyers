@@ -23,4 +23,9 @@ class Normalize
 	{
 		return preg_replace('!\s+!', ' ', Strings::trim(Strings::upper($input)));
 	}
+
+	public static function identificationNumber($input)
+	{
+		return Strings::trim($input);
+	}
 }

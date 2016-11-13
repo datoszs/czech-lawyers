@@ -2,7 +2,6 @@
 namespace App\Model\Advocates;
 
 use App\Model\Jobs\JobRun;
-use App\Enums\AdvocateStatus;
 use App\Model\Users\User;
 use DateTime;
 use Nextras\Orm\Entity\Entity;
@@ -13,8 +12,8 @@ use Nextras\Orm\Relationships\OneHasMany;
  * @property string							$remoteIdentificator
  * @property string							$identificationNumber
  * @property string							$registrationNumber
- * @property string							$status							{enum AdvocateStatus::STATUS_*}
- * @property OneHasMany|AdvocateInfo[]		$advocateInfo		{1:m AdvocateInfo::$advocate}
+ * @property string							$localPath
+ * @property OneHasMany|AdvocateInfo[]		$advocateInfo		{1:m AdvocateInfo::$advocate, orderBy=[inserted,DESC]}
  * @property DateTime						$inserted						{default now}
  * @property User							$insertedBy						{m:1 User, oneSided=true}
  * @property JobRun|null					$jobRun							{m:1 JobRun, oneSided=true}

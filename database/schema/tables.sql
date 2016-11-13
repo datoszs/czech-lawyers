@@ -179,10 +179,17 @@ COMMENT ON COLUMN document_supreme_administrative_court.decision IS 'Type of dec
 
 
 ------------------- Advocates -------------------
+
+CREATE TYPE advocate_status AS ENUM (
+  'active', /* Advocate is active. */
+  'suspended', /* Advocates activity is suspended. */
+  'removed' /* Advocate was removed or is inactive. */
+);
+
 CREATE TABLE advocate_info (
   id_advocate_info BIGSERIAL PRIMARY KEY,
   advocate_id BIGINT NOT NULL,
-  hash VARCHAR(128) NOT NULL,
+  status advocate_status,
   name TEXT NOT NULL,
   surname TEXT NOT NULL,
   degree_before TEXT,
@@ -201,11 +208,9 @@ CREATE TABLE advocate_info (
 );
 
 CREATE INDEX ON advocate_info(advocate_id);
-CREATE INDEX ON advocate_info(hash);
 
 COMMENT ON TABLE advocate_info IS 'Contains tuples of volatile advocate data in time.';
 COMMENT ON COLUMN advocate_info.advocate_id IS 'To which advocate this information belongs.';
-COMMENT ON COLUMN advocate_info.hash IS 'Hash of all fields of this info to provide faster interface for duplicate lookup.';
 COMMENT ON COLUMN advocate_info.name IS 'First name of advocate.';
 COMMENT ON COLUMN advocate_info.surname IS 'Surname of advocate.';
 COMMENT ON COLUMN advocate_info.degree_before IS 'Degree before name.';
@@ -216,30 +221,22 @@ COMMENT ON COLUMN advocate_info.valid_from IS 'Since when the tuple is valid.';
 COMMENT ON COLUMN advocate_info.valid_to IS 'Until the tuple is valid, or null when to infinity.';
 COMMENT ON COLUMN advocate_info.job_run_id IS 'ID of job run which added this advocate.';
 
-CREATE TYPE advocate_status AS ENUM (
-  'active', /* Advocate is active. */
-  'suspended', /* Advocates activity is suspended. */
-  'removed' /* Advocate was removed or is inactive. */
-);
-
 CREATE TABLE advocate (
   id_advocate BIGSERIAL PRIMARY KEY,
   remote_identificator VARCHAR(255) UNIQUE NOT NULL,
   identification_number VARCHAR(40) UNIQUE NULL,
   registration_number VARCHAR(40) NOT NULL,
-  advocate_state advocate_status,
-  advocate_name_id BIGINT NULL REFERENCES advocate_name(id_advocate_name) ON UPDATE CASCADE ON DELETE RESTRICT,
   inserted TIMESTAMP NOT NULL DEFAULT NOW(),
   inserted_by BIGINT NOT NULL REFERENCES "user"(id_user) ON UPDATE CASCADE ON DELETE RESTRICT,
   job_run_id BIGINT NULL REFERENCES job_run(id_job_run) ON UPDATE CASCADE ON DELETE RESTRICT,
-  updated TIMESTAMP NULL
+  updated TIMESTAMP NULL,
+  local_path TEXT
 );
 
 COMMENT ON TABLE advocate IS 'List of advocates which was or can be found inside documents.';
 COMMENT ON COLUMN advocate.remote_identificator IS 'ID used by the advocate association.';
 COMMENT ON COLUMN advocate.identification_number IS 'Number of advocate.';
 COMMENT ON COLUMN advocate.registration_number IS 'Registration number of advocate by the advocate association.';
-COMMENT ON COLUMN advocate.advocate_name_id IS 'Active (most up to date) tuple with details.';
 COMMENT ON COLUMN advocate.inserted IS 'Timestamp of introduction of advocate into our system.';
 COMMENT ON COLUMN advocate.job_run_id IS 'ID of job run which added this advocate.';
 COMMENT ON COLUMN advocate.updated IS 'Timestamp of last change of  advocate';
