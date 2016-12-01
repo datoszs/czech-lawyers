@@ -37,6 +37,9 @@ class MappingFactory
 			$propertyName,
 			$this->storageReflection->convertEntityToStorageKey($propertyName),
 			function ($value) {
+				if ($value === null) {
+					return null;
+				}
 				return Json::decode($value, Json::FORCE_ARRAY);
 			},
 			function ($value) {
