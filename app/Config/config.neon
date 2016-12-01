@@ -56,6 +56,7 @@ console:
 		- App\Commands\CAKCrawler
 		- App\Commands\CausaImport
 		- App\Commands\AdvocatesImport
+		- App\Commands\OfficialDataImport
 
 orm:
 	model: App\Model\Orm

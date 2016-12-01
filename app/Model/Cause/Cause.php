@@ -8,6 +8,7 @@ use Nextras\Orm\Entity\Entity;
 /**
  * @property int				$id					{primary}
  * @property string				$registrySign
+ * @property array|null			$officialData
  * @property DateTime			$inserted			{default now}
  * @property JobRun|null		$jobRun				{m:1 JobRun, oneSided=true}
  */

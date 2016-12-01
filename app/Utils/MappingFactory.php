@@ -3,6 +3,7 @@
 namespace Mikulas\OrmExt;
 
 use Mikulas\OrmExt\Pg\PgArray;
+use Nette\Utils\Json;
 use Nextras\Orm\Entity\Reflection\EntityMetadata;
 use Nextras\Orm\InvalidArgumentException;
 use Nextras\Orm\Mapper\Dbal\StorageReflection\IStorageReflection;
@@ -25,6 +26,24 @@ class MappingFactory
 		$this->entityMetadata = $entityMetadata;
 	}
 
+	/**
+	 * @param string $propertyName
+	 * @throws InvalidPropertyException
+	 */
+	public function addJsonMapping($propertyName)
+	{
+		$this->validateProperty($propertyName);
+		$this->storageReflection->setMapping(
+			$propertyName,
+			$this->storageReflection->convertEntityToStorageKey($propertyName),
+			function ($value) {
+				return Json::decode($value, Json::FORCE_ARRAY);
+			},
+			function ($value) {
+				return Json::encode($value);
+			}
+		);
+	}
 
 	/**
 	 * @param string   $propertyName
