@@ -5,6 +5,7 @@ namespace App\Model\Services;
 use App\Model\Documents\Document;
 use App\Model\Documents\DocumentSupremeCourt;
 use App\Model\Orm;
+use Nextras\Orm\Collection\ICollection;
 use Nextras\Orm\Entity\Entity;
 
 class DocumentService
@@ -37,4 +38,21 @@ class DocumentService
 	{
 		return $this->orm->documents->findBy(['recordId' => $recordId])->fetch();
 	}
+
+	public function findByCourt($courtId)
+    {
+        return $this->orm->documents
+            ->findBy(['court' => $courtId])
+            ->orderBy('case',ICollection::DESC)
+            ->fetchAll();
+    }
+
+    public function findByCaseId($caseId)
+    {
+        return $this->orm->documents
+            ->findBy(['case' => $caseId])
+            ->orderBy('decisionDate',ICollection::DESC)
+            ->fetchAll();
+    }
+
 }

@@ -28,4 +28,9 @@ class CauseService
 		return $entity;
 	}
 
+	public function findAll()
+    {
+        return $this->orm->causes->findAll()->fetchAll();
+    }
+
 }

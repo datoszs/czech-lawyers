@@ -117,7 +117,7 @@ class CausaImport extends Command
 				$extras->document = $document;
 				$extras->orderNumber = $row['order_number'];
 				$extras->decision = $row['decision'];
-				$extras->decision_type = $row['decision_type'];
+				$extras->decisionType = $row['decision_type'];
 			} elseif ($courtId == Court::TYPE_US) {
 				$extras = new DocumentLawCourt();
 				$extras->document = $document;

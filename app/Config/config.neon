@@ -31,6 +31,9 @@ services:
 	- App\Model\Services\DocumentService
 	- App\Model\Services\CauseService
 	- App\Model\Services\AdvocateService
+	- App\Model\Services\nssDocumentService
+	- App\Model\Services\usDocumentService
+	- App\Model\Services\CaseResultService
 	# Factories
 	- App\Components\LoginForm\LoginFormFactory
 	- App\Components\UserForm\UserFormFactory
@@ -56,6 +59,7 @@ console:
 		- App\Commands\CAKCrawler
 		- App\Commands\CausaImport
 		- App\Commands\AdvocatesImport
+		- App\Commands\TagResultsNSS
 
 orm:
 	model: App\Model\Orm
