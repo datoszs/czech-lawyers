@@ -254,7 +254,8 @@ CREATE TYPE tagging_status AS ENUM (
 
 CREATE TABLE tagging_advocate (
   id_tagging_advocate BIGSERIAL PRIMARY KEY,
-  document_id BIGINT NOT NULL REFERENCES document(id_document) ON UPDATE CASCADE ON DELETE RESTRICT,
+  case_id BIGINT NOT NULL REFERENCES "case"(id_case) ON UPDATE CASCADE ON DELETE RESTRICT,
+  document_id BIGINT NULL REFERENCES document(id_document) ON UPDATE CASCADE ON DELETE RESTRICT,
   advocate_id BIGINT NULL REFERENCES advocate(id_advocate)  ON UPDATE CASCADE ON DELETE RESTRICT,
   status tagging_status NOT NULL,
   is_final BOOLEAN NULL,
@@ -264,17 +265,20 @@ CREATE TABLE tagging_advocate (
   job_run_id BIGINT NULL REFERENCES job_run(id_job_run) ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
-CREATE UNIQUE INDEX ON tagging_advocate(document_id);
-CREATE UNIQUE INDEX ON tagging_advocate(advocate_id);
+CREATE INDEX ON tagging_advocate(case_id);
+CREATE INDEX ON tagging_advocate(advocate_id);
 
 COMMENT ON TABLE tagging_advocate IS 'Entries containing tagging of documents to advocates with their history (last inserted tagging of certain document is considered valid).';
+COMMENT ON COLUMN tagging_advocate.case_id IS 'Case to which the tagging belongs';
+COMMENT ON COLUMN tagging_advocate.document_id IS 'Document based on which the tagging was done... Or null when done by other means.';
 COMMENT ON COLUMN tagging_advocate.status IS 'Status of tagging, see its states.';
 COMMENT ON COLUMN tagging_advocate.is_final IS 'Set to true when created by flawless human.';
 COMMENT ON COLUMN tagging_advocate.job_run_id IS 'ID of job run which added this tagging.';
 
 CREATE TABLE tagging_case_result (
   id_tagging_case_result BIGSERIAL PRIMARY KEY,
-  document_id BIGINT NOT NULL REFERENCES document(id_document) ON UPDATE CASCADE ON DELETE RESTRICT,
+  case_id BIGINT NOT NULL REFERENCES "case"(id_case) ON UPDATE CASCADE ON DELETE RESTRICT,
+  document_id BIGINT NULL REFERENCES document(id_document) ON UPDATE CASCADE ON DELETE RESTRICT,
   case_result case_result NULL,
   status tagging_status NOT NULL,
   is_final BOOLEAN NULL,
@@ -284,9 +288,12 @@ CREATE TABLE tagging_case_result (
   job_run_id BIGINT NULL REFERENCES job_run(id_job_run) ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
-CREATE UNIQUE INDEX ON tagging_case_result(document_id);
+CREATE INDEX ON tagging_case_result(case_id);
+CREATE INDEX ON tagging_case_result(document_id);
 
 COMMENT ON TABLE tagging_case_result IS 'Entries containing tagging of documents with their case result with their history (last inserted tagging of certain document is considered valid).';
+COMMENT ON COLUMN tagging_case_result.case_id IS 'Case to which the tagging belongs';
+COMMENT ON COLUMN tagging_case_result.document_id IS 'Document based on which the tagging was done... Or null when done by other means.';
 COMMENT ON COLUMN tagging_case_result.status IS 'Status of tagging, see its states.';
 COMMENT ON COLUMN tagging_case_result.is_final IS 'Set to true when created by flawless human.';
 COMMENT ON COLUMN tagging_advocate.job_run_id IS 'ID of job run which added this tagging.';
