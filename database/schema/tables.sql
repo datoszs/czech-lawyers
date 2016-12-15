@@ -105,8 +105,11 @@ CREATE TYPE case_result AS ENUM (
 CREATE TABLE "case" (
   id_case BIGSERIAL PRIMARY KEY,
   registry_sign VARCHAR(255) NOT NULL UNIQUE,
+  court_id BIGINT NOT NULL REFERENCES court(id_court) ON UPDATE CASCADE ON DELETE RESTRICT,
   inserted TIMESTAMP DEFAULT NOW() NOT NULL
 );
+
+CREATE INDEX ON "case"(court_id);
 
 COMMENT ON TABLE "case" IS 'List of cases';
 COMMENT ON COLUMN "case".registry_sign IS 'Unique sign under which the case is managed.';

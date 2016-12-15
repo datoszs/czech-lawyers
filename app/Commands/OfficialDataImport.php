@@ -2,7 +2,9 @@
 namespace App\Commands;
 
 
+use App\Enums\Court;
 use App\Model\Services\CauseService;
+use App\Model\Services\CourtService;
 use App\Utils\Helpers;
 use App\Utils\Normalize;
 use app\Utils\JobCommand;
@@ -19,6 +21,7 @@ class OfficialDataImport extends Command
 	use JobCommand;
 
 	const ARGUMENT_FILE = 'file';
+	const ARGUMENT_COURT = 'court';
 	const OPTION_DELIMITER = 'delimiter';
 	const OPTION_DELIMITER_SHORTCUT = 'd';
 	const OPTION_KEYS = 'keys';
@@ -30,15 +33,23 @@ class OfficialDataImport extends Command
 	const RETURN_CODE_INVALID_FILE = 1;
 	const RETURN_CODE_INVALID_NAMES = 2;
 	const RETURN_CODE_INVALID_SKIP = 3;
+	const RETURN_CODE_INVALID_COURT = 4;
 
 	/** @var CauseService @inject */
 	public $causeService;
+
+	/** @var CourtService @inject */
+	public $courtService;
 
 	protected function configure()
 	{
 		$this->setName('app:import-official-data')
 			->setDescription('Imports information from official data (aggregates, make them unique and overwrite old data). May require more of memory_limit.')
 			->addArgument(
+				static::ARGUMENT_COURT,
+				InputArgument::REQUIRED,
+				sprintf('Court which is imported, available values are: %s', implode(', ', array_keys(Court::$types)))
+			)->addArgument(
 				static::ARGUMENT_FILE,
 				InputArgument::REQUIRED,
 				'CSV file with official data to be imported.'
@@ -66,16 +77,21 @@ class OfficialDataImport extends Command
 	 * Expects file path with data to import.
 	 * Note: executed in transaction
 	 * @param OutputInterface $consoleOutput
+	 * @param int $courtId
 	 * @param string $file
 	 * @param string $delimiter
+	 * @param array $keys
+	 * @param array $skip
 	 * @return array where first is number of newly inserted and second number of overwritten items.
 	 */
-	public function processFile(OutputInterface $consoleOutput, $file, $delimiter, $keys, $skip)
+	public function processFile(OutputInterface $consoleOutput, $courtId, $file, $delimiter, $keys, $skip)
 	{
 		// Ensure that the file is in UTF-8
 		if (!mb_check_encoding(file_get_contents($file), 'UTF-8')) {
 			throw new InvalidArgumentException('Given file is not in UTF-8, before using this tool, please convert input file.');
 		}
+		// Get court
+		$court = $this->courtService->getById($courtId);
 		// Expects registry sign in first column, all other columns are objectized and stored
 		$csv = Reader::createFromPath($file);
 		$csv->setDelimiter($delimiter);
@@ -106,7 +122,7 @@ class OfficialDataImport extends Command
 		$new = 0;
 		$overwritten = 0;
 		foreach ($toPersist as $registryMark => $caseData) {
-			$entity = $this->causeService->findOrCreate($registryMark); // explicitly create case when not already exists
+			$entity = $this->causeService->findOrCreate($court, $registryMark); // explicitly create case when not already exists
 			if ($entity->officialData) {
 				$overwritten++;
 			} else {
@@ -121,6 +137,7 @@ class OfficialDataImport extends Command
 	protected function execute(InputInterface $input, OutputInterface $consoleOutput)
 	{
 		$this->prepare();
+		$court = $input->getArgument(static::ARGUMENT_COURT);
 		$file = $input->getArgument(static::ARGUMENT_FILE);
 		$delimiter = $input->getOption(static::OPTION_DELIMITER);
 		$keys = Helpers::safeExplode('|', $input->getOption(static::OPTION_KEYS));
@@ -128,7 +145,11 @@ class OfficialDataImport extends Command
 		$code = 0;
 		$output = null;
 		$message = null;
-		if (!is_file($file) || !is_readable($file)) {
+		if (!isset(Court::$types[$court])) {
+			$message = 'Error: The given court is not valid value.';
+			$code = static::RETURN_CODE_INVALID_COURT;
+			$consoleOutput->writeln($message);
+		} elseif (!is_file($file) || !is_readable($file)) {
 			$message = 'Error: The given path is not file or not readable.';
 			$code = static::RETURN_CODE_INVALID_FILE;
 		} elseif (!$keys || count($keys) == 0) {
@@ -139,7 +160,7 @@ class OfficialDataImport extends Command
 			$code = static::RETURN_CODE_INVALID_SKIP;
 		} else {
 			// import to db
-			list($new, $overwritten) = $this->processFile($consoleOutput, $file, $delimiter, $keys, $skip);
+			list($new, $overwritten) = $this->processFile($consoleOutput, Court::$types[$court], $file, $delimiter, $keys, $skip);
 			if ($new > 0 || $overwritten > 0) {
 				$this->causeService->flush();
 			}

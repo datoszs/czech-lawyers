@@ -104,7 +104,7 @@ class CausaImport extends Command
 			$document->webPath = (string) $row['web_path'];
 			$document->localPath = $destinationDirRelative . (string) $row['local_path'];
 			$document->decisionDate = new DateTime($row['decision_date']);
-			$document->case = $this->causeService->findOrCreate(Normalize::registryMark($row['registry_mark']), $this->jobRun);
+			$document->case = $this->causeService->findOrCreate($court, Normalize::registryMark($row['registry_mark']), $this->jobRun);
 			$document->jobRun = $this->jobRun;
 			$extras = null;
 			if ($courtId == Court::TYPE_NS) {
