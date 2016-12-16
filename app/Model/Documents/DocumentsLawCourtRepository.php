@@ -14,4 +14,9 @@ class DocumentsLawCourtRepository extends Repository
 	{
 		return [DocumentLawCourt::class];
 	}
+
+	public function getByDocumentId(int $documentId)
+	{
+		return $this->findBy(['document' => $documentId]);
+	}
 }

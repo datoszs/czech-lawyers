@@ -43,6 +43,9 @@ class MappingFactory
 				return Json::decode($value, Json::FORCE_ARRAY);
 			},
 			function ($value) {
+				if ($value === null) {
+					return null;
+				}
 				return Json::encode($value);
 			}
 		);

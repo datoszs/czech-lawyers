@@ -1,11 +1,11 @@
 <?php
 namespace App\Model\Services;
 
-
-use App\Enums\Court;
 use App\Model\Documents\Document;
 use App\Model\Orm;
 use Nextras\Orm\Collection\ICollection;
+use App\Enums\Court as CourtEnum;
+use Nextras\Orm\Entity\IEntity;
 
 class DocumentService
 {
@@ -47,26 +47,20 @@ class DocumentService
             ->fetchAll();
     }
 
-    public function findExtra($courtId, $documentId) {
-	    if (Court::TYPE_NSS == $courtId)
-        {
-            return $this->orm
-                ->documentsSupremeAdministrativeCourt
-                ->findBy(['document' => $documentId])
-                ->fetch();
-        } elseif (Court::TYPE_US == $courtId)
-        {
-            return $this->orm
-                ->documentsLawCourt
-                ->findBy(['document' => $documentId])
-                ->fetch();
-	    } elseif (Court::TYPE_NS == $courtId)
-        {
-            return $this->orm
-                ->documentsSupremeCourt
-                ->findBy(['document' => $documentId])
-                ->fetch();
-	    }else
-          return NULL;
+	/**
+	 * Returns extra data or null for given document
+	 * @param Document $document
+	 * @return IEntity|null
+	 */
+	public function findExtraData(Document $document)
+	{
+		if ($document->court->id == CourtEnum::TYPE_NSS) {
+			return $this->orm->documentsSupremeAdministrativeCourt->getByDocumentId($document->id)->fetch();
+		} elseif ($document->court->id == CourtEnum::TYPE_NS) {
+			return $this->orm->documentsSupremeCourt->getByDocumentId($document->id)->fetch();
+		} elseif ($document->court->id == CourtEnum::TYPE_US) {
+			return $this->orm->documentsLawCourt->getByDocumentId($document->id)->fetch();
+		}
+		return null;
 	}
 }

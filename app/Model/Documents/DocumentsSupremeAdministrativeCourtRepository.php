@@ -14,4 +14,9 @@ class DocumentsSupremeAdministrativeCourtRepository extends Repository
 	{
 		return [DocumentSupremeAdministrativeCourt::class];
 	}
+
+	public function getByDocumentId(int $documentId)
+	{
+		return $this->findBy(['document' => $documentId]);
+	}
 }
