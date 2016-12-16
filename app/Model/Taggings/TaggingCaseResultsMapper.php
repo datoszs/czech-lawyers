@@ -7,6 +7,6 @@ class TaggingCaseResultsMapper extends Mapper
 {
 	public function getTableName()
 	{
-		return 'tagging_case_results';
+		return 'tagging_case_result';
 	}
 }

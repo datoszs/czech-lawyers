@@ -19,7 +19,6 @@ use Nextras\Orm\Entity\Entity;
  * @property DateTime			$inserted			{default now}
  * @property User				$insertedBy			{m:1 User, oneSided=true}
  * @property JobRun|null		$jobRun				{m:1 JobRun, oneSided=true}
- * @property DateTime			$updated			{default now}
  */
 class TaggingCaseResult extends Entity
 {

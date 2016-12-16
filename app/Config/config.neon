@@ -31,6 +31,7 @@ services:
 	- App\Model\Services\DocumentService
 	- App\Model\Services\CauseService
 	- App\Model\Services\AdvocateService
+	- App\Model\Services\TaggingService
 	# Factories
 	- App\Components\LoginForm\LoginFormFactory
 	- App\Components\UserForm\UserFormFactory
@@ -57,6 +58,8 @@ console:
 		- App\Commands\CausaImport
 		- App\Commands\AdvocatesImport
 		- App\Commands\OfficialDataImport
+		- App\Commands\TagResults
+		- APP\Commands\TagAdvocates
 
 orm:
 	model: App\Model\Orm

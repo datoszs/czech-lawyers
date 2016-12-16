@@ -77,7 +77,7 @@ class AdvocatesImport extends Command
 			$advocateInfo->city = $row['city'];
 			$advocateInfo->postalArea = $row['postal_area'];
 			$advocateInfo->email = Helpers::safeDeterministicExplode('|', $row['email']);
-			$advocateInfo->specialization = Helpers::safeDeterministicExplode('|', $row['specializaton']);
+			$advocateInfo->specialization = Helpers::safeDeterministicExplode('|', $row['specialization']);
 			$advocateInfo->insertedBy = $this->user;
 
 			$advocate = new Advocate();

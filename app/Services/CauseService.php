@@ -22,6 +22,11 @@ class CauseService
 		return $this->orm->causes->getBy(['registrySign' => $registrySign]);
 	}
 
+	public function findAll()
+    {
+        return $this->orm->causes->findAll()->fetchAll();
+    }
+
 	public function findOrCreate($registrySign, JobRun $jobRun = null)
 	{
 		$entity = $this->orm->causes->getBy(['registrySign' => $registrySign]);
@@ -44,4 +49,7 @@ class CauseService
 		$this->orm->flush();
 	}
 
+	public function findNotTagged() {
+
+	}
 }

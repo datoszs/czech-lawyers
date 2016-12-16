@@ -19,3 +19,4 @@ storage/documents/us/*
 *.deployment-in-progress
 *.xml
 *.iml
+test.txt
