@@ -59,7 +59,6 @@ console:
 		- App\Commands\AdvocatesImport
 		- App\Commands\OfficialDataImport
 		- App\Commands\TagResults
-		- APP\Commands\TagAdvocates
 
 orm:
 	model: App\Model\Orm
