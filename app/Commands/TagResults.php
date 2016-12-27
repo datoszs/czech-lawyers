@@ -196,7 +196,7 @@ class TagResults extends Command
     protected function execute(InputInterface $input, OutputInterface $consoleOutput)
     {
         $court = $input->getArgument(static::ARGUMENT_COURT);
-        $consoleOutput->writeln("court: " . $court);
+        $output = null;
         $this->prepare();
         $courtId = Court::$types[$court];
         $causes = $this->causeService->findForTagging($this->courtService->getById($courtId));
@@ -223,7 +223,7 @@ class TagResults extends Command
             $result->isFinal = false;
             $result->insertedBy = $this->user;
             $result->jobRun = $this->jobRun;
-
+            $output .= sprintf("Tagging case result for case [%s] of [%s]\n", $cause->registrySign, $cause->court->name);
             $entity = $this->taggingService->findByDocument($document);
             if ($entity) {
                 if ($this->taggingService->persistCaseResultIfDiffers($result)) {
@@ -236,7 +236,9 @@ class TagResults extends Command
 
         }
         $this->taggingService->flush();
-        $consoleOutput->writeln($this->makeStatistic(null, true));
+        $message = $this->makeStatistic(null, true);
+        $this->finalize(0,$output,$message);
+        return 0;
     }
 
 
