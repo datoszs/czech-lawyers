@@ -5,6 +5,10 @@ use App\Model\Taggings\TaggingAdvocate;
 use App\Model\Taggings\TaggingCaseResult;
 use Nextras\Orm\Repository\Repository;
 
+
+/**
+ * @method TaggingCaseResult|null getLastTagging($causeId)
+ */
 class TaggingCaseResultsRepository extends Repository
 {
 

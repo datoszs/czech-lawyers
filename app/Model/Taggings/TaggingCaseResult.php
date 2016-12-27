@@ -1,6 +1,7 @@
 <?php
 namespace App\Model\Taggings;
 
+use App\Model\Cause\Cause;
 use App\Model\Documents\Document;
 use App\Model\Jobs\JobRun;
 use App\Model\Users\User;
@@ -11,7 +12,8 @@ use Nextras\Orm\Entity\Entity;
 
 /**
  * @property int				$id					{primary}
- * @property Document			$document			{m:1 Document, oneSided=true}
+ * @property Cause				$case				{m:1 Cause, oneSided=true}
+ * @property Document|null		$document			{m:1 Document, oneSided=true}
  * @property string				$caseResult			{enum CaseResult::RESULT_*}
  * @property string				$status				{enum TaggingStatus::STATUS_*}
  * @property boolean			$isFinal

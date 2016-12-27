@@ -59,6 +59,7 @@ console:
 		- App\Commands\AdvocatesImport
 		- App\Commands\OfficialDataImport
 		- App\Commands\TagResults
+		- App\Commands\NSResultTagger
 
 orm:
 	model: App\Model\Orm

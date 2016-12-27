@@ -18,4 +18,9 @@ class CausesMapper extends Mapper
 	{
 		return 'case';
 	}
+
+	public function findForTagging($courtId)
+	{
+		return $this->builder()->where('court_id = %i AND id_case NOT IN (SELECT case_id FROM tagging_case_result WHERE is_final)', $courtId);
+	}
 }

@@ -9,4 +9,9 @@ class TaggingCaseResultsMapper extends Mapper
 	{
 		return 'tagging_case_result';
 	}
+
+	public function getLastTagging($causeId)
+	{
+		return $this->builder()->where('case_id = %i', $causeId)->orderBy('inserted DESC')->limitBy(1);
+	}
 }
