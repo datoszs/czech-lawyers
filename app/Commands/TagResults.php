@@ -17,7 +17,7 @@ use App\Model\Services\TaggingService;
 use App\Model\Services\CauseService;
 use App\Model\Services\DocumentService;
 use App\Model\Taggings\TaggingCaseResult;
-use app\Utils\JobCommand;
+use App\Utils\JobCommand;
 use Nette\Utils\Strings;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
