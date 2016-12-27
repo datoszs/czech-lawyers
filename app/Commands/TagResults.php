@@ -12,6 +12,7 @@ namespace App\Commands;
 use App\Enums\CaseResult;
 use App\Enums\Court;
 use App\Enums\TaggingStatus;
+use App\Model\Services\CourtService;
 use App\Model\Services\TaggingService;
 use App\Model\Services\CauseService;
 use App\Model\Services\DocumentService;
@@ -37,6 +38,11 @@ class TagResults extends Command
     protected $ignored = 0;
     protected $failed = 0;
     protected $fuzzy = 0;
+    protected $empty = 0;
+    protected $updated = 0;
+
+    /** @var CourtService @inject */
+    public $courtService;
 
     /** @var CauseService @inject */
     public $causeService;
@@ -90,6 +96,9 @@ class TagResults extends Command
 
     protected function makeStatistic($status, $action)
     {
+        if ($status == NULL && !$action) {
+            $this->empty++;
+        }
         if (!$action) {
             switch ($status) {
                 case TaggingStatus::STATUS_PROCESSED: {
@@ -110,7 +119,7 @@ class TagResults extends Command
                 }
             }
         } else {
-            return "Processed: {$this->processed}, Ignored: {$this->ignored}, Failed: {$this->failed}, Fuzzy: {$this->fuzzy}";
+            return "Processed: {$this->processed}, Ignored: {$this->ignored}, Failed: {$this->failed}, Fuzzy: {$this->fuzzy}, Empty: {$this->empty}, Updated: {$this->updated}";
         }
 
     }
@@ -119,8 +128,8 @@ class TagResults extends Command
     {
         if (Court::TYPE_NSS == $courtId) {
             if (
-                Strings::contains($decision, static::DECISION_RESULT_NEUTRAL) or
-                Strings::contains($decision, static::DECISION_RESULT_NEGATIVE) or
+                Strings::contains($decision, static::DECISION_RESULT_NEUTRAL) ||
+                Strings::contains($decision, static::DECISION_RESULT_NEGATIVE) ||
                 $type == static::FORM_NSS
             )
                 return true;
@@ -134,10 +143,10 @@ class TagResults extends Command
 
             if (
                 (
-                    Strings::contains($decision, static::DECISION_RESULT_NEUTRAL) or
-                    Strings::contains($decision, static::DECISION_RESULT_NEGATIVE) and
+                    Strings::contains($decision, static::DECISION_RESULT_NEUTRAL) ||
+                    Strings::contains($decision, static::DECISION_RESULT_NEGATIVE) &&
                     $type == static::FORM_US_1
-                ) or $type == static::FORM_US_0
+                ) || $type == static::FORM_US_0
             )
                 return true;
         }
@@ -153,34 +162,32 @@ class TagResults extends Command
         $caseResult = CaseResult::RESULT_UNKNOWN;
 
         foreach ($documents as $document) {
-            if ($document->court->id == $courtId) {
-                //$consoleOutput->writeln("Documents: ".count($documents));
-                if (!$find) {
-                    $extra = $this->documentService->findExtra($courtId, $document->id);
-                    if ($extra != null) {
-                        list($type, $decision) = $this->getTypeAndDecision($courtId, $extra);
-                        //$consoleOutput->writeln($type.", ".$decision);
-                        $debug = $type . ", " . $decision;
-                        if ($onlyOne) {
-                            $cause = $document->case;
-                            $consoleOutput->writeln($cause->id . " " . $cause->registrySign . "(" . count($documents) . ")");
-                            $onlyOne = FALSE;
-                        }
-
-                        if ($this->isRelevant($courtId, mb_strtolower($type), $decision)) {
-                            $caseResult = $this->computeCaseResult($courtId, mb_strtolower($type), $decision);
-                            $status = TaggingStatus::STATUS_PROCESSED;
-                            break;
-                        } else { // find another relevant document
-                            $consoleOutput->writeln("\t" . $type . ", " . $decision);
-                            $status = TaggingStatus::STATUS_IGNORED;
-                            continue;
-                        }
-                    } else { // extra information not found
-                        $status = TaggingStatus::STATUS_FAILED;
+            //$consoleOutput->writeln("Documents: ".count($documents));
+            if (!$find) {
+                $extra = $this->documentService->findExtraData($document);
+                if ($extra != null) {
+                    list($type, $decision) = $this->getTypeAndDecision($courtId, $extra);
+                    //$consoleOutput->writeln($type.", ".$decision);
+                    $debug = $type . ", " . $decision;
+                    if ($onlyOne) {
+                        $cause = $document->case;
+                        //$consoleOutput->writeln($cause->id . " " . $cause->registrySign . "(" . count($documents) . ")");
+                        $onlyOne = FALSE;
                     }
-                }
 
+                    if ($this->isRelevant($courtId, mb_strtolower($type), $decision)) {
+                        $caseResult = $this->computeCaseResult($courtId, mb_strtolower($type), $decision);
+                        $status = TaggingStatus::STATUS_PROCESSED;
+                        $find = TRUE;
+                    } else { // find another relevant document
+                        //$consoleOutput->writeln("\t" . $type . ", " . $decision);
+                        $status = TaggingStatus::STATUS_IGNORED;
+                        continue;
+                    }
+                } else { // extra information not found
+                    echo "FAILED";
+                    $status = TaggingStatus::STATUS_FAILED;
+                }
             }
         }
         return [$document, $caseResult, $debug, $status];
@@ -192,32 +199,41 @@ class TagResults extends Command
         $consoleOutput->writeln("court: " . $court);
         $this->prepare();
         $courtId = Court::$types[$court];
-        $causes = $this->causeService->findAll();
-        $consoleOutput->writeln($courtId . " " . count($causes));
+        $causes = $this->causeService->findForTagging($this->courtService->getById($courtId));
+        //$consoleOutput->writeln($courtId . " " . count($causes));
         foreach ($causes as $cause) {
-            //$consoleOutput->writeln($cause->id);
             $documents = $this->documentService->findByCaseId($cause->id);
-            //$consoleOutput->writeln(count($documents));
-            list($document, $caseResult, $debug, $status) = $this->processDocument($documents, $courtId, $consoleOutput);
-            if ($status == CaseResult::RESULT_UNKNOWN or $document->court->id != $courtId)
+            //$consoleOutput->writeln($cause->id . " " . $cause->registrySign . "(" . count($documents) . ")");
+            if ($documents == null) {
+                $this->makeStatistic(null,false);
                 continue;
+            }
+            list($document, $caseResult, $debug, $status) = $this->processDocument($documents, $courtId, $consoleOutput);
+            if ($document == null) {
+                $this->makeStatistic($status, false);
+                continue;
+            }
+
             $result = new TaggingCaseResult();
             $result->caseResult = $caseResult;
             $result->debug = $debug;
             $result->document = $document;
-            /* tady bude case_id, který se bude používat pro kontrolu existujícího a bude se porovnávat výsledek tagování */
+            $result->case = $cause;
             $result->status = $status;
             $result->isFinal = false;
             $result->insertedBy = $this->user;
             $result->jobRun = $this->jobRun;
 
-            $this->makeStatistic($status, false);
-
             $entity = $this->taggingService->findByDocument($document);
-            if ($entity)
-                continue;
-            else
+            if ($entity) {
+                if ($this->taggingService->persistCaseResultIfDiffers($result)) {
+                    $this->updated++;
+                }
+            } else {
+                $this->makeStatistic($status, false);
                 $this->taggingService->insert($result);
+            }
+
         }
         $this->taggingService->flush();
         $consoleOutput->writeln($this->makeStatistic(null, true));

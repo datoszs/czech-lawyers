@@ -56,9 +56,6 @@ class CauseService
 		$this->orm->flush();
 	}
 
-	public function findNotTagged() {
-
-	}
 	public function findForTagging(Court $court)
 	{
 		return $this->orm->causes->findForTagging($court->id);
