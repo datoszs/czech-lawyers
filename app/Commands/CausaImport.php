@@ -3,6 +3,7 @@ namespace App\Commands;
 
 
 use App\Enums\Court;
+use App\Model\Court\Court as CourtEntity;
 use App\Model\Documents\Document;
 use App\Model\Documents\DocumentLawCourt;
 use App\Model\Documents\DocumentSupremeAdministrativeCourt;
@@ -47,6 +48,9 @@ class CausaImport extends Command
 	/** @var CauseService @inject */
 	public $causeService;
 
+	/** @var CourtEntity */
+	private $court;
+
 	protected function configure()
 	{
 		$this->setName('app:import-documents')
@@ -71,16 +75,17 @@ class CausaImport extends Command
 	 * Expects validate directory with data to import.
 	 * Note: executed in transaction
 	 * @param OutputInterface $consoleOutput
+	 * @param string $output Output to be stored
 	 * @param int $courtId ID of court
 	 * @param string $directory
 	 * @param boolean $overwrite whether the files should be overwritten
 	 * @return array where first is number of imported and second number of duplicated items.
 	 */
-	public function processDirectory(OutputInterface $consoleOutput, $courtId, $directory, $overwrite)
+	public function processDirectory(OutputInterface $consoleOutput, &$output, $courtId, $directory, $overwrite)
 	{
 		$csv = Reader::createFromPath($directory . '/metadata.csv');
 		$csv->setDelimiter(';');
-		$court = $this->courtService->getById($courtId);
+		$court = $this->getCourt($courtId);
 		$destinationDir = static::getCourtDirectory($courtId);
 		$destinationDirRelative = static::getCourtDirectory($courtId, true);
 		$csv->setOffset(1); // skip column names
@@ -94,6 +99,7 @@ class CausaImport extends Command
 
 			if ($entity) {
 				$duplicated++;
+				$output .= sprintf("Warning: record with ID %s already found in database.", $row['record_id']) . "\n";
 				$consoleOutput->writeln(sprintf("Warning: record with ID %s already found in database.", $row['record_id']));
 				continue;
 			}
@@ -131,7 +137,9 @@ class CausaImport extends Command
 			// Copy document file into destination folder
 			$destinationPath = $destinationDir . $row['local_path'];
 			if (!$overwrite && file_exists($destinationPath)) {
-				$consoleOutput->writeln(sprintf("Warning: Skipping file %s as it already exists in %s.", $row['local_path'], $destinationDirRelative));
+				$temp = sprintf("Warning: Skipping file %s as it already exists in %s.", $row['local_path'], $destinationDirRelative);
+				$output .= $temp . "\n";
+				$consoleOutput->writeln($temp);
 				continue;
 			}
 			copy($directory . '/documents/' . $row['local_path'], $destinationPath); // copy immediately - better to have not referenced files than documents in database without their files.
@@ -169,12 +177,18 @@ class CausaImport extends Command
 			$code = static::INVALID_CONTENT;
 			$consoleOutput->writeln($message);
 		} else {
+			// State explicitly to
+			$courtEntity = $this->getCourt(Court::$types[$court]);
+			$temp = sprintf("Court: %s\n", $courtEntity->name);
+			$output .= $temp;
+			$consoleOutput->write($temp);
 			// import to db
-			list($imported, $duplicated) = $this->processDirectory($consoleOutput, Court::$types[$court], $directory, $overwrite);
+			list($imported, $duplicated) = $this->processDirectory($consoleOutput, $output, Court::$types[$court], $directory, $overwrite);
 			if ($imported > 0) {
 				$this->documentService->flush();
 			}
 			$message = "Imported {$imported} documents ({$duplicated} duplicate).\n";
+			$output .= $message;
 			$consoleOutput->write($message);
 			// Empty directory after successful procession
 			FileSystem::delete($directory . '/metadata.csv');
@@ -184,6 +198,14 @@ class CausaImport extends Command
 		if ($code !== self::RETURN_CODE_SUCCESS) {
 			$consoleOutput->writeln($message);
 		}
+	}
+
+	private function getCourt($courtId)
+	{
+		if (!$this->court || $this->court->id != $courtId) {
+			$this->court = $this->courtService->getById($courtId);
+		}
+		return $this->court;
 	}
 
 	private function getCourtDirectory($court, $projectRelative = false)
