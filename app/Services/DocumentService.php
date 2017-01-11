@@ -33,6 +33,11 @@ class DocumentService
 		$this->orm->flush();
 	}
 
+	public function save(IEntity $entity)
+	{
+		$this->orm->persist($entity);
+	}
+
 	public function findByRecordId($recordId)
 	{
 		return $this->orm->documents->findBy(['recordId' => $recordId])->fetch();

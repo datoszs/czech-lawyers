@@ -1,6 +1,7 @@
 <?php
 namespace App\Model\Services;
 
+use App\Model\Cause\Cause;
 use App\Model\Taggings\TaggingCaseResult;
 use App\Model\Orm;
 use Nextras\Orm\Entity\IEntity;
@@ -37,6 +38,23 @@ class TaggingService
 			->orm
 			->taggingCaseResults
 			->getBy(['document' => $document]);
+	}
+
+	public function findAdvocateTaggingsByCase(Cause $case)
+	{
+		return $this
+			->orm
+			->taggingAdvocates
+			->findBy(['case' => $case])
+			->fetchAll();
+	}
+	public function findCaseResultTaggingsByCase(Cause $case)
+	{
+		return $this
+			->orm
+			->taggingCaseResults
+			->findBy(['case' => $case])
+			->fetchAll();
 	}
 
 	/**

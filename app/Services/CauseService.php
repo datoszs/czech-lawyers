@@ -24,9 +24,14 @@ class CauseService
 	}
 
 	public function findAll()
-    {
-        return $this->orm->causes->findAll()->fetchAll();
-    }
+	{
+		return $this->orm->causes->findAll()->fetchAll();
+	}
+
+	public function findFromCourt(Court $court)
+	{
+		return $this->orm->causes->findBy(['court' => $court])->fetchAll();
+	}
 
 	public function findOrCreate(Court $court, $registrySign, JobRun $jobRun = null)
 	{
@@ -54,6 +59,11 @@ class CauseService
 	public function flush()
 	{
 		$this->orm->flush();
+	}
+
+	public function remove(IEntity $entity)
+	{
+		$this->orm->remove($entity);
 	}
 
 	public function findForTagging(Court $court)
