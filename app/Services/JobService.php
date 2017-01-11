@@ -31,6 +31,11 @@ class JobService
 		return $this->orm->jobs->findAll()->fetchAll();
 	}
 
+	public function findAllSortedByExecuted()
+	{
+		return $this->orm->jobs->findAllSortedByExecuted();
+	}
+
 	/** @return Job */
 	public function get($id)
 	{

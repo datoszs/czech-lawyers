@@ -3,6 +3,19 @@
 
 {block content}
     <h1 class="page-header">Pravidelné úlohy</h1>
+
+    <div class="dropdown">
+        <button class="btn btn-default dropdown-toggle" type="button" id="sorting" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            Sorting:
+            {if $order}Executed{else}ID{/if}
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="sorting">
+            <li><a href="{plink this, null}">ID</a></li>
+            <li><a href="{plink this, 'executed'}">Executed</a></li>
+        </ul>
+    </div>
+
     {include ../flashes.latte}
     <table class="table table-responsive table-striped table-condensed table-hover">
         <thead>

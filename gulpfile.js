@@ -12,7 +12,7 @@ var merge2 = require('merge2');
 var paths = {
     scripts: [
         'resources/js/jquery-2.2.0.min.js',
-        'resources/js/bootstrap.min.js',
+        'resources/js/bootstrap.js',
         'resources/js/netteForms.min.js',
         'resources/js/application.js'
     ],

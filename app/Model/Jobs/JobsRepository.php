@@ -1,8 +1,12 @@
 <?php
 namespace App\Model\Jobs;
 
+use Nextras\Orm\Collection\ICollection;
 use Nextras\Orm\Repository\Repository;
 
+/**
+ * @method ICollection|Job[] findAllSortedByExecuted()
+ */
 class JobsRepository extends Repository
 {
 

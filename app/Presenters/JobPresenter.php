@@ -2,14 +2,7 @@
 
 namespace App\Presenters;
 
-use App\Components\ProfileForm\ProfileFormFactory;
-use App\Components\UserForm\UserFormFactory;
-use App\Enums\UserType;
 use App\Model\Services\JobService;
-use App\Model\Services\UserService;
-use App\Utils\Resources;
-use App\Utils\Actions;
-use Nette;
 
 
 class JobPresenter extends SecuredPresenter
@@ -18,9 +11,14 @@ class JobPresenter extends SecuredPresenter
 	public $jobService;
 
 	/** @privilege(App\Utils\Resources::JOBS, App\Utils\Actions::VIEW) */
-	public function actionDefault()
+	public function actionDefault($order = null)
 	{
-		$this->template->jobs = $this->jobService->findAll();
+		$this->template->order = $order;
+		if (!$order) {
+			$this->template->jobs = $this->jobService->findAll();
+		} else {
+			$this->template->jobs = $this->jobService->findAllSortedByExecuted();
+		}
 	}
 
 	/** @privilege(App\Utils\Resources::JOBS, App\Utils\Actions::VIEW) */
