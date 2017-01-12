@@ -2,7 +2,7 @@
 namespace App\Utils;
 
 use Nette\Utils\Strings;
-use Nette\Utils\Validators;
+use Nette\Utils\Validators as NetteValidators;
 
 class Normalize
 {
@@ -15,7 +15,7 @@ class Normalize
 		// ÚS registry marks get special treatment as they come in very weird formats, such as iv.ús vs 4 ús etc.
 		if (Strings::contains($registryMark, '.ús ') || Strings::contains($registryMark, ' ús ') || Strings::contains($registryMark, '.ús-st.')) {
 			$splitted = Strings::split($registryMark, '/(\.| )/');
-			if (count($splitted) > 0 && $splitted[0] !== 'pl' && Validators::isNumericInt($splitted[0])) {
+			if (count($splitted) > 0 && $splitted[0] !== 'pl' && NetteValidators::isNumericInt($splitted[0])) {
 				$splitted[0] = Romans::numberToRoman($splitted[0]);
 			}
 			if (count($splitted) > 1 && ($splitted[1] === '.' || $splitted[1] === ' ')) {
