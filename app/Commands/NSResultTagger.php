@@ -36,7 +36,7 @@ class NSResultTagger extends ResultTagger
 
 	private function parseResult($result)
 	{
-		if ($result == "ZASTAVENO") {
+		if ($result == "ZASTAVENO" || $result == 'VZATO ZPĚT') {
 			return CaseResult::RESULT_NEUTRAL;
 		} elseif (Strings::contains($result, 'ZR') || Strings::contains($result, 'ZAM') || Strings::contains($result, 'ZM')) {
 			return CaseResult::RESULT_POSITIVE;
