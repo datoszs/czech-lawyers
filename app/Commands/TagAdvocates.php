@@ -119,8 +119,8 @@ class TagAdvocates extends Command
                 if(Strings::lower($advocate->name) == $name &&
                     Strings::lower($advocate->surname) == $surname
                 ) {
-                    /*print($result->case->registrySign . "\n");
-                    printf("%s %s, %d, %s\n", $name, $surname, $advocate->advocate->id, end($advocate->email));*/
+                    print($result->case->registrySign . "\n");
+                    printf("%s %s, %d, %s\n", $name, $surname, $advocate->advocate->id, end($advocate->email));
                     $this->prepareAndSave($advocate->advocate,$result->case,$debug);
                     $shoda++;
                     break;
