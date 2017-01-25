@@ -36,7 +36,7 @@ class NSResultTagger extends ResultTagger
 
 	private function parseResult($result)
 	{
-		if ($result == "ZASTAVENO") {
+		if ($result == "ZASTAVENO" || $result == 'VZATO ZPĚT') {
 			return CaseResult::RESULT_NEUTRAL;
 		} elseif (Strings::contains($result, 'ZR') || Strings::contains($result, 'ZAM') || Strings::contains($result, 'ZM')) {
 			return CaseResult::RESULT_POSITIVE;
@@ -58,7 +58,7 @@ class NSResultTagger extends ResultTagger
 				$tagging->status = TaggingStatus::STATUS_FAILED;
 			} else {
 				$tagging = $this->prepareTagging($cause);
-				$tagging->caseResult = $this->parseResult($result);
+				$tagging->caseResult = $this->parseResult($result[0]);
 				$tagging->debug = sprintf('Original value: %s', $result[0]);
 				$tagging->status = TaggingStatus::STATUS_PROCESSED;
 			}

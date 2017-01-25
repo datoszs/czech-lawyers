@@ -76,7 +76,7 @@ class AdvocatesImport extends Command
 			$advocateInfo->street = $row['street'];
 			$advocateInfo->city = $row['city'];
 			$advocateInfo->postalArea = $row['postal_area'];
-			$advocateInfo->email = Helpers::safeDeterministicExplode('|', $row['email']);
+			$advocateInfo->email = Helpers::safeDeterministicExplode(', ', $row['email']);
 			$advocateInfo->specialization = Helpers::safeDeterministicExplode('|', $row['specialization']);
 			$advocateInfo->insertedBy = $this->user;
 
@@ -97,7 +97,7 @@ class AdvocatesImport extends Command
 			if ($entity) { // already exists, just update
 				/** @var AdvocateInfo $advocateInfoStored */
 				$advocateInfoStored = $entity->advocateInfo->get()->fetch();
-				if ($this->AdvocateInfosDiffers($advocateInfoStored, $advocateInfo)) {
+				if ($advocateInfoStored === null || $this->AdvocateInfosDiffers($advocateInfoStored, $advocateInfo)) {
 					$updated++;
 					$consoleOutput->writeln(sprintf("Info: updating record with ID %s (inserting new advocate info tuple).", $row['remote_identificator']));
 					$advocateInfo->advocate = $entity;
