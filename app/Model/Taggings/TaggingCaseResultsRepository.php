@@ -3,11 +3,13 @@ namespace App\Model\Documents;
 
 use App\Model\Taggings\TaggingAdvocate;
 use App\Model\Taggings\TaggingCaseResult;
+use Nextras\Orm\Collection\ICollection;
 use Nextras\Orm\Repository\Repository;
 
 
 /**
  * @method TaggingCaseResult|null getLastTagging($causeId)
+ * @method ICollection|array findTaggingResultsByCourt($courtId)
  */
 class TaggingCaseResultsRepository extends Repository
 {

@@ -8,17 +8,34 @@ class AdvocateInfosMapper extends Mapper
 {
 
 
-	protected function createStorageReflection()
-	{
-		$factory = new MappingFactory(parent::createStorageReflection(), $this->getRepository()->getEntityMetadata());
-		$factory->addStringArrayMapping('email');
-		$factory->addStringArrayMapping('specialization');
+    protected function createStorageReflection()
+    {
+        $factory = new MappingFactory(parent::createStorageReflection(), $this->getRepository()->getEntityMetadata());
+        $factory->addStringArrayMapping('email');
+        $factory->addStringArrayMapping('specialization');
 
-		return $factory->getStorageReflection();
-	}
+        return $factory->getStorageReflection();
+    }
 
-	public function getTableName()
-	{
-		return 'advocate_info';
-	}
+    public function getTableName()
+    {
+        return 'advocate_info';
+    }
+
+    public function findUniqueNames()
+    {
+        return $this->connection->query
+        ("
+        SELECT ai.*
+        FROM
+        (
+            SELECT name, surname
+            FROM advocate_info
+            GROUP BY 1,2
+            HAVING COUNT(DISTINCT(advocate_id))=1
+        ) AS t
+        INNER JOIN advocate_info AS ai ON (ai.name=t.name AND ai.surname=t.surname)
+        ORDER BY t
+        ");
+    }
 }

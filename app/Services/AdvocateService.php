@@ -5,6 +5,7 @@ use App\Model\Advocates\Advocate;
 use App\Model\Advocates\AdvocateInfo;
 use App\Model\Orm;
 use DateTimeImmutable;
+use Nette\NotImplementedException;
 use Nextras\Orm\Entity\IEntity;
 
 class AdvocateService

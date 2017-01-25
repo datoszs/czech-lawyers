@@ -3,6 +3,7 @@ namespace App\Model\Services;
 
 use App\Model\Cause\Cause;
 use App\Model\Taggings\TaggingCaseResult;
+use App\Model\Taggings\TaggingAdvocate;
 use App\Model\Orm;
 use Nextras\Orm\Entity\IEntity;
 
@@ -32,6 +33,15 @@ class TaggingService
 		$this->orm->flush();
 	}
 
+	public function findAll()
+    {
+        return $this
+            ->orm
+            ->taggingCaseResults
+            ->findAll()
+            ->fetchAll();
+    }
+
 	public function findByDocument(IEntity $document)
 	{
 		return $this
@@ -56,6 +66,7 @@ class TaggingService
 			->findBy(['case' => $case])
 			->fetchAll();
 	}
+
 
 	/**
 	 * Persist (but not flush) given entity if it is new case result tagging (i.e. when no such previous exists).
