@@ -1,0 +1,75 @@
+{extends '../@frontend.latte'}
+{var $pageTitle = 'Vyhledání advokáta'}
+
+{block content}
+	<h1>Vyhledání advokáta</h1>
+	<div class="row">
+		<div class="col-xs-6">
+			{control searchForm}
+		</div>
+	</div>
+
+
+	{if $query && count($advocates) == 0}
+		<div class="alert alert-info">Nebyli nalezeni žádní advokáti. Zkuste být méně specifičtí.</div>
+	{/if}
+
+	{if count($advocates) > 100}
+		<div class="alert alert-warning">Bylo nalezeno více než 100 advokátů, viditelných je pouze první 100. Zkuste být konkrétnější.</div>
+	{/if}
+
+	{if count($advocates)}
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th>IČ</th>
+					<th>Stav</th>
+					<th>Jméno a příjmení</th>
+					<th>Adresa</th>
+					<th>Akce</th>
+				</tr>
+			</thead>
+			<tbody>
+				{foreach $advocates as $advocate}
+					<tr>
+						<td>{$advocate->registrationNumber}</td>
+							{var $names = []}
+							{var $currentName = null}
+							{foreach $advocate->advocateInfo as $advocateInfo}
+								{var $name = \App\Utils\TemplateFilters::formatName($advocateInfo->name, $advocateInfo->surname,  $advocateInfo->degreeBefore, $advocateInfo->degreeAfter)}
+								{first}
+									{var $currentName = $name}
+								{/first}
+								{if !$advocateInfo->validTo}
+									{var $status = $advocateInfo->status}
+								{/if}
+								{if !$iterator->first && \Nette\Utils\Strings::contains($name, $query)}
+									{var $names[] = $name}
+								{/if}
+							{/foreach}
+						<td>
+							<span class="label {if $status == App\Enums\AdvocateStatus::STATUS_ACTIVE}label-success{else}label-default{/if}">
+								{App\Enums\AdvocateStatus::$statuses[$status]}
+							</span>
+						</td>
+						<td>
+							<b>{$currentName}</b>
+							<br>
+							<i>{array_unique($names)|implode:', '}</i>
+						</td>
+						<td>
+							{foreach $advocate->advocateInfo as $advocateInfo}
+								{$advocateInfo->street}<br>
+								{$advocateInfo->city} {$advocateInfo->postalArea}
+								{continueIf $iterator->first}
+							{/foreach}
+						</td>
+						<td>
+							<a href="{plink Advocate:detail, $advocate->id, \Nette\Utils\Strings::webalize($currentName)}">Detail</a>
+						</td>
+					</tr>
+				{/foreach}
+			</tbody>
+		</table>
+	{/if}
+{/block}

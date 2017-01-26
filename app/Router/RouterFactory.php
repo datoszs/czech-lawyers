@@ -16,6 +16,12 @@ class RouterFactory
 	public static function createRouter()
 	{
 		$router = new RouteList;
+		$router[] = new Route('advocate/detail/<id>[/<slug>]', 'Advocate:detail');
+		$router[] = new Route('advocate/search/<query>', 'Advocate:search');
+
+		$router[] = new Route('case/detail/<id>[/<slug>]', 'Case:detail');
+		$router[] = new Route('case/search/<query>[/<match>]', 'Case:search');
+
 		$router[] = new Route('<presenter>/<action>[/<id>]', 'Homepage:default');
 		return $router;
 	}

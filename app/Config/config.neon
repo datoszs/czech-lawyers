@@ -37,6 +37,11 @@ services:
 	- App\Components\UserForm\UserFormFactory
 	- App\Components\ProfileForm\ProfileFormFactory
 
+	# Tuning
+	nette.latteFactory:
+		setup:
+			- addFilter(null,[App\Utils\TemplateFilters(),common])
+
 extensions:
 	dbal: Nextras\Dbal\Bridges\NetteDI\DbalExtension
 	orm: Nextras\Orm\Bridges\NetteDI\OrmExtension

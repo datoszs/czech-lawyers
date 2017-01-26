@@ -1,13 +1,31 @@
-{extends '../@placeholder.latte'}
+{extends '../@frontend.latte'}
 
-{block content}
-	<h1>Čeští advokáti.cz</h1>
-	<p>
-		Jak jsou advokáti precizní ve svých podáních? Kolik těchto podání je odmítnuto pro formální nedostatky?
-		To je oč tu (po)běží.
-	</p>
-	<p>
-		GitHub: <a href="https://github.com/datoszs">https://github.com/datoszs</a><br>
-		Kontakt: <a href="mailto:info@cestiadvokati.cz">info@cestiadvokati.cz</a>
-	</p>
+{block container}
+	<div class="jumbotron">
+		<h1>Čeští advokáti.cz</h1>
+		<p class="lead">
+			Jak jsou advokáti precizní ve svých podáních? Kolik těchto podání je odmítnuto pro formální nedostatky?
+			To je oč tu (po)běží.
+		</p>
+		{control searchForm}
+	</div>
+
+	<div class="row row-spaced">
+		<div class="col-sm-6 col-md-6">
+			<h2>Proč</h2>
+			<a class="btn btn-default" href="#" role="button">Více »</a>
+		</div>
+		<div class="col-sm-6 col-md-6">
+			<h2>Jak</h2>
+			<a class="btn btn-default" href="#" role="button">Více »</a>
+		</div>
+		<div class="col-sm-6 col-md-6">
+			<h2>Metodika</h2>
+			<a class="btn btn-default" href="#" role="button">Více »</a>
+		</div>
+		<div class="col-sm-6 col-md-6">
+			<h2>Podpora</h2>
+			<a class="btn btn-default" href="#" role="button">Více »</a>
+		</div>
+	</div>
 {/block}

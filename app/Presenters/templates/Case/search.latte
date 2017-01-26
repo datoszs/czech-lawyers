@@ -1,0 +1,64 @@
+{extends '../@frontend.latte'}
+{var $pageTitle = 'Vyhledání případu'}
+
+{block content}
+	<h1>Vyhledání případu</h1>
+	<div class="row">
+		<div class="col-xs-6">
+			{control searchForm}
+		</div>
+	</div>
+
+
+	{if $query && count($cases) == 0}
+		<div class="alert alert-info">Nebyly nalezeny žádné případy. Zkuste být méně specifičtí.</div>
+	{/if}
+
+	{if count($cases) > 100}
+		<div class="alert alert-warning">Bylo nalezeno více než 100 případů, viditelných je pouze první 100. Zkuste být konkrétnější.</div>
+	{/if}
+
+	{if count($cases)}
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th>Soud</th>
+					<th>Spisová značka</th>
+					<th>Výsledek<sup>1</sup></th>
+					<th>Advokát<sup>2</sup></th>
+					<th>Akce</th>
+				</tr>
+			</thead>
+			<tbody>
+				{foreach $cases as $case}
+					<tr>
+						<td>{$case->court->name}</td>
+						<td>{$case->registrySign|upper}</td>
+						<td>
+							{include ../case-result.latte, tagging => $results[$case->id] ?? null}
+						</td>
+						<td>
+							{var $advocateTagging = $advocatesTaggings[$case->id] ?? null}
+							{var $advocateInfo = null}
+							{if $advocateTagging}
+								{foreach $advocateTagging->advocate->advocateInfo as $temp}
+									{var $advocateInfo = $temp}
+									{breakIf true}
+								{/foreach}
+							{/if}
+							{if !$advocateTagging || !$advocateInfo}
+								<span class="text-muted"><i>Nepřiřazen</i></span>
+							{else}
+							{var $name = \App\Utils\TemplateFilters::formatName($advocateInfo->name, $advocateInfo->surname,  $advocateInfo->degreeBefore, $advocateInfo->degreeAfter)}
+								<a href="{plink Advocate:detail, $advocateTagging->advocate->id, \Nette\Utils\Strings::webalize($name)}">{$name}</a>
+							{/if}
+						</td>
+						<td>
+							<a href="{plink Case:detail, $case->id, \Nette\Utils\Strings::webalize($case->registrySign)}">Detail</a>
+						</td>
+					</tr>
+				{/foreach}
+			</tbody>
+		</table>
+	{/if}
+{/block}

@@ -19,6 +19,11 @@ class AdvocateService
 		$this->orm = $orm;
 	}
 
+	public function get($advocateId)
+	{
+		return $this->orm->advocates->getById($advocateId);
+	}
+
 	public function insert(Advocate $advocate, AdvocateInfo $advocateInfo = null, $flush = false)
 	{
 		$this->orm->persist($advocate);
@@ -48,6 +53,11 @@ class AdvocateService
 			}
 			$info->validTo = new DateTimeImmutable();
 		}
+	}
+
+	public function search($phrase, $limit = null)
+	{
+		return $this->orm->advocates->search($phrase, $limit)->fetchAll();
 	}
 
 	/**

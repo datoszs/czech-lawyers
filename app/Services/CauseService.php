@@ -18,9 +18,19 @@ class CauseService
 		$this->orm = $orm;
 	}
 
+	public function get($causeId)
+	{
+		return $this->orm->causes->getById($causeId);
+	}
+
 	public function find($registrySign)
 	{
 		return $this->orm->causes->getBy(['registrySign' => $registrySign]);
+	}
+
+	public function search($query, $limit = null, $match = null)
+	{
+		return $this->orm->causes->search($query, $limit, $match)->fetchAll();
 	}
 
 	public function findAll()

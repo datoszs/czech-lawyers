@@ -4,6 +4,11 @@ namespace App\Model\Documents;
 use App\Model\Taggings\TaggingAdvocate;
 use Nextras\Orm\Repository\Repository;
 
+/**
+ * @method TaggingAdvocate|null getLatestTagging($causeId)
+ * @method TaggingAdvocate[]|null findLatestTagging($causesIds);
+ * @method TaggingAdvocate[]|null findLatestTaggingByAdvocates($advocatesIds);
+ */
 class TaggingAdvocatesRepository extends Repository
 {
 

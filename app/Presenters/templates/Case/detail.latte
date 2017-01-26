@@ -1,0 +1,60 @@
+{extends '../@frontend.latte'}
+{var $pageTitle = 'Případ ' . \Nette\Utils\Strings::upper($case->registrySign)}
+
+{block content}
+	<h1>Případ {$case->registrySign|upper}</h1>
+	<div class="row">
+		<div class="col-md-12">
+			<p>Soud: {$case->court->name}</p>
+			<p>
+				Advokát:
+				{if $advocateTagging}
+					{var $advocateInfo = null}
+					{foreach $advocateTagging->advocate->advocateInfo as $temp}
+						{var $advocateInfo = $temp}
+						{breakIf true}
+					{/foreach}
+				{/if}
+				{if !$advocateTagging || !$advocateInfo}
+					<span class="text-muted"><i>Nepřiřazen</i></span>
+				{else}
+					{var $name = \App\Utils\TemplateFilters::formatName($advocateInfo->name, $advocateInfo->surname,  $advocateInfo->degreeBefore, $advocateInfo->degreeAfter)}
+					<a href="{plink Advocate:detail, $advocateTagging->advocate->id, \Nette\Utils\Strings::webalize($name)}">{$name}</a>
+				{/if}
+			</p>
+			<p>
+				Výsledek:
+				{include ../case-result.latte, tagging => $results[$case->id] ?? null}
+			</p>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<h2>Dokumenty</h2>
+			{if count($documents) == 0}
+				<div class="alert alert-info">
+					K tomuto případu nemáme žádné dokumenty. Je možné, že data ještě nemáme staženy, nebo nebyly (ještě) zvěřeněny.
+				</div>
+			{else}
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th>ID záznamu</th>
+							<th>Datum rozhodnutí</th>
+							<th>Odkaz</th>
+						</tr>
+					</thead>
+					<tbody>
+					{foreach $documents as $document}
+						<tr>
+							<td>{$document->recordId}</td>
+							<td>{$document->decisionDate|date: 'j. n. Y'}</td>
+							<td><a href="{$document->webPath}" target="_blank">Otevřít</a></td>
+						</tr>
+					{/foreach}
+					</tbody>
+				</table>
+			{/if}
+		</div>
+	</div>
+{/block}

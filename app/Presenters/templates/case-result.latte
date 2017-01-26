@@ -1,0 +1,13 @@
+{if isset($tagging) && $tagging}
+    {if $tagging->caseResult == App\Enums\CaseResult::RESULT_NEUTRAL}
+        <span class="label label-default">Neutrální</span>
+    {elseif $tagging->caseResult == App\Enums\CaseResult::RESULT_POSITIVE}
+        <span class="label label-success">Pozitivní</span>
+    {elseif $tagging->caseResult == App\Enums\CaseResult::RESULT_NEGATIVE}
+        <span class="label label-danger">Negativní</span>
+    {elseif $tagging->caseResult == App\Enums\CaseResult::RESULT_UNKNOWN}
+        <span class="label label-default">Neznámý</span>
+    {/if}
+{else}
+    <span class="text-muted"><i>Nedostupný</i></span>
+{/if}

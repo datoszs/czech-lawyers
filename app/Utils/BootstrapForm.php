@@ -16,64 +16,71 @@ use Nette\Forms\Rendering\DefaultFormRenderer;
 
 class BootstrapForm extends Form
 {
-    const VERTICAL = 'form-vertical';
-    const HORIZONTAL = 'form-horizontal';
+	const VERTICAL = 'form-vertical';
+	const HORIZONTAL = 'form-horizontal';
+	const INLINE = 'form-inline';
 
-    private $type = self::HORIZONTAL;
+	private $type = self::HORIZONTAL;
 
-    public function __construct(\Nette\ComponentModel\IContainer $parent = null, $name = null)
-    {
-        parent::__construct($parent, $name);
+	public function __construct(\Nette\ComponentModel\IContainer $parent = null, $name = null)
+	{
+		parent::__construct($parent, $name);
 
-        /** @var DefaultFormRenderer $renderer */
-        $renderer = $this->getRenderer();
-        $renderer->wrappers['controls']['container'] = NULL;
-        $renderer->wrappers['pair']['container'] = 'div class=form-group';
-        $renderer->wrappers['pair']['.error'] = 'has-error';
-        $renderer->wrappers['control']['container'] = 'div class=col-sm-9';
-        $renderer->wrappers['label']['container'] = 'div class="col-sm-3 control-label"';
-        $renderer->wrappers['control']['description'] = 'span class=help-block';
-        $renderer->wrappers['control']['errorcontainer'] = 'span class=help-block';
-        $renderer->wrappers['error']['container'] = 'div';
-        $renderer->wrappers['error']['item'] = 'div class="alert alert-danger"';
-    }
+		/** @var DefaultFormRenderer $renderer */
+		$renderer = $this->getRenderer();
+		$renderer->wrappers['controls']['container'] = NULL;
+		$renderer->wrappers['pair']['container'] = 'div class=form-group';
+		$renderer->wrappers['pair']['.error'] = 'has-error';
+		$renderer->wrappers['control']['container'] = 'div class=col-sm-9';
+		$renderer->wrappers['label']['container'] = 'div class="col-sm-3 control-label"';
+		$renderer->wrappers['control']['description'] = 'span class=help-block';
+		$renderer->wrappers['control']['errorcontainer'] = 'span class=help-block';
+		$renderer->wrappers['error']['container'] = 'div';
+		$renderer->wrappers['error']['item'] = 'div class="alert alert-danger"';
+	}
 
-    public function setType($type)
-    {
-        $this->type = $type;
-    }
+	public function setType($type)
+	{
+		$this->type = $type;
+		if ($type === static::INLINE || $type === static::VERTICAL) {
+			/** @var DefaultFormRenderer $renderer */
+			$renderer = $this->getRenderer();
+			$renderer->wrappers['control']['container'] = '';
+			$renderer->wrappers['label']['container'] = '';
+		}
+	}
 
-    private function setUpControls()
-    {
-        foreach ($this->getControls() as $control) {
-            if ($control instanceof Button) {
-                $control->getControlPrototype()->addClass(empty($usedPrimary) ? 'btn btn-primary' : 'btn btn-default');
-                $usedPrimary = TRUE;
+	private function setUpControls()
+	{
+		foreach ($this->getControls() as $control) {
+			if ($control instanceof Button) {
+				$control->getControlPrototype()->addClass(empty($usedPrimary) ? 'btn btn-primary' : 'btn btn-default');
+				$usedPrimary = TRUE;
 
-            } elseif ($control instanceof TextBase || $control instanceof SelectBox || $control instanceof MultiSelectBox) {
-                $control->getControlPrototype()->addClass('form-control');
+			} elseif ($control instanceof TextBase || $control instanceof SelectBox || $control instanceof MultiSelectBox) {
+				$control->getControlPrototype()->addClass('form-control');
 
-            } elseif ($control instanceof Checkbox || $control instanceof CheckboxList || $control instanceof RadioList) {
-                $control->getSeparatorPrototype()->setName('div')->addClass($control->getControlPrototype()->type);
-            }
-        }
-    }
+			} elseif ($control instanceof Checkbox || $control instanceof CheckboxList || $control instanceof RadioList) {
+				$control->getSeparatorPrototype()->setName('div')->addClass($control->getControlPrototype()->type);
+			}
+		}
+	}
 
-    public function disable()
-    {
-        /** @var NetteBaseControl $control */
-        foreach ($this->getControls() as $control) {
-            $control->setAttribute('readonly');
-            if ($control instanceof SubmitButton) {
-                $control->setDisabled();
-            }
-        }
-    }
+	public function disable()
+	{
+		/** @var NetteBaseControl $control */
+		foreach ($this->getControls() as $control) {
+			$control->setAttribute('readonly');
+			if ($control instanceof SubmitButton) {
+				$control->setDisabled();
+			}
+		}
+	}
 
-    public function render(...$args)
-    {
-        $this->getElementPrototype()->addClass($this->type);
-        $this->setUpControls();
-        parent::render();
-    }
+	public function render(...$args)
+	{
+		$this->getElementPrototype()->addClass($this->type);
+		$this->setUpControls();
+		parent::render();
+	}
 }

@@ -1,10 +1,12 @@
 <?php
 namespace App\Model\Services;
 
+use App\Model\Advocates\Advocate;
 use App\Model\Cause\Cause;
 use App\Model\Taggings\TaggingCaseResult;
 use App\Model\Taggings\TaggingAdvocate;
 use App\Model\Orm;
+use Nextras\Dbal\Connection;
 use Nextras\Orm\Entity\IEntity;
 
 
@@ -13,9 +15,13 @@ class TaggingService
 	/** @var Orm */
 	private $orm;
 
-	public function __construct(Orm $orm)
+	/** @var Connection */
+	private $connection;
+
+	public function __construct(Orm $orm, Connection $connection)
 	{
 		$this->orm = $orm;
+		$this->connection = $connection;
 	}
 
 	public function insert($result)
@@ -59,6 +65,59 @@ class TaggingService
 			->fetchAll();
 	}
 
+
+	public function findCaseResultLatestTaggingByCases(array $cases)
+	{
+		$casesIds = array_map(function (Cause $case) {
+			return $case->id;
+		}, $cases);
+		if (count($casesIds) == 0) {
+			return [];
+		}
+		return $this->orm->taggingCaseResults->findLatestTagging($casesIds)->fetchAll();
+	}
+
+	public function findLatestTaggingByAdvocate(array $advocate)
+	{
+		$advocatesIds = array_map(function (Advocate $case) {
+			return $case->id;
+		}, $advocate);
+		if (count($advocatesIds) == 0) {
+			return [];
+		}
+		return $this->orm->taggingAdvocates->findLatestTaggingByAdvocates($advocatesIds)->fetchAll();
+	}
+
+	public function getLatestAdvocateTaggingFor(Cause $case)
+	{
+		return $this->orm->taggingAdvocates->getLatestTagging($case->id)->fetch();
+	}
+
+	public function findLatestAdvocateTaggingByCases(array $cases)
+	{
+		$casesIds = array_map(function (Cause $cause) { return $cause->id; }, $cases);
+		return $this->orm->taggingAdvocates->findLatestTagging($casesIds)->fetchAll();
+	}
+
+	public function computeAdvocateStatistics(Advocate $advocate)
+	{
+		return $this->connection->query('
+		SELECT
+			case_result,
+			COUNT(*) AS count
+		FROM "case"
+		JOIN (
+			SELECT DISTINCT ON (case_id) * FROM tagging_case_result ORDER BY case_id, inserted DESC
+		) AS last_taggings ON "case".id_case = last_taggings.case_id
+		JOIN (
+			SELECT DISTINCT ON (case_id) * FROM tagging_advocate ORDER BY case_id, inserted DESC
+		) AS last_taggings_advocate ON "case".id_case = last_taggings_advocate.case_id
+		WHERE advocate_id = %i
+		GROUP BY case_result
+		',
+			$advocate->id
+		)->fetchPairs('case_result', 'count');
+	}
 
 	/**
 	 * Persist (but not flush) given entity if it is new case result tagging (i.e. when no such previous exists).
