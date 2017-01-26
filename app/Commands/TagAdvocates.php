@@ -75,8 +75,11 @@ class TagAdvocates extends Command
         $tagAdvocate->insertedBy = $this->user;
         $tagAdvocate->jobRun = $this->jobRun;
 
-        $this->output .= sprintf("Tagging advocate result for case [%s] of [%s]\n", $case->registrySign, $case->court->name);
-        $this->taggingService->insert($tagAdvocate);
+        $entity = $this->taggingService->findAdvocateTaggingsByCase($case);
+        if(!$entity) {
+            $this->output .= sprintf("Tagging advocate result for case [%s] of [%s]\n", $case->registrySign, $case->court->name);
+            $this->taggingService->insert($tagAdvocate);
+        }
     }
     /* primarne pro US */
     protected function processCase()
@@ -137,7 +140,7 @@ class TagAdvocates extends Command
 
         }
         $this->taggingService->flush();
-        printf("Nalezeno: %d shod; prázdných: %d; úspěšnost: %f%%",$shoda,$this->empty, ($shoda/count($results)) * 100);
+        $this->output .= sprintf("\nNalezeno: %d shod; prázdných: %d; úspěšnost: %f%%",$shoda,$this->empty, ($shoda/count($results)) * 100);
     }
 
     protected function execute(InputInterface $input, OutputInterface $consoleOutput)
@@ -145,7 +148,7 @@ class TagAdvocates extends Command
         $this->prepare();
         $court = $input->getArgument(static::ARGUMENT_COURT);
         $this->court_id = Court::$types[$court];
-        $this->output .= $court;
+        $this->output .= $court."\n";
         $this->processCase();
         $this->finalize(0,$this->output,"Hotovo");
     }
