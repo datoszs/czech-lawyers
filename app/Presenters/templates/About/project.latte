@@ -1,0 +1,93 @@
+{extends '../@frontend.latte'}
+{var $pageTitle = 'O projektu'}
+{block content}
+    <div class="row">
+        <h1>O PROJEKTU</h1>
+        <p>
+            Dlouhodobým cílem projektu je zpřístupnit informace o činnosti českých advokátů a nabídnout tak jeden z
+            podkladů, na jejichž základě se lze rozhodnout, kterého advokáta si zvolit. Krátkodobým, v současnosti
+            realizovaným cílem projektu je zpřístupnění informací o činnosti advokátů v soudních řízeních, pro která si
+            advokáta ze zákona zvolit musíte - v řízení o dovolání před Nejvyšším soudem, o kasační stížnosti před
+            Nejvyšším správním soudem a o ústavní stížnosti před Ústavním soudem. Web cestiadvokati.cz advokáty hodnotí
+            na základě konečných rozhodnutí vydaných v těchto řízeních. Advokáti mají možnost se k tomuto hodnocení
+            vyjádřit. Umožnění komentování činnosti advokáta jinými osobami neplánujeme.</p>
+
+        <p>Advokáti nejsou hodnoceni podle toho, zda u soudů vyhrávají. Advokát nemůže a nemá předvídat, jak soudci
+            rozhodnou. Úkolem advokáta není vždy vyhrát a bylo by nežádoucí, aby advokát ze strachu ze zhoršení své
+            reputace bral jen případy, u nichž si je úspěchem u soudu jist. Nicméně advokát zcela jistě má svou práci
+            vykonávat pečlivě a neobracet se na soudy s opožděnými či vadnými podáními. Rovněž by měl být schopen
+            klientovi citlivě vysvětlit, kdy se s jeho věcí na soud obrátit nelze, protože nesplňuje kritéria stanovená
+            zákonem. Advokáti jsou tedy hodnoceni na základě procentuálního podílu těchto “chybných” podání v celkovém
+            počtu jejich podání, rozhodnutí o nichž systém zpracovává (podrobně k rozsahu zpracovávaných rozhodnutí viz
+            níže).</p>
+
+        <p>Projekt bez jakékoliv finanční podpory realizuje zapsaný spolek DATOS - data o spravedlnosti, IČO 05003997.
+            Předsedkyní spolku a iniciátorkou projektu je Tereza Papoušková, členy spolku a tvůrci webu jsou Jan Drábek
+            a Radim Jílek. Více <a href="{plink About:contact}">viz Kontakty</a>.</p>
+    </div>
+    <div class="row">
+        <h2>ROZSAH ZPRACOVÁVANÝCH ROZHODNUTÍ</h2>
+        <p>
+            Advokáti jsou hodnoceni na základě konečných rozhodnutí Nejvyššího, Nejvyššího správního a Ústavního soudu,
+            která jednou týdně stahujeme z webů nsoud.cz, nssoud.cz a usoud.cz. Nyní jsou již všechna rozhodnutí těchto
+            soudů veřejně dostupná online, nebylo tomu tak ale vždy. Rozsah zpracovávaných konečných rozhodnutí se proto
+            pro
+            jednotlivé soudy liší.</p>
+
+        <h3>Nejvyšší soud</h3>
+        <p>Konečná rozhodnutí o dovoláních v občanskoprávních věcech (rejstříky Cdo, Cdon, ICdo, NSČR, Odo, Odon)
+            vydaných
+            po 1. 6. 2000 a v trestněprávních věcech (rejstřík Tdo) vydaných po 1. 1. 2002.</p>
+
+        <h3>Nejvyšší správní soud</h3>
+        <p>Konečná rozhodnutí o kasačních stížnostech (rejstříky As, Ads, Afs, Ars, Azs) vydaná po 1. 1. 2006.</p>
+
+        <h3>Ústavní soud</h3>
+        <p>V období od počátku činnosti soudu do 31. 12. 2006 (včetně) všechna konečná rozhodnutí (v tomto období nebyla
+            nijak rozlišována rozhodnutí o ústavních stížnostech a rozhodnutí vydaná v jiných typech řízení). Od 1. 1.
+            2007
+            jen konečná rozhodnutí o ústavních stížnostech.</p>
+    </div>
+    <div class="row" id="hodnoceni">
+        <h2>ZPŮSOB ZPRACOVÁNÍ ROZHODNUTÍ A HODNOCENÍ ADVOKÁTŮ</h2>
+            <p>Ke každému konečnému rozhodnutí (unikátní spisové značce) se jednou měsíčně snažíme přiřadit konkrétního
+            advokáta, na jehož podání toto rozhodnutí reaguje. Následně zjišťujeme, zda jde o:
+                <ul>
+            <li>meritorní konečné rozhodnutí -> pomyslný plusový bod pro advokáta, protože se jeho podáním soud alespoň
+                zčásti co do obsahu zabýval;</li>
+            <li>nemeritorní konečné rozhodnutí -> pomyslný minusový bod pro advokáta, protože se jeho podáním soud co do
+                obsahu vůbec nezabýval;</li>
+            <li>rozhodnutí o zastavení řízení -> ani plusový ani minusový bod pro advokáta, protože podání bylo
+                pravděpodobně vzato zpět a nelze tak určit, zda bylo “chybné” nebo ne.</li></ul></p>
+
+            <p>Při zjišťování výsledku řízení jsme z XX % úspěšní. Ne vždy se nám ale podaří tento výsledek přiřadit
+            konkrétnímu advokátovi. Důvody jsou různé.
+                <ul>
+            <li>Advokát není a nikdy nebyl zapsaný v seznamu českých advokátů (stahujeme jej jednou týdně z cak.cz). Mohlo
+                jít například o přeshraničně působícího advokáta.</li>
+            <li>V oficiálním seznamu českých advokátů je více advokátů stejného jména a příjmení. Nejvyšší a Nejvyšší
+            správní soud nám údaje o advokátech poskytují pouze v rozsahu jméno a příjmení (nikoliv IČ), takže nejsme
+                schopni zjistit, který z vícero možných advokátů se ve skutečnosti na tyto soudy obrátil.</li>
+            <li>Advokát je v oficiálním seznamu českých advokátů již zapsán pod jiným jménem, než pod kterým se obracel na
+            soud (kupříkladu z důvodu změny jména po svatbě). To opět znamená překážku pro přiřazení konečných
+            rozhodnutí vydaných Nejvyšším a Nejvyšším správním soudem. Počínaje rokem 2017 už nicméně změny jmen
+                advokátů díky pravidelnému stahování seznamu z cak.cz evidujeme.</li>
+            <li>Soud nám neposkytl informaci o tom, který advokát v řízení figuroval. Tento důvod je relevantní především
+                pro Ústavní soud, jehož vnitřní databáze je v některých letech z tohoto pohledu nekompletní.</li>
+            <li>V případě dovolání se nám nepodařilo zjistit, která ze stran dovolání podávala a tedy kterému advokátu
+            přiřadit výsledek. Toto se mohlo stát v menší části občanskoprávních věcí. Nejvyšší soud nám totiž poskytl
+            jak údaje o advokátech, kteří dovolání podávali, tak i o advokátech protistran, aniž by mezi nimi byl
+            schopen rozlišit. Která ze stran dovolání podávala jsme tedy zjišťovali automatickým zpracováváním textu
+            konečného rozhodnutí. Je možné, že se nám to někdy nepodařilo a že jsme dosud nestihli dovolatele dozjistit
+                zpracováním “ručním”.</li></ul></p>
+
+            <p>Pro úplnost je ještě třeba upozornit, že Nejvyšší soud a Ústavní soud nemeritorní konečná rozhodnutí
+            vydávají nejen tehdy, když se na ně advokát obrátí pozdě, například nepřiloží potřebné materiály nebo když
+            tak učiní v situaci, kdy to zákon nepřipouští. Nemeritorní konečná rozhodnutí mohou vydat také v případě, že
+            advokátovo podání považují za “zjevně neopodstatněné”. Ne vždy je pro advokáta snadné z předchozích
+                rozhodnutí soudu vysledovat, co ještě soud za “opodstatněné” považuje a co už ne.</p>
+
+            <p>Pokud byste o tom, na základě čeho a jak české advokáty hodnotíme, chtěli vědět více, můžete nahlédnout do
+                <a href="https://github.com/datoszs">zdrojového kódu</a> celého projektu nebo nás <a href="{plink About:contact}">kontaktovat</a>.</p>
+    </div>
+{/block}
