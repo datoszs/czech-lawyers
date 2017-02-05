@@ -2,15 +2,16 @@
 {var $pageTitle = 'O projektu'}
 {block content}
     <div class="row">
-        <h1>O PROJEKTU</h1>
+        <h1>O projektu</h1>
         <p>
             Dlouhodobým cílem projektu je zpřístupnit informace o činnosti českých advokátů a nabídnout tak jeden z
             podkladů, na jejichž základě se lze rozhodnout, kterého advokáta si zvolit. Krátkodobým, v současnosti
             realizovaným cílem projektu je zpřístupnění informací o činnosti advokátů v soudních řízeních, pro která si
-            advokáta ze zákona zvolit musíte - v řízení o dovolání před Nejvyšším soudem, o kasační stížnosti před
-            Nejvyšším správním soudem a o ústavní stížnosti před Ústavním soudem. Web cestiadvokati.cz advokáty hodnotí
+            advokáta ze zákona zvolit musíte &ndash; v řízení o dovolání před Nejvyšším soudem, o kasační stížnosti před
+            Nejvyšším správním soudem a o ústavní stížnosti před Ústavním soudem. Web <a href="{plink Homepage:}">cestiadvokati.cz</a> advokáty hodnotí
             na základě konečných rozhodnutí vydaných v těchto řízeních. Advokáti mají možnost se k tomuto hodnocení
-            vyjádřit. Umožnění komentování činnosti advokáta jinými osobami neplánujeme.</p>
+            vyjádřit. Umožnění komentování činnosti advokáta jinými osobami neplánujeme.
+        </p>
 
         <p>Advokáti nejsou hodnoceni podle toho, zda u soudů vyhrávají. Advokát nemůže a nemá předvídat, jak soudci
             rozhodnou. Úkolem advokáta není vždy vyhrát a bylo by nežádoucí, aby advokát ze strachu ze zhoršení své
@@ -23,10 +24,10 @@
 
         <p>Projekt bez jakékoliv finanční podpory realizuje zapsaný spolek DATOS - data o spravedlnosti, IČO 05003997.
             Předsedkyní spolku a iniciátorkou projektu je Tereza Papoušková, členy spolku a tvůrci webu jsou Jan Drábek
-            a Radim Jílek. Více <a href="{plink About:contact}">viz Kontakty</a>.</p>
+            a Radim Jílek. Více najdete na stránce <a href="{plink About:contact}">Kontakty</a>.</p>
     </div>
     <div class="row">
-        <h2>ROZSAH ZPRACOVÁVANÝCH ROZHODNUTÍ</h2>
+        <h2>Rozsah zpracovávaných rozhodnutí</h2>
         <p>
             Advokáti jsou hodnoceni na základě konečných rozhodnutí Nejvyššího, Nejvyššího správního a Ústavního soudu,
             která jednou týdně stahujeme z webů nsoud.cz, nssoud.cz a usoud.cz. Nyní jsou již všechna rozhodnutí těchto
@@ -53,33 +54,45 @@
             <p>Ke každému konečnému rozhodnutí (unikátní spisové značce) se jednou měsíčně snažíme přiřadit konkrétního
             advokáta, na jehož podání toto rozhodnutí reaguje. Následně zjišťujeme, zda jde o:
                 <ul>
-            <li>meritorní konečné rozhodnutí -> pomyslný plusový bod pro advokáta, protože se jeho podáním soud alespoň
+            <li>meritorní konečné rozhodnutí &rarr; pomyslný plusový bod pro advokáta, protože se jeho podáním soud alespoň
                 zčásti co do obsahu zabýval;</li>
-            <li>nemeritorní konečné rozhodnutí -> pomyslný minusový bod pro advokáta, protože se jeho podáním soud co do
+            <li>nemeritorní konečné rozhodnutí &rarr; pomyslný minusový bod pro advokáta, protože se jeho podáním soud co do
                 obsahu vůbec nezabýval;</li>
-            <li>rozhodnutí o zastavení řízení -> ani plusový ani minusový bod pro advokáta, protože podání bylo
+            <li>rozhodnutí o zastavení řízení &rarr; ani plusový ani minusový bod pro advokáta, protože podání bylo
                 pravděpodobně vzato zpět a nelze tak určit, zda bylo “chybné” nebo ne.</li></ul></p>
 
             <p>Při zjišťování výsledku řízení jsme z XX % úspěšní. Ne vždy se nám ale podaří tento výsledek přiřadit
-            konkrétnímu advokátovi. Důvody jsou různé.
-                <ul>
-            <li>Advokát není a nikdy nebyl zapsaný v seznamu českých advokátů (stahujeme jej jednou týdně z cak.cz). Mohlo
-                jít například o přeshraničně působícího advokáta.</li>
-            <li>V oficiálním seznamu českých advokátů je více advokátů stejného jména a příjmení. Nejvyšší a Nejvyšší
-            správní soud nám údaje o advokátech poskytují pouze v rozsahu jméno a příjmení (nikoliv IČ), takže nejsme
-                schopni zjistit, který z vícero možných advokátů se ve skutečnosti na tyto soudy obrátil.</li>
-            <li>Advokát je v oficiálním seznamu českých advokátů již zapsán pod jiným jménem, než pod kterým se obracel na
-            soud (kupříkladu z důvodu změny jména po svatbě). To opět znamená překážku pro přiřazení konečných
-            rozhodnutí vydaných Nejvyšším a Nejvyšším správním soudem. Počínaje rokem 2017 už nicméně změny jmen
-                advokátů díky pravidelnému stahování seznamu z cak.cz evidujeme.</li>
-            <li>Soud nám neposkytl informaci o tom, který advokát v řízení figuroval. Tento důvod je relevantní především
-                pro Ústavní soud, jehož vnitřní databáze je v některých letech z tohoto pohledu nekompletní.</li>
-            <li>V případě dovolání se nám nepodařilo zjistit, která ze stran dovolání podávala a tedy kterému advokátu
-            přiřadit výsledek. Toto se mohlo stát v menší části občanskoprávních věcí. Nejvyšší soud nám totiž poskytl
-            jak údaje o advokátech, kteří dovolání podávali, tak i o advokátech protistran, aniž by mezi nimi byl
-            schopen rozlišit. Která ze stran dovolání podávala jsme tedy zjišťovali automatickým zpracováváním textu
-            konečného rozhodnutí. Je možné, že se nám to někdy nepodařilo a že jsme dosud nestihli dovolatele dozjistit
-                zpracováním “ručním”.</li></ul></p>
+                konkrétnímu advokátovi. Důvody jsou různé.</p>
+            <ul>
+                <li>Advokát není a nikdy nebyl zapsaný v seznamu českých advokátů (stahujeme jej jednou týdně z <a
+                            href="http://www.cak.cz">cak.cz</a>). Mohlo
+                    jít například o přeshraničně působícího advokáta.
+                </li>
+                <li>V oficiálním seznamu českých advokátů je více advokátů stejného jména a příjmení. Nejvyšší a Nejvyšší
+                    správní soud nám údaje o advokátech poskytují pouze v rozsahu jméno a příjmení (nikoliv IČ), takže
+                    nejsme
+                    schopni zjistit, který z vícero možných advokátů se ve skutečnosti na tyto soudy obrátil.
+                </li>
+                <li>Advokát je v oficiálním seznamu českých advokátů již zapsán pod jiným jménem, než pod kterým se obracel
+                    na
+                    soud (kupříkladu z důvodu změny jména po svatbě). To opět znamená překážku pro přiřazení konečných
+                    rozhodnutí vydaných Nejvyšším a Nejvyšším správním soudem. Počínaje rokem 2017 už nicméně změny jmen
+                    advokátů díky pravidelnému stahování seznamu z <a href="http://www.cak.cz">cak.cz</a> evidujeme.
+                </li>
+                <li>Soud nám neposkytl informaci o tom, který advokát v řízení figuroval. Tento důvod je relevantní
+                    především
+                    pro Ústavní soud, jehož vnitřní databáze je v některých letech z tohoto pohledu nekompletní.
+                </li>
+                <li>V případě dovolání se nám nepodařilo zjistit, která ze stran dovolání podávala a tedy kterému advokátu
+                    přiřadit výsledek. Toto se mohlo stát v menší části občanskoprávních věcí. Nejvyšší soud nám totiž
+                    poskytl
+                    jak údaje o advokátech, kteří dovolání podávali, tak i o advokátech protistran, aniž by mezi nimi byl
+                    schopen rozlišit. Která ze stran dovolání podávala jsme tedy zjišťovali automatickým zpracováváním textu
+                    konečného rozhodnutí. Je možné, že se nám to někdy nepodařilo a že jsme dosud nestihli dovolatele
+                    dozjistit
+                    zpracováním “ručním”.
+                </li>
+            </ul>
 
             <p>Pro úplnost je ještě třeba upozornit, že Nejvyšší soud a Ústavní soud nemeritorní konečná rozhodnutí
             vydávají nejen tehdy, když se na ně advokát obrátí pozdě, například nepřiloží potřebné materiály nebo když
