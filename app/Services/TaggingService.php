@@ -134,6 +134,16 @@ class TaggingService
 		return false;
 	}
 
+    public function persistAdvocateIfDiffers(TaggingAdvocate $entity)
+    {
+        $old = $this->orm->taggingAdvocates->getLatestTagging($entity->case->id)->fetch();
+        if ($this->isTaggingAdvocateDifferent($entity, $old)) {
+            $this->persist($entity);
+            return true;
+        }
+        return false;
+    }
+
 	/**
 	 * Returns true/false according to semantic difference of tagging.
 	 * @param TaggingCaseResult $new New case tagging
@@ -144,4 +154,14 @@ class TaggingService
 	{
 		return $old === null || !($old instanceof TaggingCaseResult) || $new->case != $old->case || $new->caseResult != $old->caseResult || $new->status != $old->status;
 	}
+
+    /**
+     * @param TaggingAdvocate $new
+     * @param $old
+     * @return bool
+     */
+    private function isTaggingAdvocateDifferent(TaggingAdvocate $new, $old)
+    {
+        return $old === null || !($old instanceof TaggingAdvocate) || $new->case != $old->case || $new->advocate != $old->advocate || $new->status != $old->status;
+    }
 }

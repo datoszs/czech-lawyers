@@ -21,6 +21,7 @@ use App\Model\Taggings\TaggingCaseResult;
 use App\Model\Taggings\TaggingAdvocate;
 use app\Utils\JobCommand;
 use Nette\Utils\ArrayList;
+use Nette\Utils\DateTime;
 use Nette\Utils\Json;
 use Nette\Utils\Strings;
 use Nextras\Orm\Collection\ICollection;
@@ -34,10 +35,10 @@ class TagAdvocates extends Command
     use JobCommand;
     const ARGUMENT_COURT = 'court';
     protected $court_id;
-    protected $processed = 0;
+    protected $shoda = 0;
     protected $ignored = 0;
     protected $failed = 0;
-    protected $fuzzy = 0;
+    protected $bad = 0;
     protected $empty = 0;
     protected $updated = 0;
     protected $output = "";
@@ -64,7 +65,8 @@ class TagAdvocates extends Command
                 'Identificator of court');
     }
 
-    protected function prepareAndSave(Advocate $advocate,Cause $case, $debug) {
+    protected function prepareAndSave(Advocate $advocate, Cause $case, $debug)
+    {
         $tagAdvocate = new TaggingAdvocate();
         $tagAdvocate->advocate = $advocate;
         $tagAdvocate->case = $case;
@@ -75,81 +77,116 @@ class TagAdvocates extends Command
         $tagAdvocate->insertedBy = $this->user;
         $tagAdvocate->jobRun = $this->jobRun;
 
-        $entity = $this->taggingService->findAdvocateTaggingsByCase($case);
-        if(!$entity) {
+        $result = $this->taggingService->persistAdvocateIfDiffers($tagAdvocate);
+        if ($result) {
             $this->output .= sprintf("Tagging advocate result for case [%s] of [%s]\n", $case->registrySign, $case->court->name);
-            $this->taggingService->insert($tagAdvocate);
         }
     }
-    /* primarne pro US */
+
     protected function processCase()
     {
         $court_id = $this->court_id;
         print($court_id . "\n");
-        /* @var TaggingCaseResult $results */
-        $results = $this->orm->taggingCaseResults->findTaggingResultsByCourt($court_id);
-        //$results = $this->taggingService->findAll();
-        $advocates = $this->orm->advocatesInfo->findUniqueNames();
-        print("Ohodnocenych kauz: " . count($results) . "\n");
-        //print($results);
-        $shoda = 0;
-        /* @var TaggingCaseResult $result */
-        foreach ($results as $result) {
-            $data = $result->case->officialData; // return last array in structure
-            if (is_array($data) && count($data) == 1) {
-                $data = end($data);
-                switch ($court_id) {
-                    case (Court::TYPE_US): {
-                        $name = Strings::lower($data["name"]);
-                        $surname = Strings::lower($data["surname"]);
-                        $debug = $name." ".$surname;
-                        if ($name == "" or $surname == "")
+        /* @var Cause[] $results */
+        $results = $this->orm->causes->findTaggingResultsByCourt($court_id)->fetchAll();
+        $advocates = $this->orm->advocatesInfo->findUniqueNames()->fetchAll();
+        $couses = count($results);
+
+        print("Nalezeno ohodnocenych kauz: " . $couses . "\n");
+        print("Nalezeno unikatnich jmen: " . count($advocates) . "\n");
+        $start = new DateTime('now');
+        print($start->format('Y-m-d H:i:s') . "\n");
+        /* @var AdvocateInfo $advocate */
+        /* @var Cause $result */
+        $indexToRemove = [];
+        foreach ($advocates as $advocate) {
+            foreach ($results as $index => $result) {
+                $raw_data = $result->officialData;
+
+                if (is_array($raw_data) && count($raw_data) == 1) {
+                    $name = null;
+                    $surname = null;
+                    $data_j = JSON::decode(JSON::encode(array_values($raw_data)), true)[0];
+
+                    if ($court_id == Court::TYPE_US) {
+                        $name = Strings::lower($data_j["name"]);
+                        $surname = Strings::lower($data_j["surname"]);
+                        $debug = $name . " " . $surname;
+                        if ($name === "" or $surname === "") {
+                            array_push($indexToRemove, $index);
+                            printf("neúplné: %s, %s\n", $name, $surname);
                             $this->empty++;
                             continue;
-                        break;
-                    }
-                    case (Court::TYPE_NSS): {
-                        $name = Strings::lower($data["names"]);
+                        }
+
+                    } elseif ($court_id == Court::TYPE_NSS) {
+                        $name = Strings::lower($data_j["names"]);
                         $debug = $name;
-                        break;
-                    }
-                    default:
+                    } else {
                         continue;
+                    }
+                } else {
+                    array_push($indexToRemove, $index);
+                    //printf("odstraňuji: %s\n", $result->registrySign);
+                    $this->bad++;
+                    continue;
                 }
-            } else {continue;}
 
-            foreach ($advocates as $advocate) {
-                if(Strings::lower($advocate->name) == $name &&
-                    Strings::lower($advocate->surname) == $surname
+                if (Strings::lower($advocate->name) === $name &&
+                    Strings::lower($advocate->surname) === $surname
                 ) {
-                    print($result->case->registrySign . "\n");
-                    printf("%s %s, %d, %s\n", $name, $surname, $advocate->advocate->id, end($advocate->email));
-                    $this->prepareAndSave($advocate->advocate,$result->case,$debug);
-                    $shoda++;
-                    break;
-                }
-                if (strpos($name,Strings::lower($advocate->name." ".$advocate->surname))) {
-                    print($result->case->registrySign . "\n");
-                    printf("%s, %d, '%s', %s\n", $advocate->name." ".$advocate->surname, $advocate->advocate->id, $name, end($advocate->email));
-                    $this->prepareAndSave($advocate->advocate,$result->case,$debug);
-                    $shoda++;
-                    break;
-                }
-            }
-            if ($shoda % 100 == 0) {$this->taggingService->flush();}
+                    print($result->registrySign . "\n");
+                    printf("%s %s, %d, %s z %d\n", $name, $surname, $advocate->advocate->id, end($advocate->email), count($results));
+                    $this->prepareAndSave($advocate->advocate, $result, $debug);
 
+                    array_push($indexToRemove, $index);
+                    $this->shoda++;
+                    continue;
+                } elseif (Strings::contains($name, Strings::lower($advocate->name . " " . $advocate->surname))) {
+
+                    print($result->registrySign . "\n");
+                    printf("%s, %d, '%s', %s z %d\n", $advocate->name . " " . $advocate->surname, $advocate->advocate->id, $name, end($advocate->email), count($results));
+
+                    $this->prepareAndSave($advocate->advocate, $result, $debug);
+                    array_push($indexToRemove, $index);
+                    $this->shoda++;
+                    continue;
+                }
+
+
+            }
+            if (count($indexToRemove) > 100) {
+                printf("----> Items to delete: %d\n", count($indexToRemove));
+                while (($item = array_pop($indexToRemove)) != null) {
+                    array_splice($results, $item, 1);
+                }
+                $results = array_values($results);
+            }
         }
         $this->taggingService->flush();
-        $this->output .= sprintf("\nNalezeno: %d shod; prázdných: %d; úspěšnost: %f%%",$shoda,$this->empty, ($shoda/count($results)) * 100);
+        print("Nalezeno ohodnocenych kauz: " . $couses . "\n");
+        print("Nalezeno unikatnich jmen: " . count($advocates) . "\n");
+        $message = sprintf("\nNalezeno: %d shod; neúplných: %d; nevhodných: %s, úspěšnost: %f%%",
+            $this->shoda,
+            $this->empty,
+            $this->bad,
+            ($this->shoda / ($couses-$this->empty-$this->bad) * 100));
+        $this->output .= $message;
+        $end = new DateTime('now');
+        printf("%s\n%s\n", $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s'));
+        $interval = $end->diff($start);
+        printf("%s %s:%s:%s\n", $interval->d, $interval->h, $interval->i, $interval->s);
+        print($message);
     }
 
-    protected function execute(InputInterface $input, OutputInterface $consoleOutput)
+    protected
+    function execute(InputInterface $input, OutputInterface $consoleOutput)
     {
         $this->prepare();
         $court = $input->getArgument(static::ARGUMENT_COURT);
         $this->court_id = Court::$types[$court];
-        $this->output .= $court."\n";
+        $this->output .= $court . "\n";
         $this->processCase();
-        $this->finalize(0,$this->output,"Hotovo");
+        $this->finalize(0, $this->output, "Hotovo");
     }
 }

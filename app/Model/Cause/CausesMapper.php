@@ -31,6 +31,11 @@ class CausesMapper extends Mapper
 		return $this->builder()->where('court_id = %i AND id_case NOT IN (SELECT case_id FROM tagging_case_result WHERE is_final)', $courtId);
 	}
 
+    public function findTaggingResultsByCourt($courtId)
+    {
+        return $this->builder()->where('court_id = %i AND id_case IN (SELECT distinct(case_id) FROM tagging_case_result WHERE is_final=FALSE) AND official_data IS NOT NULL',$courtId)->orderBy('id_case');
+    }
+
 	/**
 	 * Search and return all cases for given phrase.
 	 * Note: case insensitive search is used.

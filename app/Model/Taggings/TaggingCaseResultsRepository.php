@@ -9,7 +9,6 @@ use Nextras\Orm\Repository\Repository;
 
 /**
  * @method TaggingCaseResult|null getLastTagging($causeId)
- * @method ICollection|array findTaggingResultsByCourt($courtId)
  * @method TaggingCaseResult[]|null findLatestTagging($causesIds);
  */
 class TaggingCaseResultsRepository extends Repository
