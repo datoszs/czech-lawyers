@@ -69,4 +69,13 @@ class AdvocateService
 		return $this->orm->advocates->findBy(['identificationNumber' => $identificationNumber])->fetch();
 	}
 
+	/**
+	 * @param string $remoteIdentificator
+	 * @return Advocate|null
+	 */
+	public function findbyRemoteIdentificator($remoteIdentificator)
+	{
+		return $this->orm->advocates->findBy(['remoteIdentificator' => $remoteIdentificator])->fetch();
+	}
+
 }

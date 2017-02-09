@@ -51,10 +51,11 @@ class AdvocatesImport extends Command
 	 * Expects valid directory with data to import.
 	 * Note: executed in transaction
 	 * @param OutputInterface $consoleOutput
+	 * @param string $output output to be stored
 	 * @param string $directory
 	 * @return array where first is number of newly created (imported), second number of updated items and third number of duplicate.
 	 */
-	public function processDirectory(OutputInterface $consoleOutput, $directory)
+	public function processDirectory(OutputInterface $consoleOutput, &$output, $directory)
 	{
 		$csv = Reader::createFromPath($directory . '/metadata.csv');
 		$csv->setDelimiter(';');
@@ -93,13 +94,25 @@ class AdvocatesImport extends Command
 			$identificationNumber = Normalize::identificationNumber($row['identification_number']);
 			/** @var Advocate $entity */
 			$entity = $this->advocateService->findByIdentificationNumber($identificationNumber);
+			if (!$entity) { // When not found, check also remote identificator (EČ - identification number should be stable except for foreign advocates gaining it later. In such case we need to fallback to remote identificator, see #57).
+				$entity = $this->advocateService->findbyRemoteIdentificator($row['remote_identificator']);
+				if ($entity) {
+					$temp = sprintf("Warning: updating record with ID %s to new EČ %s.\n", $row['remote_identificator'], $identificationNumber);
+					$output .= $temp;
+					$consoleOutput->write($temp);
+					$entity->identificationNumber = $identificationNumber;
+					$this->advocateService->persist($entity);
+				}
+			}
 
 			if ($entity) { // already exists, just update
 				/** @var AdvocateInfo $advocateInfoStored */
 				$advocateInfoStored = $entity->advocateInfo->get()->fetch();
 				if ($advocateInfoStored === null || $this->AdvocateInfosDiffers($advocateInfoStored, $advocateInfo)) {
 					$updated++;
-					$consoleOutput->writeln(sprintf("Info: updating record with ID %s (inserting new advocate info tuple).", $row['remote_identificator']));
+					$temp = sprintf("Info: updating record with ID %s (inserting new advocate info tuple).\n", $row['remote_identificator']);
+					$output .= $temp;
+					$consoleOutput->write($temp);
 					$advocateInfo->advocate = $entity;
 					// Invalidate old records
 					$this->advocateService->invalidateOldInfos($entity, $advocateInfo);
@@ -109,7 +122,9 @@ class AdvocatesImport extends Command
 					copy($directory . '/documents/' . $row['local_path'], $destinationPath); // copy immediately - better to have not referenced files than documents in database without their files.
 				} else {
 					$duplicated++;
-					$consoleOutput->writeln(sprintf("Info: record with ID %s already found in database.", $row['remote_identificator']));
+					$temp = sprintf("Info: record with ID %s already found in database.\n", $row['remote_identificator']);
+					$output .= $temp;
+					$consoleOutput->write($temp);
 				}
 				continue;
 			}
@@ -143,12 +158,13 @@ class AdvocatesImport extends Command
 			$code = static::INVALID_CONTENT;
 		} else {
 			// import to db
-			list($imported, $updated, $duplicated) = $this->processDirectory($consoleOutput, $directory);
+			list($imported, $updated, $duplicated) = $this->processDirectory($consoleOutput, $output, $directory);
 			if ($imported > 0 || $updated > 0) {
 				$this->advocateService->flush();
 			}
-			$message = "Imported {$imported} new advocates, {$updated} updated, {$duplicated} remained the same.\n";
-			$consoleOutput->write($message);
+			$temp = $message = "Imported {$imported} new advocates, {$updated} updated, {$duplicated} remained the same.\n";
+			$consoleOutput->write($temp);
+			$output .= $temp;
 			// Empty directory after successful procession
 			FileSystem::delete($directory . '/metadata.csv');
 			FileSystem::delete($directory . '/documents/');
@@ -162,20 +178,20 @@ class AdvocatesImport extends Command
 	private function getColumnNames()
 	{
 		return [
-			"remote_identificator",
-			"identification_number",
-			"registration_number",
-			"name",
-			"surname",
-			"degree_before",
-			"degree_after",
-			"state",
-			"street",
-			"city",
-			"postal_area",
-			"local_path",
-			"email",
-			"specialization"
+			'remote_identificator',
+			'identification_number',
+			'registration_number',
+			'name',
+			'surname',
+			'degree_before',
+			'degree_after',
+			'state',
+			'street',
+			'city',
+			'postal_area',
+			'local_path',
+			'email',
+			'specialization'
 		];
 	}
 
