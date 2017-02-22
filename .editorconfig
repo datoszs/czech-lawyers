@@ -13,3 +13,12 @@ trim_trailing_whitespace = true
 [*.neon]
 indent_style = tab
 tab_width = 4
+
+[*.{js,less}]
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 4
+
+[package.json]
+indent_style = space
+indent_size = 2
