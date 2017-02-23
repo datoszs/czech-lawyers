@@ -40,7 +40,7 @@
 						<td>
 							{var $advocateTagging = $advocatesTaggings[$case->id] ?? null}
 							{var $advocateInfo = null}
-							{if $advocateTagging}
+							{if $advocateTagging && $advocateTagging->advocate}
 								{foreach $advocateTagging->advocate->advocateInfo as $temp}
 									{var $advocateInfo = $temp}
 									{breakIf true}

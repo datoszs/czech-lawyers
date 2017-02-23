@@ -8,8 +8,8 @@
 			<p>Soud: {$case->court->name}</p>
 			<p>
 				Advokát:
-				{if $advocateTagging}
-					{var $advocateInfo = null}
+				{var $advocateInfo = null}
+				{if $advocateTagging && $advocateTagging->advocate}
 					{foreach $advocateTagging->advocate->advocateInfo as $temp}
 						{var $advocateInfo = $temp}
 						{breakIf true}
