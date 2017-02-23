@@ -7,6 +7,16 @@
     "type": "git",
     "url": "https://github.com/datoszs/czech-lawyers.git"
   },
+  "scripts": {
+    "start": "webpack-dev-server -d --inline --hot --env.dev --progress",
+    "prebuild": "npm run lint && npm run test && rimraf dist/*",
+    "build": "webpack --progress --env",
+    "lint": "eslint frontend",
+    "lint:fix": "npm run lint -- --fix",
+    "test:base": "mocha --compilers js:babel-register frontend/test.js frontend/**/*.spec.js",
+    "test": "npm run test:base -- --reporter spec",
+    "test:watch": "npm run test:base -- --reporter min --watch"
+  },
   "dependencies": {
     "immutable": "3.8.1",
     "react": "15.4.2",
