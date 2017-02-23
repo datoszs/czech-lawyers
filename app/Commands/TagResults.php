@@ -199,7 +199,7 @@ class TagResults extends Command
         $output = null;
         $this->prepare();
         $courtId = Court::$types[$court];
-        $causes = $this->causeService->findForTagging($this->courtService->getById($courtId));
+        $causes = $this->causeService->findForResultTagging($this->courtService->getById($courtId));
         //$consoleOutput->writeln($courtId . " " . count($causes));
         foreach ($causes as $cause) {
             $documents = $this->documentService->findByCaseId($cause->id);

@@ -76,9 +76,14 @@ class CauseService
 		$this->orm->remove($entity);
 	}
 
-	public function findForTagging(Court $court)
+	public function findForResultTagging(Court $court)
 	{
-		return $this->orm->causes->findForTagging($court->id);
+		return $this->orm->causes->findForResultTagging($court->id);
+	}
+
+	public function findForAdvocateTagging(Court $court)
+	{
+		return $this->orm->causes->findForAdvocateTagging($court->id);
 	}
 
 }

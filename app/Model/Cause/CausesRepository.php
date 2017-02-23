@@ -5,7 +5,8 @@ use Nextras\Orm\Collection\ICollection;
 use Nextras\Orm\Repository\Repository;
 
 /**
- * @method ICollection|Cause[] findForTagging($courtId)
+ * @method ICollection|Cause[] findForResultTagging($courtId)
+ * @method ICollection|Cause[] findForAdvocateTagging($courtId)
  * @method ICollection|Cause[] findTaggingResultsByCourt($courtId)
  * @method ICollection|Cause[] search($phrase, $limit = null, $match = null)
  */

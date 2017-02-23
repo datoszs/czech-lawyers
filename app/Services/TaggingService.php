@@ -134,15 +134,15 @@ class TaggingService
 		return false;
 	}
 
-    public function persistAdvocateIfDiffers(TaggingAdvocate $entity)
-    {
-        $old = $this->orm->taggingAdvocates->getLatestTagging($entity->case->id)->fetch();
-        if ($this->isTaggingAdvocateDifferent($entity, $old)) {
-            $this->persist($entity);
-            return true;
-        }
-        return false;
-    }
+	public function persistAdvocateIfDiffers(TaggingAdvocate $entity)
+	{
+		$old = $this->orm->taggingAdvocates->getLatestTagging($entity->case->id)->fetch();
+		if ($this->isTaggingAdvocateDifferent($entity, $old)) {
+			$this->persist($entity);
+			return true;
+		}
+		return false;
+	}
 
 	/**
 	 * Returns true/false according to semantic difference of tagging.

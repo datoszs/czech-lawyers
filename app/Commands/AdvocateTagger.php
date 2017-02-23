@@ -12,9 +12,9 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Abstract case tagger for result tagging (obtains all cases/documents relevant for tagging).
+ * Abstract case tagger for advocate tagging (obtains all cases/documents relevant for tagging).
  */
-abstract class ResultTagger extends Command
+abstract class AdvocateTagger extends Command
 {
 	use JobCommand;
 
@@ -38,7 +38,7 @@ abstract class ResultTagger extends Command
 	{
 	}
 
-	protected function processCase(Cause $cause)
+	protected function processCase(Cause $cause, string &$output, OutputInterface $consoleOutput)
 	{
 		throw new NotImplementedException();
 	}
@@ -49,22 +49,22 @@ abstract class ResultTagger extends Command
 		$this->beforeExecute();
 
 		$code = 0;
-		$message = null;
-		$output = null;
+		$message = '';
+		$output = '';
 
 		$persisted = 0;
 
-		$data = $this->causeService->findForResultTagging($this->court);
+		$data = $this->causeService->findForAdvocateTagging($this->court);
 		foreach ($data as $cause) {
-			if ($this->processCase($cause)) {
-				$output .= sprintf("Tagging case result for case [%s] of [%s]\n", $cause->registrySign, $cause->court->name);
+			if ($this->processCase($cause, $output, $consoleOutput)) {
+				$output .= sprintf("Tagging advocate to case [%s] of [%s]\n", $cause->registrySign, $cause->court->name);
 				$persisted++;
 			}
 		}
 
 		if ($persisted > 0) {
 			$this->causeService->flush();
-			$message = sprintf("%s case results from [%s] were tagged (or its tagging updated).\n", $persisted, $this->court->name);
+			$message = sprintf("%s case advocates from [%s] were tagged (or its tagging updated).\n", $persisted, $this->court->name);
 			$consoleOutput->write($message);
 		} else {
 			$message = sprintf("Nothing from [%s] was tagged.\n", $this->court->name);

@@ -21,12 +21,12 @@ class CausesMapper extends Mapper
 	}
 
 	/**
-	 * Returns all cases which can be tagged (the cases with is_final flag set to true are ignored).
+	 * Returns all cases which can be result tagged (the cases with is_final flag set to true are ignored).
 	 *
 	 * @param int $courtId
 	 * @return QueryBuilder
 	 */
-	public function findForTagging($courtId)
+	public function findForResultTagging($courtId)
 	{
 		return $this->builder()->where('court_id = %i AND id_case NOT IN (SELECT case_id FROM tagging_case_result WHERE is_final)', $courtId);
 	}
@@ -35,6 +35,17 @@ class CausesMapper extends Mapper
     {
         return $this->builder()->where('court_id = %i AND id_case IN (SELECT distinct(case_id) FROM tagging_case_result WHERE is_final=FALSE) AND official_data IS NOT NULL',$courtId)->orderBy('id_case');
     }
+
+	/**
+	 * Returns all cases which can be advocate tagged (the cases with is_final flag set to true are ignored).
+	 *
+	 * @param int $courtId
+	 * @return QueryBuilder
+	 */
+	public function findForAdvocateTagging($courtId)
+	{
+		return $this->builder()->where('court_id = %i AND id_case NOT IN (SELECT case_id FROM tagging_advocate WHERE is_final)', $courtId);
+	}
 
 	/**
 	 * Search and return all cases for given phrase.

@@ -67,6 +67,7 @@ console:
 		- App\Commands\NSResultTagger
 		- App\Commands\CausaUnifier
 		- App\Commands\TagAdvocates
+		- App\Commands\NSAdvocateTagger
 
 orm:
 	model: App\Model\Orm
