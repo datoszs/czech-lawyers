@@ -55,6 +55,33 @@ export default ({dev}) => ({
                         loader: ['css-loader', 'less-loader'],
                     }),
             },
+            {
+                test: /\.eot$/,
+                loader: 'file-loader',
+            },
+            {
+                test: /\.svg$/,
+                loader: 'file-loader',
+                query: {
+                    limit: 10000,
+                    mimetype: 'image/svg+xml',
+                },
+            },
+            {
+                test: /\.ttf$/,
+                loader: 'file-loader',
+                query: {
+                    limit: 10000,
+                    mimetype: 'application/octet-stream',
+                },
+            },
+            {
+                test: /\.woff2?$/,
+                loader: 'url-loader',
+                query: {
+                    mimetype: 'application/font-woff',
+                },
+            },
         ],
     },
 });

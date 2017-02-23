@@ -18,14 +18,16 @@
     "test:watch": "npm run test:base -- --reporter min --watch"
   },
   "dependencies": {
+    "bootstrap": "3.3.7",
     "immutable": "3.8.1",
     "react": "15.4.2",
+    "react-bootstrap": "0.30.7",
     "react-dom": "15.4.2",
+    "react-hot-loader": "3.0.0-beta.6",
     "react-redux": "5.0.2",
     "redux": "3.6.0",
     "redux-immutable": "3.1.0",
-    "redux-saga": "0.14.3",
-    "react-hot-loader": "3.0.0-beta.6"
+    "redux-saga": "0.14.3"
   },
   "devDependencies": {
     "babel-core": "6.23.1",
@@ -47,24 +49,26 @@
     "eslint-plugin-jsx-a11y": "4.0.0",
     "eslint-plugin-react": "6.10.0",
     "extract-text-webpack-plugin": "2.0.0-rc.3",
+    "file-loader": "0.10.0",
+    "gulp": "^3.9.1",
+    "gulp-clean": "^0.3.1",
+    "gulp-concat": "^2.6.0",
+    "gulp-exec": "^2.1.2",
+    "gulp-expect-file": "0.0.7",
+    "gulp-less": "^3.0.5",
+    "gulp-uglify": "^1.5.3",
     "html-webpack-plugin": "2.28.0",
     "less": "2.7.2",
     "less-loader": "2.2.3",
+    "merge2": "^1.0.2",
     "mocha": "3.2.0",
     "react-addons-test-utils": "15.4.2",
     "rimraf": "2.6.0",
     "sinon": "1.17.7",
     "sinon-chai": "2.8.0",
     "style-loader": "0.13.1",
+    "url-loader": "0.5.7",
     "webpack": "2.2.1",
-    "webpack-dev-server": "2.3.0",
-    "gulp": "^3.9.1",
-    "gulp-clean": "^0.3.1",
-    "gulp-concat": "^2.6.0",
-    "gulp-less": "^3.0.5",
-    "gulp-uglify": "^1.5.3",
-    "gulp-expect-file": "0.0.7",
-    "gulp-exec": "^2.1.2",
-    "merge2": "^1.0.2"
+    "webpack-dev-server": "2.3.0"
   }
 }
