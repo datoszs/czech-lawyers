@@ -1,0 +1,51 @@
+{
+    "extends": "airbnb",
+    "parser": "babel-eslint",
+    "plugins": [
+        "react"
+    ],
+    "parserOptions": {
+        "ecmaVersion": 6,
+        "sourceType": "module",
+        "ecmaFeatures": {
+            "jsx": true,
+            "impliedStrict": true
+        }
+    },
+    "env": {
+        "es6": true,
+        "browser": true,
+        "node": true,
+        "mocha": true
+    },
+    "rules": {
+        "indent": ["error", 4, {
+            "SwitchCase" : 1 // case should be more indented than switch
+        }],
+        "react/jsx-indent": ["error", 4],
+        "react/jsx-indent-props": ["error", 4],
+
+        "object-curly-spacing": ["error", "never"],
+        "react/jsx-filename-extension": "off",
+        "arrow-parens": ["error", "always"],
+        "max-len": "off",
+        "import/prefer-default-export": "off",
+        /* capital-letter functions should only be used as constructors */
+        "new-cap": ["error", {
+            "newIsCap": true,
+            "newIsCapExceptions": [],
+            "capIsNew": false,
+            "capIsNewExceptions": ["Map", "Set", "List"]
+        }],
+        /* only links and buttons should have onClick */
+        "jsx-a11y/no-static-element-interactions": "off",
+        "no-else-return": "off",
+        /* test dependencies are dev dependencies */
+        "import/no-extraneous-dependencies": ["error", {
+            "devDependencies": ["frontend/test.js", "**/*.spec.js"],
+            "optionalDependencies": false
+        }],
+
+        "react/jsx-key": "warn"
+    }
+}

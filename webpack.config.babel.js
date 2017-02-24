@@ -1,0 +1,87 @@
+import path from 'path';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import ExtractTextPlugin from 'extract-text-webpack-plugin';
+import webpack from 'webpack';
+
+/** removes falsy items from array */
+const array = (...target) => target.filter((item) => item);
+
+export default ({dev}) => ({
+    entry: array(
+        dev && 'react-hot-loader/patch',
+        'babel-polyfill',
+        './frontend/',
+    ),
+    output: {
+        path: path.resolve(__dirname, 'dist'),
+        filename: 'bundle.js',
+    },
+    plugins: array(
+        new HtmlWebpackPlugin({
+            template: 'frontend/index.html',
+            inject: true,
+        }),
+        new webpack.DefinePlugin({
+            'process.env.NODE_ENV': JSON.stringify(dev ? 'development' : 'production'),
+        }),
+        !dev && new webpack.NoEmitOnErrorsPlugin(),
+        !dev && new webpack.optimize.UglifyJsPlugin({
+            output: {
+                comments: false,
+            },
+        }),
+        !dev && new ExtractTextPlugin('style.css'),
+    ),
+    module: {
+        rules: [
+            {
+                test: /\.js$/,
+                loader: 'babel-loader',
+                exclude: /node_modules/,
+                options: {
+                    presets: [
+                        ['es2015', {modules: false}],
+                        'react',
+                    ],
+                    cacheDirectory: true,
+                },
+            },
+            {
+                test: /\.less$/,
+                loader: dev
+                    ? ['style-loader', 'css-loader', 'less-loader']
+                    : ExtractTextPlugin.extract({
+                        fallbackLoader: 'style-loader',
+                        loader: ['css-loader', 'less-loader'],
+                    }),
+            },
+            {
+                test: /\.eot$/,
+                loader: 'file-loader',
+            },
+            {
+                test: /\.svg$/,
+                loader: 'file-loader',
+                query: {
+                    limit: 10000,
+                    mimetype: 'image/svg+xml',
+                },
+            },
+            {
+                test: /\.ttf$/,
+                loader: 'file-loader',
+                query: {
+                    limit: 10000,
+                    mimetype: 'application/octet-stream',
+                },
+            },
+            {
+                test: /\.woff2?$/,
+                loader: 'url-loader',
+                query: {
+                    mimetype: 'application/font-woff',
+                },
+            },
+        ],
+    },
+});
