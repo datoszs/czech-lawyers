@@ -16,7 +16,7 @@
 
 1. Make directories `temp/` and `log/` writable.
 2. Run `composer install` to install backend dependencies.
-3. Run `npm update` to install runtime dependencies.
+3. Run `npm install` to install runtime dependencies.
 4. Run `gulp`
 5. Create local config `app/Config/config.local.neon` (see example file `config.local.neon.example`).
 6. Migrate database by running `php www/index.php migrations:continue`
@@ -48,12 +48,14 @@ Note: branches starting with `wip-` prefix are contains unfinished and incomplet
 
 You can use either full standalone server such as Apache and configure VirtualHost properly, or you can use PHP built-in webserver for which just run `php -S localhost:8000 -t www` in the root of the project. Then the website is available at `http://localhost:8000`.
 
+You can start front-end application in development mode by runnning `npm start` in the project root. Web application is then available at `http://localhost:8080`. 
+
 
 When having installation done, these steps needs to be performed to get up-to-date version:
 
 1. Run `git pull` of proper branch (`master`, `develop`...)
 2. Install PHP dependencies: `composer install`
-3. Install building asset dependencies: `npm update`
+3. Install building asset dependencies: `npm install`
 4. Migrate database: `php index.php migrate-database`
 5. Rebuild assets using `gulp development`
 
