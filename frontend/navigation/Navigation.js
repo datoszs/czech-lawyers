@@ -1,6 +1,7 @@
 import React from 'react';
 import {Link} from 'react-router';
-import {Navbar, Nav, NavItem} from 'react-bootstrap';
+import {Navbar, Nav} from 'react-bootstrap';
+import RouteNavItem from './RouteNavItem';
 
 const Navigation = () => (
     <Navbar>
@@ -10,8 +11,8 @@ const Navigation = () => (
         </Navbar.Header>
         <Navbar.Collapse>
             <Nav pullRight>
-                <NavItem>O projektu</NavItem>
-                <NavItem>Kontakt</NavItem>
+                <RouteNavItem route="about">O projektu</RouteNavItem>
+                <RouteNavItem route="contact">Kontakt</RouteNavItem>
             </Nav>
         </Navbar.Collapse>
     </Navbar>
