@@ -119,6 +119,37 @@ class TaggingService
 		)->fetchPairs('case_result', 'count');
 	}
 
+	public function computeAdvocatesStatistics(array $advocatesIds)
+	{
+		if (count($advocatesIds) === 0) {
+			$advocatesIds[] = null;
+		}
+		// TODO: optimalize
+		$data = $this->connection->query('
+		SELECT
+			advocate_id,
+			case_result,
+			COUNT(*) AS count
+		FROM "case"
+		JOIN (
+			SELECT DISTINCT ON (case_id) * FROM tagging_case_result ORDER BY case_id, inserted DESC
+		) AS last_taggings ON "case".id_case = last_taggings.case_id
+		JOIN (
+			SELECT DISTINCT ON (case_id) * FROM tagging_advocate ORDER BY case_id, inserted DESC
+		) AS last_taggings_advocate ON "case".id_case = last_taggings_advocate.case_id
+		WHERE advocate_id IN %?i[]
+		GROUP BY advocate_id, case_result
+		',
+			$advocatesIds
+		)->fetchAll();
+		$output = [];
+		foreach ($data as $row) {
+			$output[$row->advocate_id][$row->case_result] = $row->count;
+		}
+		return $output;
+	}
+
+
 	/**
 	 * Persist (but not flush) given entity if it is new case result tagging (i.e. when no such previous exists).
 	 * @param TaggingCaseResult $entity

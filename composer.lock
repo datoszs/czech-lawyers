@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "93f8cfbaf106c11c279d0a5e7b0e520a",
-    "content-hash": "0ef7f000995c2ff375ac42a4851e6634",
+    "hash": "03445494e1ae82dd426485b165f69425",
+    "content-hash": "dcbfe7e5608ac1aa25609393e7da1cb2",
     "packages": [
         {
             "name": "datoscz/content-transformer",
@@ -48,6 +48,144 @@
                 "issues": "https://github.com/datoszs/content-transformer/issues"
             },
             "time": "2017-02-02 15:57:23"
+        },
+        {
+            "name": "doctrine/annotations",
+            "version": "v1.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/doctrine/annotations.git",
+                "reference": "54cacc9b81758b14e3ce750f205a393d52339e97"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/doctrine/annotations/zipball/54cacc9b81758b14e3ce750f205a393d52339e97",
+                "reference": "54cacc9b81758b14e3ce750f205a393d52339e97",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/lexer": "1.*",
+                "php": "^5.6 || ^7.0"
+            },
+            "require-dev": {
+                "doctrine/cache": "1.*",
+                "phpunit/phpunit": "^5.7"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.4.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Doctrine\\Common\\Annotations\\": "lib/Doctrine/Common/Annotations"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Roman Borschel",
+                    "email": "roman@code-factory.org"
+                },
+                {
+                    "name": "Benjamin Eberlei",
+                    "email": "kontakt@beberlei.de"
+                },
+                {
+                    "name": "Guilherme Blanco",
+                    "email": "guilhermeblanco@gmail.com"
+                },
+                {
+                    "name": "Jonathan Wage",
+                    "email": "jonwage@gmail.com"
+                },
+                {
+                    "name": "Johannes Schmitt",
+                    "email": "schmittjoh@gmail.com"
+                }
+            ],
+            "description": "Docblock Annotations Parser",
+            "homepage": "http://www.doctrine-project.org",
+            "keywords": [
+                "annotations",
+                "docblock",
+                "parser"
+            ],
+            "time": "2017-02-24 16:22:25"
+        },
+        {
+            "name": "doctrine/cache",
+            "version": "v1.6.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/doctrine/cache.git",
+                "reference": "b6f544a20f4807e81f7044d31e679ccbb1866dc3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/doctrine/cache/zipball/b6f544a20f4807e81f7044d31e679ccbb1866dc3",
+                "reference": "b6f544a20f4807e81f7044d31e679ccbb1866dc3",
+                "shasum": ""
+            },
+            "require": {
+                "php": "~5.5|~7.0"
+            },
+            "conflict": {
+                "doctrine/common": ">2.2,<2.4"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.8|~5.0",
+                "predis/predis": "~1.0",
+                "satooshi/php-coveralls": "~0.6"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.6.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Doctrine\\Common\\Cache\\": "lib/Doctrine/Common/Cache"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Roman Borschel",
+                    "email": "roman@code-factory.org"
+                },
+                {
+                    "name": "Benjamin Eberlei",
+                    "email": "kontakt@beberlei.de"
+                },
+                {
+                    "name": "Guilherme Blanco",
+                    "email": "guilhermeblanco@gmail.com"
+                },
+                {
+                    "name": "Jonathan Wage",
+                    "email": "jonwage@gmail.com"
+                },
+                {
+                    "name": "Johannes Schmitt",
+                    "email": "schmittjoh@gmail.com"
+                }
+            ],
+            "description": "Caching library offering an object-oriented API for many cache backends",
+            "homepage": "http://www.doctrine-project.org",
+            "keywords": [
+                "cache",
+                "caching"
+            ],
+            "time": "2016-10-29 11:16:17"
         },
         {
             "name": "doctrine/instantiator",
@@ -102,6 +240,60 @@
                 "instantiate"
             ],
             "time": "2015-06-14 21:17:01"
+        },
+        {
+            "name": "doctrine/lexer",
+            "version": "v1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/doctrine/lexer.git",
+                "reference": "83893c552fd2045dd78aef794c31e694c37c0b8c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/doctrine/lexer/zipball/83893c552fd2045dd78aef794c31e694c37c0b8c",
+                "reference": "83893c552fd2045dd78aef794c31e694c37c0b8c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Doctrine\\Common\\Lexer\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Roman Borschel",
+                    "email": "roman@code-factory.org"
+                },
+                {
+                    "name": "Guilherme Blanco",
+                    "email": "guilhermeblanco@gmail.com"
+                },
+                {
+                    "name": "Johannes Schmitt",
+                    "email": "schmittjoh@gmail.com"
+                }
+            ],
+            "description": "Base library for a lexer that can be used in Top-Down, Recursive Descent Parsers.",
+            "homepage": "http://www.doctrine-project.org",
+            "keywords": [
+                "lexer",
+                "parser"
+            ],
+            "time": "2014-09-09 13:34:57"
         },
         {
             "name": "ezyang/htmlpurifier",
@@ -3169,6 +3361,120 @@
                 "nette"
             ],
             "time": "2017-01-29 19:39:20"
+        },
+        {
+            "name": "ublaboo/api-docu",
+            "version": "v1.2.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ublaboo/api-docu.git",
+                "reference": "e3f6c6724b5a7b95c35b953ca8fac9aec9d06aa4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ublaboo/api-docu/zipball/e3f6c6724b5a7b95c35b953ca8fac9aec9d06aa4",
+                "reference": "e3f6c6724b5a7b95c35b953ca8fac9aec9d06aa4",
+                "shasum": ""
+            },
+            "require": {
+                "latte/latte": "^2.3|^2.4",
+                "nette/application": "^2.3|^2.4",
+                "nette/di": "^2.3|^2.4",
+                "nette/http": "^2.3|^2.4",
+                "ublaboo/api-router": ">=1.2.5"
+            },
+            "require-dev": {
+                "mockery/mockery": "~0.9",
+                "nette/tester": "~1.6.1",
+                "tracy/tracy": "^2.3|^2.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Ublaboo\\ApiDocu\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Pavel Janda",
+                    "homepage": "http://paveljanda.com"
+                }
+            ],
+            "description": "Documentation generating for ApiRouter routes - awesome runtime documentation",
+            "homepage": "http://ublaboo.paveljanda.com/api-docu",
+            "keywords": [
+                "api",
+                "apidocu",
+                "docu",
+                "documentation",
+                "nette",
+                "rest",
+                "routes"
+            ],
+            "time": "2016-09-21 11:52:36"
+        },
+        {
+            "name": "ublaboo/api-router",
+            "version": "v1.2.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ublaboo/api-router.git",
+                "reference": "c91fa0a2cb0f328385635b0f2c11bfe0524ed408"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ublaboo/api-router/zipball/c91fa0a2cb0f328385635b0f2c11bfe0524ed408",
+                "reference": "c91fa0a2cb0f328385635b0f2c11bfe0524ed408",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/annotations": "^1.2.0",
+                "doctrine/cache": "~1.6.0",
+                "nette/application": "^2.3|^2.4",
+                "nette/di": "^2.3|^2.4",
+                "nette/http": "^2.3|^2.4",
+                "nette/reflection": "^2.3|^2.4",
+                "nette/utils": "^2.3|^2.4"
+            },
+            "require-dev": {
+                "mockery/mockery": "~0.9",
+                "nette/tester": "~1.6.1",
+                "tracy/tracy": "^2.3|^2.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Ublaboo\\ApiRouter\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Pavel Janda",
+                    "homepage": "http://paveljanda.com"
+                }
+            ],
+            "description": "RESTful Router for your Apis in Nette Framework - created either directly or via annotation",
+            "homepage": "http://ublaboo.paveljanda.com/api-router",
+            "keywords": [
+                "api",
+                "nette",
+                "rest",
+                "restapi",
+                "restrouter",
+                "route",
+                "router",
+                "routes",
+                "routing"
+            ],
+            "time": "2016-12-20 13:52:08"
         },
         {
             "name": "webmozart/assert",

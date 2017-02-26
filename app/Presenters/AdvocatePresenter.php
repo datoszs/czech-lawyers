@@ -21,7 +21,7 @@ class AdvocatePresenter extends BasePresenter
 	{
 		$data = [];
 		if ($query) {
-			$data = $this->advocateService->search($query, 101);
+			$data = $this->advocateService->search($query, 0, 101);
 		}
 		$this->template->query = $query;
 		$this->template->advocates = $data;

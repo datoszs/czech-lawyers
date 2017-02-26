@@ -55,9 +55,9 @@ class AdvocateService
 		}
 	}
 
-	public function search($phrase, $limit = null)
+	public function search($phrase, int $start = 0, ?int $limit = null)
 	{
-		return $this->orm->advocates->search($phrase, $limit)->fetchAll();
+		return $this->orm->advocates->search($phrase, $start, $limit)->fetchAll();
 	}
 
 	/**

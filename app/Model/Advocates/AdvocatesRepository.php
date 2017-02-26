@@ -5,7 +5,7 @@ use Nextras\Orm\Collection\ICollection;
 use Nextras\Orm\Repository\Repository;
 
 /**
- * @method ICollection|Advocate[] search($phrase, $limit = null)
+ * @method ICollection|Advocate[] search($phrase, int $start = 0, ?int $limit = null)
  */
 class AdvocatesRepository extends Repository
 {

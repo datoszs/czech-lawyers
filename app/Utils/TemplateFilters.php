@@ -14,13 +14,25 @@ class TemplateFilters
 		}
 	}
 
-	public static function formatName($firstname, $lastname, $degreeBefore = null, $degreeAfter = null)
+	/**
+	 * Formats given name according to czech grammar
+	 *
+	 * @param string $firstname
+	 * @param string $lastname
+	 * @param null|string $degreeBefore
+	 * @param null|string $degreeAfter
+	 * @return string
+	 */
+	public static function formatName(string $firstname, string $lastname, ?string $degreeBefore = null, ?string $degreeAfter = null)
 	{
 		$output = [];
 		$output[] = $degreeBefore;
 		$output[] = $firstname;
 		$output[] = $lastname;
-		$output[] = $degreeAfter;
-		return implode(' ', array_filter($output));
+		$temp = implode(' ', array_filter($output));
+		if ($degreeAfter) {
+			$temp .= ', ' . $degreeAfter;
+		}
+		return $temp;
 	}
 }

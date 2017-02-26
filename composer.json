@@ -38,7 +38,9 @@
 		"league/csv": "^8.0",
 		"ipub/visual-paginator": "^1.0",
 		"datoscz/content-transformer": "~0.5.0",
-		"phpunit/phpunit": "^6.0"
+		"phpunit/phpunit": "^6.0",
+		"ublaboo/api-router": "^1.2",
+		"ublaboo/api-docu": "^1.2"
 	},
 	"repositories": [
 		{
