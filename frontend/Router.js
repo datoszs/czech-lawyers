@@ -3,12 +3,14 @@ import {connect} from 'react-redux';
 import {
     Router as ReactRouter,
     Route,
+    IndexRoute,
     browserHistory,
 } from 'react-router';
 
 import router from './router';
 import navigation from './navigation';
 
+import home from './home';
 import about from './about';
 import contact from './contact';
 
@@ -17,6 +19,7 @@ const Router = ({handleEnter}) => {
     return (
         <ReactRouter history={browserHistory}>
             <Route path="/" component={navigation.AppContainer}>
+                <IndexRoute component={home.Container} onEnter={handleEnter(home.NAME)} />
                 {createRoute(about)}
                 {createRoute(contact)}
             </Route>
