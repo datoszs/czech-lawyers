@@ -42,6 +42,7 @@ export default ({dev}) => ({
                     presets: [
                         ['es2015', {modules: false}],
                         'react',
+                        'stage-1',
                     ],
                     cacheDirectory: true,
                 },
@@ -83,5 +84,8 @@ export default ({dev}) => ({
                 },
             },
         ],
+    },
+    devServer: {
+        historyApiFallback: {index: '/'},
     },
 });
