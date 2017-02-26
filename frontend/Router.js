@@ -9,14 +9,20 @@ import {
 import router from './router';
 import navigation from './navigation';
 
-const Router = ({handleEnter}) => (
-    <ReactRouter history={browserHistory}>
-        <Route path="/" component={navigation.AppContainer} onEnter={handleEnter('ROOT')} >
-            <Route path="about" component={() => <h1>O projektu</h1>} />
-            <Route path="contact" component={() => <h1>Kontakt</h1>} />
-        </Route>
-    </ReactRouter>
-);
+import about from './about';
+import contact from './contact';
+
+const Router = ({handleEnter}) => {
+    const createRoute = (module) => <Route path={module.ROUTE} component={module.Container} onEnter={handleEnter(module.NAME)} />;
+    return (
+        <ReactRouter history={browserHistory}>
+            <Route path="/" component={navigation.AppContainer}>
+                {createRoute(about)}
+                {createRoute(contact)}
+            </Route>
+        </ReactRouter>
+    );
+};
 
 Router.propTypes = {
     handleEnter: PropTypes.func.isRequired,
