@@ -8,7 +8,6 @@
 
 namespace App\Commands;
 
-
 use App\Enums\CaseResult;
 use App\Enums\Court;
 use App\Enums\TaggingStatus;
@@ -33,6 +32,7 @@ class TagResults extends Command
     const FORM_US_0 = "nález";
     const FORM_US_1 = "usnesení";
     const FORM_NSS = "rozsudek";
+    const DIFFERENT = 666;
 
     protected $processed = 0;
     protected $ignored = 0;
@@ -40,6 +40,7 @@ class TagResults extends Command
     protected $fuzzy = 0;
     protected $empty = 0;
     protected $updated = 0;
+    protected $different = 0;
 
     /** @var CourtService @inject */
     public $courtService;
@@ -117,9 +118,19 @@ class TagResults extends Command
                     $this->fuzzy++;
                     break;
                 }
+                case (static::DIFFERENT): {
+                    $this->different++;
+                    break;
+                }
             }
         } else {
-            return "Processed: {$this->processed}, Ignored: {$this->ignored}, Failed: {$this->failed}, Fuzzy: {$this->fuzzy}, Empty: {$this->empty}, Updated: {$this->updated}";
+            return
+                "Processed: {$this->processed}, \
+                Ignored: {$this->ignored}, \
+                Failed: {$this->failed}, \
+                Fuzzy: {$this->fuzzy}, \
+                Empty: {$this->empty}, \
+                Different: {$this->different}";
         }
 
     }
@@ -175,8 +186,8 @@ class TagResults extends Command
                         $onlyOne = FALSE;
                     }
 
-                    if ($this->isRelevant($courtId, mb_strtolower($type), $decision)) {
-                        $caseResult = $this->computeCaseResult($courtId, mb_strtolower($type), $decision);
+                    if ($this->isRelevant($courtId, Strings::lower($type), $decision)) {
+                        $caseResult = $this->computeCaseResult($courtId, Strings::lower($type), $decision);
                         $status = TaggingStatus::STATUS_PROCESSED;
                         $find = TRUE;
                     } else { // find another relevant document
@@ -195,12 +206,14 @@ class TagResults extends Command
 
     protected function execute(InputInterface $input, OutputInterface $consoleOutput)
     {
+        echo "zkouska";
+        $consoleOutput->writeln("zkouska");
         $court = $input->getArgument(static::ARGUMENT_COURT);
         $output = null;
         $this->prepare();
         $courtId = Court::$types[$court];
-        $causes = $this->causeService->findForResultTagging($this->courtService->getById($courtId));
-        //$consoleOutput->writeln($courtId . " " . count($causes));
+        $causes = $this->causeService->findForTagging($this->courtService->getById($courtId));
+        $consoleOutput->writeln($courtId . " " . count($causes));
         foreach ($causes as $cause) {
             $documents = $this->documentService->findByCaseId($cause->id);
             //$consoleOutput->writeln($cause->id . " " . $cause->registrySign . "(" . count($documents) . ")");
@@ -212,6 +225,14 @@ class TagResults extends Command
             if ($document == null) {
                 $this->makeStatistic($status, false);
                 continue;
+            }
+
+            if ($cause->officialData) {
+                if (Strings::contains($debug, Json::decode($cause->officialData, true)["result"])){
+                    echo "shoda\n";
+                    $this->makeStatistic(static::DIFFERENT,false);
+                }
+                echo "nic";
             }
 
             $result = new TaggingCaseResult();
