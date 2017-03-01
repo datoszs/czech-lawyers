@@ -6,16 +6,16 @@ const getModel = (state) => state.get(NAME);
 /**
  * Returns message and optionaly formats it.
  * @param key Message key
- * @param parameters Parameter object (optional)
+ * @param params Parameter object (optional)
  * @returns Formatted string
  */
-export const getMessage = (state, key, parameters) => {
+export const getMessage = (state, key, params) => {
     const message = getModel(state).get(key);
     if (message) {
-        if (!parameters) {
+        if (!params) {
             return message;
         } else {
-            return sprintf(message, parameters);
+            return sprintf(message, params);
         }
     } else {
         return key; // fallback
