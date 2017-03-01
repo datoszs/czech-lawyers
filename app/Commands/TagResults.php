@@ -16,8 +16,10 @@ use App\Model\Services\TaggingService;
 use App\Model\Services\CauseService;
 use App\Model\Services\DocumentService;
 use App\Model\Taggings\TaggingCaseResult;
+use App\Model\Cause\Cause;
 use App\Utils\JobCommand;
 use Nette\Utils\Strings;
+use Nette\Utils\Json;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -125,11 +127,11 @@ class TagResults extends Command
             }
         } else {
             return
-                "Processed: {$this->processed}, \
-                Ignored: {$this->ignored}, \
-                Failed: {$this->failed}, \
-                Fuzzy: {$this->fuzzy}, \
-                Empty: {$this->empty}, \
+                "Processed: {$this->processed}, 
+                Ignored: {$this->ignored}, 
+                Failed: {$this->failed}, 
+                Fuzzy: {$this->fuzzy}, 
+                Empty: {$this->empty}, 
                 Different: {$this->different}";
         }
 
@@ -206,14 +208,11 @@ class TagResults extends Command
 
     protected function execute(InputInterface $input, OutputInterface $consoleOutput)
     {
-        echo "zkouska";
-        $consoleOutput->writeln("zkouska");
         $court = $input->getArgument(static::ARGUMENT_COURT);
         $output = null;
         $this->prepare();
         $courtId = Court::$types[$court];
-        $causes = $this->causeService->findForTagging($this->courtService->getById($courtId));
-        $consoleOutput->writeln($courtId . " " . count($causes));
+        $causes = $this->causeService->findForResultTagging($this->courtService->getById($courtId));
         foreach ($causes as $cause) {
             $documents = $this->documentService->findByCaseId($cause->id);
             //$consoleOutput->writeln($cause->id . " " . $cause->registrySign . "(" . count($documents) . ")");
@@ -227,12 +226,14 @@ class TagResults extends Command
                 continue;
             }
 
-            if ($cause->officialData) {
-                if (Strings::contains($debug, Json::decode($cause->officialData, true)["result"])){
-                    echo "shoda\n";
+            if ($cause->officialData && $cause->court->id == Court::TYPE_NSS) {
+            	$json_input = Json::decode(Json::encode(array_values($cause->officialData)), true)[0]["result"];
+                if (!Strings::contains($debug, $json_input)) {
                     $this->makeStatistic(static::DIFFERENT,false);
+                	$message = $cause->registrySign." - Court: '".$json_input."'; Web: '".$debug."'\n";
+                	$consoleOutput->writeln($message);
+                	$output .= $message;
                 }
-                echo "nic";
             }
 
             $result = new TaggingCaseResult();
