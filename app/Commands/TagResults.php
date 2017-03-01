@@ -262,6 +262,5 @@ class TagResults extends Command
         $this->finalize(0,$output,$message);
         return 0;
     }
-
-
 }
+
