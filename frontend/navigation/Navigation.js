@@ -16,8 +16,8 @@ const Navigation = () => (
         </Navbar.Header>
         <Navbar.Collapse>
             <Nav pullRight>
-                <RouteNavItem route={about.ROUTE}>O projektu</RouteNavItem>
-                <RouteNavItem route={contact.ROUTE}>Kontakt</RouteNavItem>
+                <RouteNavItem route={about.ROUTE}><Msg msg="about.title" /></RouteNavItem>
+                <RouteNavItem route={contact.ROUTE}><Msg msg="contact.title" /></RouteNavItem>
             </Nav>
         </Navbar.Collapse>
     </Navbar>

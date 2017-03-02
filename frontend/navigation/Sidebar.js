@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {ButtonGroup, Glyphicon} from 'react-bootstrap';
+import {Msg} from '../containers';
 import {transition} from '../util';
 import contact from '../contact';
 import Button from './SidebarButton';
@@ -33,7 +34,7 @@ class Sidebar extends Component {
         if (this.state.displayed) {
             return (
                 <ButtonGroup id="sidebar" onMouseEnter={this.showClose} onMouseLeave={this.hideClose} className="hidden-xs">
-                    <Button onClick={goToContact}>Napište nám</Button>
+                    <Button onClick={goToContact}><Msg msg="contact.appeal" /></Button>
                     {
                         this.state.closeDisplayed &&
                         <Button className="close-btn" onClick={this.hide}><Glyphicon glyph="remove-sign" /></Button>
