@@ -406,6 +406,27 @@ pre.apiDocu-json {
 
 	</a>
 				</div>
+
+				<h2 class="apiDocu-section-title">Cases</h2>
+
+				<div class="apiDocu-section">
+	<a href="Cases.7.php" class="apiDocu-url">
+		/api/case/<span class="apiDocu-mask-param"&gt;</span>&lt;id&gt;</span>
+
+		<div class="apiDocu-url-method">GET</div>
+
+		<div class="apiDocu-url-tags">
+			
+				<span style="background-color: #9b59b6;" class="apiDocu-url-tag">public</span>
+		</div>
+	</a>
+	<a href="Cases.8.php" class="apiDocu-url">
+		/api/case/
+
+		<div class="apiDocu-url-method"></div>
+
+	</a>
+				</div>
 	</div>
 </div>
 

@@ -12,6 +12,7 @@ use App\Model\Services\AdvocateService;
 use App\Model\Services\TaggingService;
 use App\Utils\TemplateFilters;
 use Nette\Application\AbortException;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Presenter;
 use Nette\Utils\Strings;
 use Ublaboo\ApiRouter\ApiRoute;
@@ -88,11 +89,15 @@ class AdvocatePresenter extends Presenter
 	 * )
 	 * @param int $id Advocate ID
 	 * @throws AbortException when redirection happens
+	 * @throws BadRequestException when advocate was not found
 	 */
 	public function actionRead(int $id) : void
 	{
 		// Load data
 		$advocate = $this->advocateService->get($id);
+		if (!$advocate) {
+			throw new BadRequestException("No such advocate [{$id}]", 404);
+		}
 		$statistics = $this->taggingService->computeAdvocatesStatistics([$id]);
 		// Transform to output
 		$output = $this->mapAdvocate($advocate, $statistics[$advocate->id] ?? []);
