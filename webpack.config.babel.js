@@ -87,5 +87,8 @@ export default ({dev}) => ({
     },
     devServer: {
         historyApiFallback: {index: '/'},
+        proxy: {
+            '/api': 'http://localhost:8000',
+        }
     },
 });
