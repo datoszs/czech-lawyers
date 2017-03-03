@@ -11,6 +11,7 @@ import router from './router';
 import navigation from './navigation';
 
 import home from './home';
+import search from './search';
 import about from './about';
 import contact from './contact';
 
@@ -20,6 +21,7 @@ const Router = ({handleEnter}) => {
         <ReactRouter history={browserHistory}>
             <Route path="/" component={navigation.AppContainer}>
                 <IndexRoute component={home.Container} onEnter={handleEnter(home.NAME)} />
+                {createRoute(search)}
                 {createRoute(about)}
                 {createRoute(contact)}
             </Route>
