@@ -7,7 +7,9 @@ import Footer from './Footer';
 const AppContainer = ({children}) => (
     <div>
         <Navigation />
-        {children}
+        <div className="container">
+            {children}
+        </div>
         <Sidebar />
         <Footer />
     </div>
