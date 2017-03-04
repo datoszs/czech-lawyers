@@ -22,7 +22,7 @@ const Container = () => (
         <Row>
             <Col md={6}>
                 <AdvocateDetail
-                    name="Judr. Jiří Novák"
+                    name="JUDr. Jiří Novák"
                     status="active"
                     city="Praha 2"
                     IC="66203147"
@@ -40,6 +40,30 @@ const Container = () => (
                     positive={5}
                     negative={6}
                     neutral={0}
+                />
+            </Col>
+        </Row>
+        <Row>
+            <Col md={6}>
+                <AdvocateDetail
+                    name="JUDr. Dana Nováková"
+                    IC="10118675"
+                    city="Žďár nad Sázavou "
+                    status="active"
+                    positive="6"
+                    negative="8"
+                    neutral="1"
+                />
+            </Col>
+            <Col md={6}>
+                <AdvocateDetail
+                    name="JUDr. Ivo Novák, Ing."
+                    IC="66226465"
+                    city=""
+                    status="removed"
+                    positive="0"
+                    negative="0"
+                    neutral="0"
                 />
             </Col>
         </Row>

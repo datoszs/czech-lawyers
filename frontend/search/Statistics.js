@@ -1,16 +1,17 @@
 import React, {PropTypes} from 'react';
 
 const Statistics = ({number, scale, color}) => (
-    <h2
+    <h1
         style={{
             color,
             display: 'inline-block',
-            transform: `scale(${scale})`,
-            margin: 2,
+            transform: `scale(${scale}) translateY(-${scale * 10}%)`,
+            margin: 7,
+            verticalAlign: 'top',
         }}
     >
         {number}
-    </h2>
+    </h1>
 );
 
 Statistics.propTypes = {
