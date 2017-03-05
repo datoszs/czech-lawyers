@@ -300,3 +300,17 @@ COMMENT ON COLUMN tagging_case_result.document_id IS 'Document based on which th
 COMMENT ON COLUMN tagging_case_result.status IS 'Status of tagging, see its states.';
 COMMENT ON COLUMN tagging_case_result.is_final IS 'Set to true when created by flawless human.';
 COMMENT ON COLUMN tagging_advocate.job_run_id IS 'ID of job run which added this tagging.';
+
+CREATE TABLE latest_tagging_case_result (
+  case_id BIGINT NOT NULL UNIQUE REFERENCES "case"(id_case) ON UPDATE CASCADE ON DELETE RESTRICT,
+  tagging_case_result_id BIGINT NOT NULL UNIQUE REFERENCES tagging_case_result(id_tagging_case_result) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+COMMENT ON TABLE latest_tagging_case_result IS 'Table that for cases (with taggings) stores the current tagging';
+
+CREATE TABLE latest_tagging_advocate (
+  case_id BIGINT NOT NULL UNIQUE REFERENCES "case"(id_case) ON UPDATE CASCADE ON DELETE RESTRICT,
+  tagging_advocate_id BIGINT NOT NULL UNIQUE REFERENCES tagging_advocate(id_tagging_advocate) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+COMMENT ON TABLE latest_tagging_advocate IS 'Table that for cases (with taggings) stores the current tagging';
