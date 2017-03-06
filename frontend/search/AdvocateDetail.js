@@ -2,6 +2,8 @@ import React, {PropTypes} from 'react';
 import {Panel, Label, Row, Col} from 'react-bootstrap';
 import Statistics from './Statistics';
 
+const normalizeScale = (scale) => Math.min(Math.max(1, scale), 1.6);
+
 const AdvocateDetail = ({name, IC, city, status, positive, negative, neutral}) => {
     const bsStyle = {
         active: 'success',
@@ -21,6 +23,8 @@ const AdvocateDetail = ({name, IC, city, status, positive, negative, neutral}) =
         </Row>
     );
 
+    const average = (positive + negative + neutral) / 3;
+
     return (
         <Panel bsStyle={bsStyle} style={{cursor: 'pointer'}} footer={footer}>
             <Row>
@@ -30,9 +34,9 @@ const AdvocateDetail = ({name, IC, city, status, positive, negative, neutral}) =
                 </Col>
                 <Col md={4}>
                     <br /><br />
-                    <Statistics number={positive} scale={1.6} color="green" />
-                    <Statistics number={negative} scale={1.2} color="red" />
-                    <Statistics number={neutral} scale={1} color="gray" />
+                    <Statistics number={positive} scale={normalizeScale(positive / average)} color="green" />
+                    <Statistics number={negative} scale={normalizeScale(negative / average)} color="red" />
+                    <Statistics number={neutral} scale={normalizeScale(neutral / average)} color="gray" />
                 </Col>
 
 

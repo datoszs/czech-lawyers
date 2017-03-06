@@ -50,9 +50,9 @@ const Container = () => (
                     IC="10118675"
                     city="Žďár nad Sázavou "
                     status="active"
-                    positive="6"
-                    negative="8"
-                    neutral="1"
+                    positive={6}
+                    negative={8}
+                    neutral={1}
                 />
             </Col>
             <Col md={6}>
@@ -61,9 +61,9 @@ const Container = () => (
                     IC="66226465"
                     city=""
                     status="removed"
-                    positive="0"
-                    negative="0"
-                    neutral="0"
+                    positive={0}
+                    negative={0}
+                    neutral={0}
                 />
             </Col>
         </Row>
