@@ -1,19 +1,20 @@
 import React, {PropTypes} from 'react';
 
 const Statistics = ({positive, negative, neutral}) => {
-    const min = Math.min(positive, negative, neutral);
     const max = Math.max(positive, negative, neutral);
-    const getStyle = (number) => {
-        const size = (((number - min) / (max - min)) * 75) + 75;
-        return {
-            fontSize: `${size}%`,
-        };
-    };
+    const bar = (number) => (
+        <div
+            className="bar"
+            style={{
+                height: `${(number / max) * 150}%`,
+            }}
+        />
+    );
     return (
         <div className="statistics">
-            <div className="positive" style={getStyle(positive)}>{positive}</div>
-            <div className="negative" style={getStyle(negative)}>{negative}</div>
-            <div className="neutral" style={getStyle(neutral)}>{neutral}</div>
+            <div className="positive">{positive}{bar(positive)}</div>
+            <div className="negative">{negative}{bar(negative)}</div>
+            <div className="neutral">{neutral}{bar(neutral)}</div>
         </div>
     );
 };

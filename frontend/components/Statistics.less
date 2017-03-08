@@ -1,8 +1,18 @@
 @import "../variables";
 
 .column(@color) {
+    margin: 1px;
+    flex-basis: 100%;
+    text-align: center;
+
+    z-index: 1;
+    position: relative;
+
     color: @color;
-    background-color: lighten(@color, 50%);
+    .bar {
+        border-color: lighten(@color, 25%);
+        background-color: lighten(@color, 50%);
+    }
 }
 
 .statistics() {
@@ -10,13 +20,14 @@
     flex-wrap: nowrap;
     align-items: flex-end;
 
-    & > div {
+    .bar {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        z-index: -1;
+
         border: 1px solid;
         border-radius: 2px;
-        margin: 1px;
-        padding: 1px;
-        flex-basis: 100%;
-        text-align: center;
     }
 
     .positive {

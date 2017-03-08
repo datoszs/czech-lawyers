@@ -22,7 +22,6 @@ const AdvocateDetail = ({name, IC, city, status, positive, negative, neutral}) =
             <Row>
                 <Col md={8}>
                     <h2>{name}</h2>
-                    <Button>Více &hellip;</Button>
                 </Col>
                 <Col md={4}>
                     <h1><Statistics positive={positive} negative={negative} neutral={neutral} /></h1>
