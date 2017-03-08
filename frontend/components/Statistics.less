@@ -1,0 +1,33 @@
+@import "../variables";
+
+.column(@color) {
+    color: @color;
+    background-color: lighten(@color, 50%);
+}
+
+.statistics() {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: flex-end;
+
+    & > div {
+        border: 1px solid;
+        border-radius: 2px;
+        margin: 1px;
+        padding: 1px;
+        flex-basis: 100%;
+        text-align: center;
+    }
+
+    .positive {
+        .column(@stats-positive-text);
+    }
+
+    .negative {
+        .column(@stats-negative-text);
+    }
+
+    .neutral {
+        .column(@stats-neutral-text);
+    }
+}
