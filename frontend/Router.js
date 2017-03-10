@@ -15,8 +15,13 @@ import about from './about';
 import contact from './contact';
 import search from './search';
 
-const Router = ({handleEnter}) => {
-    const createRoute = (module) => <Route path={module.ROUTE} component={module.Container} onEnter={handleEnter(module.NAME)} />;
+const Router = ({handleEnter, handleChange}) => {
+    const createRoute = (module) => <Route
+        path={module.ROUTE}
+        component={module.Container}
+        onEnter={handleEnter(module.NAME)}
+        onChange={handleChange(module.NAME)}
+    />;
     return (
         <ReactRouter history={browserHistory}>
             <Route path="/" component={navigation.AppContainer}>
@@ -31,10 +36,12 @@ const Router = ({handleEnter}) => {
 
 Router.propTypes = {
     handleEnter: PropTypes.func.isRequired,
+    handleChange: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
     handleEnter: (name) => (nextState) => dispatch(router.routeEntered(name, nextState.params, nextState.location.query)),
+    handleChange: (name) => (prevState, nextState) => dispatch(router.routeEntered(name, nextState.params, nextState.location.query)),
 });
 
 export default connect(undefined, mapDispatchToProps)(Router);
