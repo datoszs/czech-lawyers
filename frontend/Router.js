@@ -13,6 +13,7 @@ import navigation from './navigation';
 import home from './home';
 import about from './about';
 import contact from './contact';
+import search from './search';
 
 const Router = ({handleEnter}) => {
     const createRoute = (module) => <Route path={module.ROUTE} component={module.Container} onEnter={handleEnter(module.NAME)} />;
@@ -22,6 +23,7 @@ const Router = ({handleEnter}) => {
                 <IndexRoute component={home.Container} onEnter={handleEnter(home.NAME)} />
                 {createRoute(about)}
                 {createRoute(contact)}
+                {createRoute(search)}
             </Route>
         </ReactRouter>
     );
