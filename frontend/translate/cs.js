@@ -6,5 +6,6 @@ export default {
     'contact.appeal': 'Napište nám',
     'copyright': '\u{A9} 2017 DATAOS \u{2014} data o spravedlnosti, z.s',
 
-    'button.search': 'Hledej',
+    'search.button': 'Hledat',
+    'search.placeholder': 'Zadejte jméno nebo IČ',
 };

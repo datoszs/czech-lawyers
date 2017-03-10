@@ -1,5 +1,8 @@
 import React from 'react';
+import autocomplete from '../autocomplete';
 
 export default () => (
-    <h1>Vyhledávání advokátů</h1>
+    <section>
+        <autocomplete.Container />
+    </section>
 );
