@@ -1,0 +1,22 @@
+@import "../variables";
+
+.statistics() {
+    .child(@color) {
+        color: @color;
+
+        display: inline-block;
+        padding: 5px;
+    }
+
+    .positive {
+        .child(@stats-positive);
+    }
+
+    .negative {
+        .child(@stats-negative);
+    }
+
+    .neutral {
+        .child(@stats-neutral);
+    }
+}

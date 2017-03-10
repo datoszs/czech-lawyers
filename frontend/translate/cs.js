@@ -8,4 +8,10 @@ export default {
 
     'search.button': 'Hledat',
     'search.placeholder': 'Zadejte jméno nebo IČ',
+
+    'advocate.ic': 'IČ',
+
+    'status.active': 'Aktivní',
+    'status.suspended': 'Pozastavený',
+    'status.removed': 'Vyškrtnutý',
 };
