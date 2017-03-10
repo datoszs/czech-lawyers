@@ -1,0 +1,19 @@
+@import "../variables";
+
+.two-column() {
+    display: flex;
+    flex-wrap: wrap;
+    margin-left: -10px;
+    margin-right: -10px;
+
+    > * {
+        box-sizing: border-box;
+        width: calc(50% ~"-" 20px);
+        margin-left: 10px;
+        margin-right: 10px;
+
+        @media (max-width: @screen-xs-max) {
+            width: 100%;
+        }
+    }
+}
