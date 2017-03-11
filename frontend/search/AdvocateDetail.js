@@ -1,14 +1,14 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
-import {Panel, Row} from 'react-bootstrap';
+import {Row} from 'react-bootstrap';
 import translate from '../translate';
-import {Statistics} from '../components';
+import {Statistics, DetailPanel} from '../components';
 import {Advocate, statusMsg} from '../model';
 import {getAdvocate} from './selectors';
 import FooterColumn from './FooterColumn';
 
 const AdvocateDetailComponent = ({advocate, msgStatus, msgIc}) => (
-    <Panel
+    <DetailPanel
         footer={
             <Row>
                 <FooterColumn value={advocate.address.city} />
@@ -16,14 +16,14 @@ const AdvocateDetailComponent = ({advocate, msgStatus, msgIc}) => (
                 <FooterColumn value={msgStatus} />
             </Row>
         }
+        title={advocate.name}
     >
-        <h2>{advocate.name}</h2>
         <Statistics
             positive={advocate.statistics.positive}
             negative={advocate.statistics.negative}
             neutral={advocate.statistics.neutral}
         />
-    </Panel>
+    </DetailPanel>
 );
 
 AdvocateDetailComponent.propTypes = {
