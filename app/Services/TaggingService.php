@@ -106,12 +106,8 @@ class TaggingService
 			case_result,
 			COUNT(*) AS count
 		FROM "case"
-		JOIN (
-			SELECT DISTINCT ON (case_id) * FROM tagging_case_result ORDER BY case_id, inserted DESC
-		) AS last_taggings ON "case".id_case = last_taggings.case_id
-		JOIN (
-			SELECT DISTINCT ON (case_id) * FROM tagging_advocate ORDER BY case_id, inserted DESC
-		) AS last_taggings_advocate ON "case".id_case = last_taggings_advocate.case_id
+		JOIN vw_latest_tagging_case_result AS last_taggings ON "case".id_case = last_taggings.case_id
+		JOIN vw_latest_tagging_advocate AS last_taggings_advocate ON "case".id_case = last_taggings_advocate.case_id
 		WHERE advocate_id = %i
 		GROUP BY case_result
 		',
@@ -124,19 +120,14 @@ class TaggingService
 		if (count($advocatesIds) === 0) {
 			$advocatesIds[] = null;
 		}
-		// TODO: optimalize
 		$data = $this->connection->query('
 		SELECT
 			advocate_id,
 			case_result,
 			COUNT(*) AS count
 		FROM "case"
-		JOIN (
-			SELECT DISTINCT ON (case_id) * FROM tagging_case_result ORDER BY case_id, inserted DESC
-		) AS last_taggings ON "case".id_case = last_taggings.case_id
-		JOIN (
-			SELECT DISTINCT ON (case_id) * FROM tagging_advocate ORDER BY case_id, inserted DESC
-		) AS last_taggings_advocate ON "case".id_case = last_taggings_advocate.case_id
+		JOIN vw_latest_tagging_case_result AS last_taggings ON "case".id_case = last_taggings.case_id
+		JOIN vw_latest_tagging_advocate AS last_taggings_advocate ON "case".id_case = last_taggings_advocate.case_id
 		WHERE advocate_id IN %?i[]
 		GROUP BY advocate_id, case_result
 		',
@@ -183,7 +174,7 @@ class TaggingService
 	 */
 	private function isTaggingDifferent(TaggingCaseResult $new, $old)
 	{
-		return $old === null || !($old instanceof TaggingCaseResult) || $new->case != $old->case || $new->caseResult != $old->caseResult || $new->status != $old->status;
+		return $old === null || !($old instanceof TaggingCaseResult) || $new->case != $old->case || $new->document != $old->document || $new->isFinal != $old->isFinal || $new->caseResult != $old->caseResult || $new->status != $old->status || $new->debug != $old->debug;
 	}
 
     /**
@@ -193,6 +184,6 @@ class TaggingService
      */
     private function isTaggingAdvocateDifferent(TaggingAdvocate $new, $old)
     {
-        return $old === null || !($old instanceof TaggingAdvocate) || $new->case != $old->case || $new->advocate != $old->advocate || $new->status != $old->status;
+        return $old === null || !($old instanceof TaggingAdvocate) || $new->case != $old->case || $new->document != $old->document || $new->isFinal != $old->isFinal || $new->advocate != $old->advocate || $new->status != $old->status || $new->debug != $old->debug;
     }
 }

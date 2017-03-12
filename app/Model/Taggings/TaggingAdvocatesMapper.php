@@ -34,7 +34,7 @@ class TaggingAdvocatesMapper extends Mapper
 		return $this->connection->query('
 			SELECT
 				*
-			FROM (SELECT DISTINCT ON (case_id) * FROM "tagging_advocate" ORDER BY case_id, inserted DESC) t
+			FROM vw_latest_tagging_advocate
 			WHERE advocate_id IN %i[]
 		', $advocatesIds); // DO NOT PUSH WHERE INSIDE as it changes semantic and provides completely different results.
 	}
@@ -51,7 +51,7 @@ class TaggingAdvocatesMapper extends Mapper
 			$causesIds[] = null;
 		}
 		return $this->connection->query('
-			SELECT DISTINCT ON (case_id) * FROM "tagging_advocate" WHERE case_id IN %?i[] ORDER BY case_id, inserted DESC
+			SELECT * FROM vw_latest_tagging_advocate WHERE case_id IN %?i[]
 		', $causesIds);
 	}
 }

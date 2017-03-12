@@ -32,7 +32,7 @@ class TaggingCaseResultsMapper extends Mapper
 	public function findLatestTagging(array $causesIds)
 	{
 		return $this->connection->query('
-			SELECT DISTINCT ON (case_id) * FROM "tagging_case_result" WHERE case_id IN %i[] ORDER BY case_id, inserted DESC
+			SELECT * FROM vw_latest_tagging_case_result WHERE case_id IN %i[]
 		', $causesIds);
 	}
 }
