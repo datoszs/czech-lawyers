@@ -1,0 +1,125 @@
+{extends '../@admin.latte'}
+{var $pageTitle = 'Tagování případů'}
+
+{block content}
+	<h1>Tagování případů</h1>
+
+	<div class="filter">
+		Soud:
+		<div class="dropdown">
+			<button class="btn btn-default dropdown-toggle" type="button" id="sorting" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+				{if $court === App\Enums\Court::TYPE_US}Ústavní soud{elseif $court === App\Enums\Court::TYPE_NS}Nejvyšší soud{elseif $court === App\Enums\Court::TYPE_NSS}Nejvyšší správní soud{else}Všechny{/if}
+				<span class="caret"></span>
+			</button>
+			<ul class="dropdown-menu" aria-labelledby="sorting">
+				<li><a href="{plink this, court => null}">Všechny</a></li>
+				<li><a href="{plink this, court => 'us'}">Ústavní soud</a></li>
+				<li><a href="{plink this, court => 'ns'}">Nejvyšší soud</a></li>
+				<li><a href="{plink this, court => 'nss'}">Nejvyšší správní soud</a></li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="filter">
+		Pouze zpochybněné:
+		<div class="dropdown">
+			<button class="btn btn-default dropdown-toggle" type="button" id="sorting" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+				{if $onlyDisputed === true}Ano{else}Ne{/if}
+				<span class="caret"></span>
+			</button>
+			<ul class="dropdown-menu" aria-labelledby="sorting">
+				<li><a href="{plink this, onlyDisputed => false}">Ne</a></li>
+				<li><a href="{plink this, onlyDisputed => true}">Ano</a></li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="filter">
+		Filtr:
+		<div class="dropdown">
+			<button class="btn btn-default dropdown-toggle" type="button" id="sorting" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+				{if $filter === 'invalid_result'}Neplatný výsledek{elseif $filter === 'invalid_advocate'}Neplatný advokát{else}Žádný{/if}
+				<span class="caret"></span>
+			</button>
+			<ul class="dropdown-menu" aria-labelledby="sorting">
+				<li><a href="{plink this, filter => null}">Žádný</a></li>
+				<li><a href="{plink this, filter => invalid_result}">Neplatný výsledek</a></li>
+				<li><a href="{plink this, filter => invalid_advocate}">Neplatný advokát</a></li>
+			</ul>
+		</div>
+	</div>
+	<div class="clearfix"></div>
+
+	<p><i>Zobrazovány případy {$paginator->getOffset()+1}&ndash;{$paginator->getOffset()+$paginator->getItemsPerPage()} z {$paginator->getItemCount()} případů.</i></p>
+
+	{if count($cases)}
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th>Soud</th>
+					<th>Spisová značka</th>
+					<th>Výsledek (+&nbsp;čas, stav)</th>
+					<th>Advokát (+&nbsp;čas, stav)</th>
+					<th>Rozporováno</th>
+					<th>Akce</th>
+				</tr>
+			</thead>
+			<tbody>
+				{foreach $cases as $case}
+					<tr>
+						<td>{$case->court->name}</td>
+						<td>{$case->registrySign|upper}</td>
+						{var $resultTagging = $results[$case->id] ?? null}
+						<td class="
+							{if $resultTagging && $resultTagging->status == App\Enums\TaggingStatus::STATUS_FAILED}danger
+							{elseif $resultTagging && $resultTagging->status == App\Enums\TaggingStatus::STATUS_IGNORED}active
+							{elseif $resultTagging && $resultTagging->status == App\Enums\TaggingStatus::STATUS_FUZZY}warning
+							{elseif $resultTagging && $resultTagging->status == App\Enums\TaggingStatus::STATUS_PROCESSED}success
+							{else}
+							{/if}
+							">
+							{include ../case-result.latte, tagging => $resultTagging ?? null, meta => true}
+						</td>
+						{var $advocateTagging = $advocatesTaggings[$case->id] ?? null}
+						<td class="
+							{if $advocateTagging && $advocateTagging->status == App\Enums\TaggingStatus::STATUS_FAILED}danger
+							{elseif $advocateTagging && $advocateTagging->status == App\Enums\TaggingStatus::STATUS_IGNORED}active
+							{elseif $advocateTagging && $advocateTagging->status == App\Enums\TaggingStatus::STATUS_FUZZY}warning
+							{elseif $advocateTagging && $advocateTagging->status == App\Enums\TaggingStatus::STATUS_PROCESSED}success
+							{else}
+							{/if}
+							">
+							{var $advocateInfo = null}
+							{if $advocateTagging && $advocateTagging->advocate}
+								{foreach $advocateTagging->advocate->advocateInfo as $temp}
+									{var $advocateInfo = $temp}
+									{breakIf true}
+								{/foreach}
+							{/if}
+							<span class="glyphicon glyphicon-info-sign pull-right" title="{$advocateTagging->debug}" n:if="$advocateTagging && $advocateTagging->debug"></span>
+							<span n:if="$advocateTagging && $advocateTagging->isFinal" class="glyphicon glyphicon-ok-sign pull-right" title="Finální"></span>
+							<a class="pull-right" target="_blank" title="Dokument na základě kterého proběhlo tagování" n:if="$advocateTagging && $advocateTagging->document" href="{plink Tagging:document, $advocateTagging->document->id}"><span class="glyphicon glyphicon-file"></span></a>
+							{if !$advocateTagging}
+								<span class="text-muted">&ndash;</span>
+							{elseif !$advocateInfo}
+								<span class="text-muted"><i>Nepřiřazen</i></span>
+							{else}
+								{var $name = \App\Utils\TemplateFilters::formatName($advocateInfo->name, $advocateInfo->surname,  $advocateInfo->degreeBefore, $advocateInfo->degreeAfter)}
+								{$name}
+							{/if}
+							{if $advocateTagging}
+								<br>
+								<small><span class="glyphicon {if $advocateTagging->insertedBy->type == \App\Enums\UserType::TYPE_PERSON}glyphicon-user{else}glyphicon-cog{/if}"></span> {$advocateTagging->insertedBy->username}, {$advocateTagging->inserted|date:'j. m. Y H:i:s'}, {App\Enums\TaggingStatus::$statuses[$advocateTagging->status]|lower}</small>
+							{/if}
+						</td>
+						<td class="success">Ne</td>
+						<td>
+							<a href="{plink Tagging:case, $case->id}">Detail</a>
+						</td>
+					</tr>
+				{/foreach}
+			</tbody>
+		</table>
+	{/if}
+	{control visualPaginator}
+{/block}

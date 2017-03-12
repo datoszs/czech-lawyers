@@ -1,0 +1,133 @@
+{extends '../@admin.latte'}
+{var $pageTitle = 'Případ ' . \Nette\Utils\Strings::upper($case->registrySign)}
+
+{block content}
+	<h1>Případ {$case->registrySign|upper}</h1>
+
+	{include ../flashes.latte}
+
+	<div class="row">
+		<div class="col-md-12">
+			<p>Soud: {$case->court->name}</p>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-6">
+			<h2>Výsledek</h2>
+			{var $resultTagging = $caseResult}
+			<div class="alert
+				{if $resultTagging && $resultTagging->status == App\Enums\TaggingStatus::STATUS_FAILED}alert-danger
+				{elseif $resultTagging && $resultTagging->status == App\Enums\TaggingStatus::STATUS_IGNORED}alert-info
+				{elseif $resultTagging && $resultTagging->status == App\Enums\TaggingStatus::STATUS_FUZZY}alert-warning
+				{elseif $resultTagging && $resultTagging->status == App\Enums\TaggingStatus::STATUS_PROCESSED}alert-success
+				{else}
+				{/if}
+				">
+			{include ../case-result.latte, tagging => $resultTagging ?? null, meta => true}
+			</div>
+
+			<div class="panel-group">
+				<div class="panel panel-default">
+					<div class="panel-heading" data-toggle="collapse" href="#case-result-tagging">
+						Nové tagování
+					</div>
+					<div id="case-result-tagging" class="panel-collapse panel-body collapse {if isset($showCaseResultForm) && $showCaseResultForm}in{/if}">
+						{control caseResultForm}
+					</div>
+				</div>
+			</div>
+
+		</div>
+		<div class="col-md-6">
+			<h2>Advokát</h2>
+			<div class="alert
+							{if $advocateTagging && $advocateTagging->status == App\Enums\TaggingStatus::STATUS_FAILED}alert-danger
+							{elseif $advocateTagging && $advocateTagging->status == App\Enums\TaggingStatus::STATUS_IGNORED}alert-info
+							{elseif $advocateTagging && $advocateTagging->status == App\Enums\TaggingStatus::STATUS_FUZZY}alert-warning
+							{elseif $advocateTagging && $advocateTagging->status == App\Enums\TaggingStatus::STATUS_PROCESSED}alert-success
+							{else}
+							{/if}
+							">
+				{var $advocateInfo = null}
+				{if $advocateTagging && $advocateTagging->advocate}
+					{foreach $advocateTagging->advocate->advocateInfo as $temp}
+						{var $advocateInfo = $temp}
+						{breakIf true}
+					{/foreach}
+				{/if}
+				<span class="glyphicon glyphicon-info-sign pull-right" title="{$advocateTagging->debug}" n:if="$advocateTagging && $advocateTagging->debug"></span>
+				<span n:if="$advocateTagging && $advocateTagging->isFinal" class="glyphicon glyphicon-ok-sign pull-right" title="Finální"></span>
+				<a class="pull-right" target="_blank" title="Dokument na základě kterého proběhlo tagování" n:if="$advocateTagging && $advocateTagging->document" href="{plink Tagging:document, $advocateTagging->document->id}"><span class="glyphicon glyphicon-file"></span></a>
+				{if !$advocateTagging}
+					<span class="text-muted">&ndash;</span>
+				{elseif !$advocateInfo}
+					<span class="text-muted"><i>Nepřiřazen</i></span>
+				{else}
+					{var $name = \App\Utils\TemplateFilters::formatName($advocateInfo->name, $advocateInfo->surname,  $advocateInfo->degreeBefore, $advocateInfo->degreeAfter)}
+					{$name}
+				{/if}
+				{if $advocateTagging}
+					<br>
+					<small><span class="glyphicon {if $advocateTagging->insertedBy->type == \App\Enums\UserType::TYPE_PERSON}glyphicon-user{else}glyphicon-cog{/if}"></span> {$advocateTagging->insertedBy->username}, {$advocateTagging->inserted|date:'j. m. Y H:i:s'}, {App\Enums\TaggingStatus::$statuses[$advocateTagging->status]|lower}</small>
+				{/if}
+			</div>
+
+			<div class="panel-group">
+				<div class="panel panel-default">
+					<div class="panel-heading" data-toggle="collapse" href="#case-result-advocate">
+							Nové tagování
+					</div>
+					<div id="case-result-advocate" class="panel-collapse panel-body collapse {if isset($showAdvocateForm) && $showAdvocateForm}in{/if}">
+						{control advocateForm}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<h2>Dokumenty</h2>
+			{if count($documents) == 0}
+				<div class="alert alert-info">
+					K tomuto případu nemáme žádné dokumenty. Je možné, že data ještě nemáme staženy, nebo nebyly (ještě) zvěřeněny.
+				</div>
+			{else}
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th>ID záznamu</th>
+							<th>Datum rozhodnutí</th>
+							<th>Kopie</th>
+							<th>Originál</th>
+						</tr>
+					</thead>
+					<tbody>
+					{foreach $documents as $document}
+						<tr>
+							<td>{$document->recordId}</td>
+							<td>{$document->decisionDate|date: 'j. n. Y'}</td>
+							<td><a href="#" data-toggle="collapse" data-target="#document-{$document->id}">Kopie</a></td>
+							<td><a href="{$document->webPath}" target="_blank">Originál</a></td>
+						</tr>
+						<tr id="document-{$document->id}" class="collapse {first}in{/first}">
+							<td colspan="4">
+								<iframe class="document-iframe" src="{plink Tagging:document, $document->id}"></iframe>
+							</td>
+						</tr>
+					{/foreach}
+					</tbody>
+				</table>
+			{/if}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<h2>Oficiální data</h2>
+			{if $case->officialData}
+				<pre>{\Nette\Utils\Json::encode($case->officialData, \Nette\Utils\Json::PRETTY)}</pre>
+			{else}
+				<div class="alert alert-info"><i>Nejsou k dispozici</i></div>
+			{/if}
+		</div>
+	</div>
+{/block}

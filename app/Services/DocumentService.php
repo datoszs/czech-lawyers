@@ -38,19 +38,33 @@ class DocumentService
 		$this->orm->persist($entity);
 	}
 
+	public function get(int $documentId)
+	{
+		return $this->orm->documents->getById($documentId);
+	}
+
 	public function findByRecordId($recordId)
 	{
 		return $this->orm->documents->findBy(['recordId' => $recordId])->fetch();
 	}
 
 	public function findByCaseId($caseId)
-    {
-        return $this->orm
-            ->documents
-            ->findBy(['case' => $caseId])
-            ->orderBy('decisionDate',ICollection::DESC)
-            ->fetchAll();
-    }
+	{
+		return $this->orm
+			->documents
+			->findBy(['case' => $caseId])
+			->orderBy('decisionDate',ICollection::DESC)
+			->fetchAll();
+	}
+
+	public function findByCaseIdPairs($caseId)
+	{
+		return $this->orm
+			->documents
+			->findBy(['case' => $caseId])
+			->orderBy('decisionDate',ICollection::DESC)
+			->fetchPairs('id', 'recordId');
+	}
 
 	/**
 	 * Returns extra data or null for given document

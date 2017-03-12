@@ -14,10 +14,12 @@ var paths = {
         'resources/js/jquery-2.2.0.min.js',
         'resources/js/bootstrap.js',
         'resources/js/netteForms.min.js',
+        'resources/js/selectize.min.js',
         'resources/js/application.js'
     ],
     styles: [
         'resources/css/bootstrap.css',
+        'resources/css/selectize.bootstrap3.css',
         'resources/css/application.css'
     ],
     stylesLess: [

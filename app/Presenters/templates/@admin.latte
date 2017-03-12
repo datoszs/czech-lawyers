@@ -29,7 +29,7 @@
                     <li {ifCurrent Admin:*}class="active"{/ifCurrent}><a href="{plink Admin:}">Přehled</a></li>
                     <li><a href="#">Dokumenty</a></li>
                     <li><a href="#">Advokáti</a></li>
-                    <li><a href="#">Značkování</a></li>
+                    <li {ifCurrent Tagging:*}class="active"{/ifCurrent}><a href="{plink Tagging:}">Značkování případů</a></li>
                 </ul>
                 <ul class="nav nav-sidebar">
                     <li {ifCurrent User:*}class="active"{/ifCurrent}><a href="{plink User:}">Uživatelé</a></li>

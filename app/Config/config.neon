@@ -52,6 +52,7 @@ extensions:
 	orm: Nextras\Orm\Bridges\NetteDI\OrmExtension
 	console: Kdyby\Console\DI\ConsoleExtension
 	migrations: Nextras\Migrations\Bridges\NetteDI\MigrationsExtension
+	visualPaginator: IPub\VisualPaginator\DI\VisualPaginatorExtension
 
 migrations:
 	dir: %appDir%/../database/migrations

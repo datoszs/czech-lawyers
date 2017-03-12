@@ -1,12 +1,17 @@
 <?php
 namespace App\Model\Cause;
 
+use App\Enums\TaggingStatus;
 use Mikulas\OrmExt\MappingFactory;
 use Nextras\Dbal\QueryBuilder\QueryBuilder;
 use Nextras\Orm\Mapper\Mapper;
 
 class CausesMapper extends Mapper
 {
+	const INVALID_ADVOCATE = 'invalid_advocate';
+	const INVALID_RESULT = 'invalid_result';
+
+
 	protected function createStorageReflection()
 	{
 		$factory = new MappingFactory(parent::createStorageReflection(), $this->getRepository()->getEntityMetadata());
@@ -68,6 +73,28 @@ class CausesMapper extends Mapper
 		$builder = $this->builder()->where('registry_sign ILIKE ' . $matchStrategy, $phrase);
 		if ($limit) {
 			$builder->limitBy($limit);
+		}
+		return $builder;
+	}
+
+	public function findForManualTagging(?int $court, bool $onlyDisputed, ?string $filter)
+	{
+		$builder = $this->builder();
+		$builder->orderBy('id_case');
+		if ($court) {
+			$builder->where('court_id = %i', $court);
+		}
+		if ($onlyDisputed) {
+			// TBD
+		}
+		if ($filter === static::INVALID_ADVOCATE) {
+			$builder->leftJoin('case', 'vw_latest_tagging_advocate', 'vw_latest_tagging_advocate', 'vw_latest_tagging_advocate.case_id = id_case');
+			$builder->where('vw_latest_tagging_advocate.status IS NULL OR (vw_latest_tagging_advocate.status NOT IN (%s) AND NOT vw_latest_tagging_advocate.is_final)', TaggingStatus::STATUS_PROCESSED);
+
+		}
+		if ($filter === static::INVALID_RESULT) {
+			$builder->leftJoin('case', 'vw_latest_tagging_case_result', 'vw_latest_tagging_case_result', 'vw_latest_tagging_case_result.case_id = id_case');
+			$builder->where('vw_latest_tagging_case_result.status IS NULL OR (vw_latest_tagging_case_result.status NOT IN (%s) AND NOT vw_latest_tagging_case_result.is_final)', TaggingStatus::STATUS_PROCESSED);
 		}
 		return $builder;
 	}

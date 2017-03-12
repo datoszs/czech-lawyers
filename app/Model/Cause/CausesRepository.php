@@ -9,6 +9,7 @@ use Nextras\Orm\Repository\Repository;
  * @method ICollection|Cause[] findForAdvocateTagging($courtId)
  * @method ICollection|Cause[] findTaggingResultsByCourt($courtId)
  * @method ICollection|Cause[] search($phrase, $limit = null, $match = null)
+ * @method ICollection|Cause[] findForManualTagging(?int $court, bool $onlyDisputed, string $filter)
  */
 class CausesRepository extends Repository
 {

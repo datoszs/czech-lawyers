@@ -38,6 +38,11 @@ class CauseService
 		return $this->orm->causes->findAll()->fetchAll();
 	}
 
+	public function findForManualTagging(?int $court, bool $onlyDisputed, ?string $filter)
+	{
+		return $this->orm->causes->findForManualTagging($court, $onlyDisputed, $filter);
+	}
+
 	public function findFromCourt(Court $court)
 	{
 		return $this->orm->causes->findBy(['court' => $court])->fetchAll();
