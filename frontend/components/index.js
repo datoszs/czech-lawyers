@@ -7,6 +7,7 @@ export {default as DetailPanel} from './DetailPanel';
 export {default as DetailFieldComponent} from './DetailFieldComponent';
 export {default as AddressFormatter} from './AddressFormatter';
 export {default as BigStatistics} from './BigStatistics';
+export {default as StatisticsLegend} from './StatisticsLegend';
 export {default as PageSubheader} from './PageSubheader';
 export {default as SocietyOverview} from './SocietyOverview';
 export {default as SimpleFormLayout} from './SimpleFormLayout';
