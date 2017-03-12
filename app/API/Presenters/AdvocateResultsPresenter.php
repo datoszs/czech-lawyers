@@ -37,12 +37,12 @@ class AdvocateResultsPresenter extends Presenter
 	 *         "id_advocate": 123,
 	 *         "id_court": 2,
 	 *         "years" : {
-	 *             2014: {
+	 *             "2014": {
 	 *                 "negative": 12,
 	 *                 "neutral": 2,
 	 *                 "positive": 59,
 	 *             },
-	 *             2016: {
+	 *             "2016": {
 	 *                 "negative": 10,
 	 *                 "neutral": 0,
 	 *                 "positive": 5,
