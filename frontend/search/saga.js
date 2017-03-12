@@ -1,6 +1,7 @@
 import {put, select, call, take} from 'redux-saga/effects';
 import {advocateAPI} from '../serverAPI';
 import {mapDtoToAdvocate} from '../model';
+import autocomplete from '../autocomplete';
 import {PAGE_SIZE} from './constants';
 import {setQuery, addAdvocates, LOAD_MORE} from './actions';
 import {isLoading, getAdvocateCount} from './selectors';
@@ -15,6 +16,7 @@ const loadAdvocatesSaga = function* loadAdvocates(query) {
 
 export default function* advocateSearch(params, {query}) {
     yield put(setQuery(query));
+    yield put(autocomplete.initializeValue(query));
     for (;;) {
         yield call(loadAdvocatesSaga, query);
         yield take(LOAD_MORE);
