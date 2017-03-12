@@ -1,6 +1,7 @@
 <?php
 namespace App\Model\Services;
 
+use App\Enums\TaggingStatus;
 use App\Model\Advocates\Advocate;
 use App\Model\Cause\Cause;
 use App\Model\Taggings\TaggingCaseResult;
@@ -136,6 +137,32 @@ class TaggingService
 		$output = [];
 		foreach ($data as $row) {
 			$output[$row->advocate_id][$row->case_result] = $row->count;
+		}
+		return $output;
+	}
+
+	public function computeAdvocateStatisticsPerYear(int $advocateId, ?int $courtId)
+	{
+		$data = $this->connection->query('
+		SELECT
+			SUBSTRING(registry_sign FROM \'....$\') AS year,
+			case_result,
+			COUNT(*) AS count
+		FROM "case"
+		JOIN vw_latest_tagging_case_result AS last_taggings ON "case".id_case = last_taggings.case_id AND last_taggings.status = %s 
+		JOIN vw_latest_tagging_advocate AS last_taggings_advocate ON "case".id_case = last_taggings_advocate.case_id AND last_taggings_advocate.status = %s
+		WHERE advocate_id = %i AND (%?i IS NULL OR court_id = %?i)
+		GROUP BY SUBSTRING(registry_sign FROM \'....$\'), case_result
+		',
+			TaggingStatus::STATUS_PROCESSED,
+			TaggingStatus::STATUS_PROCESSED,
+			$advocateId,
+			$courtId,
+			$courtId
+		)->fetchAll();
+		$output = [];
+		foreach ($data as $row) {
+			$output[$row->year][$row->case_result] = $row->count;
 		}
 		return $output;
 	}
