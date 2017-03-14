@@ -82,7 +82,7 @@ class AdvocateResultsPresenter extends Presenter
 	public function actionRead(int $advocate, ?int $court = null) : void
 	{
 		if ($court && !in_array($court, Court::$types, true)) {
-			throw new BadRequestException("No such acourt [{$court}]", 404);
+			throw new BadRequestException("No such court [{$court}]", 404);
 		}
 		// Load data
 		$advocateEntity = $this->advocateService->get($advocate);

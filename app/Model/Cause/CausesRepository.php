@@ -10,6 +10,7 @@ use Nextras\Orm\Repository\Repository;
  * @method ICollection|Cause[] findTaggingResultsByCourt($courtId)
  * @method ICollection|Cause[] search($phrase, $limit = null, $match = null)
  * @method ICollection|Cause[] findForManualTagging(?int $court, bool $onlyDisputed, string $filter)
+ * @method ICollection|Cause[] findFromAdvocate(int $advocateId, ?int $court, ?int $year, ?string $result)
  */
 class CausesRepository extends Repository
 {

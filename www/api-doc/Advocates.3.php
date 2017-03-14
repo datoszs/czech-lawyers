@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>ApiDocu - /api/advocate/&lt;id&gt;</title>
+	<title>ApiDocu - /api/advocate-cases/&lt;advocate&gt;</title>
 	<style>html, body {
 	margin: 0;
 	padding: 0;
@@ -374,7 +374,7 @@ pre.apiDocu-json {
 
 	</a>
 	<a href="Advocates.3.php" class="apiDocu-url">
-		/api/advocate/<span class="apiDocu-mask-param"&gt;</span>&lt;id&gt;</span>
+		/api/advocate-cases/<span class="apiDocu-mask-param"&gt;</span>&lt;advocate&gt;</span>
 
 		<div class="apiDocu-url-method">GET</div>
 
@@ -384,13 +384,13 @@ pre.apiDocu-json {
 		</div>
 	</a>
 	<a href="Advocates.4.php" class="apiDocu-url">
-		/api/advocate/
+		/api/advocate-cases/
 
 		<div class="apiDocu-url-method"></div>
 
 	</a>
 	<a href="Advocates.5.php" class="apiDocu-url">
-		/api/advocate-results/<span class="apiDocu-mask-param"&gt;</span>&lt;advocate&gt;</span>[/<span class="apiDocu-mask-param"&gt;</span>&lt;court&gt;</span>]
+		/api/advocate/<span class="apiDocu-mask-param"&gt;</span>&lt;id&gt;</span>
 
 		<div class="apiDocu-url-method">GET</div>
 
@@ -400,13 +400,13 @@ pre.apiDocu-json {
 		</div>
 	</a>
 	<a href="Advocates.6.php" class="apiDocu-url">
-		/api/advocate-results/
+		/api/advocate/
 
 		<div class="apiDocu-url-method"></div>
 
 	</a>
 	<a href="Advocates.7.php" class="apiDocu-url">
-		/api/advocate/search[/<span class="apiDocu-mask-param"&gt;</span>&lt;query&gt;</span>/[<span class="apiDocu-mask-param"&gt;</span>&lt;start&gt;</span>-<span class="apiDocu-mask-param"&gt;</span>&lt;count&gt;</span>]]
+		/api/advocate-results/<span class="apiDocu-mask-param"&gt;</span>&lt;advocate&gt;</span>[/<span class="apiDocu-mask-param"&gt;</span>&lt;court&gt;</span>]
 
 		<div class="apiDocu-url-method">GET</div>
 
@@ -416,6 +416,22 @@ pre.apiDocu-json {
 		</div>
 	</a>
 	<a href="Advocates.8.php" class="apiDocu-url">
+		/api/advocate-results/
+
+		<div class="apiDocu-url-method"></div>
+
+	</a>
+	<a href="Advocates.9.php" class="apiDocu-url">
+		/api/advocate/search[/<span class="apiDocu-mask-param"&gt;</span>&lt;query&gt;</span>/[<span class="apiDocu-mask-param"&gt;</span>&lt;start&gt;</span>-<span class="apiDocu-mask-param"&gt;</span>&lt;count&gt;</span>]]
+
+		<div class="apiDocu-url-method">GET</div>
+
+		<div class="apiDocu-url-tags">
+			
+				<span style="background-color: #9b59b6;" class="apiDocu-url-tag">public</span>
+		</div>
+	</a>
+	<a href="Advocates.10.php" class="apiDocu-url">
 		/api/advocate/search
 
 		<div class="apiDocu-url-method"></div>
@@ -426,7 +442,7 @@ pre.apiDocu-json {
 				<h2 class="apiDocu-section-title">Cases</h2>
 
 				<div class="apiDocu-section">
-	<a href="Cases.9.php" class="apiDocu-url">
+	<a href="Cases.11.php" class="apiDocu-url">
 		/api/case/<span class="apiDocu-mask-param"&gt;</span>&lt;id&gt;</span>
 
 		<div class="apiDocu-url-method">GET</div>
@@ -436,7 +452,7 @@ pre.apiDocu-json {
 				<span style="background-color: #9b59b6;" class="apiDocu-url-tag">public</span>
 		</div>
 	</a>
-	<a href="Cases.10.php" class="apiDocu-url">
+	<a href="Cases.12.php" class="apiDocu-url">
 		/api/case/
 
 		<div class="apiDocu-url-method"></div>
@@ -450,7 +466,7 @@ pre.apiDocu-json {
 
 	<div class="apiDocu-container">
 		<div class="apiDocu-url">
-			/api/advocate/<span class="apiDocu-mask-param"&gt;</span>&lt;id&gt;</span>
+			/api/advocate-cases/<span class="apiDocu-mask-param"&gt;</span>&lt;advocate&gt;</span>
 
 			<div class="apiDocu-url-method">GET</div>
 
@@ -462,7 +478,7 @@ pre.apiDocu-json {
 
 			<h2>Description</h2>
 
-			<div class="apiDocu-description apiDocu-description-main">Get information about advocate with given ID.<br /><br><pre class="apiDocu-json">    {<br />        <span class="apiDocu-string">"id_advocate"</span>: 123,<br />        <span class="apiDocu-string">"remote_identificator"</span>: <span class="apiDocu-string">"77b3dbfb-f855-4170-9d5b-dc30757a0204"</span>,<br />        <span class="apiDocu-string">"identification_number"</span>: <span class="apiDocu-string">"11223344"</span>,<br />        <span class="apiDocu-string">"registration_number"</span>: <span class="apiDocu-string">"00001"</span>,<br />        <span class="apiDocu-string">"fullname"</span>: <span class="apiDocu-string">"JUDr. Ing. Petr Omáčka, PhD."</span>,<br />        <span class="apiDocu-string">"residence"</span>: {<br />            <span class="apiDocu-string">"street"</span>: <span class="apiDocu-string">"Pod mostem"</span>,<br />            <span class="apiDocu-string">"city"</span>: <span class="apiDocu-string">"Brno"</span>,<br />            <span class="apiDocu-string">"postal_area"</span>: <span class="apiDocu-string">"602 00"</span><br />        },<br />        <span class="apiDocu-string">"emails"</span>: [<br />            <span class="apiDocu-string">"petr.omacka@example.com"</span><br />        ],<br />        <span class="apiDocu-string">"state"</span>: <span class="apiDocu-string">"active"</span>,<br />        <span class="apiDocu-string">"remote_page"</span>: <span class="apiDocu-string">"http:<span class="apiDocu-comment">//vyhledavac.cak.cz/Units/_Search/Details/detailAdvokat.aspx?id=77b3dbfb-f855-4170-9d5b-dc30757a0204"</span>,</span><br>        <span class="apiDocu-string">"statistics"</span>: {<br />            <span class="apiDocu-string">"negative"</span>: 12,<br />            <span class="apiDocu-string">"neutral"</span>: 2,<br />            <span class="apiDocu-string">"positive"</span>: 59,<br />        }<br />    }<br /></pre><br />Available advocate states (see @see AdvocateStatus):<br /> - <b>active</b><br /> - <b>suspended</b><br /> - <b>removed</b><br />Available statistics results (@see CaseResult):<br /> - <b>negative</b><br /> - <b>neutral</b><br /> - <b>positive</b></div>
+			<div class="apiDocu-description apiDocu-description-main">Get advocate cases fulfilling given filters (or all when no filters given)<br /><br><pre class="apiDocu-json">    {<br />        <span class="apiDocu-string">"id_advocate"</span>: 123,<br />        <span class="apiDocu-string">"id_court"</span>: 2,<br />        <span class="apiDocu-string">"year"</span>: 2016<br />        <span class="apiDocu-string">"result"</span>:<br />        <span class="apiDocu-string">"cases"</span> : [<br />            {<br />                <span class="apiDocu-string">"id_case"</span>: 25,<br />                <span class="apiDocu-string">"id_court"</span>: 2,<br />                <span class="apiDocu-string">"registry_mark"</span>: <span class="apiDocu-string">"42 CDO 4000/2016"</span>,<br />                <span class="apiDocu-string">"result"</span>: <span class="apiDocu-string">"negative"</span>,<br />            }<br />        ]<br />    }<br /></pre><br />Through query object additional filters can be provided:<br /> - <b>id_court</b> (e.g. 2)<br /> - <b>year</b> (e.g. 2016)<br /> - <b>result</b> (e.g. negative)<br />Available results (@see CaseResult):<br /> - <b>negative</b><br /> - <b>neutral</b><br /> - <b>positive</b><br />When additional filter is provided its value is returned in response.</div>
 
 
 		<h2>Methods</h2>
@@ -475,7 +491,7 @@ pre.apiDocu-json {
 			<table>
 					<tr>
 						<th>
-							<span class="apiDocu-mask-param">&lt;id&gt;</span>
+							<span class="apiDocu-mask-param">&lt;advocate&gt;</span>
 							<div class="apiDocu-mask-param-description">
 								<ul>
 									<li>

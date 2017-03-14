@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>ApiDocu - /api/advocate/</title>
+	<title>ApiDocu - /api/advocate-cases/</title>
 	<style>html, body {
 	margin: 0;
 	padding: 0;
@@ -374,7 +374,7 @@ pre.apiDocu-json {
 
 	</a>
 	<a href="Advocates.3.php" class="apiDocu-url">
-		/api/advocate/<span class="apiDocu-mask-param"&gt;</span>&lt;id&gt;</span>
+		/api/advocate-cases/<span class="apiDocu-mask-param"&gt;</span>&lt;advocate&gt;</span>
 
 		<div class="apiDocu-url-method">GET</div>
 
@@ -384,13 +384,13 @@ pre.apiDocu-json {
 		</div>
 	</a>
 	<a href="Advocates.4.php" class="apiDocu-url">
-		/api/advocate/
+		/api/advocate-cases/
 
 		<div class="apiDocu-url-method"></div>
 
 	</a>
 	<a href="Advocates.5.php" class="apiDocu-url">
-		/api/advocate-results/<span class="apiDocu-mask-param"&gt;</span>&lt;advocate&gt;</span>[/<span class="apiDocu-mask-param"&gt;</span>&lt;court&gt;</span>]
+		/api/advocate/<span class="apiDocu-mask-param"&gt;</span>&lt;id&gt;</span>
 
 		<div class="apiDocu-url-method">GET</div>
 
@@ -400,13 +400,13 @@ pre.apiDocu-json {
 		</div>
 	</a>
 	<a href="Advocates.6.php" class="apiDocu-url">
-		/api/advocate-results/
+		/api/advocate/
 
 		<div class="apiDocu-url-method"></div>
 
 	</a>
 	<a href="Advocates.7.php" class="apiDocu-url">
-		/api/advocate/search[/<span class="apiDocu-mask-param"&gt;</span>&lt;query&gt;</span>/[<span class="apiDocu-mask-param"&gt;</span>&lt;start&gt;</span>-<span class="apiDocu-mask-param"&gt;</span>&lt;count&gt;</span>]]
+		/api/advocate-results/<span class="apiDocu-mask-param"&gt;</span>&lt;advocate&gt;</span>[/<span class="apiDocu-mask-param"&gt;</span>&lt;court&gt;</span>]
 
 		<div class="apiDocu-url-method">GET</div>
 
@@ -416,6 +416,22 @@ pre.apiDocu-json {
 		</div>
 	</a>
 	<a href="Advocates.8.php" class="apiDocu-url">
+		/api/advocate-results/
+
+		<div class="apiDocu-url-method"></div>
+
+	</a>
+	<a href="Advocates.9.php" class="apiDocu-url">
+		/api/advocate/search[/<span class="apiDocu-mask-param"&gt;</span>&lt;query&gt;</span>/[<span class="apiDocu-mask-param"&gt;</span>&lt;start&gt;</span>-<span class="apiDocu-mask-param"&gt;</span>&lt;count&gt;</span>]]
+
+		<div class="apiDocu-url-method">GET</div>
+
+		<div class="apiDocu-url-tags">
+			
+				<span style="background-color: #9b59b6;" class="apiDocu-url-tag">public</span>
+		</div>
+	</a>
+	<a href="Advocates.10.php" class="apiDocu-url">
 		/api/advocate/search
 
 		<div class="apiDocu-url-method"></div>
@@ -426,7 +442,7 @@ pre.apiDocu-json {
 				<h2 class="apiDocu-section-title">Cases</h2>
 
 				<div class="apiDocu-section">
-	<a href="Cases.9.php" class="apiDocu-url">
+	<a href="Cases.11.php" class="apiDocu-url">
 		/api/case/<span class="apiDocu-mask-param"&gt;</span>&lt;id&gt;</span>
 
 		<div class="apiDocu-url-method">GET</div>
@@ -436,7 +452,7 @@ pre.apiDocu-json {
 				<span style="background-color: #9b59b6;" class="apiDocu-url-tag">public</span>
 		</div>
 	</a>
-	<a href="Cases.10.php" class="apiDocu-url">
+	<a href="Cases.12.php" class="apiDocu-url">
 		/api/case/
 
 		<div class="apiDocu-url-method"></div>
@@ -450,7 +466,7 @@ pre.apiDocu-json {
 
 	<div class="apiDocu-container">
 		<div class="apiDocu-url">
-			/api/advocate/
+			/api/advocate-cases/
 
 			<div class="apiDocu-url-method"></div>
 
