@@ -14,7 +14,9 @@ class DetailPanel extends Component {
     }
 
     setActive(active) {
-        this.setState({active});
+        if (active !== this.state.active) {
+            this.setState({active});
+        }
     }
 
     render() {
@@ -28,7 +30,7 @@ class DetailPanel extends Component {
                 bsStyle={this.state.active ? 'primary' : 'default'}
                 className="detail-panel"
                 footer={this.props.footer}
-                onMouseEnter={this.handleEnter}
+                onMouseMove={this.handleEnter}
                 onMouseLeave={this.handleExit}
                 onClick={this.props.onClick}
             >
