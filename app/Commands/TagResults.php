@@ -227,11 +227,12 @@ class TagResults extends Command
             }
 
             if ($cause->officialData && $cause->court->id == Court::TYPE_NSS) {
-            	$json_input = Json::decode(Json::encode(array_values($cause->officialData)), true)[0]["result"];
-                if (!Strings::contains($debug, $json_input)) {
+            	$json_input = implode("; ", array_unique(array_column($cause->officialData, "result")));
+            	$part = trim(explode(", ", $debug)[1]);
+                if (!Strings::contains($json_input, $part)) {
                     $this->makeStatistic(static::DIFFERENT,false);
                 	$message = $cause->registrySign." - Court: '".$json_input."'; Web: '".$debug."'\n";
-                	$consoleOutput->writeln($message);
+                	$consoleOutput->write($message);
                 	$output .= $message;
                 }
             }
