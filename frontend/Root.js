@@ -4,12 +4,12 @@ import {Provider} from 'react-redux';
 import './include.less';
 import './index.less';
 
-import Router from './Router';
+import AppRouter from './AppRouter';
 
 // eslint-disable-next-line react/prop-types, #scaffolding
 const Root = ({store}) => (
     <Provider store={store}>
-        <Router />
+        <AppRouter />
     </Provider>
 );
 

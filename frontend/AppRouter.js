@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {
-    Router as ReactRouter,
+    Router,
     Route,
     IndexRoute,
     browserHistory,
@@ -15,7 +15,7 @@ import about from './about';
 import contact from './contact';
 import search from './search';
 
-const Router = ({handleEnter, handleChange}) => {
+const AppRouter = ({handleEnter, handleChange}) => {
     const createRoute = (module) => <Route
         path={module.ROUTE}
         component={module.Container}
@@ -23,18 +23,18 @@ const Router = ({handleEnter, handleChange}) => {
         onChange={handleChange(module.NAME)}
     />;
     return (
-        <ReactRouter history={browserHistory}>
+        <Router history={browserHistory}>
             <Route path="/" component={navigation.AppContainer}>
                 <IndexRoute component={home.Container} onEnter={handleEnter(home.NAME)} />
                 {createRoute(about)}
                 {createRoute(contact)}
                 {createRoute(search)}
             </Route>
-        </ReactRouter>
+        </Router>
     );
 };
 
-Router.propTypes = {
+AppRouter.propTypes = {
     handleEnter: PropTypes.func.isRequired,
     handleChange: PropTypes.func.isRequired,
 };
@@ -44,4 +44,4 @@ const mapDispatchToProps = (dispatch) => ({
     handleChange: (name) => (prevState, nextState) => dispatch(router.routeEntered(name, nextState.params, nextState.location.query)),
 });
 
-export default connect(undefined, mapDispatchToProps)(Router);
+export default connect(undefined, mapDispatchToProps)(AppRouter);
