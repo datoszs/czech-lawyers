@@ -8,8 +8,11 @@ const search = (query, start, count) => doGet(`${base}/search/${query}/${start}-
 
 const get = (id) => doGet(`${base}/${id}`);
 
+const getResults = (id, court) => doGet(`/api/advocate-results/${id}${court ? `/${court}` : ''}`);
+
 export default {
     autocomplete,
     search,
     get,
+    getResults,
 };
