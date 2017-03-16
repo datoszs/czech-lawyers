@@ -73,7 +73,6 @@
 						<td class="
 							{if $resultTagging && $resultTagging->status == App\Enums\TaggingStatus::STATUS_FAILED}danger
 							{elseif $resultTagging && $resultTagging->status == App\Enums\TaggingStatus::STATUS_IGNORED}active
-							{elseif $resultTagging && $resultTagging->status == App\Enums\TaggingStatus::STATUS_FUZZY}warning
 							{elseif $resultTagging && $resultTagging->status == App\Enums\TaggingStatus::STATUS_PROCESSED}success
 							{else}
 							{/if}
@@ -84,7 +83,6 @@
 						<td class="
 							{if $advocateTagging && $advocateTagging->status == App\Enums\TaggingStatus::STATUS_FAILED}danger
 							{elseif $advocateTagging && $advocateTagging->status == App\Enums\TaggingStatus::STATUS_IGNORED}active
-							{elseif $advocateTagging && $advocateTagging->status == App\Enums\TaggingStatus::STATUS_FUZZY}warning
 							{elseif $advocateTagging && $advocateTagging->status == App\Enums\TaggingStatus::STATUS_PROCESSED}success
 							{else}
 							{/if}

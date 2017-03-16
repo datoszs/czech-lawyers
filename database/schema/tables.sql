@@ -249,10 +249,9 @@ ALTER TABLE advocate_info ADD FOREIGN KEY (advocate_id) REFERENCES advocate(id_a
 ------------------- Tagging -------------------
 
 CREATE TYPE tagging_status AS ENUM (
-  'failed', /* processing failed due to some error state (exception, missing file etc.) */
-  'ignored' /* document skipped as not relevant */,
-  'processed' /* document was successfulLy tagged */,
-  'fuzzy' /* document was tagged but the result is uncertain (can be switched here unless the last tagging was done by user type person) */
+  'failed', /* processing failed due to some error state (exception, missing file etc, to many matches) */
+  'ignored' /* tagging of this entity as not relevant (no advocate present,...) */,
+  'processed' /* entity was successfulLy tagged */
 );
 
 CREATE TABLE tagging_advocate (

@@ -29,17 +29,16 @@ class TagResults extends Command
 {
     use JobCommand;
     const ARGUMENT_COURT = 'court';
-    const DECISION_RESULT_NEUTRAL = "zastaveno";
-    const DECISION_RESULT_NEGATIVE = "odmítnuto";
-    const FORM_US_0 = "nález";
-    const FORM_US_1 = "usnesení";
-    const FORM_NSS = "rozsudek";
+    const DECISION_RESULT_NEUTRAL = 'zastaveno';
+    const DECISION_RESULT_NEGATIVE = 'odmítnuto';
+    const FORM_US_0 = 'nález';
+    const FORM_US_1 = 'usnesení';
+    const FORM_NSS = 'rozsudek';
     const DIFFERENT = 666;
 
     protected $processed = 0;
     protected $ignored = 0;
     protected $failed = 0;
-    protected $fuzzy = 0;
     protected $empty = 0;
     protected $updated = 0;
     protected $different = 0;
@@ -116,10 +115,6 @@ class TagResults extends Command
                     $this->failed++;
                     break;
                 }
-                case TaggingStatus::STATUS_FUZZY: {
-                    $this->fuzzy++;
-                    break;
-                }
                 case (static::DIFFERENT): {
                     $this->different++;
                     break;
@@ -129,8 +124,7 @@ class TagResults extends Command
             return
                 "Processed: {$this->processed}, 
                 Ignored: {$this->ignored}, 
-                Failed: {$this->failed}, 
-                Fuzzy: {$this->fuzzy}, 
+                Failed: {$this->failed},  
                 Empty: {$this->empty}, 
                 Different: {$this->different}";
         }
