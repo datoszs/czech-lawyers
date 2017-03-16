@@ -5,7 +5,7 @@ import {routerShape} from 'react-router';
 const RouteNavItem = ({route, children}, {router}) => (
     <NavItem
         active={router.isActive(route)}
-        onClick={() => router.push(route)}
+        onClick={() => router.push(`/${route}`)}
     >
         {children}
     </NavItem>

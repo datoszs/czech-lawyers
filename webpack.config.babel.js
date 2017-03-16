@@ -14,6 +14,7 @@ export default ({dev}) => ({
     ),
     output: {
         path: path.resolve(__dirname, 'dist'),
+        publicPath: '/',
         filename: 'bundle.js',
     },
     plugins: array(
@@ -86,7 +87,7 @@ export default ({dev}) => ({
         ],
     },
     devServer: {
-        historyApiFallback: {index: '/'},
+        historyApiFallback: true,
         proxy: {
             '/api': 'http://localhost:8000',
         }

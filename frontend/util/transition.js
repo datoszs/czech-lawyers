@@ -12,5 +12,5 @@ export default (module, params, query) => {
     if (query) {
         route += `?${querystring.stringify(query)}`;
     }
-    browserHistory.push(route);
+    browserHistory.push(`/${route}`);
 };
