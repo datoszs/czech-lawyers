@@ -89,7 +89,7 @@ export default ({dev}) => ({
     devServer: {
         historyApiFallback: true,
         proxy: {
-            '/api': 'http://localhost:8000',
+            '/api': 'http://[::1]:8000',
         }
     },
 });
