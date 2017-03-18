@@ -38,11 +38,7 @@ if ($state !== 0) {
 
 // Build frontend
 $state = 0;
-if ($environment === 'production') {
-	system('npm run build && mv dist/* www/frontend', $state);
-} else {
-	echo "Frontend in development version should be build manually, see README.\n";
-}
+system('npm run build && mv dist/* www/frontend', $state);
 if ($state !== 0) {
 	die("Error: Building frontend has failed.\n");
 }
