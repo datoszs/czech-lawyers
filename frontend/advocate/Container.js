@@ -1,25 +1,21 @@
-import React, {PropTypes} from 'react';
-import {connect} from 'react-redux';
-import {PageHeader} from 'react-bootstrap';
-import {AdvocateDetail} from '../model';
-import {getAdvocate} from './selectors';
+import React from 'react';
+import {Row, Col, ButtonToolbar} from 'react-bootstrap';
+import {BackButton} from '../containers';
+import Header from './Header';
+import Detail from './Detail';
+import CakLink from './CakLink';
 
-const AdvocateContainer = ({advocate}) => (
+export default () => (
     <section>
-        <PageHeader>{advocate ? advocate.name : 'Detail advokáta'}</PageHeader>
+        <Header />
+        <Row>
+            <Col sm={6}>
+                <ButtonToolbar>
+                    <BackButton />
+                    <CakLink />
+                </ButtonToolbar>
+                <Detail />
+            </Col>
+        </Row>
     </section>
 );
-
-AdvocateContainer.defaultProps = {
-    advocate: null,
-};
-
-AdvocateContainer.propTypes = {
-    advocate: PropTypes.instanceOf(AdvocateDetail),
-};
-
-const mapStateToProps = (state) => ({
-    advocate: getAdvocate(state),
-});
-
-export default connect(mapStateToProps)(AdvocateContainer);
