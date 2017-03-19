@@ -17,8 +17,9 @@ from psycopg2 import extras
 
 bad_word = [")", "agentura", "asociace", "advokátní", "koncipient"]
 skip_word = ["sama", "§", "s.r.o.", "a.s.", "o.s.", "v.o.s.", "kancelář"]
-states = dict(ok="processed", fuzzy="fuzzy", no="failed")
+states = dict(ok="processed", no="failed")
 Variants = namedtuple('Variants', ["full", "normal", "reverse"])
+threshold = 5
 
 
 def load_config(path_to_neon):
@@ -35,14 +36,22 @@ def connection(path_to_neon):
                             password=dbal["password"],
                             host=dbal["host"])
 
+def print_statistic(tagger):
+    print("----\n"
+          "Causes: {}, unique advocates: {}\n"
+          "Matched: {}, No matched: {}, Without changes: {}\n"
+          "Bad: {}, Empty: {}\n"
+          "Processed: {}, Failed: {}, Hited: {}\n"
+          "Size of match_cache: {}, Size of no_match_cache: {}\n"
+          "Compare full: {}, Contains normal or reverse: {}".format(
+            len(tagger.causes), len(tagger.advocates),
+            tagger.matched, tagger.no_matched, tagger.without_changes,
+            tagger.bad, tagger.empty,
+            tagger.processed, tagger.failed, tagger.hit,
+            len(tagger.match_cache), len(tagger.no_match_cache),
+            tagger.cmp_full, tagger.cont_normal)
+    )
 
-def get_status(type_of_comparison):
-    if "contains" in type_of_comparison:
-        return states["fuzzy"]
-    elif "compare" in type_of_comparison:
-        return states["ok"]
-    else:
-        return states["no"]
 
 
 class QueryDB(object):
@@ -54,35 +63,40 @@ class QueryDB(object):
             "SELECT concat(degree_before,'/',name,' ',surname) AS fullname, string_agg(DISTINCT advocate_id::text, ' ') AS advocate_id "
             "FROM advocate_info "
             "GROUP BY degree_before, name, surname "
-            "HAVING array_length(array_agg(DISTINCT advocate_id), 1) = 1;")
+            "HAVING array_length(array_agg(DISTINCT advocate_id), 1) = 1"
+            "ORDER BY degree_before DESC"
+            ";")
         return self.cur.fetchall()
 
     def find_for_advocate_tagging(self, court):
-        self.cur.execute("SELECT *"
-                         "FROM \"case\""
-                         "WHERE court_id = %s AND id_case NOT IN (SELECT case_id FROM tagging_advocate WHERE is_final);" % court)
+        self.cur.execute(
+                "SELECT *"
+                "FROM \"case\""
+                "WHERE court_id = %s AND id_case NOT IN (SELECT case_id FROM tagging_advocate WHERE is_final);" % court)
         return self.cur.fetchall()
 
     def insert_to_db(self, record):
         self.cur.execute(
-            "INSERT INTO tagging_advocate (%s) VALUES (%s,%s,'%s',%s,'%s',%s,%s,%s,%i)" % (",".join(record.keys()),
-                                                                                           record["document_id"],
-                                                                                           record["advocate_id"],
-                                                                                           record["status"],
-                                                                                           record["is_final"],
-                                                                                           record["debug"],
-                                                                                           record["inserted"],
-                                                                                           record["inserted_by"],
-                                                                                           record["job_run_id"],
-                                                                                           record["case_id"]
-                                                                                           ))
+            "INSERT INTO tagging_advocate ({}) VALUES ({},{},'{}',{},'{}',{},{},{},{})".format(
+                    ",".join(record.keys()),
+                    record["document_id"],
+                    record["advocate_id"],
+                    record["status"],
+                    record["is_final"],
+                    record["debug"],
+                    record["inserted"],
+                    record["inserted_by"],
+                    record["job_run_id"],
+                    record["case_id"]
+            ))
 
     def get_last_tagging(self, cause_id):
-        self.cur.execute("SELECT * "
-                         "FROM tagging_advocate "
-                         "WHERE case_id=%i "
-                         "ORDER BY inserted DESC "
-                         "LIMIT 1" % int(cause_id))
+        self.cur.execute(
+                "SELECT * "
+                "FROM tagging_advocate "
+                "WHERE case_id=%i "
+                "ORDER BY inserted DESC "
+                "LIMIT 1" % int(cause_id))
         return self.cur.fetchone()
 
     def insert_if_differs(self, new, old):
@@ -168,9 +182,10 @@ class NameCleaner:
             result = m.group(1)
             if len(result) >= 12:
                 string = result
-        return string, "EXTRACT"
+        return string.strip(), "EXTRACT"
 
-    def prepare_advocate(self, raw_string):
+    @staticmethod
+    def prepare_advocate(raw_string):
         parts = raw_string.split('/')
         #print(parts)
         normalize = list(filter(str.strip, parts))
@@ -184,18 +199,20 @@ class NameCleaner:
 
 class AdvocateTagger(QueryDB):
     def __init__(self, path_to_neon, court_id, job_id):
-        self.court = court_id
+        self.court = int(court_id)
         self.job = job_id
         self.conn = connection(path_to_neon)
         self.cursor = self.conn.cursor(cursor_factory=extras.RealDictCursor)
         super().__init__(self.cursor)
         self.causes = self.find_for_advocate_tagging(court_id)
         self.advocates = self.find_unique_advocates()
-        t1 = datetime.utcnow()
+        t1 = datetime.now()
         print(t1 - t0)
         self.cleaner = NameCleaner()
-        self.matched, self.no_matched = 0, 0
-        self.cmp_full, self.cont_full, self.cmp_normal, self.cont_normal = (0, 0, 0, 0)
+        self.bad, self.empty = 0, 0
+        self.matched, self.no_matched, self.without_changes = (0,) * 3
+        self.cmp_full, self.cont_normal = (0, 0)
+        self.processed, self.failed, self.hit = (0, ) * 3
         self.no_match_cache, self.match_cache = {}, {}
 
     @staticmethod
@@ -207,9 +224,10 @@ class AdvocateTagger(QueryDB):
         else:
             return None
 
-    def print_info(self, case_name, text, name, name_full, advocate_id, type_of_comparison):
-        print(U"%s - '%s' -> %s" % (case_name, text, name))
-        print(U"\t %s, %s, >> \"%s\" <<" % (name_full, advocate_id, type_of_comparison))
+    @staticmethod
+    def print_info(case, text, name, advocate_name, advocate_id, type_of_comparison):
+        print("{} - '{}' -> {}".format(case["registry_sign"], text, name).encode())
+        print("\t {}, {}, >> \"{}\". <<".format(advocate_name, advocate_id, type_of_comparison).encode())
 
     def prepare_tagging(self, cause, status, debug, advocate="NULL", role=2):
         record = OrderedDict([
@@ -225,139 +243,144 @@ class AdvocateTagger(QueryDB):
         ])
         return record
 
-    def full_match(self, for_match, text):
-        if for_match == text:
-            self.cmp_full += 1
-            return "full compare - dummy"
-        elif for_match in text:
-            self.cont_full += 1
-            return "full contains - dummy"
+    def choice_best_match(self, matches, text, name):
+        for i in range(0, threshold):
+            if matches.get(i):
+                records = matches.get(i)
+                distance = i
+                break
+        # advocate_id, advocate_name, debug, status
+        # variants, advocate_id
+        if len(records) == 1:
+            best = records[0]
+            self.cont_normal += 1
+            return best[1], best[0].full, "was tagged from: %s (%s)" % (text, name), states["ok"], best[-1]
+        elif len(records) < 6:
+            result = []
+            names = []
+            for variants, advocate_id, note in records:
+                if advocate_id not in result:
+                    result.append(advocate_id)
+                    names.append(variants.full)
+            debug = "\"%s\" with levenshtein distance = %d" % ("; ".join(names), distance)
+            return "NULL", debug, debug, states["no"], "mixed"
+        else:
+            return (None,) * 5
+
+    def process_case(self, cause, text):
+        # check_cache record with the same name in match_cache
+        exist = self.match_cache.get(text)
+        name = self.cleaner.extract_name(text)[0].title()
+        if exist is not None:
+            new, advocate_name, status = exist
+            new["case_id"] = cause["id_case"]
+            type_of_comparison = "now exist"
+            self.hit += 1
+        else:
+            type_of_comparison, status, variants, advocate_id = None, None, None, None
+            matches = {}
+            for advocate in self.advocates:
+                variants = self.cleaner.prepare_advocate(advocate["fullname"])
+                # compare full variant name (with degrees) with 'text'
+                if variants.full == text:
+                    self.cmp_full += 1
+                    status = states["ok"]
+                    type_of_comparison = "full compare"
+                    advocate_id = advocate["advocate_id"]
+                    break
+                # normal variant of name
+                if variants.normal.title() in text:
+                    distance = lev.distance(variants.normal.title(), name)
+                    if distance < threshold:
+                        matches.setdefault(distance, []).append((variants, advocate["advocate_id"], "contains normal - levenshtein"))
+                # reverse variant of name
+                if variants.reverse.title() in text:
+                    distance = lev.distance(variants.reverse.title(), name)
+                    if distance < threshold:
+                        matches.setdefault(distance, []).append((variants, advocate["advocate_id"], "contains reverse - levenshtein"))
+                # special compare only with surname
+                if self.court == 3:
+                    if name in variants.normal:
+                        distance = lev.distance(variants.normal.split()[-1], name)
+                        if distance < threshold:
+                            matches.setdefault(distance, []).append((variants, advocate["advocate_id"], "contains only surname - levenshtein"))
+
+            if advocate_id:
+                advocate_name = variants.full
+                debug = "was tagged from: %s (%s)" % (text, name)
+            elif matches:
+                advocate_id, advocate_name, debug, status, type_of_comparison = self.choice_best_match(matches, text, name)
+
+            if advocate_id is not None:
+                new = self.prepare_tagging(cause, status, debug, advocate=advocate_id)
+            else:
+                return False
+        self.match_cache.setdefault(text, (new, advocate_name, status))
+        if self.insert_if_differs(new, self.get_last_tagging(cause["id_case"])):
+            if new["status"] == states["ok"]:
+                self.processed += 1
+            else:
+                self.failed += 1
+            self.print_info(cause, text, name, advocate_name,
+                            new["advocate_id"], type_of_comparison)
+            return True
         else:
             return None
 
-    def prepare_debug(self, matches, name):
-        result = []
-        #print(matches)
-        for names, advocate, distance, type_of_comparison in matches.values():
-            #print("\t", names.full, distance, ",", advocate, "-", type_of_comparison)
-            result.append(names.full)
-        return "; ".join(result), "NULL"
-
-    def process_case(self, cause, text):
-        try:
-            exist = self.match_cache[text]
-            if self.insert_if_differs(exist[0], self.get_last_tagging(cause["id_case"])):
-                self.print_info(
-                    cause["registry_sign"],
-                    text,
-                    self.cleaner.extract_name(text)[0],
-                    exist[1],
-                    exist[0]["advocate_id"],
-                    "now exist"
-                )
-                return True
-        except KeyError:
-            pass
-        type_of_comparison, variants, advocate_id = None, None, None
-        name = self.cleaner.extract_name(text)[0].title()
-        full_matches, matches = {}, {}
-        for advocate in self.advocates:
-            variants = self.cleaner.prepare_advocate(advocate["fullname"])
-            # compare full variant name (with degrees) with 'text'
-            type_of_comparison = self.full_match(variants.full.lower(), text.lower())
-            if type_of_comparison is not None:
-                advocate_id = advocate["advocate_id"]
-                full_matches[advocate_id] = (variants, advocate_id, 0, type_of_comparison)
-            # normal variant of name
-            distance = lev.distance(variants.normal.title(), name)
-            if variants.normal.title() in text:
-                if distance < 4:
-                    advocate_id = advocate["advocate_id"]
-                    matches[advocate_id] = (variants, advocate_id, distance, "contains normal - levenshtein")
-            # reverse variant of name
-            distance = lev.distance(variants.reverse.title(), name)
-            if variants.reverse.title() in text:
-                if distance < 4:
-                    advocate_id = advocate["advocate_id"]
-                    matches[advocate_id] = (variants, advocate_id, distance, "contains reverse - levenshtein")
-        debug = text
-        if full_matches and len(full_matches) == 1:
-            variants, advocate_id, distance, type_of_comparison = list(full_matches.values())[0]
-        elif full_matches and len(full_matches) < 4:
-            debug, advocate_id = self.prepare_debug(full_matches, name)
-            type_of_comparison = "more matches"
-        elif matches and len(matches) == 1:
-            variants, advocate_id, distance, type_of_comparison = list(matches.values())[0]
-            self.cmp_normal += 1
-        elif matches and len(matches) < 4:
-            debug, advocate_id = self.prepare_debug(matches, name)
-            type_of_comparison = "more matches"
-        else:
-            return False
-        if type_of_comparison is None:
-            return False
-        status = get_status(type_of_comparison)
-        if status == "failed":
-            new = self.prepare_tagging(cause, status, debug)
-            if self.insert_if_differs(new, self.get_last_tagging(cause["id_case"])):
-                self.print_info(cause["registry_sign"], text, name, debug,
-                                '', type_of_comparison)
-                return False
-        else:
-            new = self.prepare_tagging(cause, status, debug, advocate_id)
-            if self.insert_if_differs(new, self.get_last_tagging(cause["id_case"])):
-                self.print_info(cause["registry_sign"], text, name, variants.full,
-                                advocate_id, type_of_comparison)
-                self.match_cache[text] = (new, variants.full)
-                return True
-
     def run(self):
+        bad = []
         for cause in self.causes:
             official_data = cause["official_data"]
             if official_data and len(official_data) == 1:
-                string = self.get_name(official_data[0], int(self.court))
-                name, status = self.cleaner.clear(string)
+                string = self.get_name(official_data[0], self.court)
+                string, status = self.cleaner.clear(string)
+                name = self.cleaner.extract_name(string)
                 if status in ["WRONG", "MORE_NAMES", "SKIP"]:
                     self.no_match_cache[string] = 1
+                    self.bad += 1
+                    bad.append((string, status))
                     continue
                 try:
                     if self.no_match_cache[name]:
+                        self.no_matched += 1
                         continue
                     elif self.no_match_cache[string]:
+                        self.no_matched += 1
                         continue
                 except KeyError:
                     pass
-                # TODO osetrit rozliseni nevlozeni od nenalezeni
-                if self.process_case(cause, string):
+
+                ret = self.process_case(cause, string)
+                if ret is True:  # insert
                     self.matched += 1
-                else:
+                elif ret is None:  # not insert
+                    self.without_changes += 1
+                else:  # not match
                     self.no_matched += 1
                     self.no_match_cache[name] = 1
+            else:
+                self.empty += 1
         self.conn.commit()
-        print("No full_match (%d):\n" % len(self.no_match_cache))
-        #print(self.no_match_cache.keys())
-
+        # print(bad, len(bad))
 
 if __name__ == "__main__":
     if len(sys.argv) == 4:
-        print(sys.argv)
+        # print(sys.argv)
         job_id = sys.argv[1]
         court = sys.argv[2]
         path = sys.argv[3] + '/../Config/config.local.neon'
     else:
         print("Usage:\n"
-            "- first arg is jobID\n"
-            "- second arg is courtID\n"
-            "- third arg is path to Command folder")
+              "- first arg is jobID\n"
+              "- second arg is courtID\n"
+              "- third arg is path to Command folder")
         sys.exit(-1)
-    t0 = datetime.utcnow()
-    print(t0)
+    t0 = datetime.now()
+    print(t0.replace(microsecond=0))
     tagger = AdvocateTagger(path, court, job_id)
     tagger.run()
-    print("Causes: %d, unique advocates: %d, Matched: %d, No matched: %d" % (
-        len(tagger.causes), len(tagger.advocates), tagger.matched, tagger.no_matched))
-    print("Compare full: %d, Contains full: %d\nCompare normal: %d" % (
-    tagger.cmp_full, tagger.cont_full, tagger.cmp_normal))
-    t2 = datetime.utcnow()
-    print(t2)
-    print("Duration: {}".format(t2 - t0))
+    print_statistic(tagger)
+    t2 = datetime.now()
+    # print(t2.replace(microsecond=0))
+    print("Duration: {}".format((t2 - t0)))
+    sys.exit(0)
