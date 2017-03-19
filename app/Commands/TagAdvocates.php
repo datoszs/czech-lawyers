@@ -36,7 +36,7 @@ class TagAdvocates extends Command
 	public function getCommand($jobId, $court_id) {
 		return sprintf(
 			'%s %s %s %s %s 2>&1',
-			'workon cestiadvokati.cz && python',
+			'python3',
 			__DIR__ . '/../../externals/tagger.py',
 			$jobId,
 			$court_id,
@@ -49,12 +49,17 @@ class TagAdvocates extends Command
 		$this->prepare();
 		$output = null;
 		$code = 0;
-		$command = $this->getCommand($this->jobId, Court::$types[$court]);
+		$command = $this->getCommand($this->jobRun->id, Court::$types[$court]);
 		$consoleOutput->writeln($command, __DIR__);
 		exec($command, $outputArray, $code);
+	
 		$output = implode("\n", $outputArray);
 		$consoleOutput->writeln($output);
-		$this->finalize($code, $output, "ok");
+		if ($code == 0) {
+			$this->finalize($code, $output, "Tagged successfully");
+		} else {
+			$this->finalize($code, $output, "Finished with error!");
+		}
 		return $code;
 	}
 }
