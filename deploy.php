@@ -31,9 +31,16 @@ if ($state !== 0) {
 
 // Update Node.js dependencies
 $state = 0;
-system('npm update', $state);
+system('npm install', $state);
 if ($state !== 0) {
 	die("Error: Update of Node.js dependencies via node failed.\n");
+}
+
+// Build frontend
+$state = 0;
+system('npm run build && mv dist/* www/frontend', $state);
+if ($state !== 0) {
+	die("Error: Building frontend has failed.\n");
 }
 
 // Remove Nette cache

@@ -17,10 +17,25 @@
 	RewriteCond %{HTTPS} off
 	RewriteRule .* https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
-	# front controller
+	# backend (api, administration...)
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteCond %{REQUEST_URI} ^/(api|api-doc|admin)/
 	RewriteRule !\.(pdf|js|ico|gif|jpg|png|css|rar|zip|tar\.gz|map)$ index.php [L]
+
+	# frontend (explicitly allow access to asset files in assets folder as well as in frontend folder)
+	RewriteCond %{REQUEST_URI} !^/(frontend|assets|api|api-doc|admin)/
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteRule (.*\.(pdf|js|ico|gif|jpg|png|css|rar|zip|tar\.gz|map))$ /frontend/$1 [L]
+
+	# frontend - redirect all to index.html -- needed as history API is used
+	RewriteCond %{REQUEST_URI} !^/(frontend|assets|api|api-doc|admin)/
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteRule ^(.*)$ /frontend/index.html [L]
+	RewriteRule ^$ /frontend/index.html [L]
+
 </IfModule>
 
 # enable gzip compression
