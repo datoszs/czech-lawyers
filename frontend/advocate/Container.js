@@ -5,6 +5,7 @@ import Header from './Header';
 import Detail from './Detail';
 import CakLink from './CakLink';
 import StatisticsContainer from './Statistics';
+import CourtFilter from './CourtFilter';
 import TimelineContainer from './Timeline';
 
 export default () => (
@@ -22,6 +23,7 @@ export default () => (
                 <StatisticsContainer />
             </Col>
         </Row>
+        <CourtFilter />
         <TimelineContainer />
     </section>
 );

@@ -3,11 +3,14 @@ import {Statistics} from '../model';
 
 const getModel = (state) => state.get(NAME);
 
-export const getId = (state) => getModel(state).get('id');
-
 export const getAdvocate = (state) => getModel(state).get('advocate');
 
 export const isAdvocateLoaded = (state) => !!getAdvocate(state);
+
+/* RESULTS */
+export const getCourtFilter = (state) => getModel(state).get('courtFilter');
+
+export const isResultsLoaded = (state) => !!getModel(state).get('results');
 
 export const getStartYear = (state) => getModel(state).get('startYear');
 
