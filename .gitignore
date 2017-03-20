@@ -20,3 +20,4 @@ storage/documents/us/*
 *.xml
 *.iml
 test.txt
+dist

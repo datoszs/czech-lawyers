@@ -15,7 +15,7 @@ export default ({dev}) => ({
     output: {
         path: path.resolve(__dirname, 'dist'),
         publicPath: '/',
-        filename: 'bundle.js',
+        filename: '[name].[chunkhash].js',
     },
     plugins: array(
         new HtmlWebpackPlugin({
@@ -31,7 +31,7 @@ export default ({dev}) => ({
                 comments: false,
             },
         }),
-        !dev && new ExtractTextPlugin('style.css'),
+        !dev && new ExtractTextPlugin('style.[chunkhash].css'),
     ),
     module: {
         rules: [

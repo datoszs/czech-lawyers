@@ -1,6 +1,6 @@
 import React from 'react';
 import {browserHistory} from 'react-router';
-import {Button,Glyphicon} from 'react-bootstrap';
+import {Button, Glyphicon} from 'react-bootstrap';
 import Msg from './Msg';
 
 export default () => (
