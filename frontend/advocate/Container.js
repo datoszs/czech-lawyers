@@ -4,6 +4,7 @@ import {BackButton} from '../containers';
 import Header from './Header';
 import Detail from './Detail';
 import CakLink from './CakLink';
+import Statistics from './Statistics';
 
 export default () => (
     <section>
@@ -15,6 +16,9 @@ export default () => (
                     <CakLink />
                 </ButtonToolbar>
                 <Detail />
+            </Col>
+            <Col sm={6}>
+                <Statistics />
             </Col>
         </Row>
     </section>

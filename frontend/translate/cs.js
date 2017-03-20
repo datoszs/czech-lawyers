@@ -22,4 +22,8 @@ export default {
 
     'advocate.detail.title': 'Detail advokáta',
     'cak.link': 'Detail na stránkách České advokátní komory',
+
+    'stats.positive.legend': 'meritorních konečných rozhodnutí',
+    'stats.negative.legend': 'nemeritorních konečných rozhodnutí',
+    'stats.neutral.legend': 'rozhodnutí o\u{000A0}zastavení řízení',
 };
