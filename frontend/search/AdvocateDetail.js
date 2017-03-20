@@ -2,12 +2,14 @@ import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {Row} from 'react-bootstrap';
 import translate from '../translate';
+import {transition} from '../util';
 import {Statistics, DetailPanel} from '../components';
 import {Advocate, statusMsg} from '../model';
+import advocateModule from '../advocate';
 import {getAdvocate} from './selectors';
 import FooterColumn from './FooterColumn';
 
-const AdvocateDetailComponent = ({advocate, msgStatus, msgIc}) => (
+const AdvocateDetailComponent = ({advocate, handleDetail, msgStatus, msgIc}) => (
     <DetailPanel
         footer={
             <Row>
@@ -17,6 +19,7 @@ const AdvocateDetailComponent = ({advocate, msgStatus, msgIc}) => (
             </Row>
         }
         title={advocate.name}
+        onClick={handleDetail}
     >
         <Statistics
             positive={advocate.statistics.positive}
@@ -28,6 +31,7 @@ const AdvocateDetailComponent = ({advocate, msgStatus, msgIc}) => (
 
 AdvocateDetailComponent.propTypes = {
     advocate: PropTypes.instanceOf(Advocate).isRequired,
+    handleDetail: PropTypes.func.isRequired,
     msgStatus: PropTypes.string.isRequired,
     msgIc: PropTypes.string.isRequired,
 };
@@ -41,7 +45,16 @@ const mapStateToProps = (state, {id}) => {
     };
 };
 
-const AdvocateDetail = connect(mapStateToProps)(AdvocateDetailComponent);
+const mapDispatchToProps = () => ({
+    handleDetail: (id) => () => transition(advocateModule, {id}),
+});
+
+const mergeProps = (stateProps, {handleDetail}, {id}) => ({
+    handleDetail: handleDetail(id),
+    ...stateProps,
+});
+
+const AdvocateDetail = connect(mapStateToProps, mapDispatchToProps, mergeProps)(AdvocateDetailComponent);
 
 AdvocateDetail.propTypes = {
     id: PropTypes.number.isRequired,

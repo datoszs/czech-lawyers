@@ -44,7 +44,7 @@ const finishedReducer = (state = true, action) => {
         case SET_QUERY:
             return action.query === '';
         case ADD_ADVOCATES:
-            return action.advocates < PAGE_SIZE;
+            return action.advocates.length < PAGE_SIZE;
         default:
             return state;
     }

@@ -8,10 +8,22 @@ export default {
 
     'search.button': 'Hledat',
     'search.placeholder': 'Zadejte jméno nebo IČ',
+    'back.button': 'Zpět',
 
     'advocate.ic': 'IČ',
+    'advocate.registration.number': 'Evidenční číslo',
+    'advocate.address': 'Sídlo',
+    'advocate.status': 'Stav',
+    'advocate.email': 'E-mail',
 
     'status.active': 'Aktivní',
     'status.suspended': 'Pozastavený',
     'status.removed': 'Vyškrtnutý',
+
+    'advocate.detail.title': 'Detail advokáta',
+    'cak.link': 'Detail na stránkách České advokátní komory',
+
+    'stats.positive.legend': 'meritorních konečných rozhodnutí',
+    'stats.negative.legend': 'nemeritorních konečných rozhodnutí',
+    'stats.neutral.legend': 'rozhodnutí o\u{000A0}zastavení řízení',
 };
