@@ -13,9 +13,9 @@ export default ({dev}) => ({
         './frontend/',
     ),
     output: {
-        path: path.resolve(__dirname, 'dist'),
+        path: path.resolve(__dirname, 'www/frontend'),
         publicPath: '/',
-        filename: '[name].[chunkhash].js',
+        filename: dev ? '[name].js' : '[name].[chunkhash].js',
     },
     plugins: array(
         new HtmlWebpackPlugin({

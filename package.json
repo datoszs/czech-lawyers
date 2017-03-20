@@ -9,7 +9,7 @@
   },
   "scripts": {
     "start": "webpack-dev-server -d --inline --hot --env.dev --progress",
-    "prebuild": "npm run lint && npm run test && rimraf dist/*",
+    "prebuild": "npm run lint && npm run test && rimraf www/frontend/*",
     "build": "webpack --progress --env",
     "lint": "eslint frontend",
     "lint:fix": "npm run lint -- --fix",

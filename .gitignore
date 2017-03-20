@@ -1,7 +1,6 @@
 log/*
 temp/*
-temp/sessions/*
-!temp/sessions
+!temp/sessions/.keep
 vendor/*
 !.gitignore
 !.htaccess
@@ -9,6 +8,8 @@ vendor/*
 app/Config/config.local.neon
 node_modules
 www/assets
+www/frontend
+!www/frontend/.keep
 vendor
 storage/documents/ns/*
 !storage/documents/ns/.keep
@@ -20,4 +21,3 @@ storage/documents/us/*
 *.xml
 *.iml
 test.txt
-dist

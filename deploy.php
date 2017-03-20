@@ -38,7 +38,7 @@ if ($state !== 0) {
 
 // Build frontend
 $state = 0;
-system('npm run build && mv dist/* www/frontend', $state);
+system('npm run build', $state);
 if ($state !== 0) {
 	die("Error: Building frontend has failed.\n");
 }
