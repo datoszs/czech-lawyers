@@ -1,5 +1,6 @@
 import {combineReducers} from 'redux-immutable';
 import {Map} from 'immutable';
+import {getCurrentYear} from '../util';
 import {AdvocateDetail, Statistics} from '../model';
 import {SET_ID, SET_ADVOCATE, SET_RESULTS} from './actions';
 
@@ -27,10 +28,22 @@ const resultsReducer = (state = Map(), action) => {
     }
 };
 
+const startYearReducer = (state = getCurrentYear(), action) => {
+    switch (action.type) {
+        case SET_RESULTS:
+            return Math.min(...Object.keys(action.results).map((year) => parseInt(year, 10)));
+        case SET_ID:
+            return getCurrentYear();
+        default:
+            return state;
+    }
+};
+
 const reducer = combineReducers({
     id: idReducer,
     advocate: advocateReducer,
     results: resultsReducer,
+    startYear: startYearReducer,
 });
 
 export default (state, action) => {

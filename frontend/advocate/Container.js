@@ -4,7 +4,8 @@ import {BackButton} from '../containers';
 import Header from './Header';
 import Detail from './Detail';
 import CakLink from './CakLink';
-import Statistics from './Statistics';
+import StatisticsContainer from './Statistics';
+import TimelineContainer from './Timeline';
 
 export default () => (
     <section>
@@ -18,8 +19,9 @@ export default () => (
                 <Detail />
             </Col>
             <Col sm={6}>
-                <Statistics />
+                <StatisticsContainer />
             </Col>
         </Row>
+        <TimelineContainer />
     </section>
 );

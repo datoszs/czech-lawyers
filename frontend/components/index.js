@@ -7,3 +7,4 @@ export {default as DetailPanel} from './DetailPanel';
 export {default as DetailFieldComponent} from './DetailFieldComponent';
 export {default as AddressFormatter} from './AddressFormatter';
 export {default as BigStatistics} from './BigStatistics';
+export {default as Timeline} from './basictimeline';

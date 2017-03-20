@@ -1,0 +1,55 @@
+@import "../../variables";
+
+.timeline() {
+    font-size: 1.5em;
+
+    display: flex;
+    align-items: stretch;
+
+    .year {
+        flex: 0 0 auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+
+        padding: 10px 0;
+        cursor: pointer;
+
+        &:hover {
+            background-color: #DDDDDD;
+        }
+
+        .legend {
+            width: 4ch;
+            height: 1em;
+
+            box-sizing: content-box;
+            padding: 2px 5px;
+            border-top: 3px solid black;
+        }
+
+        .child(@color) {
+            background-color: fade(@color, 80%);
+            border: @color 1px;
+            border-style: solid solid none solid;
+            margin: 0 5px;
+
+            &:hover {
+                background-color: @color;
+            }
+        }
+
+        .positive {
+            .child(@stats-positive);
+        }
+
+        .negative {
+            .child(@stats-negative);
+        }
+
+        .neutral {
+            .child(@stats-neutral);
+        }
+    }
+
+}
