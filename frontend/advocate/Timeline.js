@@ -1,16 +1,14 @@
 import {connect} from 'react-redux';
-import {Timeline} from '../components';
-import {getStartYear, getPositive, getNegative, getNeutral} from './selectors';
+import {Timeline} from '../components/timeline';
+import {getStartYear} from './selectors';
+import Year from './Year';
 
 const mapStateToProps = (state) => ({
     startYear: getStartYear(state),
 });
 
-const mergeProps = ({startYear}) => ({
-    startYear,
-    positiveSelector: getPositive,
-    negativeSelector: getNegative,
-    neutralSelector: getNeutral,
+const mapDispatchToProps = () => ({
+    YearComponent: Year,
 });
 
-export default connect(mapStateToProps, undefined, mergeProps)(Timeline);
+export default connect(mapStateToProps, mapDispatchToProps)(Timeline);

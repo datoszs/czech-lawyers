@@ -1,0 +1,15 @@
+@import "../../variables";
+
+.bar() {
+    margin: 0 5px;
+    border-style: solid solid none solid;
+    border-width: 1px;
+
+    .colored(@color) {
+        background-color: fade(@color, 50%);
+        border-color: @color;
+    }
+    &.positive { .colored(@stats-positive); }
+    &.negative { .colored(@stats-negative); }
+    &.neutral { .colored(@stats-neutral); }
+}
