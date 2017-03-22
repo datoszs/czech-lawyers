@@ -1,5 +1,6 @@
 import React, {PropTypes} from 'react';
 import classnames from 'classnames';
+import {wrapEventStop} from '../../util';
 
 const Bar = ({size, className, selected, onClick}) => (
     <div
@@ -9,7 +10,7 @@ const Bar = ({size, className, selected, onClick}) => (
             selected,
         })}
         style={{height: `${size}ex`}}
-        onClick={onClick}
+        onClick={wrapEventStop(onClick)}
     />
 );
 

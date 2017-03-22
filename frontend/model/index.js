@@ -5,3 +5,4 @@ export {default as Advocate, mapDtoToAdvocate} from './Advocate';
 export {default as AdvocateDetail, mapDtoToAdvocateDetail} from './AdvocateDetail';
 export {default as mapDtoToAdvocateResults} from './mapDtoToAdvocateResults';
 export {default as courts, courtsMsg} from './courts';
+export {default as result, classNameResult} from './result';

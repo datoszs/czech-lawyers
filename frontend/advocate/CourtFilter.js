@@ -11,7 +11,7 @@ const CourtFilterComponent = ({activeCourt, setActiveCourt}) => (
     <ButtonGroup>
         <Button
             key="no-court"
-            onClick={() => setActiveCourt(null)}
+            onClick={() => (activeCourt !== null ? setActiveCourt(null) : {})}
             active={activeCourt === null}
         >
             <Msg msg="court.all" />
@@ -19,7 +19,7 @@ const CourtFilterComponent = ({activeCourt, setActiveCourt}) => (
         {Object.values(courts).map((court) =>
             <Button
                 key={court}
-                onClick={() => setActiveCourt(court)}
+                onClick={() => (court !== activeCourt ? setActiveCourt(court) : {})}
                 active={court === activeCourt}
             >
                 <Msg msg={courtsMsg[court]} />

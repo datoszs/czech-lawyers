@@ -1,6 +1,7 @@
 import React from 'react';
 import {Row, Col, ButtonToolbar} from 'react-bootstrap';
 import {BackButton} from '../containers';
+import {TimelineScroll} from '../components/timeline';
 import Header from './Header';
 import Detail from './Detail';
 import CakLink from './CakLink';
@@ -24,6 +25,8 @@ export default () => (
             </Col>
         </Row>
         <CourtFilter />
-        <TimelineContainer />
+        <TimelineScroll>
+            <TimelineContainer />
+        </TimelineScroll>
     </section>
 );

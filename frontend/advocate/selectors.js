@@ -17,8 +17,5 @@ export const getStartYear = (state) => getModel(state).get('startYear');
 const emptyResults = new Statistics({});
 export const getResults = (state, year) => getModel(state).getIn(['results', year], emptyResults);
 
-const getSpecificResults = (property) => (state, year) => getModel(state).getIn(['results', year, property], null);
-
-export const getPositive = getSpecificResults('positive');
-export const getNegative = getSpecificResults('negative');
-export const getNeutral = getSpecificResults('neutral');
+export const getYearFilter = (state) => getModel(state).get('yearFilter');
+export const getResultFilter = (state) => getModel(state).get('resultFilter');
