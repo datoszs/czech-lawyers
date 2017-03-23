@@ -12,4 +12,10 @@ export const classNameResult = {
 
 export const checkResult = (value) => (Object.values(result).includes(value) ? value : null);
 
+export const resultMsg = {
+    [result.POSITIVE]: 'result.positive',
+    [result.NEGATIVE]: 'result.negative',
+    [result.NEUTRAL]: 'result.neutral',
+};
+
 export default result;

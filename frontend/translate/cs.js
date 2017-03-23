@@ -31,4 +31,8 @@ export default {
     'court.nss': 'Nejvyšší správní soud',
     'court.us': 'Ústavní soud',
     'court.all': 'Všechny soudy',
+
+    'result.positive': 'Meritorní',
+    'result.negative': 'Nemeritorní',
+    'result.neutral': 'Zastavení řízení',
 };

@@ -8,6 +8,7 @@ import CakLink from './CakLink';
 import StatisticsContainer from './Statistics';
 import CourtFilter from './CourtFilter';
 import TimelineContainer from './Timeline';
+import CaseContainer from './CaseContainer';
 
 export default () => (
     <section>
@@ -28,5 +29,6 @@ export default () => (
         <TimelineScroll>
             <TimelineContainer />
         </TimelineScroll>
+        <CaseContainer />
     </section>
 );
