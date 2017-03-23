@@ -21,6 +21,13 @@ describe('Advocate Detail model', () => {
         const advocate = new AdvocateDetail(template);
         advocate.statistics.should.equal(template.statistics);
     });
+    it('takes existing status', () => {
+        const template = createTemplate({
+            status: status.SUSPENDED,
+        });
+        const advocate = new AdvocateDetail(template);
+        advocate.status.should.equal(status.SUSPENDED);
+    });
     it('marks unknown status as active', () => {
         const template = createTemplate({
             status: 'UNKNOWN',

@@ -6,3 +6,4 @@ export {default as AdvocateDetail, mapDtoToAdvocateDetail} from './AdvocateDetai
 export {default as mapDtoToAdvocateResults} from './mapDtoToAdvocateResults';
 export {default as courts, courtsMsg} from './courts';
 export {default as result, classNameResult} from './result';
+export {default as Case, mapDtoToCase} from './Case';

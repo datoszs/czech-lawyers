@@ -10,4 +10,6 @@ export const classNameResult = {
     neutral: result.NEUTRAL,
 };
 
+export const checkResult = (value) => (Object.values(result).includes(value) ? value : null);
+
 export default result;

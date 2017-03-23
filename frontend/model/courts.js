@@ -15,4 +15,6 @@ export const courtsMsg = {
     [courts.US]: 'court.us',
 };
 
+export const checkCourt = (value) => (Object.values(courts).includes(value) ? value : null);
+
 export default courts;
