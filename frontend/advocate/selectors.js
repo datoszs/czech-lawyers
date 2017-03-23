@@ -19,3 +19,7 @@ export const getResults = (state, year) => getModel(state).getIn(['results', yea
 
 export const getYearFilter = (state) => getModel(state).get('yearFilter');
 export const getResultFilter = (state) => getModel(state).get('resultFilter');
+
+export const getCases = (state) => getModel(state).get('caseList');
+export const getCase = (state, id) => getModel(state).getIn(['cases', id]);
+export const areCasesLoaded = (state) => !!getCases(state).size;

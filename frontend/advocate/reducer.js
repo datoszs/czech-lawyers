@@ -1,8 +1,8 @@
 import {combineReducers} from 'redux-immutable';
-import {Map} from 'immutable';
+import {Map, List} from 'immutable';
 import {getCurrentYear} from '../util';
-import {AdvocateDetail, Statistics} from '../model';
-import {SET_ID, SET_ADVOCATE, SET_RESULTS, SET_COURT_FILTER, SET_GRAPH_FILTER} from './actions';
+import {AdvocateDetail, Statistics, Case} from '../model';
+import {SET_ID, SET_ADVOCATE, SET_RESULTS, SET_COURT_FILTER, SET_GRAPH_FILTER, SET_CASES} from './actions';
 
 const idReducer = (state = null, action) => (action.type === SET_ID ? action.id : state);
 
@@ -76,6 +76,32 @@ const resultFilterReducer = (state = null, action) => {
     }
 };
 
+const caseListReducer = (state = List(), action) => {
+    switch (action.type) {
+        case SET_ID:
+        case SET_COURT_FILTER:
+        case SET_GRAPH_FILTER:
+            return List();
+        case SET_CASES:
+            return List(action.cases.map(({id}) => id));
+        default:
+            return state;
+    }
+};
+
+const caseReducer = (state = Map(), action) => {
+    switch (action.type) {
+        case SET_ID:
+        case SET_COURT_FILTER:
+        case SET_GRAPH_FILTER:
+            return Map();
+        case SET_CASES:
+            return Map(action.cases.map((caseObj) => [caseObj.id, new Case(caseObj)]));
+        default:
+            return state;
+    }
+};
+
 const reducer = combineReducers({
     id: idReducer,
     advocate: advocateReducer,
@@ -84,6 +110,8 @@ const reducer = combineReducers({
     startYear: startYearReducer,
     yearFilter: yearFilterReducer,
     resultFilter: resultFilterReducer,
+    caseList: caseListReducer,
+    cases: caseReducer,
 });
 
 export default (state, action) => {
