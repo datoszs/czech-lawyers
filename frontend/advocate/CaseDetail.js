@@ -1,12 +1,14 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {Row, Col} from 'react-bootstrap';
+import {transition} from '../util';
 import {DetailPanel} from '../components';
 import translate from '../translate';
 import {courtsMsg, resultMsg} from '../model';
 import {getCase} from './selectors';
+import caseDetail from '../case';
 
-const CaseDetailComponent = ({registry, court, result}) => (
+const CaseDetailComponent = ({registry, court, result, handleDetail}) => (
     <DetailPanel
         title={registry}
         footer={
@@ -15,6 +17,7 @@ const CaseDetailComponent = ({registry, court, result}) => (
                 <Col sm={4}>{result}</Col>
             </Row>
         }
+        onClick={handleDetail}
     />
 );
 
@@ -22,6 +25,7 @@ CaseDetailComponent.propTypes = {
     registry: PropTypes.string.isRequired,
     court: PropTypes.string,
     result: PropTypes.string,
+    handleDetail: PropTypes.func.isRequired,
 };
 
 CaseDetailComponent.defaultProps = {
@@ -38,7 +42,11 @@ const mapStateToProps = (state, {id}) => {
     };
 };
 
-const CaseDetail = connect(mapStateToProps)(CaseDetailComponent);
+const mapDispatchToProps = (state, {id}) => ({
+    handleDetail: () => transition(caseDetail, {id}),
+});
+
+const CaseDetail = connect(mapStateToProps, mapDispatchToProps)(CaseDetailComponent);
 
 CaseDetail.propTypes = {
     id: PropTypes.number.isRequired,

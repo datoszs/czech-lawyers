@@ -19,7 +19,7 @@ describe('Case model', () => {
             result: 'UNKNOWN',
         });
         const caseObj = new Case(template);
-        expect(caseObj.result).to.equal(null);
+        expect(caseObj.result).to.be.null();
     });
     it('takes existing court', () => {
         const template = createTemplate({
@@ -33,7 +33,7 @@ describe('Case model', () => {
             court: 'UNKNOWN',
         });
         const caseObj = new Case(template);
-        expect(caseObj.court).to.equal(null);
+        expect(caseObj.court).to.be.null();
     });
 
     describe('DTO to Case mapping', () => {

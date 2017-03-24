@@ -35,4 +35,9 @@ export default {
     'result.positive': 'Meritorní',
     'result.negative': 'Nemeritorní',
     'result.neutral': 'Zastavení řízení',
+
+    'case.detail.title': 'Detail případu',
+    'case.advocate': 'Advokát',
+    'case.court': 'Soud',
+    'case.result': 'Výsledek',
 };

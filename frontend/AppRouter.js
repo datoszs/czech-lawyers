@@ -15,6 +15,7 @@ import about from './about';
 import contact from './contact';
 import search from './search';
 import advocate from './advocate';
+import caseDetail from './case';
 
 const AppRouter = ({handleEnter, handleChange}) => {
     const createRoute = (module) => <Route
@@ -31,6 +32,7 @@ const AppRouter = ({handleEnter, handleChange}) => {
                 {createRoute(contact)}
                 {createRoute(search)}
                 {createRoute(advocate)}
+                {createRoute(caseDetail)}
             </Route>
         </Router>
     );
