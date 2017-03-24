@@ -5,7 +5,11 @@ import {DetailPanel} from '../components';
 import {getDocument} from './selectors';
 
 const DocumentDetailComponent = ({mark, date, handleDetail}) => (
-    <DetailPanel title={mark} onClick={handleDetail}><h3>{moment(date).format('LL')}</h3></DetailPanel>
+    <DetailPanel
+        title={mark}
+        onClick={handleDetail}
+        footer={moment(date).format('LL')}
+    />
 );
 
 DocumentDetailComponent.propTypes = {
