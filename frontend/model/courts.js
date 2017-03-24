@@ -4,8 +4,8 @@
  * @property US Ústavní soud (Constitutional Court)
  */
 const courts = {
-    NS: 1,
-    NSS: 2,
+    NSS: 1,
+    NS: 2,
     US: 3,
 };
 
