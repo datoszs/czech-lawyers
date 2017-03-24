@@ -21,6 +21,13 @@ describe('Advocate model', () => {
         const advocate = new Advocate(template);
         advocate.statistics.should.equal(template.statistics);
     });
+    it('takes existing status', () => {
+        const template = createTemplate({
+            status: status.REMOVED,
+        });
+        const advocate = new Advocate(template);
+        advocate.status.should.equal(status.REMOVED);
+    });
     it('marks unknown status as active', () => {
         const template = createTemplate({
             status: 'UNKNOWN',

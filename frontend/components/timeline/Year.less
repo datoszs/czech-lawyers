@@ -1,0 +1,24 @@
+.year() {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+
+    padding: 10px 0;
+    cursor: pointer;
+
+    .legend {
+        width: 4ch;
+        height: 1em;
+        box-sizing: content-box;
+        padding: 2px 5px;
+        border-top: 3px solid black;
+    }
+
+    &:hover {
+        background-color: #EEEEEE;
+    }
+
+    &.selected {
+        background: #DDDDDD;
+    }
+}

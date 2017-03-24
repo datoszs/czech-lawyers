@@ -1,10 +1,14 @@
 import React from 'react';
 import {Row, Col, ButtonToolbar} from 'react-bootstrap';
 import {BackButton} from '../containers';
+import {TimelineScroll} from '../components/timeline';
 import Header from './Header';
 import Detail from './Detail';
 import CakLink from './CakLink';
-import Statistics from './Statistics';
+import StatisticsContainer from './Statistics';
+import CourtFilter from './CourtFilter';
+import TimelineContainer from './Timeline';
+import CaseContainer from './CaseContainer';
 
 export default () => (
     <section>
@@ -18,8 +22,13 @@ export default () => (
                 <Detail />
             </Col>
             <Col sm={6}>
-                <Statistics />
+                <StatisticsContainer />
             </Col>
         </Row>
+        <CourtFilter />
+        <TimelineScroll>
+            <TimelineContainer />
+        </TimelineScroll>
+        <CaseContainer />
     </section>
 );

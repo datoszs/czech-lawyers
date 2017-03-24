@@ -6,3 +6,7 @@ export const wrapEventStop = (handler) => (event) => {
     event.preventDefault();
     handler(event);
 };
+
+export const getCurrentYear = () => new Date().getFullYear();
+
+export const sequence = (length) => Array.from({length}, (value, index) => index);

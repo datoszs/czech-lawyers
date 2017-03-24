@@ -44,13 +44,14 @@ class DetailPanel extends Component {
 }
 
 DetailPanel.propTypes = {
-    children: PropTypes.node.isRequired,
+    children: PropTypes.node,
     footer: PropTypes.node,
     title: PropTypes.node.isRequired,
     onClick: PropTypes.func,
 };
 
 DetailPanel.defaultProps = {
+    children: null,
     footer: null,
     onClick: () => {}, // do nothing
 };

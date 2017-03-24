@@ -26,4 +26,13 @@ export default {
     'stats.positive.legend': 'meritorních konečných rozhodnutí',
     'stats.negative.legend': 'nemeritorních konečných rozhodnutí',
     'stats.neutral.legend': 'rozhodnutí o\u{000A0}zastavení řízení',
+
+    'court.ns': 'Nejvyšší soud',
+    'court.nss': 'Nejvyšší správní soud',
+    'court.us': 'Ústavní soud',
+    'court.all': 'Všechny soudy',
+
+    'result.positive': 'Meritorní',
+    'result.negative': 'Nemeritorní',
+    'result.neutral': 'Zastavení řízení',
 };
