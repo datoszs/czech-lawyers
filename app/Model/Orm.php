@@ -3,6 +3,7 @@ namespace App\Model;
 
 use App\Model\Cause\CausesRepository;
 use App\Model\Court\CourtsRepository;
+use App\Model\Disputes\DisputeRepository;
 use App\Model\Advocates\AdvocateInfosRepository;
 use App\Model\Advocates\AdvocatesRepository;
 use App\Model\Documents\DocumentsLawCourtRepository;
@@ -22,6 +23,7 @@ use Nextras\Orm\Model\Model;
  * @property-read JobRunsRepository $jobRuns
  * @property-read CourtsRepository $courts
  * @property-read CausesRepository $causes
+ * @property-read DisputeRepository $disputes
  * @property-read DocumentsRepository $documents
  * @property-read DocumentsSupremeCourtRepository $documentsSupremeCourt
  * @property-read DocumentsSupremeAdministrativeCourtRepository $documentsSupremeAdministrativeCourt
