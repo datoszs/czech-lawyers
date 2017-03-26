@@ -42,6 +42,7 @@ services:
 	- App\Model\Services\CauseService
 	- App\Model\Services\AdvocateService
 	- App\Model\Services\TaggingService
+	- App\Model\Services\DisputationService
 	# Factories
 	- App\Components\LoginForm\LoginFormFactory
 	- App\Components\UserForm\UserFormFactory

@@ -1,0 +1,18 @@
+{layout layouts/@single-column.latte}
+
+{block body}
+    <p>
+        Dobrý den,<br>
+        prověření případu <b>{$case->registrySign|formatRegistryMark}</b> o které jste požádali, bylo provedeno.
+        Níže se nachází naše vyjádření k danému prověření.
+    </p>
+
+    <pre>{$content}</pre>
+
+    <p>&ndash; Web Čestiadvokáti.cz</p>
+{/block}
+
+{block unsubscribe}
+    Tento e-mail jste obdrželi, protože jsme odpovídali na žádost o prověření potvrzenou z vaší e-mailové adresy.
+    <br><br>
+{/block}

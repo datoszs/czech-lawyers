@@ -110,7 +110,13 @@
 								<small><span class="glyphicon {if $advocateTagging->insertedBy->type == \App\Enums\UserType::TYPE_PERSON}glyphicon-user{else}glyphicon-cog{/if}"></span> {$advocateTagging->insertedBy->username}, {$advocateTagging->inserted|date:'j. m. Y H:i:s'}, {App\Enums\TaggingStatus::$statuses[$advocateTagging->status]|lower}</small>
 							{/if}
 						</td>
-						<td class="success">Ne</td>
+						<td class="{if isset($disputations[$case->id])}danger{else}success{/if}">
+							{if isset($disputations[$case->id])}
+								{$disputations[$case->id]}
+							{else}
+								0
+							{/if}
+						</td>
 						<td>
 							<a href="{plink Tagging:case, $case->id}">Detail</a>
 						</td>

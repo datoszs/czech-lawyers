@@ -6,15 +6,19 @@ namespace App\Presenters;
 use App\Enums\CaseResult;
 use App\Enums\Court;
 use App\Enums\TaggingStatus;
+use App\Exceptions\NoSuchDisputeException;
 use App\Model\Advocates\Advocate;
 use App\Model\Advocates\AdvocateInfo;
+use App\Model\Cause\Cause;
 use App\Model\Services\AdvocateService;
 use App\Model\Services\CauseService;
+use App\Model\Services\DisputationService;
 use App\Model\Services\DocumentService;
 use App\Model\Services\TaggingService;
 use App\Model\Taggings\TaggingAdvocate;
 use App\Model\Taggings\TaggingCaseResult;
 use App\Utils\BootstrapForm;
+use App\Utils\MailService;
 use App\Utils\Responses\OriginalMimeTypeFileResponse;
 use App\Utils\TemplateFilters;
 use IPub\VisualPaginator\Components\Control;
@@ -22,7 +26,9 @@ use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\Responses\FileResponse;
 use Nette\Application\UI\Form;
+use Nette\Mail\SendException;
 use Nette\Utils\Validators;
+use Nextras\Orm\Mapper\Dbal\DbalCollection;
 
 
 class TaggingPresenter extends SecuredPresenter
@@ -39,6 +45,15 @@ class TaggingPresenter extends SecuredPresenter
 	/** @var AdvocateService @inject */
 	public $advocateService;
 
+	/** @var DisputationService @inject */
+	public $disputationService;
+
+	/** @var MailService @inject */
+	public $mailService;
+
+	/** @var DbalCollection */
+	private $disputes;
+
 	/** @privilege(App\Utils\Resources::TAGGING, App\Utils\Actions::VIEW) */
 	public function actionCase(int $caseId)
 	{
@@ -50,6 +65,7 @@ class TaggingPresenter extends SecuredPresenter
 
 		$this->template->case = $case;
 		$this->template->documents = $documents;
+		$this->template->disputes = $this->disputes = $this->disputationService->findByCase($case);
 		/** @var TaggingCaseResult $caseResult */
 		$this->template->caseResult = $caseResult = $this->prepareCasesResults([$case])[$case->id] ?? null;
 		$this->template->advocateTagging = $this->taggingService->getLatestAdvocateTaggingFor($case);
@@ -82,6 +98,7 @@ class TaggingPresenter extends SecuredPresenter
 		$cases = $cases->limitBy($paginator->itemsPerPage, $paginator->offset);
 		$results = $this->prepareCasesResults($cases->fetchAll());
 		$advocatesTaggings = $this->prepareAdvocates($cases->fetchAll());
+		$disputations = $this->disputationService->findDisputationCounts(array_map(function (Cause $cause) { return $cause->id; }, $cases->fetchAll()));
 
 		$this->template->onlyDisputed = $onlyDisputed;
 		$this->template->filter = $filter;
@@ -90,6 +107,7 @@ class TaggingPresenter extends SecuredPresenter
 		$this->template->cases = $cases;
 		$this->template->results = $results;
 		$this->template->advocatesTaggings = $advocatesTaggings;
+		$this->template->disputations = $disputations;
 	}
 
 	/**
@@ -243,6 +261,53 @@ class TaggingPresenter extends SecuredPresenter
 			$this->redirect('this');
 		};
 
+		return $form;
+	}
+
+	public function createComponentResolveDisputes()
+	{
+		$form = new BootstrapForm();
+		$this->addComponent($form, 'resolveDisputes');
+		$form->action .= '#disputations';
+		$allowed = [];
+		foreach ($this->disputes->fetchAll() as $dispute) {
+			$allowed[$dispute->id] = $dispute->id;
+		}
+		$form->addCheckboxList('responding', 'Odpovědět', $allowed)
+			->setRequired('Vyberte, prosím, alespoň jedno rozporování pro odpovídání.');
+
+		$form->addTextArea('response', 'Odpověď', null, 10)
+			->setRequired('Vyplňte, prosím, vaši odpověď na vybrané zprávy.');
+		$form->addSubmit('sent', 'Odeslat');
+		$form->onSuccess[] = function (Form $form)
+		{
+			$values = $form->getValues();
+			$disputes = $values->responding;
+			foreach ($disputes as $disputeId) {
+				try {
+					$dispute = $this->disputationService->resolve($disputeId, $values->response, $this->user->id);
+				} catch (NoSuchDisputeException $ex) {
+					$form->addError('Neplatný výběr odpovídaných rozporování.');
+					return;
+				}
+				$message = $this->mailService->createMessage('disputation-response', [
+					'case' => $dispute->case,
+					'content' => $values->response
+				]);
+				$message->setSubject('[Čeští advokáti]: prověření případu');
+				$message->addTo($dispute->email, $dispute->fullname);
+				$message->setFrom($this->mailService->getNoReplyAddress());
+				try {
+					$this->mailService->send($message);
+				} catch (SendException $exception) {
+					$form->addError(sprintf('Nepodařilo se odeslat e-mail pro %s.', $dispute->email));
+					return;
+				}
+			}
+			$this->disputationService->flush();
+			$this->flashMessage('Odpovědi byly uloženy a odeslány.', 'alert-success');
+			$this->redirect('this#top');
+		};
 		return $form;
 	}
 }
