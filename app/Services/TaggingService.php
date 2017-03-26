@@ -131,14 +131,14 @@ class TaggingService
 	{
 		$data = $this->connection->query('
 		SELECT
-			SUBSTRING(registry_sign FROM \'....$\') AS year,
+			SUBSTRING(registry_sign FROM \'/(.*)$\') AS year,
 			case_result,
 			COUNT(*) AS count
 		FROM "case"
 		JOIN vw_latest_tagging_case_result AS last_taggings ON "case".id_case = last_taggings.case_id AND last_taggings.status = %s 
 		JOIN vw_latest_tagging_advocate AS last_taggings_advocate ON "case".id_case = last_taggings_advocate.case_id AND last_taggings_advocate.status = %s
 		WHERE advocate_id = %i AND (%?i IS NULL OR court_id = %?i)
-		GROUP BY SUBSTRING(registry_sign FROM \'....$\'), case_result
+		GROUP BY SUBSTRING(registry_sign FROM \'/(.*)$\'), case_result
 		',
 			TaggingStatus::STATUS_PROCESSED,
 			TaggingStatus::STATUS_PROCESSED,
