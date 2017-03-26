@@ -3,7 +3,7 @@ import {List} from 'immutable';
 import CaseDetail, {mapDtoToCaseDetail} from './CaseDetail';
 import court from './courts';
 import result from './result';
-import Document, {mapDtoToDocument} from './Document';
+import {mapDtoToDocument} from './Document';
 
 describe('Case Detail model', () => {
     const createTemplate = (custom = {}) => Object.assign({}, {
