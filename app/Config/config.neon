@@ -3,6 +3,11 @@
 # https://nette.org/security-warning
 #
 parameters:
+	mailing:
+		mails:
+			noreply: no-reply@example.com
+			support: support@example.com
+		templates: %appDir%/mails
 
 
 php:
@@ -24,6 +29,7 @@ services:
 	# Utils
 	router: App\Router\RouterFactory::createRouter
 	- App\Utils\Authorizator
+	- App\Utils\MailService(%mailing%)
 	# Services
 	- App\Model\Services\UserService
 	- App\Model\Services\JobService
