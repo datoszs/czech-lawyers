@@ -65,6 +65,7 @@ class AdvocateCasesPresenter extends Presenter
 	 *  - <b>negative</b>
 	 *  - <b>neutral</b>
 	 *  - <b>positive</b>
+	 *  - <b><i>null</i></b> when no result available
 	 *
 	 * When additional filter is provided its value is returned in response.
 	 *
@@ -151,7 +152,7 @@ class AdvocateCasesPresenter extends Presenter
 				'id_case' => $case->id,
 				'id_court' => $case->court->id,
 				'registry_mark' => $case->registrySign,
-				'result' => $results[$case->id] ? $results[$case->id]->caseResult : null,
+				'result' => isset($results[$case->id]) ? $results[$case->id]->caseResult : null,
 			];
 		}
 		return $output;
