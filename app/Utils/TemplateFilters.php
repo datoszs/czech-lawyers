@@ -21,9 +21,10 @@ class TemplateFilters
 	 * @param string $lastname
 	 * @param null|string $degreeBefore
 	 * @param null|string $degreeAfter
+	 * @param null|string $city
 	 * @return string
 	 */
-	public static function formatName(string $firstname, string $lastname, ?string $degreeBefore = null, ?string $degreeAfter = null)
+	public static function formatName(string $firstname, string $lastname, ?string $degreeBefore = null, ?string $degreeAfter = null, ?string $city = null)
 	{
 		$output = [];
 		$output[] = $degreeBefore;
@@ -32,6 +33,9 @@ class TemplateFilters
 		$temp = implode(' ', array_filter($output));
 		if ($degreeAfter) {
 			$temp .= ', ' . $degreeAfter;
+		}
+		if ($city) {
+			$temp .= ' - '. $city;
 		}
 		return $temp;
 	}

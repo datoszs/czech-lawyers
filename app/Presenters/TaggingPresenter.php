@@ -199,7 +199,7 @@ class TaggingPresenter extends SecuredPresenter
 				/** @var AdvocateInfo $currentAdvocateInfo */
 				$currentAdvocateInfo = $advocate->advocateInfo->get()->fetch();
 				if ($currentAdvocateInfo) {
-					$advocates = [$advocate->id => TemplateFilters::formatName($currentAdvocateInfo->name, $currentAdvocateInfo->surname, $currentAdvocateInfo->degreeBefore, $currentAdvocateInfo->degreeAfter)];
+					$advocates = [$advocate->id => TemplateFilters::formatName($currentAdvocateInfo->name, $currentAdvocateInfo->surname, $currentAdvocateInfo->degreeBefore, $currentAdvocateInfo->degreeAfter, $currentAdvocateInfo->city)];
 				}
 			}
 		}

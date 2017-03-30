@@ -89,7 +89,7 @@ class AdvocateAutocompletePresenter extends Presenter
 		// Compose name and test if not matched in
 		/** @var AdvocateInfo $advocateInfo */
 		foreach ($advocate->advocateInfo as $advocateInfo) {
-			$fullname = TemplateFilters::formatName($advocateInfo->name, $advocateInfo->surname, $advocateInfo->degreeBefore, $advocateInfo->degreeAfter);
+			$fullname = TemplateFilters::formatName($advocateInfo->name, $advocateInfo->surname, $advocateInfo->degreeBefore, $advocateInfo->degreeAfter, $advocateInfo->city);
 			if (!$currentFullname) {
 				$currentFullname = $fullname;
 			}

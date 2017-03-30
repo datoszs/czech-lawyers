@@ -61,7 +61,7 @@
 				{elseif !$advocateInfo}
 					<span class="text-muted"><i>Nepřiřazen</i></span>
 				{else}
-					{var $name = \App\Utils\TemplateFilters::formatName($advocateInfo->name, $advocateInfo->surname,  $advocateInfo->degreeBefore, $advocateInfo->degreeAfter)}
+					{var $name = \App\Utils\TemplateFilters::formatName($advocateInfo->name, $advocateInfo->surname,  $advocateInfo->degreeBefore, $advocateInfo->degreeAfter, $advocateInfo->city)}
 					{$name}
 				{/if}
 				{if $advocateTagging}
@@ -109,7 +109,7 @@
 						</tr>
 						<tr id="document-{$document->id}" class="collapse {first}in{/first}">
 							<td colspan="4">
-								<iframe class="document-iframe" src="{plink Tagging:document, $document->id}"></iframe>
+								<iframe class="document-iframe" src="{plink Tagging:document, $document->id}" sandbox=""></iframe>
 							</td>
 						</tr>
 					{/foreach}
