@@ -1,11 +1,13 @@
 import React, {PropTypes} from 'react';
 import {Address} from '../model';
+import PostcodeFormatter from './PostcodeFormatter';
 
 const AddressFormatter = ({value}) => (
-    <p>
-        {value.street}<br />
-        {value.city}&emsp;{value.postcode.substring(0, 3)}&nbsp;{value.postcode.substring(3, 5)}
-    </p>
+    <div>
+        {value.street}
+        {(value.street && (value.city || value.postcode)) && <br />}
+        {value.city}&emsp;<PostcodeFormatter value={value.postcode} />
+    </div>
 );
 
 AddressFormatter.propTypes = {
