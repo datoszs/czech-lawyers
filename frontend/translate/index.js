@@ -1,5 +1,5 @@
 import {NAME} from './constants';
-import {getMessage} from './selectors';
+import {getMessage, getShortDateFormat} from './selectors';
 import reducer from './reducer';
 
 /**
@@ -10,5 +10,5 @@ import reducer from './reducer';
  * There is no support for switching yet, but it should be quite simple to add.
  *
  */
-const translate = {NAME, getMessage, reducer};
+const translate = {NAME, getMessage, reducer, getShortDateFormat};
 export default translate;
