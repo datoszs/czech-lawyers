@@ -15,6 +15,7 @@ export default {
     'advocate.address': 'Sídlo',
     'advocate.status': 'Stav',
     'advocate.email': 'E-mail',
+    'advocate.cases': 'Případy',
 
     'status.active': 'Aktivní',
     'status.suspended': 'Pozastavený',
@@ -40,4 +41,5 @@ export default {
     'case.advocate': 'Advokát',
     'case.court': 'Soud',
     'case.result': 'Výsledek',
+    'case.documents': 'Dokumenty',
 };

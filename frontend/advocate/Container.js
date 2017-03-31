@@ -1,6 +1,7 @@
 import React from 'react';
 import {Row, Col, ButtonToolbar} from 'react-bootstrap';
-import {BackButton} from '../containers';
+import {BackButton, Msg} from '../containers';
+import {PageSubheader} from '../components';
 import {TimelineScroll} from '../components/timeline';
 import Header from './Header';
 import Detail from './Detail';
@@ -25,6 +26,7 @@ export default () => (
                 <StatisticsContainer />
             </Col>
         </Row>
+        <PageSubheader><Msg msg="advocate.cases"/></PageSubheader>
         <CourtFilter />
         <TimelineScroll>
             <TimelineContainer />
