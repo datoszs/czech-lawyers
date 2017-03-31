@@ -52,6 +52,22 @@ const startYearReducer = (state = getCurrentYear(), action) => {
     }
 };
 
+const maxCasesReducer = (state = null, action) => {
+    switch (action.type) {
+        case SET_RESULTS:
+            return Math.max(
+                state,
+                Object.values(action.results)
+                    .map((statistics) => (statistics.positive || 0) + (statistics.negative || 0) + (statistics.neutral || 0))
+                    .reduce((result, year) => Math.max(result, year)),
+            );
+        case SET_ID:
+            return null;
+        default:
+            return state;
+    }
+};
+
 const yearFilterReducer = (state = null, action) => {
     switch (action.type) {
         case SET_ID:
@@ -108,6 +124,7 @@ const reducer = combineReducers({
     courtFilter: courtFilterReducer,
     results: resultsReducer,
     startYear: startYearReducer,
+    maxCases: maxCasesReducer,
     yearFilter: yearFilterReducer,
     resultFilter: resultFilterReducer,
     caseList: caseListReducer,

@@ -9,7 +9,7 @@ const Bar = ({size, className, selected, onClick}) => (
             'timeline-bar': true,
             selected,
         })}
-        style={{height: `${size}ex`}}
+        style={{height: `${size * 100}%`}}
         onClick={wrapEventStop(onClick)}
     />
 );
