@@ -115,10 +115,6 @@ class NSAdvocateTagger extends AdvocateTagger
 			$temp = sprintf("Case [%s] file [%s] tagged with [%s -> %s].\n", TemplateFilters::formatRegistryMark($cause->registrySign), $document->localPath ?? null, (($originalAdvocateName !== $advocateName) ? $originalAdvocateName . '->' . $advocateName : $advocateName), $advocateNameNominativ);
 			$output .= $temp;
 			$consoleOutput->write($temp);
-		} else {
-			$temp = sprintf("Case [%s] file [%s] already tagged with [%s -> %s].\n", TemplateFilters::formatRegistryMark($cause->registrySign), $document->localPath ?? null, (($originalAdvocateName !== $advocateName) ? $originalAdvocateName . '->' . $advocateName : $advocateName), $advocateNameNominativ);
-			$output .= $temp;
-			$consoleOutput->write($temp);
 		}
 		return $result;
 	}
