@@ -6,22 +6,37 @@ if (!file_exists('./.git')) {
 	die("Error: This deployment script should be executed only from the project root. Terminating now.\n");
 }
 if (!isset($argv[1]) || !in_array($argv[1], ['production', 'development'])) {
-	die("Error: The deployment environment is empty or invalid.\n");
+	die("Error: The deployment environment is empty or invalid. Allowed values: production, development (dummy data + not minified assets)\n");
 }
 if (file_exists('.deployment-in-progress')) {
 	die("Error: There was already deployment outgoing, fix issues and remove the ./.deployment-in-progress file.\n");
 }
 
 $environment = $argv[1];
+$version = $argv[2] ?? null;
 
 touch('.deployment-in-progress');
 
 // Fetch and pull new sources
 $state = 0;
-system('git pull', $state);
+system('git fetch --prune', $state);
 if ($state !== 0) {
-	die("Error: Git pull failed\n");
+	unlink('.deployment-in-progress');
+	die("Error: Git fetch failed\n");
 }
+
+$state = 0;
+if ($version) {
+	echo sprintf("Checking out %s\n", $version);
+	system(sprintf('git checkout %s',$version), $state);
+} else {
+	system('git merge --ff-only `git rev-parse --abbrev-ref --symbolic-full-name @{u}`', $state);
+}
+if ($state !== 0) {
+	unlink('.deployment-in-progress');
+	die("Error: Git checkout failed\n");
+}
+
 // Update PHP dependencies
 $state = 0;
 system('php composer.phar install', $state);
