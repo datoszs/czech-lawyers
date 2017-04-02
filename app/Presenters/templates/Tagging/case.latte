@@ -1,8 +1,8 @@
 {extends '../@admin.latte'}
-{var $pageTitle = 'Případ ' . \Nette\Utils\Strings::upper($case->registrySign)}
+{var $pageTitle = 'Případ ' . \App\Utils\TemplateFilters::formatRegistryMark($case->registrySign)}
 
 {block content}
-	<h1>Případ {$case->registrySign|upper}</h1>
+	<h1>Případ {$case->registrySign|formatRegistryMark}</h1>
 
 	{include ../flashes.latte}
 

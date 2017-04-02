@@ -6,6 +6,7 @@ use App\Model\Court\Court;
 use App\Model\Services\CauseService;
 use App\Model\Services\CourtService;
 use app\Utils\JobCommand;
+use App\Utils\TemplateFilters;
 use Nette\NotImplementedException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -57,7 +58,7 @@ abstract class ResultTagger extends Command
 		$data = $this->causeService->findForResultTagging($this->court);
 		foreach ($data as $cause) {
 			if ($this->processCase($cause)) {
-				$output .= sprintf("Tagging case result for case [%s] of [%s]\n", $cause->registrySign, $cause->court->name);
+				$output .= sprintf("Tagging case result for case [%s] of [%s]\n", TemplateFilters::formatRegistryMark($cause->registrySign), $cause->court->name);
 				$persisted++;
 			}
 		}

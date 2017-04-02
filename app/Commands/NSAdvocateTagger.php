@@ -17,6 +17,7 @@ use App\Model\Services\TaggingService;
 use App\Model\Taggings\TaggingAdvocate;
 use App\Utils\AdvocateMatcher;
 use App\Utils\AdvocatePrefixPrematcher;
+use App\Utils\TemplateFilters;
 use Nette\Utils\Strings;
 use Nextras\Dbal\Connection;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -96,13 +97,13 @@ class NSAdvocateTagger extends AdvocateTagger
 		try {
 			list($advocateNameNominativ, $advocateId) = $this->matcher->match($advocateName);
 		} catch (NoMatchException $ex) {
-			$temp = sprintf("Case [%s] file [%s] no match for [%s] withing given distance.\n", $cause->registrySign, $document->localPath ?? null, $advocateName);
+			$temp = sprintf("Case [%s] file [%s] no match for [%s] withing given distance.\n", TemplateFilters::formatRegistryMark($cause->registrySign), $document->localPath ?? null, $advocateName);
 			$output .= $temp;
 			$consoleOutput->write($temp);
 			// we found advocate, but we could not match it with db, further procession could provide bogus result.
 			return $this->taggingService->persistAdvocateIfDiffers($this->prepareTagging($cause, sprintf('Advocate extracted: %s no match in our database.', $advocateName)));
 		} catch (MultipleMatchesException $ex) {
-			$temp = sprintf("Case [%s] file [%s] multiple matches for [%s] withing given distance: [%s].\n", $cause->registrySign, $document->localPath ?? null, $advocateName, $ex->getMessage());
+			$temp = sprintf("Case [%s] file [%s] multiple matches for [%s] withing given distance: [%s].\n", TemplateFilters::formatRegistryMark($cause->registrySign), $document->localPath ?? null, $advocateName, $ex->getMessage());
 			$output .= $temp;
 			$consoleOutput->write($temp);
 			// we found advocate, but we could not match it with db, further procession could provide bogus result.
@@ -111,11 +112,11 @@ class NSAdvocateTagger extends AdvocateTagger
 		$advocateTagging = $this->prepareTagging($cause, $advocateName, $document, $this->advocateService->get($advocateId));
 		$result = $this->taggingService->persistAdvocateIfDiffers($advocateTagging);
 		if ($result) {
-			$temp = sprintf("Case [%s] file [%s] tagged with [%s -> %s].\n", $cause->registrySign, $document->localPath ?? null, (($originalAdvocateName !== $advocateName) ? $originalAdvocateName . '->' . $advocateName : $advocateName), $advocateNameNominativ);
+			$temp = sprintf("Case [%s] file [%s] tagged with [%s -> %s].\n", TemplateFilters::formatRegistryMark($cause->registrySign), $document->localPath ?? null, (($originalAdvocateName !== $advocateName) ? $originalAdvocateName . '->' . $advocateName : $advocateName), $advocateNameNominativ);
 			$output .= $temp;
 			$consoleOutput->write($temp);
 		} else {
-			$temp = sprintf("Case [%s] file [%s] already tagged with [%s -> %s].\n", $cause->registrySign, $document->localPath ?? null, (($originalAdvocateName !== $advocateName) ? $originalAdvocateName . '->' . $advocateName : $advocateName), $advocateNameNominativ);
+			$temp = sprintf("Case [%s] file [%s] already tagged with [%s -> %s].\n", TemplateFilters::formatRegistryMark($cause->registrySign), $document->localPath ?? null, (($originalAdvocateName !== $advocateName) ? $originalAdvocateName . '->' . $advocateName : $advocateName), $advocateNameNominativ);
 			$output .= $temp;
 			$consoleOutput->write($temp);
 		}
@@ -163,7 +164,7 @@ class NSAdvocateTagger extends AdvocateTagger
 		foreach ($documents as $document) {
 			$completePath = __DIR__ . '/../../' . $document->localPath;
 			if (!file_exists($completePath)) {
-				$temp = sprintf("File [%s] is missing, skipping case [%s].\n", $document->localPath, $cause->registrySign);
+				$temp = sprintf("File [%s] is missing, skipping case [%s].\n", $document->localPath, TemplateFilters::formatRegistryMark($cause->registrySign));
 				$output .= $temp;
 				$consoleOutput->write($temp);
 				return $this->taggingService->persistAdvocateIfDiffers($this->prepareTagging($cause, sprintf('Missing file: %s', $document->localPath)));
@@ -171,7 +172,7 @@ class NSAdvocateTagger extends AdvocateTagger
 			try {
 				$advocateName = $this->extractor->extract($completePath);
 			} catch (ExtractionException $exception) {
-				$temp = sprintf("Case [%s] file [%s] extraction error [%s].\n", $cause->registrySign, $document->localPath, $exception->getMessage());
+				$temp = sprintf("Case [%s] file [%s] extraction error [%s].\n", TemplateFilters::formatRegistryMark($cause->registrySign), $document->localPath, $exception->getMessage());
 				$output .= $temp;
 				$consoleOutput->write($temp);
 				continue;

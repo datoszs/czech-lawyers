@@ -6,6 +6,7 @@ use App\Model\Court\Court;
 use App\Model\Services\CauseService;
 use App\Model\Services\CourtService;
 use app\Utils\JobCommand;
+use App\Utils\TemplateFilters;
 use Nette\NotImplementedException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -57,7 +58,7 @@ abstract class AdvocateTagger extends Command
 		$data = $this->causeService->findForAdvocateTagging($this->court);
 		foreach ($data as $cause) {
 			if ($this->processCase($cause, $output, $consoleOutput)) {
-				$output .= sprintf("Tagging advocate to case [%s] of [%s]\n", $cause->registrySign, $cause->court->name);
+				$output .= sprintf("Tagging advocate to case [%s] of [%s]\n", TemplateFilters::formatRegistryMark($cause->registrySign), $cause->court->name);
 				$persisted++;
 			}
 		}

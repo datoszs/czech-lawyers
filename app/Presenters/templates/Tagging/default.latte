@@ -68,7 +68,7 @@
 				{foreach $cases as $case}
 					<tr>
 						<td>{$case->court->name}</td>
-						<td>{$case->registrySign|upper}</td>
+						<td>{$case->registrySign|formatRegistryMark}</td>
 						{var $resultTagging = $results[$case->id] ?? null}
 						<td class="
 							{if $resultTagging && $resultTagging->status == App\Enums\TaggingStatus::STATUS_FAILED}danger

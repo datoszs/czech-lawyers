@@ -11,6 +11,7 @@ use App\Model\Cause\Cause;
 use App\Model\Services\AdvocateService;
 use App\Model\Services\CauseService;
 use App\Model\Services\TaggingService;
+use App\Utils\TemplateFilters;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Presenter;
 use Nextras\Orm\Collection\ICollection;
@@ -151,7 +152,7 @@ class AdvocateCasesPresenter extends Presenter
 			$output['cases'][] = [
 				'id_case' => $case->id,
 				'id_court' => $case->court->id,
-				'registry_mark' => $case->registrySign,
+				'registry_mark' => TemplateFilters::formatRegistryMark($case->registrySign),
 				'result' => isset($results[$case->id]) ? $results[$case->id]->caseResult : null,
 			];
 		}

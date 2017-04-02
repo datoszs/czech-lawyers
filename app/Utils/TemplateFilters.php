@@ -3,6 +3,8 @@ namespace App\Utils;
 
 
 
+use Nette\Utils\Strings;
+
 class TemplateFilters
 {
 	public static function common($filter, $value)
@@ -38,5 +40,38 @@ class TemplateFilters
 			$temp .= ' - '. $city;
 		}
 		return $temp;
+	}
+
+	/**
+	 * Formats given normalized (canonized) registry mark to appropriate format
+	 * See: https://github.com/datoszs/czech-lawyers/issues/91
+	 * @param string $value
+	 * @return string
+	 */
+	public static function formatRegistryMark(string $value) : string
+	{
+		$parts = explode(' ', $value);
+		if (count($parts) !== 3) {
+			return $value;
+		}
+
+		if ($parts[0] === 'pl.') { // Exception of Law court
+			$parts[0] = 'Pl.';
+		} else {
+			$parts[0] = Strings::upper($parts[0]);
+		}
+
+		if ($parts[1] === 'ús') { // Exception of Law court
+			$parts[1] = 'ÚS';
+		} else if ($parts[1] === 'icdo') { // Exception of Supreme court
+			$parts[1] = 'ICdo';
+		} else if ($parts[1] === 'nscr') { // Exception of Supreme court
+			$parts[1] = 'NSČR';
+		} else {
+			$parts[1] = Strings::firstUpper($parts[1]);
+		}
+
+
+		return implode(' ', $parts);
 	}
 }

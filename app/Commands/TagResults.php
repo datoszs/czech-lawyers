@@ -18,6 +18,7 @@ use App\Model\Services\DocumentService;
 use App\Model\Taggings\TaggingCaseResult;
 use App\Model\Cause\Cause;
 use App\Utils\JobCommand;
+use App\Utils\TemplateFilters;
 use Nette\Utils\Strings;
 use Nette\Utils\Json;
 use Symfony\Component\Console\Command\Command;
@@ -225,7 +226,7 @@ class TagResults extends Command
             	$part = trim(explode(", ", $debug)[1]);
                 if (!Strings::contains($json_input, $part)) {
                     $this->makeStatistic(static::DIFFERENT,false);
-                	$message = $cause->registrySign." - Court: '".$json_input."'; Web: '".$debug."'\n";
+                	$message = TemplateFilters::formatRegistryMark($cause->registrySign)." - Court: '".$json_input."'; Web: '".$debug."'\n";
                 	$consoleOutput->write($message);
                 	$output .= $message;
                 }
@@ -240,7 +241,7 @@ class TagResults extends Command
             $result->isFinal = false;
             $result->insertedBy = $this->user;
             $result->jobRun = $this->jobRun;
-            $output .= sprintf("Tagging case result for case [%s] of [%s]\n", $cause->registrySign, $cause->court->name);
+            $output .= sprintf("Tagging case result for case [%s] of [%s]\n", TemplateFilters::formatRegistryMark($cause->registrySign), $cause->court->name);
             $entity = $this->taggingService->findByDocument($document);
             if ($entity) {
                 if ($this->taggingService->persistCaseResultIfDiffers($result)) {

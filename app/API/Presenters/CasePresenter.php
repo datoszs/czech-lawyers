@@ -140,7 +140,7 @@ class CasePresenter extends Presenter
 		return [
 			'id_case' => $case->id,
 			'id_court' => $case->court->id,
-			'registry_mark' => Strings::upper($case->registrySign),
+			'registry_mark' => TemplateFilters::formatRegistryMark($case->registrySign),
 			'tagging_advocate' => $advocate,
 			'tagging_result' => ($result && $result->status === TaggingStatus::STATUS_PROCESSED) ? $result->caseResult : null,
 			'documents' => array_map(function (Document $document) {
