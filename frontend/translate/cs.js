@@ -1,4 +1,5 @@
 import about from './about.cs.md';
+import home from './home.cs.md';
 
 /* eslint-disable quote-props */
 export default {
@@ -44,6 +45,9 @@ export default {
     'case.court': 'Soud',
     'case.result': 'Výsledek',
     'case.documents': 'Dokumenty',
+
+    'home.above': 'Zadejte advokáta a zobrazte si statistiky o jeho vystupování před třemi nejdůležitějšími soudy v ČR.',
+    'home.below': home,
 
     'about.text': about,
 };
