@@ -64,7 +64,7 @@ class JobService
 		return $entity;
 	}
 
-	public function finishRun(JobRun $jobRun, $returnCode, $output, $message)
+	public function finishRun(JobRun $jobRun, int $returnCode, ?string $output, ?string $message)
 	{
 		$jobRun->finished = new DateTime();
 		$jobRun->returnCode = $returnCode;

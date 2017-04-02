@@ -3,10 +3,14 @@
 namespace App\Presenters;
 
 use App\Model\Services\JobService;
+use App\Utils\Responses\OriginalMimeTypeFileResponse;
 
 
 class JobPresenter extends SecuredPresenter
 {
+
+	const JOB_RUN_LOGS_DIR = __DIR__ . '/../../storage/logs/job_run/';
+
 	/** @var JobService @inject */
 	public $jobService;
 
@@ -32,5 +36,14 @@ class JobPresenter extends SecuredPresenter
 	public function actionRun($runId)
 	{
 		$this->template->run = $this->jobService->findRun($runId);
+		$filename = static::JOB_RUN_LOGS_DIR . $runId . '.bz';
+		$this->template->hasLogFile = file_exists($filename);
+	}
+
+	/** @privilege(App\Utils\Resources::JOBS, App\Utils\Actions::VIEW) */
+	public function actionLog($runId)
+	{
+		$filename = static::JOB_RUN_LOGS_DIR . $runId . '.bz';
+		$this->sendResponse(new OriginalMimeTypeFileResponse($filename));
 	}
 }

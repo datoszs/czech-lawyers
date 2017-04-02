@@ -17,6 +17,8 @@ storage/documents/nss/*
 !storage/documents/nss/.keep
 storage/documents/us/*
 !storage/documents/us/.keep
+storage/logs/*
+!storage/logs/job_run/.keep
 *.deployment-in-progress
 *.xml
 *.iml

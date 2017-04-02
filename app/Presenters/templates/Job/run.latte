@@ -29,7 +29,24 @@
                 {/if}
             </td>
         </tr>
+        <tr>
+            <th>Celý výstup</th>
+            <td>
+                {if $hasLogFile}
+                    <a href="{plink Job:log, $run->id}">Stáhnout</a>
+                {else}
+                    <i>viz níže</i>
+                {/if}
+            </td>
+        </tr>
     </table>
-    <pre>{$run->output}</pre>
+    <h2>Výstup uložený v databázi</h2>
+    {if $run->output === null}
+        <pre><i>Neexistuje</i></pre>
+    {elseif !$run->output}
+        <pre><i>Prázdný</i></pre>
+    {else}
+        <pre>{$run->output}</pre>
+    {/if}
 
 {/block}

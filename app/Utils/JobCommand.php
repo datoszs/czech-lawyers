@@ -7,6 +7,7 @@ use App\Model\Jobs\JobRun;
 use App\Model\Services\JobService;
 use App\Model\Services\UserService;
 use App\Model\Users\User;
+use App\Presenters\JobPresenter;
 use Nette\InvalidStateException;
 use Symfony\Component\Console\Command\Command;
 
@@ -45,8 +46,10 @@ trait JobCommand
 		}
 	}
 
-	public function finalize($returnCode, $output, $message)
+	public function finalize(int $returnCode, ?string $output, ?string $message)
 	{
-		$this->jobService->finishRun($this->jobRun, $returnCode, $output, $message);
+		$jobRunId = $this->jobRun->id;
+		file_put_contents('compress.bzip2://' . JobPresenter::JOB_RUN_LOGS_DIR . $jobRunId . '.bz', $output);
+		$this->jobService->finishRun($this->jobRun, $returnCode, null, $message);
 	}
 }
