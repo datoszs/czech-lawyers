@@ -26,7 +26,7 @@ export default () => (
                 <StatisticsContainer />
             </Col>
         </Row>
-        <PageSubheader><Msg msg="advocate.cases"/></PageSubheader>
+        <PageSubheader><Msg msg="advocate.cases" /></PageSubheader>
         <CourtFilter />
         <TimelineScroll>
             <TimelineContainer />
