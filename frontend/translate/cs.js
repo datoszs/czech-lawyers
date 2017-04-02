@@ -1,3 +1,5 @@
+import about from './about.cs.md';
+
 /* eslint-disable quote-props */
 export default {
     'app.title': 'Čeští advokáti.cz',
@@ -42,4 +44,6 @@ export default {
     'case.court': 'Soud',
     'case.result': 'Výsledek',
     'case.documents': 'Dokumenty',
+
+    'about.text': about,
 };

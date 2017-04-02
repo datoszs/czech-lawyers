@@ -84,6 +84,10 @@ export default ({dev}) => ({
                     mimetype: 'application/font-woff',
                 },
             },
+            {
+                test: /\.md$/,
+                loader: 'raw-loader',
+            },
         ],
     },
     devServer: {

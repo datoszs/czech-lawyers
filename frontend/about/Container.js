@@ -1,7 +1,12 @@
 import React from 'react';
 import {PageHeader} from 'react-bootstrap';
-import {Msg} from '../containers';
+import {Msg, RichText} from '../containers';
 
-const Container = () => <PageHeader><Msg msg="about.title" /></PageHeader>;
+const Container = () => (
+    <section>
+        <PageHeader><Msg msg="about.title" /></PageHeader>
+        <RichText msg="about.text" />
+    </section>
+);
 
 export default Container;
