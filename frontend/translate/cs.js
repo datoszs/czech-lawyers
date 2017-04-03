@@ -1,5 +1,7 @@
 import about from './about.cs.md';
 import home from './home.cs.md';
+import authors from './authors.cs.md';
+import contact from './contact.cs.md';
 
 /* eslint-disable quote-props */
 export default {
@@ -7,7 +9,7 @@ export default {
     'about.title': 'O projektu',
     'contact.title': 'Kontakt',
     'contact.appeal': 'Napište nám',
-    'copyright': '\u{A9} 2017 DATOS \u{2014} data o spravedlnosti, z.s',
+    'copyright': '\u{A9} 2017 DATOS \u{2014} data o spravedlnosti, z. S.',
 
     'search.button': 'Hledat',
     'search.placeholder': 'Zadejte jméno nebo IČ',
@@ -50,4 +52,8 @@ export default {
     'home.below': home,
 
     'about.text': about,
+
+    'contact.subtitle': 'Za projektem stojí:',
+    'contact.authors': authors,
+    'contact.us.text': contact,
 };
