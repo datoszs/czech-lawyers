@@ -9,7 +9,7 @@ export default {
     'about.title': 'O projektu',
     'contact.title': 'Kontakt',
     'contact.appeal': 'Napište nám',
-    'copyright': '\u{A9} 2017 DATOS \u{2014} data o spravedlnosti, z. S.',
+    'copyright': '\u{A9} 2017 DATOS \u{2014} data o spravedlnosti, z. s.',
 
     'search.button': 'Hledat',
     'search.placeholder': 'Zadejte jméno nebo IČ',
@@ -56,4 +56,9 @@ export default {
     'contact.subtitle': 'Za projektem stojí:',
     'contact.authors': authors,
     'contact.us.text': contact,
+
+    'society.name': 'DATOS \u{2014} data o spravedlnosti z. s.',
+    'society.ic': 'IČ: 05003997',
+    'society.street': 'Fleischnerova 20',
+    'society.city': '635\u{000A0}00 Brno',
 };

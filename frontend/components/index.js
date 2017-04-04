@@ -8,3 +8,4 @@ export {default as DetailFieldComponent} from './DetailFieldComponent';
 export {default as AddressFormatter} from './AddressFormatter';
 export {default as BigStatistics} from './BigStatistics';
 export {default as PageSubheader} from './PageSubheader';
+export {default as SocietyOverview} from './SocietyOverview';
