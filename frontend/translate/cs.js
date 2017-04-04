@@ -1,10 +1,15 @@
+import about from './about.cs.md';
+import home from './home.cs.md';
+import authors from './authors.cs.md';
+import contact from './contact.cs.md';
+
 /* eslint-disable quote-props */
 export default {
     'app.title': 'Čeští advokáti.cz',
     'about.title': 'O projektu',
     'contact.title': 'Kontakt',
     'contact.appeal': 'Napište nám',
-    'copyright': '\u{A9} 2017 DATAOS \u{2014} data o spravedlnosti, z.s',
+    'copyright': '\u{A9} 2017 DATOS \u{2014} data o spravedlnosti, z. s.',
 
     'search.button': 'Hledat',
     'search.placeholder': 'Zadejte jméno nebo IČ',
@@ -42,4 +47,18 @@ export default {
     'case.court': 'Soud',
     'case.result': 'Výsledek',
     'case.documents': 'Dokumenty',
+
+    'home.above': 'Zadejte advokáta a zobrazte si statistiky o jeho vystupování před třemi nejdůležitějšími soudy v ČR.',
+    'home.below': home,
+
+    'about.text': about,
+
+    'contact.subtitle': 'Za projektem stojí:',
+    'contact.authors': authors,
+    'contact.us.text': contact,
+
+    'society.name': 'DATOS \u{2014} data o spravedlnosti z. s.',
+    'society.ic': 'IČ: 05003997',
+    'society.street': 'Fleischnerova 20',
+    'society.city': '635\u{000A0}00 Brno',
 };
