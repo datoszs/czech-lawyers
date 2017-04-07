@@ -10,7 +10,7 @@ const DisputeButtonComponent = ({formOpen, disputed, openForm}) => {
     if (formOpen) {
         return <DisputeForm />;
     } else {
-        return <Button disabled={disputed} onClick={openForm}><Msg msg="case.dispute.submit" /></Button>;
+        return <Button bsStyle="danger" disabled={disputed} onClick={openForm}><Msg msg="case.dispute" /></Button>;
     }
 };
 

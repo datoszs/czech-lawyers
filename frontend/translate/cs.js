@@ -48,8 +48,9 @@ export default {
     'case.court': 'Soud',
     'case.result': 'Výsledek',
     'case.documents': 'Dokumenty',
-    'case.dispute': dispute,
+    'case.dispute.text': dispute,
     'case.dispute.submit': 'Rozporovat',
+    'case.dispute': 'Rozporovat výsledek',
 
     'home.above': 'Zadejte advokáta a zobrazte si statistiky o jeho vystupování před třemi nejdůležitějšími soudy v ČR.',
     'home.below': home,
