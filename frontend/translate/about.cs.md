@@ -26,14 +26,12 @@ týdně stahujeme z webů [nsoud.cz](http://www.nsoud.cz), [nssoud.cz](http://ww
 Nyní jsou (až na ojedinělé výjimky) již všechna rozhodnutí těchto soudů veřejně dostupná online, nebylo tomu tak ale vždy.
 Rozsah zpracovávaných konečných rozhodnutí se proto pro jednotlivé soudy liší.
 
-### Nejvyšší soud
-Konečná rozhodnutí o dovoláních v občanskoprávních věcech (rejstříky Cdo, Cdon, ICdo, NSČR, Odo, Odon) vydaných po 1. 6. 2000
-a v trestněprávních věcech (rejstřík Tdo) vydaných po 1. 1. 2002.
-
-### Nejvyšší správní soud
+- **Nejvyšší soud**:
+Konečná rozhodnutí o dovoláních v občanskoprávních věcech (rejstříky Cdo, Cdon, ICdo, NSČR, Odo, Odon)
+vydaných po 1. 6. 2000 a v trestněprávních věcech (rejstřík Tdo) vydaných po 1. 1. 2002.
+- **Nejvyšší správní soud**:
 Konečná rozhodnutí o kasačních stížnostech (rejstříky As, Ads, Afs, Ars, Azs) vydaná po 1. 1. 2006.
-
-### Ústavní soud
+- **Ústavní soud**:
 V období od počátku činnosti soudu do 31. 12. 2006 (včetně) všechna konečná rozhodnutí (v tomto období nebyla nijak
 rozlišována rozhodnutí o ústavních stížnostech a rozhodnutí vydaná v jiných typech řízení). Od 1. 1. 2007 jen
 konečná rozhodnutí o ústavních stížnostech.
