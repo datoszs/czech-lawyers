@@ -44,8 +44,8 @@ const CaptchaForm = (reduxForm({onSubmit})(CaptchaFormComponent));
 
 CaptchaForm.propTypes = {
     form: PropTypes.string.isRequired,
-    submitLabel: PropTypes.string.isRequired,
     action: PropTypes.func.isRequired,
+    submitLabel: PropTypes.string.isRequired,
 };
 
 export default CaptchaForm;

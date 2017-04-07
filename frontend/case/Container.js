@@ -3,6 +3,7 @@ import {Row, Col} from 'react-bootstrap';
 import Header from './Header';
 import Detail from './Detail';
 import Documents from './DocumentContainer';
+import DisputeButton from './DisputeButton';
 
 const Container = () => (
     <section>
@@ -10,6 +11,7 @@ const Container = () => (
         <Row>
             <Col sm={6}>
                 <Detail />
+                <DisputeButton />
             </Col>
             <Col sm={6}>
                 <Documents />

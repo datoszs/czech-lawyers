@@ -2,6 +2,7 @@ import about from './about.cs.md';
 import home from './home.cs.md';
 import authors from './authors.cs.md';
 import contact from './contact.cs.md';
+import dispute from './dispute.cs.md';
 
 /* eslint-disable quote-props */
 export default {
@@ -47,6 +48,8 @@ export default {
     'case.court': 'Soud',
     'case.result': 'Výsledek',
     'case.documents': 'Dokumenty',
+    'case.dispute': dispute,
+    'case.dispute.submit': 'Rozporovat',
 
     'home.above': 'Zadejte advokáta a zobrazte si statistiky o jeho vystupování před třemi nejdůležitějšími soudy v ČR.',
     'home.below': home,
