@@ -6,7 +6,7 @@ const InputTextArea = ({input, label}) => (
         {label && <ControlLabel>{label}</ControlLabel>}
         <FormControl
             componentClass="textarea"
-            style={{height: '10em'}}
+            className="input-text-area"
             value={input.value}
             onChange={input.onChange}
         />

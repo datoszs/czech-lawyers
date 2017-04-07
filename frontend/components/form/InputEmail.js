@@ -6,6 +6,7 @@ const InputEmail = ({input, label, placeholder}) => (
         {label && <ControlLabel>{label}</ControlLabel>}
         <FormControl
             type="email"
+            className="input-email"
             placeholder={placeholder}
             value={input.value}
             onChange={input.onChange}
