@@ -1,11 +1,10 @@
 import React, {PropTypes} from 'react';
-import {Form, Button} from 'react-bootstrap';
+import {Form} from 'react-bootstrap';
 import {reduxForm, Field} from 'redux-form/immutable';
 import Captcha from 'react-google-recaptcha';
 import {wrapEventStop} from '../../util';
-import {Msg} from '../';
 
-const CaptchaFormComponent = ({inline, children, submitLabel, handleSubmit}) => {
+const CaptchaFormComponent = ({inline, children, handleSubmit}) => {
     let captcha;
     return (
         <Form inline={inline} onSubmit={wrapEventStop(() => captcha.execute())}>
@@ -22,7 +21,6 @@ const CaptchaFormComponent = ({inline, children, submitLabel, handleSubmit}) => 
                     ref={(component) => { captcha = component; }}
                 />}
             />
-            <Button type="submit" bsStyle="primary"><Msg msg={submitLabel} /></Button>
         </Form>
     );
 };
@@ -30,7 +28,6 @@ const CaptchaFormComponent = ({inline, children, submitLabel, handleSubmit}) => 
 CaptchaFormComponent.propTypes = {
     inline: PropTypes.bool,
     children: PropTypes.node.isRequired,
-    submitLabel: PropTypes.string.isRequired,
     handleSubmit: PropTypes.func.isRequired,
 };
 
@@ -45,7 +42,6 @@ const CaptchaForm = (reduxForm({onSubmit})(CaptchaFormComponent));
 CaptchaForm.propTypes = {
     form: PropTypes.string.isRequired,
     action: PropTypes.func.isRequired,
-    submitLabel: PropTypes.string.isRequired,
 };
 
 export default CaptchaForm;
