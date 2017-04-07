@@ -56,9 +56,13 @@ export default {
     'contact.subtitle': 'Za projektem stojí:',
     'contact.authors': authors,
     'contact.us.text': contact,
+    'contact.form.message': 'Vaše zpráva',
+    'contact.form.submit': 'Odeslat',
 
     'society.name': 'DATOS \u{2014} data o spravedlnosti z. s.',
     'society.ic': 'IČ: 05003997',
     'society.street': 'Fleischnerova 20',
     'society.city': '635\u{000A0}00 Brno',
+
+    'form.email': 'Váš e-mail',
 };
