@@ -8,6 +8,7 @@ use App\Model\Cause\Cause;
 use App\Model\Services\CauseService;
 use App\Model\Services\TaggingService;
 use App\Model\Taggings\TaggingCaseResult;
+use App\Utils\CaptchaVerificator;
 use App\Utils\MailService;
 use DateTimeImmutable;
 use Nette\Application\AbortException;
@@ -38,6 +39,9 @@ class DisputeCasePresenter extends Presenter
 
 	/** @var MailService @inject */
 	public $mailService;
+
+	/** @var CaptchaVerificator @inject */
+	public $captchaVerificator;
 
 	/**
 	 * Dispute given case (case result, advocate or both).
@@ -186,8 +190,7 @@ class DisputeCasePresenter extends Presenter
 
 	private function validCaptcha($token)
 	{
-		// TODO
-		return true;
+		return $this->captchaVerificator->verify($token);
 	}
 
 	private function getConfirmLink($email, $code)

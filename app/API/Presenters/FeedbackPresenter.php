@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\APIModule\Presenters;
 
 
+use App\Utils\CaptchaVerificator;
 use App\Utils\MailService;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Presenter;
@@ -24,6 +25,9 @@ class FeedbackPresenter extends Presenter
 
 	/** @var MailService @inject */
 	public $mailService;
+
+	/** @var CaptchaVerificator @inject */
+	public $captchaVerificator;
 
 	/**
 	 * Sends given feedback to responsible people.
@@ -86,7 +90,6 @@ class FeedbackPresenter extends Presenter
 	}
 	private function validCaptcha($token)
 	{
-		// TODO
-		return true;
+		return $this->captchaVerificator->verify($token);
 	}
 }
