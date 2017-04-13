@@ -10,3 +10,5 @@ export const getDocument = (state, id) => getModel(state).getIn(['documents', id
 
 export const isDisputed = (state) => getModel(state).get('disputed');
 export const isDisputeFormOpen = (state) => getModel(state).get('disputeFormOpen');
+
+export const getLoadTime = (state) => getModel(state).get('loadTime');

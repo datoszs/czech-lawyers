@@ -51,6 +51,7 @@ export default {
     'case.dispute.text': dispute,
     'case.dispute.submit': 'Rozporovat',
     'case.dispute': 'Rozporovat výsledek',
+    'case.dispute.reason': 'Důvod k rozporování',
 
     'home.above': 'Zadejte advokáta a zobrazte si statistiky o jeho vystupování před třemi nejdůležitějšími soudy v ČR.',
     'home.below': home,
