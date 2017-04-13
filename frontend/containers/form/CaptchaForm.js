@@ -3,6 +3,7 @@ import {Form} from 'react-bootstrap';
 import {reduxForm, Field} from 'redux-form/immutable';
 import Captcha from 'react-google-recaptcha';
 import {wrapEventStop} from '../../util';
+import {siteKey} from '../../serverAPI';
 
 const CaptchaFormComponent = ({inline, children, handleSubmit}) => {
     let captcha;
@@ -16,7 +17,7 @@ const CaptchaFormComponent = ({inline, children, handleSubmit}) => {
                         input.onChange(value);
                         handleSubmit();
                     }}
-                    sitekey="6Ldw-BsUAAAAAJ35FtswvO1Ar2B2XrkTgmFXs4P6"
+                    sitekey={siteKey}
                     size="invisible"
                     ref={(component) => { captcha = component; }}
                 />}
