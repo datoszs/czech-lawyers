@@ -11,7 +11,7 @@ const CaptchaFormComponent = ({inline, children, handleSubmit}) => {
         <Form inline={inline} onSubmit={wrapEventStop(() => captcha.execute())}>
             {children}
             <Field
-                name="g-recaptcha-response"
+                name="captcha_token"
                 component={({input}) => <Captcha
                     onChange={(value) => {
                         input.onChange(value);

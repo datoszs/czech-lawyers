@@ -69,4 +69,5 @@ export default {
     'society.city': '635\u{000A0}00 Brno',
 
     'form.email': 'Váš e-mail',
+    'form.name': 'Vaše jméno',
 };
