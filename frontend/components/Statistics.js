@@ -1,13 +1,13 @@
 import React, {PropTypes} from 'react';
+import StatisticsBar from './StatisticsBar';
 
 const Statistics = ({positive, negative, neutral}) => {
     const max = Math.max(positive, negative, neutral);
-    const style = (number) => ({fontSize: `${((number / max) * 75) + 75}%`});
     return (
         <h2 className="statistics">
-            <div className="positive" style={style(positive)}>{positive}</div>
-            <div className="negative" style={style(negative)}>{negative}</div>
-            <div className="neutral" style={style(neutral)}>{neutral}</div>
+            <StatisticsBar number={positive} max={max} type="positive" />
+            <StatisticsBar number={negative} max={max} type="negative" />
+            <StatisticsBar number={neutral} max={max} type="neutral" />
         </h2>
     );
 };

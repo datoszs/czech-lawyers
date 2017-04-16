@@ -1,35 +1,10 @@
 @import "../variables";
 
 .big-statistics {
-    .same-width() {
-        display: flex;
-        & > * {
-            flex: 1 0 0;
-            text-align: center;
-        }
-    }
+    display: flex;
+    margin-top: 50px;
 
-    .child(@color) {
-        color: @color;
-    }
-
-    .numbers {
-        .same-width();
-        align-items: baseline;
-
+    .big-bar {
         font-size: 5em;
-        .positive {
-            color: @stats-positive;
-        }
-        .negative {
-            color: @stats-negative;
-        }
-        .neutral {
-            color: @stats-neutral;
-        }
-    }
-
-    .legend {
-        .same-width();
     }
 }
