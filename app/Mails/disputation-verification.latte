@@ -1,0 +1,16 @@
+{layout layouts/@single-column.latte}
+
+{block body}
+    <p>
+        Dobrý den,<br>
+        bylo požádáno o prověření případu <b>{$case->registrySign|formatRegistryMark}</b>, předtím než jej prověříme,<br>
+        potvrďte prosím svoji žádost nejpozději do <b>{$deadline|date: 'j. n. Y H:i:s'}</b> na následující stránce:
+    </p>
+
+    <p style="text-align: center;">
+        <a href="{$link}">{$link}</a>
+    </p>
+    <p>Bez tohoto potvrzení nebude váš požadavek brán v potaz. Toto opatření je nezbytné kvůli prevenci zneužívání této funkce.</p>
+
+    <p>&ndash; Web Čestiadvokáti.cz</p>
+{/block}
