@@ -2,6 +2,7 @@ import about from './about.cs.md';
 import home from './home.cs.md';
 import authors from './authors.cs.md';
 import contact from './contact.cs.md';
+import dispute from './dispute.cs.md';
 
 /* eslint-disable quote-props */
 export default {
@@ -47,6 +48,10 @@ export default {
     'case.court': 'Soud',
     'case.result': 'Výsledek',
     'case.documents': 'Dokumenty',
+    'case.dispute.text': dispute,
+    'case.dispute.submit': 'Rozporovat',
+    'case.dispute': 'Rozporovat výsledek',
+    'case.dispute.reason': 'Důvod k rozporování',
 
     'home.above': 'Zadejte advokáta a zobrazte si statistiky o jeho vystupování před třemi nejdůležitějšími soudy v ČR.',
     'home.below': home,
@@ -56,9 +61,14 @@ export default {
     'contact.subtitle': 'Za projektem stojí:',
     'contact.authors': authors,
     'contact.us.text': contact,
+    'contact.form.message': 'Vaše zpráva',
+    'contact.form.submit': 'Odeslat',
 
     'society.name': 'DATOS \u{2014} data o spravedlnosti z. s.',
     'society.ic': 'IČ: 05003997',
     'society.street': 'Fleischnerova 20',
     'society.city': '635\u{000A0}00 Brno',
+
+    'form.email': 'Váš e-mail',
+    'form.name': 'Vaše jméno',
 };

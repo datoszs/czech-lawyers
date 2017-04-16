@@ -3,6 +3,7 @@ import {PageHeader} from 'react-bootstrap';
 import {Msg, RichText} from '../containers';
 import {PageSubheader} from '../components';
 import SocietyContainer from './SocietyContainer';
+import ContactForm from './ContactForm';
 
 const Container = () => (
     <section>
@@ -11,7 +12,7 @@ const Container = () => (
         <SocietyContainer />
         <RichText msg="contact.authors" />
         <PageSubheader><Msg msg="contact.appeal" /></PageSubheader>
-        <RichText msg="contact.us.text" />
+        <ContactForm />
     </section>
 );
 

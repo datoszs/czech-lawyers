@@ -1,5 +1,5 @@
 import querystring from 'query-string';
-import {doGet} from './fetch';
+import {doGet, doPost} from './fetch';
 
 const base = '/api/case';
 
@@ -12,7 +12,10 @@ const getByAdvocate = (id, court, year, result) => {
     return doGet(`/api/advocate-cases/${id}?${querystring.stringify(query)}`);
 };
 
+const dispute = (id, values) => doPost(`/api/dispute-case/${id}`)(values);
+
 export default {
     get,
     getByAdvocate,
+    dispute,
 };

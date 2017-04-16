@@ -1,7 +1,8 @@
 import {combineReducers} from 'redux-immutable';
 import {Map} from 'immutable';
+import moment from 'moment';
 import {CaseDetail, Document} from '../model';
-import {SET_ID, SET_DETAIL} from './actions';
+import {SET_ID, SET_DETAIL, OPEN_DISPUTE_FORM, DISPUTE} from './actions';
 
 const idReducer = (state = null, action) => (action.type === SET_ID ? action.id : state);
 
@@ -27,10 +28,37 @@ const documentReducer = (state = Map(), action) => {
     }
 };
 
+const disputeFormReducer = (state = false, action) => {
+    switch (action.type) {
+        case OPEN_DISPUTE_FORM:
+            return true;
+        case SET_ID:
+        case DISPUTE:
+            return false;
+        default:
+            return state;
+    }
+};
+const disputedReducer = (state = false, action) => {
+    switch (action.type) {
+        case DISPUTE:
+            return true;
+        case SET_ID:
+            return false;
+        default:
+            return state;
+    }
+};
+
+const loadTimeReducer = (state = null, action) => (action.type === SET_ID ? moment().toISOString() : state);
+
 const reducer = combineReducers({
     id: idReducer,
     detail: detailReducer,
     documents: documentReducer,
+    disputeFormOpen: disputeFormReducer,
+    disputed: disputedReducer,
+    loadTime: loadTimeReducer,
 });
 
 export default (state, action) => {

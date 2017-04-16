@@ -1,5 +1,6 @@
 @import "../variables";
 @import "timeline/index";
+@import "form/index";
 @import (reference) "TwoColumn";
 @import (reference) "SearchForm";
 @import (reference) "Statistics";
@@ -10,6 +11,7 @@
 @import (reference) "PageSubheader";
 @import (reference) "SocietyOverview";
 @import (reference) "StatisticsBar";
+@import (reference) "SimpleFormLayout";
 
 .two-column { .two-column(); }
 .search-form { .search-form(); }
@@ -23,3 +25,4 @@
 .statistics-column.positive { .statistics-column(@stats-positive); }
 .statistics-column.negative { .statistics-column(@stats-negative); }
 .statistics-column.neutral { .statistics-column(@stats-neutral); }
+.simple-form { .simple-form(); }
