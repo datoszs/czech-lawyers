@@ -8,6 +8,7 @@ import {Advocate, statusMsg} from '../model';
 import advocateModule from '../advocate';
 import {getAdvocate} from './selectors';
 import FooterColumn from './FooterColumn';
+import Legend from './Legend';
 
 const AdvocateDetailComponent = ({advocate, handleDetail, msgStatus, msgIc}) => (
     <DetailPanel
@@ -25,6 +26,7 @@ const AdvocateDetailComponent = ({advocate, handleDetail, msgStatus, msgIc}) => 
             positive={advocate.statistics.positive}
             negative={advocate.statistics.negative}
             neutral={advocate.statistics.neutral}
+            legend={Legend}
         />
     </DetailPanel>
 );
