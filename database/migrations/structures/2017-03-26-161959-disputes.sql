@@ -1,5 +1,6 @@
 CREATE TABLE case_disputation (
 	id_case_disputation BIGSERIAL PRIMARY KEY,
+	fullname TEXT NOT NULL,
 	email TEXT NOT NULL,
 	code VARCHAR(128) NOT NULL,
 	case_id BIGINT NOT NULL REFERENCES "case"(id_case) ON UPDATE CASCADE ON DELETE CASCADE,

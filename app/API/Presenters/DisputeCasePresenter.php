@@ -6,6 +6,7 @@ namespace App\APIModule\Presenters;
 
 use App\Model\Cause\Cause;
 use App\Model\Services\CauseService;
+use App\Model\Services\DisputationService;
 use App\Model\Services\TaggingService;
 use App\Model\Taggings\TaggingCaseResult;
 use App\Utils\CaptchaVerificator;
@@ -36,6 +37,9 @@ class DisputeCasePresenter extends Presenter
 
 	/** @var TaggingService @inject */
 	public $taggingService;
+
+	/** @var DisputationService @inject */
+	public $disputationService;
 
 	/** @var MailService @inject */
 	public $mailService;
@@ -142,10 +146,18 @@ class DisputeCasePresenter extends Presenter
 
 		// store disputation in invalid status
 		try {
-			$entity = $this->taggingService->dispute($case, $from, $content, $advocateTagging, $caseResultTagging);
+			$entity = $this->disputationService->dispute(
+				$case,
+				$fullname,
+				$from,
+				$content,
+				($disputedTagging === 'both' || $disputedTagging === 'advocate') ? $advocateTagging : null,
+				($disputedTagging === 'both' || $disputedTagging === 'case_result') ? $caseResultTagging : null
+			);
 		} catch (Throwable $ex) {
 			Debugger::log($ex);
 			$this->sendJson(['result' => 'fail']);
+			return;
 		}
 
 		// send email.

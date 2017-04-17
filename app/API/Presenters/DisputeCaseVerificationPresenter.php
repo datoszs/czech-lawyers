@@ -7,7 +7,7 @@ namespace App\APIModule\Presenters;
 use App\Exceptions\ExpiredDisputeRequestException;
 use App\Exceptions\NoSuchDisputeRequestException;
 use App\Model\Services\CauseService;
-use App\Model\Services\TaggingService;
+use App\Model\Services\DisputationService;
 use App\Utils\MailService;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Presenter;
@@ -30,8 +30,8 @@ class DisputeCaseVerificationPresenter extends Presenter
 	/** @var CauseService @inject */
 	public $causeService;
 
-	/** @var TaggingService @inject */
-	public $taggingService;
+	/** @var DisputationService @inject */
+	public $disputationService;
 
 	/** @var MailService @inject */
 	public $mailService;
@@ -81,7 +81,7 @@ class DisputeCaseVerificationPresenter extends Presenter
 
 		// Confirm dispute
 		try {
-			$this->taggingService->confirmDispute($email, $code);
+			$this->disputationService->confirmDispute($email, $code);
 		} catch (NoSuchDisputeRequestException $exception) {
 			$this->sendJson(['result' => 'no_request']);
 		} catch (ExpiredDisputeRequestException $exception) {

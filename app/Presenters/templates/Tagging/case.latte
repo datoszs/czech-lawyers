@@ -128,4 +128,111 @@
 			{/if}
 		</div>
 	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<h2 id="disputations">Rozporování</h2>
+			{if count($disputes) != 0}
+				{form resolveDisputes, class => 'form-horizontal'}
+					<div class="errors alert alert-danger" n:if="$form->hasErrors()">
+						<p n:foreach="$form->errors as $error">{$error}</p>
+					</div>
+					<table class="table table-bordered">
+						<thead>
+						<tr>
+							<th>ID</th>
+							<th>Předmět rozporování &amp; zdůvodnění</th>
+							<th>Odpověď</th>
+						</tr>
+						</thead>
+						<tbody>
+						{foreach $disputes as $dispute}
+							{var $notValid = !$dispute->validatedAt}
+							{var $expired = $notValid && $dispute->validUntil < new DateTimeImmutable()}
+							{var $new = !$expired && !$dispute->response}
+							<tr {if $expired}class="text-muted"{/if}>
+								<td>
+									{$dispute->id}<br>
+									{input responding:$dispute->id}<br>
+									{if $notValid}
+										<span class="label label-default">Not validated</span>
+									{/if}
+									{if $expired}
+										<span class="label label-default">Expired</span>
+									{/if}
+									{if $new}
+										<span class="label label-primary">New</span>
+									{/if}
+								</td>
+								<td>
+									<div class="row">
+										<div class="col-xs-6">
+											{if $dispute->taggingCaseResult}
+												{var $resultTagging = $dispute->taggingCaseResult}
+												<div class="alert
+													{if $resultTagging && $resultTagging->status == App\Enums\TaggingStatus::STATUS_FAILED}alert-danger
+													{elseif $resultTagging && $resultTagging->status == App\Enums\TaggingStatus::STATUS_IGNORED}alert-info
+													{elseif $resultTagging && $resultTagging->status == App\Enums\TaggingStatus::STATUS_PROCESSED}alert-success
+													{else}
+													{/if}">
+													{include ../case-result.latte, tagging => $dispute->taggingCaseResult, meta => true}
+												</div>
+											{/if}
+										</div>
+										<div class="col-xs-6">
+											{if $dispute->taggingAdvocate}
+												<div class="alert
+													{if $dispute->taggingAdvocate && $dispute->taggingAdvocate->status == App\Enums\TaggingStatus::STATUS_FAILED}alert-danger
+													{elseif $dispute->taggingAdvocate && $dispute->taggingAdvocate->status == App\Enums\TaggingStatus::STATUS_IGNORED}alert-info
+													{elseif $dispute->taggingAdvocate && $dispute->taggingAdvocate->status == App\Enums\TaggingStatus::STATUS_PROCESSED}alert-success
+													{else}
+													{/if}">
+													{var $advocateInfo = null}
+													{if $dispute->taggingAdvocate && $dispute->taggingAdvocate->advocate}
+														{foreach $dispute->taggingAdvocate->advocate->advocateInfo as $temp}
+															{var $advocateInfo = $temp}
+															{breakIf true}
+														{/foreach}
+														{var $name = \App\Utils\TemplateFilters::formatName($advocateInfo->name, $advocateInfo->surname,  $advocateInfo->degreeBefore, $advocateInfo->degreeAfter)}
+														{$name}
+													{/if}
+												</div>
+											{/if}
+										</div>
+									</div>
+									<blockquote>
+										{$dispute->reason}
+									</blockquote>
+									<small>
+										<span class="glyphicon glyphicon-user"></span> <a href="mailto:{$dispute->email}" title="{$dispute->email}">{$dispute->fullname}</a>,
+										<span title="{if $dispute->validatedAt}{$dispute->validatedAt|date: 'j. n. Y H:i:s'}{else}Nevalidováno{/if}">{$dispute->inserted|date: 'j. n. Y H:i:s'}
+									</small>
+								</td>
+								<td>
+									<blockquote n:if="$dispute->response">
+										{$dispute->response}
+									</blockquote>
+									{if $dispute->resolvedBy}
+										<small><span class="glyphicon glyphicon-user"></span> {$dispute->resolvedBy->username}, {$dispute->resolved|date:'j. m. Y H:i:s'}</small>
+									{/if}
+								</td>
+							</tr>
+						{/foreach}
+						</tbody>
+					</table>
+					<div class="form-group required">
+						<div class="col-sm-3 control-label">{label response}</div>
+						<div class="col-sm-9">{input response, class => 'form-control'}</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-3 control-label"></div>
+						<div class="col-sm-9">{input sent, class => 'btn btn-primary button'}</div>
+					</div>
+				{/form}
+				<p><i>Vybrání případu na který bylo již odpovězeno přepíše předchozí odpověď.</i></p>
+			{else}
+				<div class="alert alert-info"><i>Žádné nejsou.</i></div>
+			{/if}
+		</div>
+	</div>
+
 {/block}

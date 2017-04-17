@@ -10,6 +10,7 @@ use Nextras\Orm\Entity\Entity;
 
 /**
  * @property int						$id					{primary}
+ * @property string						$fullname
  * @property string						$email
  * @property string						$code
  * @property Cause						$case				{m:1 Cause, oneSided=true}

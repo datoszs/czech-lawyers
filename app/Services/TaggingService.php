@@ -2,16 +2,11 @@
 namespace App\Model\Services;
 
 use App\Enums\TaggingStatus;
-use App\Exceptions\ExpiredDisputeRequestException;
-use App\Exceptions\NoSuchDisputeRequestException;
 use App\Model\Advocates\Advocate;
 use App\Model\Cause\Cause;
-use App\Model\Disputes\Dispute;
 use App\Model\Taggings\TaggingCaseResult;
 use App\Model\Taggings\TaggingAdvocate;
 use App\Model\Orm;
-use DateTimeImmutable;
-use Nette\Utils\Random;
 use Nextras\Dbal\Connection;
 use Nextras\Orm\Entity\IEntity;
 
@@ -207,53 +202,5 @@ class TaggingService
 	private function isTaggingAdvocateDifferent(TaggingAdvocate $new, $old)
 	{
 		return $old === null || !($old instanceof TaggingAdvocate) || $new->case != $old->case || $new->document != $old->document || $new->isFinal != $old->isFinal || $new->advocate != $old->advocate || $new->status != $old->status || $new->debug != $old->debug;
-	}
-
-	/**
-	 * Create new case disputation request with given parameters
-	 * @param Cause $case
-	 * @param string $from
-	 * @param string $content
-	 * @param TaggingAdvocate|null $advocateTagging
-	 * @param TaggingCaseResult|null $caseResultTagging
-	 * @return Dispute
-	 */
-	public function dispute(Cause $case, string $from, string $content, ?TaggingAdvocate $advocateTagging, ?TaggingCaseResult $caseResultTagging)
-	{
-		$code = Random::generate(128);
-		$entity = new Dispute();
-		$entity->case = $case;
-		$entity->taggingAdvocate = $advocateTagging;
-		$entity->taggingCaseResult = $caseResultTagging;
-		$entity->email = $from;
-		$entity->reason = $content;
-		$entity->validUntil = (new DateTimeImmutable())->modify('+24 hours');
-		$entity->code = $code;
-		$this->orm->persistAndFlush($entity);
-		return $entity;
-	}
-
-	/**
-	 * Confirms case disputation request if it exists
-	 * @param string $email
-	 * @param string $code
-	 * @throws ExpiredDisputeRequestException when request is expired
-	 * @throws NoSuchDisputeRequestException when no reguest for such email and validation code
-	 */
-	public function confirmDispute(string $email, string $code)
-	{
-		/** @var Dispute $entity */
-		$entity = $this->orm->disputes->getBy([
-			'code' => $code,
-			'email' => $email,
-		]);
-		if (!$entity) {
-			throw new NoSuchDisputeRequestException();
-		}
-		if ($entity->validUntil < new DateTimeImmutable()) {
-			throw new ExpiredDisputeRequestException();
-		}
-		$entity->validatedAt = new DateTimeImmutable();
-		$this->orm->persistAndFlush($entity);
 	}
 }
