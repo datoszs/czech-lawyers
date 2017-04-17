@@ -7,7 +7,7 @@ parameters:
 		mails:
 			noreply: no-reply@example.com
 			support: support@example.com
-		templates: %appDir%/mails
+		templates: %appDir%/Mails
 	google:
 		captcha:
 			secret:
