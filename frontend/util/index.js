@@ -10,3 +10,5 @@ export const wrapEventStop = (handler) => (event) => {
 export const getCurrentYear = () => new Date().getFullYear();
 
 export const sequence = (length) => Array.from({length}, (value, index) => index);
+
+export const dateFormat = 'Y-MM-DD\\THH:mm:ssZ';

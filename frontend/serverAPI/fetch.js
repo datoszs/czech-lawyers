@@ -30,7 +30,7 @@ export const doPost = (url) => (body) => {
     const request = superagent
         .post(url)
         .send(body)
-        .type('json')
+        .type('form')
         .accept('json');
     return execute(request);
 };

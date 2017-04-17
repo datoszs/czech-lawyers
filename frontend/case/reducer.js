@@ -1,6 +1,7 @@
 import {combineReducers} from 'redux-immutable';
 import {Map} from 'immutable';
 import moment from 'moment';
+import {dateFormat} from '../util';
 import {CaseDetail, Document} from '../model';
 import {SET_ID, SET_DETAIL, OPEN_DISPUTE_FORM, DISPUTE} from './actions';
 
@@ -50,7 +51,7 @@ const disputedReducer = (state = false, action) => {
     }
 };
 
-const loadTimeReducer = (state = null, action) => (action.type === SET_ID ? moment().toISOString() : state);
+const loadTimeReducer = (state = null, action) => (action.type === SET_ID ? moment().format(dateFormat) : state);
 
 const reducer = combineReducers({
     id: idReducer,

@@ -4,7 +4,7 @@ import {SEND_EMAIL} from './actions';
 
 const sendEmailSaga = function* sendEmail({values}) {
     try {
-        yield call(feedbackAPI, values);
+        yield call(feedbackAPI, values.toJS());
     } catch (ex) {
         console.error('Unable to send e-mail feedback.');
     }
