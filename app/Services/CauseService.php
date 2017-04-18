@@ -28,9 +28,9 @@ class CauseService
 		return $this->orm->causes->getBy(['registrySign' => $registrySign]);
 	}
 
-	public function search($query, $limit = null, $match = null)
+	public function search(?string $query, int $start = 0, int $count = 100, string $strategy)
 	{
-		return $this->orm->causes->search($query, $limit, $match)->fetchAll();
+		return $this->orm->causes->search($query, $start, $count, $strategy)->fetchAll();
 	}
 
 	public function findAll()

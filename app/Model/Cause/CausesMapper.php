@@ -57,23 +57,22 @@ class CausesMapper extends Mapper
 	 * Note: case insensitive search is used.
 	 *
 	 * @param string $phrase Phrase to be searched
-	 * @param int|null $limit Maximal number of results, more than some threashold will result in memory limit problems
-	 * @param string|null $match Mathing strategy. Null: %he%, start: he%, end: %he
+	 * @param int $start Offset of results
+	 * @param int $count Number of results
+	 * @param string $strategy Matching strategy. Null: %he%, start: he%, end: %he
 	 * @return QueryBuilder
 	 */
-	public function search($phrase, $limit = null, $match = null)
+	public function search(?string $phrase, int $start, int $count, string $strategy)
 	{
-		if ($match === 'start') {
+		if ($strategy === 'start') {
 			$matchStrategy = '%like_';
-		} elseif ($match === 'end') {
+		} elseif ($strategy === 'end') {
 			$matchStrategy = '%_like';
 		} else {
 			$matchStrategy = '%_like_';
 		}
 		$builder = $this->builder()->where('registry_sign ILIKE ' . $matchStrategy, $phrase);
-		if ($limit) {
-			$builder->limitBy($limit);
-		}
+		$builder->limitBy($count, $start);
 		return $builder;
 	}
 
