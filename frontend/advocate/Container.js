@@ -1,6 +1,6 @@
 import React from 'react';
-import {Row, Col, ButtonToolbar} from 'react-bootstrap';
-import {BackButton, Msg} from '../containers';
+import {Row, Col} from 'react-bootstrap';
+import {Msg} from '../containers';
 import {PageSubheader} from '../components';
 import {TimelineScroll} from '../components/timeline';
 import Header from './Header';
@@ -16,11 +16,8 @@ export default () => (
         <Header />
         <Row>
             <Col sm={6}>
-                <ButtonToolbar>
-                    <BackButton />
-                    <CakLink />
-                </ButtonToolbar>
                 <Detail />
+                <CakLink />
             </Col>
             <Col sm={6}>
                 <StatisticsContainer />

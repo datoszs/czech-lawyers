@@ -1,11 +1,11 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
-import {Button} from 'react-bootstrap';
+import {Button, Glyphicon} from 'react-bootstrap';
 import {Msg} from '../containers';
 import {getAdvocate} from './selectors';
 
 const CakLinkComponent = ({href}) => (
-    <Button href={href} disabled={!href} target="_blank"><Msg msg="cak.link" /></Button>
+    <Button href={href} disabled={!href} target="_blank"><Msg msg="cak.link" /> <Glyphicon glyph="new-window" /></Button>
 );
 
 CakLinkComponent.propTypes = {
