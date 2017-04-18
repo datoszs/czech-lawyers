@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>ApiDocu - /api/case/search/</title>
+	<title>ApiDocu - /api/feedback/</title>
 	<style>html, body {
 	margin: 0;
 	padding: 0;
@@ -535,20 +535,24 @@ pre.apiDocu-json {
 
 	<div class="apiDocu-container">
 		<div class="apiDocu-url">
-			/api/case/search/
+			/api/feedback/
 
-			<div class="apiDocu-url-method"></div>
+			<div class="apiDocu-url-method">POST</div>
 
+			<div class="apiDocu-url-tags">
+				
+					<span style="background-color: #9b59b6;" class="apiDocu-url-tag">public</span>
+			</div>
 		</div>
 
 			<h2>Description</h2>
 
-			<div class="apiDocu-description apiDocu-description-main">API for retrieving list of cases for search results</div>
+			<div class="apiDocu-description apiDocu-description-main">Sends given feedback to responsible people.<br />Expects following POST params:<br /> - full_name - an non-empty string with sender full name<br /> - from - an valid e-mail address of sender<br /> - content - non empty text to be sent to us<br /> - captcha_token - an non-empty captcha token which will be used to validate the request (to prevent spamming)<br />Outcome:<br /><br><pre class="apiDocu-json">    {<br />        <span class="apiDocu-string">"result"</span>: <span class="apiDocu-string">"success"</span><br />    }<br /></pre><br />Potential results of sending feedback:<br /> - <b>invalid_input</b> when input data missing or invalid<br /> - <b>invalid_captcha</b> when captcha is invalid<br /> - <b>success</b> when sending succeed<br /> - <b>fail</b> when sending fails</div>
 
 
 		<h2>Methods</h2>
 
-		<p class="apiDocu-description"></p>
+		<p class="apiDocu-description">POST</p>
 
 
 

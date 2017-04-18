@@ -459,9 +459,9 @@ pre.apiDocu-json {
 
 	</a>
 	<a href="Cases.13.php" class="apiDocu-url">
-		/api/dispute-case/<span class="apiDocu-mask-param"&gt;</span>&lt;id&gt;</span>
+		/api/case/search[/<span class="apiDocu-mask-param"&gt;</span>&lt;query&gt;</span>/[<span class="apiDocu-mask-param"&gt;</span>&lt;start&gt;</span>-<span class="apiDocu-mask-param"&gt;</span>&lt;count&gt;</span>]]
 
-		<div class="apiDocu-url-method">POST</div>
+		<div class="apiDocu-url-method">GET</div>
 
 		<div class="apiDocu-url-tags">
 			
@@ -469,13 +469,13 @@ pre.apiDocu-json {
 		</div>
 	</a>
 	<a href="Cases.14.php" class="apiDocu-url">
-		/api/dispute-case/
+		/api/case/search/
 
 		<div class="apiDocu-url-method"></div>
 
 	</a>
 	<a href="Cases.15.php" class="apiDocu-url">
-		/api/dispute-case-verification/
+		/api/dispute-case/<span class="apiDocu-mask-param"&gt;</span>&lt;id&gt;</span>
 
 		<div class="apiDocu-url-method">POST</div>
 
@@ -490,12 +490,28 @@ pre.apiDocu-json {
 		<div class="apiDocu-url-method"></div>
 
 	</a>
+	<a href="Cases.17.php" class="apiDocu-url">
+		/api/dispute-case-verification/
+
+		<div class="apiDocu-url-method">POST</div>
+
+		<div class="apiDocu-url-tags">
+			
+				<span style="background-color: #9b59b6;" class="apiDocu-url-tag">public</span>
+		</div>
+	</a>
+	<a href="Cases.18.php" class="apiDocu-url">
+		/api/dispute-case/
+
+		<div class="apiDocu-url-method"></div>
+
+	</a>
 				</div>
 
 				<h2 class="apiDocu-section-title">Feedback</h2>
 
 				<div class="apiDocu-section">
-	<a href="Feedback.17.php" class="apiDocu-url">
+	<a href="Feedback.19.php" class="apiDocu-url">
 		/api/feedback/
 
 		<div class="apiDocu-url-method">POST</div>
@@ -505,7 +521,7 @@ pre.apiDocu-json {
 				<span style="background-color: #9b59b6;" class="apiDocu-url-tag">public</span>
 		</div>
 	</a>
-	<a href="Feedback.18.php" class="apiDocu-url">
+	<a href="Feedback.20.php" class="apiDocu-url">
 		/api/feedback/
 
 		<div class="apiDocu-url-method"></div>

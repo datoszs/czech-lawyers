@@ -459,9 +459,9 @@ pre.apiDocu-json {
 
 	</a>
 	<a href="Cases.13.php" class="apiDocu-url">
-		/api/dispute-case/<span class="apiDocu-mask-param"&gt;</span>&lt;id&gt;</span>
+		/api/case/search[/<span class="apiDocu-mask-param"&gt;</span>&lt;query&gt;</span>/[<span class="apiDocu-mask-param"&gt;</span>&lt;start&gt;</span>-<span class="apiDocu-mask-param"&gt;</span>&lt;count&gt;</span>]]
 
-		<div class="apiDocu-url-method">POST</div>
+		<div class="apiDocu-url-method">GET</div>
 
 		<div class="apiDocu-url-tags">
 			
@@ -469,13 +469,13 @@ pre.apiDocu-json {
 		</div>
 	</a>
 	<a href="Cases.14.php" class="apiDocu-url">
-		/api/dispute-case/
+		/api/case/search/
 
 		<div class="apiDocu-url-method"></div>
 
 	</a>
 	<a href="Cases.15.php" class="apiDocu-url">
-		/api/dispute-case-verification/
+		/api/dispute-case/<span class="apiDocu-mask-param"&gt;</span>&lt;id&gt;</span>
 
 		<div class="apiDocu-url-method">POST</div>
 
@@ -490,12 +490,28 @@ pre.apiDocu-json {
 		<div class="apiDocu-url-method"></div>
 
 	</a>
+	<a href="Cases.17.php" class="apiDocu-url">
+		/api/dispute-case-verification/
+
+		<div class="apiDocu-url-method">POST</div>
+
+		<div class="apiDocu-url-tags">
+			
+				<span style="background-color: #9b59b6;" class="apiDocu-url-tag">public</span>
+		</div>
+	</a>
+	<a href="Cases.18.php" class="apiDocu-url">
+		/api/dispute-case/
+
+		<div class="apiDocu-url-method"></div>
+
+	</a>
 				</div>
 
 				<h2 class="apiDocu-section-title">Feedback</h2>
 
 				<div class="apiDocu-section">
-	<a href="Feedback.17.php" class="apiDocu-url">
+	<a href="Feedback.19.php" class="apiDocu-url">
 		/api/feedback/
 
 		<div class="apiDocu-url-method">POST</div>
@@ -505,7 +521,7 @@ pre.apiDocu-json {
 				<span style="background-color: #9b59b6;" class="apiDocu-url-tag">public</span>
 		</div>
 	</a>
-	<a href="Feedback.18.php" class="apiDocu-url">
+	<a href="Feedback.20.php" class="apiDocu-url">
 		/api/feedback/
 
 		<div class="apiDocu-url-method"></div>
@@ -531,7 +547,7 @@ pre.apiDocu-json {
 
 			<h2>Description</h2>
 
-			<div class="apiDocu-description apiDocu-description-main">Get information about case with given ID.<br /><br><pre class="apiDocu-json">    {<br />        <span class="apiDocu-string">"id_case"</span>: 12,<br />        <span class="apiDocu-string">"id_court"</span>: 2,<br />        <span class="apiDocu-string">"registry_mark"</span>: <span class="apiDocu-string">"42 CDO 4000/2016"</span>,<br />        <span class="apiDocu-string">"tagging_advocate"</span>: {<br />            <span class="apiDocu-string">"id_advocate"</span>: 123,<br />            <span class="apiDocu-string">"fullname"</span>: <span class="apiDocu-string">"JUDr. Ing. Petr Omáčka, PhD."</span><br />        },<br />        <span class="apiDocu-string">"tagging_result"</span>: <span class="apiDocu-string">"negative"</span>,<br />        <span class="apiDocu-string">"documents"</span>: [<br />            {<br />                <span class="apiDocu-string">"id_document"</span>: 543,<br />                <span class="apiDocu-string">"mark"</span>: <span class="apiDocu-string">"ECLI:CZ:NS:2016:42.CDO.4000.2016.1"</span>,<br />                <span class="apiDocu-string">"decision_date"</span>: <span class="apiDocu-string">"2012-04-23T18:25:43.511Z"</span>,<br />                <span class="apiDocu-string">"public_link"</span>: <span class="apiDocu-string">"http:<span class="apiDocu-comment">//example.com/doc/12AS13LAA0"</span></span><br>            }<br />        ]<br />    }<br /></pre><br />Potential tagging advocate:<br /> - <b>array</b> when tagging present and valid<br /> - <b>null</b> when null, or tagging is invalid<br />Potential tagging result (@see CaseResult):<br /> - <b>negative</b><br /> - <b>neutral</b><br /> - <b>positive</b><br /> - <b>null</b> - when tagging is invalid</div>
+			<div class="apiDocu-description apiDocu-description-main">Get information about case with given ID.<br /><br><pre class="apiDocu-json">    {<br />        <span class="apiDocu-string">"id_case"</span>: 12,<br />        <span class="apiDocu-string">"id_court"</span>: 2,<br />        <span class="apiDocu-string">"registry_mark"</span>: <span class="apiDocu-string">"42 CDO 4000/2016"</span>,<br />        <span class="apiDocu-string">"tagging_advocate"</span>: {<br />            <span class="apiDocu-string">"id_advocate"</span>: 123,<br />            <span class="apiDocu-string">"fullname"</span>: <span class="apiDocu-string">"JUDr. Ing. Petr Omáčka, PhD."</span><br />        },<br />        <span class="apiDocu-string">"tagging_result"</span>: <span class="apiDocu-string">"negative"</span>,<br />        <span class="apiDocu-string">"documents"</span>: [<br />            {<br />                <span class="apiDocu-string">"id_document"</span>: 543,<br />                <span class="apiDocu-string">"mark"</span>: <span class="apiDocu-string">"ECLI:CZ:NS:2016:42.CDO.4000.2016.1"</span>,<br />                <span class="apiDocu-string">"decision_date"</span>: <span class="apiDocu-string">"2012-04-23T18:25:43.511Z"</span>,<br />                <span class="apiDocu-string">"public_link"</span>: <span class="apiDocu-string">"http:<span class="apiDocu-comment">//example.com/doc/12AS13LAA0"</span></span><br>                <span class="apiDocu-string">"public_local_link"</span>: <span class="apiDocu-string">"http:<span class="apiDocu-comment">//example.com/doc/12AS13LAA0"</span></span><br>            }<br />        ]<br />    }<br /></pre><br />Potential tagging advocate:<br /> - <b>array</b> when tagging present and valid<br /> - <b>null</b> when null, or tagging is invalid<br />Potential tagging result (@see CaseResult):<br /> - <b>negative</b><br /> - <b>neutral</b><br /> - <b>positive</b><br /> - <b>null</b> - when tagging is invalid</div>
 
 
 		<h2>Methods</h2>

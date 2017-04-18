@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>ApiDocu - /api/case/search/</title>
+	<title>ApiDocu - /api/dispute-case-verification/</title>
 	<style>html, body {
 	margin: 0;
 	padding: 0;
@@ -535,20 +535,24 @@ pre.apiDocu-json {
 
 	<div class="apiDocu-container">
 		<div class="apiDocu-url">
-			/api/case/search/
+			/api/dispute-case-verification/
 
-			<div class="apiDocu-url-method"></div>
+			<div class="apiDocu-url-method">POST</div>
 
+			<div class="apiDocu-url-tags">
+				
+					<span style="background-color: #9b59b6;" class="apiDocu-url-tag">public</span>
+			</div>
 		</div>
 
 			<h2>Description</h2>
 
-			<div class="apiDocu-description apiDocu-description-main">API for retrieving list of cases for search results</div>
+			<div class="apiDocu-description apiDocu-description-main">Verifies pending case disputation<br />Apart from case ID following parameters are expected (and mandatory) in POST params:<br /> - email - non-empty e-mail<br /> - code - non-empty validation code<br />Outcome:<br /><br><pre class="apiDocu-json">    {<br />        <span class="apiDocu-string">"result"</span>: <span class="apiDocu-string">"success"</span><br />    }<br /></pre><br />Potential results of disputing:<br /> - <b>invalid_input</b> when input is invalid<br /> - <b>expired</b> when validation request is expired<br /> - <b>no_request</b> when no such request found<br /> - <b>success</b> when succeeded<br /> - <b>fail</b> when other error state happens</div>
 
 
 		<h2>Methods</h2>
 
-		<p class="apiDocu-description"></p>
+		<p class="apiDocu-description">POST</p>
 
 
 
