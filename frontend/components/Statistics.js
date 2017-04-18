@@ -6,7 +6,7 @@ const Statistics = ({positive, negative, neutral, legend}) => {
     const max = Math.max(positive, negative, neutral);
     const LegendComponent = legend;
     return (
-        <OverlayTrigger overlay={<LegendComponent />}>
+        <OverlayTrigger placement="left" overlay={<LegendComponent />}>
             <h2 className="statistics">
                 <StatisticsBar number={positive} max={max} type="positive" />
                 <StatisticsBar number={negative} max={max} type="negative" />
