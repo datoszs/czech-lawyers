@@ -55,7 +55,7 @@
 				{/if}
 				<span class="glyphicon glyphicon-info-sign pull-right" title="{$advocateTagging->debug}" n:if="$advocateTagging && $advocateTagging->debug"></span>
 				<span n:if="$advocateTagging && $advocateTagging->isFinal" class="glyphicon glyphicon-ok-sign pull-right" title="Finální"></span>
-				<a class="pull-right" target="_blank" title="Dokument na základě kterého proběhlo tagování" n:if="$advocateTagging && $advocateTagging->document" href="{plink Tagging:document, $advocateTagging->document->id}"><span class="glyphicon glyphicon-file"></span></a>
+				<a class="pull-right" target="_blank" title="Dokument na základě kterého proběhlo tagování" n:if="$advocateTagging && $advocateTagging->document" href="{plink Document:view, $advocateTagging->document->id}"><span class="glyphicon glyphicon-file"></span></a>
 				{if !$advocateTagging}
 					<span class="text-muted">&ndash;</span>
 				{elseif !$advocateInfo}
@@ -109,7 +109,7 @@
 						</tr>
 						<tr id="document-{$document->id}" class="collapse {first}in{/first}">
 							<td colspan="4">
-								<iframe class="document-iframe" src="{plink Tagging:document, $document->id}" sandbox=""></iframe>
+								<iframe class="document-iframe" src="{plink Document:view, $document->id}" sandbox=""></iframe>
 							</td>
 						</tr>
 					{/foreach}

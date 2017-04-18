@@ -110,24 +110,6 @@ class TaggingPresenter extends SecuredPresenter
 		$this->template->disputations = $disputations;
 	}
 
-	/**
-	 * Renders given document from local copy (available only to admins)
-	 *
-	 * @privilege(App\Utils\Resources::TAGGING, App\Utils\Actions::VIEW)
-	 * @param int $documentId ID of document to show
-	 * @throws BadRequestException when no such document exists
-	 * @throws AbortException when redirection happens
-	 */
-	public function actionDocument(int $documentId)
-	{
-		$document = $this->documentService->get($documentId);
-		if (!$document) {
-			throw new BadRequestException('No such document [{$id}]', 404);
-		}
-		$localCopy = new OriginalMimeTypeFileResponse(__DIR__ . '/../../' . $document->localPath, NULL, NULL, FALSE);
-		$this->sendResponse($localCopy);
-	}
-
 	private function prepareAdvocates($data)
 	{
 		$temp = $this->taggingService->findLatestAdvocateTaggingByCases($data);

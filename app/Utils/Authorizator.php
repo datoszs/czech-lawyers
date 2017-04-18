@@ -26,6 +26,7 @@ class Authorizator extends Permission
 
 		$this->deny(UserRole::TYPE_GUEST);
 		$this->allow(UserRole::TYPE_GUEST, Resources::SHARED, Actions::LOGIN);
+		$this->allow(UserRole::TYPE_GUEST, Resources::DOCUMENTS, Actions::VIEW_PUBLIC);
 
 		$this->allow(UserRole::TYPE_VIEWER, Resources::SHARED, Actions::PROFILE);
 		$this->allow(UserRole::TYPE_VIEWER, [Resources::ADVOCATES, Resources::DOCUMENTS, Resources::TAGGING], [Actions::VIEW]);

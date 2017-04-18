@@ -17,6 +17,7 @@ class RouterFactory
 	{
 		$router = new RouteList;
 
+		$router[] = new Route('/public/document/<action>[/<id>]', 'Document:default');
 		$router[] = new Route('/admin/<presenter>/<action>[/<id>]', 'Admin:default');
 		return $router;
 	}

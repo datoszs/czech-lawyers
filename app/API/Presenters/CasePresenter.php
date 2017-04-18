@@ -64,6 +64,7 @@ class CasePresenter extends Presenter
 	 *                 "mark": "ECLI:CZ:NS:2016:42.CDO.4000.2016.1",
 	 *                 "decision_date": "2012-04-23T18:25:43.511Z",
 	 *                 "public_link": "http://example.com/doc/12AS13LAA0"
+	 *                 "public_local_link": "http://example.com/doc/12AS13LAA0"
 	 *             }
 	 *         ]
 	 *     }
@@ -128,7 +129,6 @@ class CasePresenter extends Presenter
 	private function mapDataToOutput(Cause $case, array $documents, ?TaggingCaseResult $result, ?TaggingAdvocate $taggingAdvocate)
 	{
 		/** @var AdvocateInfo $currentInfo */
-		//$currentInfo = $advocate->advocateInfo->get()->fetch();
 		$advocate = null;
 		if ($taggingAdvocate && $taggingAdvocate->status === TaggingStatus::STATUS_PROCESSED) {
 			$currentInfo = $taggingAdvocate->advocate->advocateInfo->get()->fetch();
@@ -149,6 +149,7 @@ class CasePresenter extends Presenter
 					'mark' => $document->recordId,
 					'decision_date' => $document->decisionDate->format(DateTime::ATOM),
 					'public_link' => $document->webPath,
+					'public_local_link' => $this->link('//:Document:view', $document->id),
 				];
 			}, $documents)
 		];

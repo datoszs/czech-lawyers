@@ -11,7 +11,7 @@
 	{if isset($meta) && $meta}
 		<span n:if="$tagging->debug" class="glyphicon glyphicon-info-sign pull-right" title="{$tagging->debug}"></span>
 		<span n:if="$tagging->isFinal" class="glyphicon glyphicon-ok-sign pull-right" title="Finální"></span>
-		<a class="pull-right" target="_blank" title="Dokument na základě kterého proběhlo tagování" n:if="$tagging->document" href="{plink Tagging:document, $tagging->document->id}"><span class="glyphicon glyphicon-file"></span></a>
+		<a class="pull-right" target="_blank" title="Dokument na základě kterého proběhlo tagování" n:if="$tagging->document" href="{plink Document:view, $tagging->document->id}"><span class="glyphicon glyphicon-file"></span></a>
 		<br>
 		<small><span class="glyphicon {if $tagging->insertedBy->type == \App\Enums\UserType::TYPE_PERSON}glyphicon-user{else}glyphicon-cog{/if}"></span> {$tagging->insertedBy->username}, {$tagging->inserted|date:'j. m. Y H:i:s'}, {App\Enums\TaggingStatus::$statuses[$tagging->status]|lower}</small>
 	{/if}

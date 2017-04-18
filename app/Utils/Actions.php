@@ -9,6 +9,8 @@ class Actions
 	const CREATE = 'create';
 	const DELETE = 'delete';
 
+	const VIEW_PUBLIC = 'view_public';
+
 	const DISABLE = 'disable';
 	const ENABLE = 'enable';
 
