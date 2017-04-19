@@ -622,9 +622,9 @@ if __name__ == "__main__":
                 shutil.move(join(out_dir, output_file), result_dir_path)
                 if not b_delete:
                     logger.debug("Cleaning working directory")
-                    # logging_process(["rm", "-rf", out_dir])
+                    logging_process(["rm", "-rf", out_dir])
                     shutil.rmtree(html_dir_path)
-                    # os.makedirs(out_dir, exist_ok=True)
+                    os.makedirs(out_dir, exist_ok=True)
             else:
                 logger.error("Result directory isn't empty.")
                 sys.exit(-1)
