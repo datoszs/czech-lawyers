@@ -431,7 +431,7 @@ def walk_pages(page_from, pages):
             f.write(str(page))
 
     if len(links_to_info) > 0:
-        for link in tqdm(links_to_info):
+        for link in links_to_info:
             #element = "a[href=\"{}\"]".format(link)
             # print(element)
             id = link.split("?")[1].split("&")[0]
