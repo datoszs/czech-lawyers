@@ -12,6 +12,9 @@ use Nextras\Orm\Entity\Entity;
  * @property string				$orderNumber
  * @property string				$decision
  * @property string				$decisionType
+ * @property array|null			$sides
+ * @property array|null			$prejudicate
+ * @property string|null		$complaint
  */
 class DocumentSupremeAdministrativeCourt extends Entity
 {

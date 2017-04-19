@@ -53,7 +53,7 @@ class CauseService
 		return $this->orm->causes->findBy(['court' => $court])->fetchAll();
 	}
 
-	public function findOrCreate(Court $court, $registrySign, JobRun $jobRun = null)
+	public function findOrCreate(Court $court, $registrySign, $year, JobRun $jobRun = null)
 	{
 		$entity = $this->orm->causes->getBy(['registrySign' => $registrySign]);
 		if (!$entity) {
@@ -61,6 +61,7 @@ class CauseService
 			$entity->court = $court;
 			$entity->registrySign = $registrySign;
 			$entity->jobRun = $jobRun;
+			$entity->year = $year;
 			$this->orm->persist($entity);
 		}
 		// Update court when needed (must due to potential typo in the import command)
