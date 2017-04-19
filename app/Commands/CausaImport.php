@@ -17,6 +17,8 @@ use app\Utils\JobCommand;
 use DateTime;
 use League\Csv\Reader;
 use Nette\Utils\FileSystem;
+use Nette\Utils\Json;
+use Nette\Utils\Strings;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -71,82 +73,6 @@ class CausaImport extends Command
 			);
 	}
 
-	/**
-	 * Expects validate directory with data to import.
-	 * Note: executed in transaction
-	 * @param OutputInterface $consoleOutput
-	 * @param string $output Output to be stored
-	 * @param int $courtId ID of court
-	 * @param string $directory
-	 * @param boolean $overwrite whether the files should be overwritten
-	 * @return array where first is number of imported and second number of duplicated items.
-	 */
-	public function processDirectory(OutputInterface $consoleOutput, &$output, $courtId, $directory, $overwrite)
-	{
-		$csv = Reader::createFromPath($directory . '/metadata.csv');
-		$csv->setDelimiter(';');
-		$court = $this->getCourt($courtId);
-		$destinationDir = static::getCourtDirectory($courtId);
-		$destinationDirRelative = static::getCourtDirectory($courtId, true);
-		$csv->setOffset(1); // skip column names
-		$rows = $csv->fetchAssoc($this->getColumnNames($courtId));
-		$imported = 0;
-		$duplicated = 0;
-		foreach ($rows as $row) {
-			// Check if not duplicate
-			$recordId = Normalize::recordId($row['record_id']);
-			$entity = $this->documentService->findByRecordId($recordId);
-
-			if ($entity) {
-				$duplicated++;
-				$output .= sprintf("Warning: record with ID %s already found in database.", $row['record_id']) . "\n";
-				$consoleOutput->writeln(sprintf("Warning: record with ID %s already found in database.", $row['record_id']));
-				continue;
-			}
-			// Prepare for insert
-			$document = new Document();
-			$document->recordId = $recordId;
-			$document->court = $court;
-			$document->webPath = (string) $row['web_path'];
-			$document->localPath = $destinationDirRelative . (string) $row['local_path'];
-			$document->decisionDate = new DateTime($row['decision_date']);
-			$document->case = $this->causeService->findOrCreate($court, Normalize::registryMark($row['registry_mark']), $this->jobRun);
-			$document->jobRun = $this->jobRun;
-			$extras = null;
-			if ($courtId == Court::TYPE_NS) {
-				$extras = new DocumentSupremeCourt();
-				$extras->document = $document;
-				$extras->ecli = $row['ecli'];
-				$extras->decisionType = $row['decision_type'];
-			} elseif ($courtId == Court::TYPE_NSS) {
-				$extras = new DocumentSupremeAdministrativeCourt();
-				$extras->document = $document;
-				$extras->orderNumber = $row['order_number'];
-				$extras->decision = $row['decision'];
-				$extras->decisionType = $row['decision_type'];
-			} elseif ($courtId == Court::TYPE_US) {
-				$extras = new DocumentLawCourt();
-				$extras->document = $document;
-				$extras->ecli = $row['ecli'];
-				$extras->formDecision = $row['form_decision'];
-				$extras->decisionResult = $row['decision_result'];
-			}
-			// Store to database
-			$this->documentService->insert($document, $extras);
-			$imported++;
-			// Copy document file into destination folder
-			$destinationPath = $destinationDir . $row['local_path'];
-			if (!$overwrite && file_exists($destinationPath)) {
-				$temp = sprintf("Warning: Skipping file %s as it already exists in %s.", $row['local_path'], $destinationDirRelative);
-				$output .= $temp . "\n";
-				$consoleOutput->writeln($temp);
-				continue;
-			}
-			copy($directory . '/documents/' . $row['local_path'], $destinationPath); // copy immediately - better to have not referenced files than documents in database without their files.
-		}
-		return [$imported, $duplicated];
-	}
-
 	protected function execute(InputInterface $input, OutputInterface $consoleOutput)
 	{
 		$this->prepare();
@@ -191,8 +117,8 @@ class CausaImport extends Command
 			$output .= $message;
 			$consoleOutput->write($message);
 			// Empty directory after successful procession
-			FileSystem::delete($directory . '/metadata.csv');
-			FileSystem::delete($directory . '/documents/');
+			//FileSystem::delete($directory . '/metadata.csv');
+			//FileSystem::delete($directory . '/documents/');
 		}
 		$this->finalize($code, $output, $message);
 		if ($code !== self::RETURN_CODE_SUCCESS) {
@@ -208,13 +134,119 @@ class CausaImport extends Command
 		return $this->court;
 	}
 
+	/**
+	 * Expects validate directory with data to import.
+	 * Note: executed in transaction
+	 * @param OutputInterface $consoleOutput
+	 * @param string $output Output to be stored
+	 * @param int $courtId ID of court
+	 * @param string $directory
+	 * @param boolean $overwrite whether the files should be overwritten
+	 * @return array where first is number of imported and second number of duplicated items.
+	 */
+	public function processDirectory(OutputInterface $consoleOutput, &$output, $courtId, $directory, $overwrite)
+	{
+		$csv = Reader::createFromPath($directory . '/metadata.csv');
+		$csv->setDelimiter(';');
+		$court = $this->getCourt($courtId);
+		$destinationDir = static::getCourtDirectory($courtId);
+		$destinationDirRelative = static::getCourtDirectory($courtId, true);
+		$csv->setOffset(1); // skip column names
+		$rows = $csv->fetchAssoc($this->getColumnNames($courtId));
+		$imported = 0;
+		$duplicated = 0;
+		foreach ($rows as $row) {
+			// Check if not duplicate
+			$recordId = Normalize::recordId($row['record_id']);
+			$entity = $this->documentService->findByRecordId($recordId);
+			if ($entity) {
+				$duplicated++;
+				$output .= sprintf("Warning: record with ID %s already found in database.", $row['record_id']) . "\n";
+				$consoleOutput->writeln(sprintf("Warning: record with ID %s already found in database.", $row['record_id']));
+				continue;
+			}
+
+
+			// Prepare for insert
+			$document = new Document();
+			$document->recordId = $recordId;
+			$document->court = $court;
+			$document->webPath = (string)$row['web_path'];
+			$document->localPath = $destinationDirRelative . (string)$row['local_path'];
+			$document->decisionDate = new DateTime($row['decision_date']);
+			// Year in ECLI can be different from date in registry_mark
+			$document->case = $this->causeService->findOrCreate($court, Normalize::registryMark($row['registry_mark']), $this->getYear($row), $this->jobRun);
+			$document->jobRun = $this->jobRun;
+			$extras = null;
+			if ($courtId == Court::TYPE_NS) {
+				$extras = new DocumentSupremeCourt();
+				$extras->document = $document;
+				$extras->ecli = $row['ecli'];
+				$extras->decisionType = $row['decision_type'];
+			} elseif ($courtId == Court::TYPE_NSS) {
+				$extras = new DocumentSupremeAdministrativeCourt();
+				$extras->document = $document;
+				$extras->orderNumber = $row['order_number'];
+				$extras->decision = $row['decision'];
+				$extras->decisionType = $row['decision_type'];
+				// More metadata
+				$extras->complaint = ($row['complaint'] != "") ? $row['complaint'] : null;
+				$extras->sides = ($row['sides'] != "") ? Json::decode($row['sides'], true) : null;
+				$extras->prejudicate = ($row['prejudicate'] != "") ? Json::decode($row['prejudicate'], true) : null;
+			} elseif ($courtId == Court::TYPE_US) {
+				$extras = new DocumentLawCourt();
+				$extras->document = $document;
+				$extras->ecli = $row['ecli'];
+				$extras->formDecision = $row['form_decision'];
+				$extras->decisionResult = $row['decision_result'];
+				// More metadata
+				$extras->paralelReferenceLaws = ($row['paralel_reference_laws'] != '') ? $row['paralel_reference_laws'] : null;
+				$extras->paralelReferenceJudgements = ($row['paralel_reference_judgements'] != '') ? $row['paralel_reference_judgements'] : null;
+				$extras->popularTitle = ($row['popular_title'] != '') ? $row['popular_title'] : null;
+				$extras->deliveryDate = ($row['delivery_date'] != '') ? new DateTime($row['delivery_date']) : null;
+				$extras->decisionDate = ($row['decision_date'] != '') ? new DateTime($row['decision_date']) : null;
+				$extras->filingDate = ($row['filing_date'] != '') ? new DateTime($row['filing_date']) : null;
+				$extras->publicationDate = ($row['publication_date'] != '') ? new DateTime($row['publication_date']) : null;
+				$extras->proceedingsType = ($row['proceedings_type'] != '') ? $row['proceedings_type'] : null;
+				$extras->importance = ($row['importance'] != '') ? $row['importance'] : null;
+				$extras->proposer = ($row['proposer'] != '') ? Json::decode($row['proposer'], true) : null;
+				$extras->institutionConcerned = ($row['institution_concerned'] != '') ? Json::decode($row['institution_concerned'], true) : null;
+				$extras->justiceRapporteur = ($row['justice_rapporteur'] != '') ? $row['justice_rapporteur'] : null;
+				$extras->contestedAct = ($row['contested_act'] != '') ? Json::decode($row['contested_act'], true) : null;
+				$extras->concernedLaws = ($row['concerned_laws'] != '') ? Json::decode($row['concerned_laws'], true) : null;
+				$extras->concernedOther = ($row['concerned_other'] != '') ? Json::decode($row['concerned_other'], true) : null;
+				$extras->dissentingOpinion = ($row['dissenting_opinion'] != '') ? Json::decode($row['dissenting_opinion'], true) : null;
+				$extras->proceedingsSubject = ($row['proceedings_subject'] != '') ? Json::decode($row['proceedings_subject'], true | JSON_NUMERIC_CHECK) : null;
+				$extras->subjectIndex = ($row['subject_index'] != '') ? Json::decode($row['subject_index'], true) : null;
+				$extras->rulingLanguage = ($row['ruling_language'] != '') ? $row['ruling_language'] : null;
+				$extras->note = ($row['note'] != '') ? $row['note'] : null;
+				$extras->names = ($row['names'] != '') ? Json::decode($row['names'], true) : null;
+
+
+			}
+			// Store to database
+			$this->documentService->insert($document, $extras);
+			$imported++;
+			// Copy document file into destination folder
+			$destinationPath = $destinationDir . $row['local_path'];
+			if (!$overwrite && file_exists($destinationPath)) {
+				$temp = sprintf("Warning: Skipping file %s as it already exists in %s.", $row['local_path'], $destinationDirRelative);
+				$output .= $temp . "\n";
+				$consoleOutput->writeln($temp);
+				continue;
+			}
+			copy($directory . '/documents/' . $row['local_path'], $destinationPath); // copy immediately - better to have not referenced files than documents in database without their files.
+		}
+		return [$imported, $duplicated];
+	}
+
 	private function getCourtDirectory($court, $projectRelative = false)
 	{
 		$baseDir = static::DOCUMENTS_DIRECTORY;
 		if ($projectRelative) {
 			$baseDir = static::DOCUMENTS_DIRECTORY_PROJECT_RELATIVE;
 		}
-		switch($court) {
+		switch ($court) {
 			case Court::TYPE_NS:
 				return $baseDir . '/ns/';
 			case Court::TYPE_NSS:
@@ -226,13 +258,31 @@ class CausaImport extends Command
 
 	private function getColumnNames($court)
 	{
-		switch($court) {
+		switch ($court) {
 			case Court::TYPE_NS:
-				return ['court_name', 'record_id', 'registry_mark', 'decision_date', 'web_path', 'local_path', 'ecli', 'decision_type'];
+				return [
+					'court_name', 'record_id', 'registry_mark', 'decision_date', 'web_path', 'local_path', 'ecli',
+					'decision_type'];
 			case Court::TYPE_NSS:
-				return ['court_name', 'record_id', 'registry_mark', 'decision_date', 'web_path', 'local_path', 'decision_type', 'decision', 'order_number'];
+				return [
+					'court_name', 'record_id', 'registry_mark', 'decision_date', 'web_path', 'local_path',
+					'decision_type', 'decision', 'order_number', 'sides', 'complaint', 'prejudicate', 'case_year'];
 			case Court::TYPE_US:
-				return ['court_name', 'record_id', 'registry_mark', 'decision_date', 'web_path', 'local_path', 'form_decision', 'decision_result', 'ecli'];
+				return [
+					'court_name', 'record_id', 'registry_mark', 'decision_date', 'case_year', 'web_path',
+					'local_path', 'form_decision', 'decision_result', 'ecli', 'paralel_reference_laws',
+					'paralel_reference_judgements', 'popular_title', 'delivery_date', 'filing_date', 'publication_date',
+					'proceedings_type', 'importance', 'proposer', 'institution_concerned', 'justice_rapporteur',
+					'contested_act', 'concerned_laws', 'concerned_other', 'dissenting_opinion', 'proceedings_subject',
+					'subject_index', 'ruling_language', 'note', 'names'];
 		}
+	}
+
+	private function getYear($row) {
+		if (isset($row['case_year']))
+			return $row['case_year'];
+		elseif (isset($row['ecli']))
+			return Strings::split($row['ecli'],':')[3];
+
 	}
 }
