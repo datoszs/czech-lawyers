@@ -25,7 +25,7 @@ class CAKCrawler extends CauseCrawler
 		return sprintf(
 			'%s %s --output-directory %s 2>&1',
             'python3',
-			__DIR__ . '/../../externals/cak-crawler.py',
+			__DIR__ . '/../../externals/cak_crawler.py',
 			escapeshellarg($directory)
 		);
 	}

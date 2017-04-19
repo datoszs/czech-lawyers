@@ -25,7 +25,7 @@ class NSSCrawler extends CauseCrawler
 		return sprintf(
 			'%s %s --output-directory %s -l %s 2>&1',
             'python3',
-			__DIR__ . '/../../externals/nss-crawler.py',
+			__DIR__ . '/../../externals/nss_crawler.py',
 			escapeshellarg($directory),
 			7
 		);

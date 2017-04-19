@@ -3,32 +3,36 @@
 # coding=utf-8
 
 """
-Crawler of Czech Republic The Supreme Administrative Court
+Crawler of Czech Republic The Supreme Administrative Court.
+
 Downloads HTML files, PDF files and produces CSV file with results
+
 """
+
 __author__ = "Radim Jílek"
 __copyright__ = "Copyright 2016, DATOS - data o spravedlnosti, z.s."
 __license__ = "GNU GPL"
 
 import codecs
 import csv
-import json
 import logging
 import math
 import os
-import pandas as pd
 import re
 import shutil
 import subprocess
 import sys
-from bs4 import BeautifulSoup
+import json
 from collections import OrderedDict
 from datetime import datetime
-from ghost import Ghost
 from optparse import OptionParser
 from os.path import join
-from tqdm import tqdm
 from urllib.parse import urljoin
+
+import pandas as pd
+from bs4 import BeautifulSoup
+from ghost import Ghost
+from tqdm import tqdm
 
 base_url = "http://nssoud.cz/"
 url = "http://nssoud.cz/main0Col.aspx?cls=JudikaturaBasicSearch&pageSource=0"
@@ -50,9 +54,13 @@ b_screens = False  # capture screenshots?
 p_re_records = re.compile(r'(\d+)$')
 p_re_decisions = re.compile(r'[a-z<>]{4}\s+(.+)\s+')
 
-
+def make_json(collection):
+    return json.dumps(dict(zip(range(1, len(collection) + 1), collection)), sort_keys=True,
+                          ensure_ascii=False)
 def set_logging():
-    # settings of logging
+    """
+    settings of logging
+    """
     global logger
     logger = logging.getLogger(__file__)
     logger.setLevel(logging.DEBUG)
@@ -77,7 +85,6 @@ def set_logging():
     logger.addHandler(fh_i)
 
 
-#-----------------------------------------------------------------------
 def create_directories():
     """
 create working directories
@@ -97,11 +104,10 @@ create working directories
         return screens_dir_path
 
 
-#-----------------------------------------------------------------------
 def logging_process(arguments):
     """
-settings logging for subprocess
-"""
+    settings logging for subprocess
+    """
     p = subprocess.Popen(arguments, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     stdout, stderr = p.communicate()
     if stdout:
@@ -110,7 +116,6 @@ settings logging for subprocess
         logger.debug("%s" % stderr)
 
 
-#-----------------------------------------------------------------------
 def parameters():
     usage = "usage: %prog [options]"
     parser = OptionParser(usage)
@@ -122,7 +127,7 @@ def parameters():
                       help="Path to output directory")
     parser.add_option("-l", "--last-days", action="store", type="string", dest="last", default=None,
                       help="Increments for the last N days (N in <1,60>)")
-    parser.add_option("-f", "--date-from", action="store", type="string", dest="date_from", default=None,
+    parser.add_option("-f", "--date-from", action="store", type="string", dest="date_from", default="1. 1. 2006",
                       help="Start date of range (d. m. yyyy)")
     parser.add_option("-t", "--date-to", action="store", type="string", dest="date_to", default=None,
                       help="End date of range (d. m. yyyy)")
@@ -139,19 +144,24 @@ def parameters():
     return options
 
 
-#-----------------------------------------------------------------------
 def make_soup(path):
     soup = BeautifulSoup(codecs.open(path, encoding="utf-8"), "html.parser")
     return soup
 
 
-#-----------------------------------------------------------------------
 def how_many(str_info, displayed_records):
     """
-find number of records and compute count of pages
-:str_info: info element as string
-:displayed_records: number of displayed records
-"""
+    Find number of records and compute count of pages.
+
+    :type str_info: string
+    :param str_info: info element as string
+
+    :type displayed_records: int
+    :param displayed_records: number of displayed records
+
+
+    """
+
     m = p_re_records.search(str_info)
     number_of_records = m.group(1)
     count_of_pages = math.ceil(int(number_of_records) / int(displayed_records))
@@ -159,32 +169,37 @@ find number of records and compute count of pages
     return number_of_records, count_of_pages
 
 
-#-----------------------------------------------------------------------
 def first_page():
     """
-go to first page on find query
-"""
+    go to first page on find query
+    """
     session.click("#_ctl0_ContentPlaceMasterPage__ctl0_pnPaging1_Repeater2__ctl0_Linkbutton2", expect_loading=True)
 
 
-#-----------------------------------------------------------------------
 def extract_data(response, html_file):
     """
-save current page as HTML file for later extraction
-:response: HTML code for saving
-:html_file: name of saving file
-"""
+    save current page as HTML file for later extraction
+
+    :type response: string
+    :param response: HTML code for saving
+
+    :type html_file: string
+    :param html_file: name of saving file
+
+    """
+
     logger.debug("Save file '%s'" % html_file)
     with codecs.open(join(html_dir_path, html_file), "w", encoding="utf-8") as f:
         f.write(response)
 
 
-#-----------------------------------------------------------------------
 def make_record(soup):
     """
-extract relevant data from page
-:soup: bs4 soup object
-"""
+    extract relevant data from page
+    :param soup: bs4 soup object
+
+    """
+
     table = soup.find("table", id="_ctl0_ContentPlaceMasterPage__ctl0_grwA")
     rows = table.findAll("tr")
     logger.debug("Records on pages: %d" % len(rows[1:]))
@@ -223,6 +238,20 @@ extract relevant data from page
         court = columns[3].getText().replace("\n", '').strip()
 
         str_date = columns[4].getText().replace("\n", '').strip()
+
+        #  extract sides to list
+        sides = []
+        for side in columns[5].contents:
+            if side.string is not None:
+                text = side.string.strip()
+                if text != '':
+                    sides.append(text)
+            else:
+                sides.extend([x.strip() for x in re.split(r"</?br>", str(side)) if x != ''])
+
+        complaint = columns[6].getText().strip()
+        prejudicate = [x.text.strip() for x in columns[7].findAll("a")]
+
         date = [x.strip() for x in str_date.split("/ ")]
         if len(date) >= 1:
             date = date[0]
@@ -231,18 +260,28 @@ extract relevant data from page
 
         filename = ""
         if link is not None:
+            case_year = link.split('/')[-2]
             filename = os.path.basename(link)
+        logger.debug(
+                "Contents: {}\nSides: {}; Complaint: {}; Year: {}; Prejudicate: {}\n{}".format(columns[5].contents,
+                                                                                               sides,
+                                                                                               complaint, case_year,
+                                                                                               prejudicate, link))
 
         item = {
             "registry_mark": mark,
-            "record_id": case_number,
+            "record_id"    : case_number,
             "decision_date": date,
-            "court_name": court,
-            "web_path": link,
-            "local_path": filename,
+            "court_name"   : court,
+            "web_path"     : link,
+            "local_path"   : filename,
             "decision_type": form_decision,
-            "decision": decision_result,
-            "order_number": case_number
+            "decision"     : decision_result,
+            "order_number" : case_number,
+            "sides"        : make_json(sides) if len(sides) else None,
+            "prejudicate"  : make_json(prejudicate) if len(prejudicate) else None,
+            "complaint"    : complaint if len(complaint) else None,
+            "case_year"    : case_year
         }
 
         writer_records.writerow(item)  # write item to CSV
@@ -251,21 +290,24 @@ extract relevant data from page
     return count_records_with_document
 
 
-#-----------------------------------------------------------------------
-# noinspection PyGlobalUndefined,PyGlobalUndefined
 def extract_information(saved_pages, extract=None):
     """
-extract informations from HTML files and write to CSVs
-:saved_pages: number of all saved pages
-:extract: boolean flag which indicates type of extraction
-"""
+    extract informations from HTML files and write to CSVs
+
+    :param saved_pages: number of all saved pages
+    :type extract: bool
+    :param extract: flag which indicates type of extraction
+
+    """
+
     html_files = [join(html_dir_path, fn) for fn in next(os.walk(html_dir_path))[2]]
     if len(html_files) == saved_pages or extract:
         global writer_links
         global writer_records
 
-        fieldnames = ['court_name', 'record_id', 'registry_mark', 'decision_date', 'web_path', 'local_path', 'decision_type',
-                      'decision', 'order_number']
+        fieldnames = ['court_name', 'record_id', 'registry_mark', 'decision_date',
+                      'web_path', 'local_path', 'decision_type', 'decision',
+                      'order_number', 'sides', 'complaint', 'prejudicate', 'case_year']
         csv_records = open(join(out_dir, output_file), 'w', newline='', encoding="utf-8")
 
         writer_records = csv.DictWriter(csv_records, fieldnames=fieldnames, delimiter=";", quoting=csv.QUOTE_ALL)
@@ -276,26 +318,24 @@ extract informations from HTML files and write to CSVs
         for html_f in t:
             logger.debug(html_f)
             count_documents += make_record(make_soup(html_f))
-            t.update()
-            #print(i)
-            """i += 1
-            if i==80:
-                break"""
         logger.info("%s records had a document" % count_documents)
         csv_records.close()
     else:
         logger.warning("len(html_files) == saved_pages = %s" % len(html_files) == saved_pages)
 
 
-#-----------------------------------------------------------------------
 def view_data(row_count, mark_type, value, date_from=None, date_to=None, last=None):
     """
-sets forms parameters for viewing data
-:mark_type: text identificator of mark type
-:value: mark type number identificator for formular
-:date_from: start date of range
-:date_to: end date of range
-"""
+    sets forms parameters for viewing data
+
+    :type mark_type: text
+    :param mark_type: text identificator of mark type
+    :param value: mark type number identificator for formular
+    :param date_from: start date of range
+    :param date_to: end date of range
+
+    """
+
     if last and session.exists("#_ctl0_ContentPlaceMasterPage__ctl0_chkPrirustky"):
         logger.debug("Select check button")
         session.set_field_value("#_ctl0_ContentPlaceMasterPage__ctl0_chkPrirustky", True)
@@ -334,7 +374,7 @@ sets forms parameters for viewing data
     # change value of row count on page
     if session.exists("#_ctl0_ContentPlaceMasterPage__ctl0_ddlRowCount"):
         value, resources = session.evaluate(
-            "document.getElementById('_ctl0_ContentPlaceMasterPage__ctl0_ddlRowCount').value")
+                "document.getElementById('_ctl0_ContentPlaceMasterPage__ctl0_ddlRowCount').value")
         #print("value != '30'",value != "30")
         if value != "30":
             logger.debug("Change row count")
@@ -349,13 +389,15 @@ sets forms parameters for viewing data
                     session.capture_to(join(screens_dir_path, "/_find_screen_" + mark_type + "_change_row_count.png"))
 
 
-# -----------------------------------------------------------------------
 def walk_pages(count_of_pages, case_type):
     """
-make a walk through pages of results
-:count_of_pages: over how many pages we have to go
-:case_type: name of type for easier identification of problem
-"""
+    make a walk through pages of results
+
+    :param count_of_pages: over how many pages we have to go
+    :param case_type: name of type for easier identification of problem
+
+    """
+
     last_file = str(count_of_pages) + "_" + case_type + ".html"
     if os.path.exists(join(html_dir_path, last_file)):
         logger.debug("Skip %s type <-- '%s' exists" % (case_type, last_file))
@@ -402,8 +444,8 @@ make a walk through pages of results
             try:
                 #result, resources = session.click("#"+link_id, expect_loading=True)
                 session.evaluate(
-                    "WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(\"%s\", \"\", true, \"\", \"\", false, true))" % link,
-                    expect_loading=True)
+                        "WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(\"%s\", \"\", true, \"\", \"\", false, true))" % link,
+                        expect_loading=True)
                 #session.wait_for(page_has_loaded,"Timeout - next page",timeout=main_timeout)
                 logger.debug("New page was loaded!")
             except Exception:
@@ -414,11 +456,10 @@ make a walk through pages of results
     return True
 
 
-#-----------------------------------------------------------------------
 def process_court():
     """
-creates files for processing and saving data, start point for processing
-"""
+    creates files for processing and saving data, start point for processing
+    """
     d = {"Ads": '10', "Afs": '11', "Ars": '116', "As": '12', "Azs": '9'}
     #d = {"As" : '12'}
     case_types = OrderedDict(sorted(d.items(), key=lambda t: t[0]))
@@ -430,7 +471,7 @@ creates files for processing and saving data, start point for processing
         logger.info(case_type)
         view_data(row_count, case_type, case_types[case_type], date_from=date_from, date_to=date_to, last=last)
         number_of_records, resources = session.evaluate(
-            "document.getElementById('_ctl0_ContentPlaceMasterPage__ctl0_ddlRowCount').value")
+                "document.getElementById('_ctl0_ContentPlaceMasterPage__ctl0_ddlRowCount').value")
         #number_of_records = "30" #hack pro testovani
         if number_of_records is not None and int(number_of_records) != row_count:
             logger.warning(int(number_of_records) != row_count)
@@ -445,7 +486,7 @@ creates files for processing and saving data, start point for processing
             logger.info("No records")
             continue
         info_elem, resources = session.evaluate(
-            "document.getElementById('_ctl0_ContentPlaceMasterPage__ctl0_pnPaging1_Repeater3__ctl0_Label2').innerHTML")
+                "document.getElementById('_ctl0_ContentPlaceMasterPage__ctl0_pnPaging1_Repeater3__ctl0_Label2').innerHTML")
 
         if info_elem:
             #number_of_records = "20" #hack pro testovani
@@ -467,22 +508,27 @@ creates files for processing and saving data, start point for processing
     return True
 
 
-#-----------------------------------------------------------------------
 def load_data(csv_file):
     """
-load data from csv file
-:csv_file: name of CSV file
-"""
+    load data from csv file
+
+    :param csv_file: name of CSV file
+
+    """
+
     data = pd.read_csv(csv_file, sep=";", na_values=['', "nan"])
     return data
 
 
-#-----------------------------------------------------------------------
 def download_pdf(data):
     """
-download PDF files
-:data: Pandas data frame object
-"""
+    download PDF files
+
+    :type data: DataFrame
+    :param data: Pandas object
+
+    """
+
     frame = data[["web_path", "local_path"]].dropna()
     t = tqdm(frame, ncols=global_ncols)
     for row in frame.itertuples():
@@ -492,15 +538,14 @@ download PDF files
         t.update()
 
 
-#-----------------------------------------------------------------------
 def main():
     global ghost
     ghost = Ghost()
     global session
     session = ghost.start(
-        download_images=False, show_scrollbars=False,
-        wait_timeout=main_timeout, display=False,
-        plugins_enabled=False)
+            download_images=False, show_scrollbars=False,
+            wait_timeout=main_timeout, display=False,
+            plugins_enabled=False)
     logger.info(u"Start - NSS")
     session.open(url)
 
@@ -567,7 +612,7 @@ if __name__ == "__main__":
         extract_information(saved_pages, extract=True)
         logger.info("DONE - extraction")
         logger.info("Moving files")
-        shutil.move(join(out_dir, output_file), result_dir_path)
+        shutil.copy(join(out_dir, output_file), result_dir_path)
     else:
         if main():
             # move results of crawling

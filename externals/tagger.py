@@ -36,6 +36,7 @@ def connection(path_to_neon):
                             password=dbal["password"],
                             host=dbal["host"])
 
+
 def print_statistic(tagger):
     print("----\n"
           "Causes: {}, unique advocates: {}\n"
@@ -51,7 +52,6 @@ def print_statistic(tagger):
             len(tagger.match_cache), len(tagger.no_match_cache),
             tagger.cmp_full, tagger.cont_normal)
     )
-
 
 
 class QueryDB(object):

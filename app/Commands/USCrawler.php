@@ -25,7 +25,7 @@ class USCrawler extends CauseCrawler
 		return sprintf(
 			'%s %s --output-directory %s -l %s 2>&1',
             'python3',
-			__DIR__ . '/../../externals/us-crawler.py',
+			__DIR__ . '/../../externals/us_crawler.py',
 			escapeshellarg($directory),
 			7
 		);
