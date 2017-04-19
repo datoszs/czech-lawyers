@@ -117,8 +117,8 @@ class CausaImport extends Command
 			$output .= $message;
 			$consoleOutput->write($message);
 			// Empty directory after successful procession
-			//FileSystem::delete($directory . '/metadata.csv');
-			//FileSystem::delete($directory . '/documents/');
+			FileSystem::delete($directory . '/metadata.csv');
+			FileSystem::delete($directory . '/documents/');
 		}
 		$this->finalize($code, $output, $message);
 		if ($code !== self::RETURN_CODE_SUCCESS) {
