@@ -1,6 +1,6 @@
 -- Add column year to Case
-ALTER TABLE 'case' ADD COLUMN year INT;
-COMMENT ON COLUMN 'case'.year IS 'A year that should be included in the registry_mark';
+ALTER TABLE "case" ADD COLUMN year INT;
+COMMENT ON COLUMN "case".year IS 'A year that should be included in the registry_mark';
 
 -- Add columns on Document supreme administrative court
 ALTER TABLE document_supreme_administrative_court ADD COLUMN sides TEXT NULL;
