@@ -9,7 +9,6 @@ const sendDisputeSaga = function* sendDispute(id, {values}) {
         const loadTime = yield select(getLoadTime);
         yield call(caseAPI.dispute, id, Object.assign(values.toJS(), {
             datetime: loadTime,
-            disputed_tagging: 'both',
         }));
     } catch (ex) {
         console.error('Unable to send dispute');

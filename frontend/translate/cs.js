@@ -52,6 +52,10 @@ export default {
     'case.dispute.submit': 'Rozporovat',
     'case.dispute': 'Rozporovat výsledek',
     'case.dispute.reason': 'Důvod k rozporování',
+    'case.dispute.resaon.result': 'Špatně přiřazený advokát',
+    'case.dispute.reason.advocate': 'Špatně přiřazený výsledek',
+    'case.dispute.reason.both': 'Špatně přiřazený advokát i výsledek',
+    'case.dispute.comment': 'Vysvětlení',
 
     'home.above': 'Zadejte advokáta a zobrazte si statistiky o jeho vystupování před třemi nejdůležitějšími soudy v ČR.',
     'home.below': home,
