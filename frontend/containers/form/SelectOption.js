@@ -1,28 +1,26 @@
-import {PropTypes} from 'react';
-import {connect} from 'react-redux';
+import React, {PropTypes} from 'react';
 import {Field} from 'redux-form/immutable';
 import {SelectOptionComponent} from '../../components/form';
-import translate from '../../translate';
+import Msg from '../Msg';
 
-const mapStateToProps = (state, {label}) => ({
-    label: translate.getMessage(state, label),
-});
-
-const mergeProps = ({label}, dispatch, {name, id}) => ({
-    component: SelectOptionComponent,
-    name,
-    props: {
-        children: label,
-        id,
-    },
-});
-
-const SelectOption = connect(mapStateToProps, undefined, mergeProps)(Field);
+const SelectOption = ({id, label}, {selectName}) => (
+    <Field
+        component={SelectOptionComponent}
+        name={selectName}
+        props={{
+            children: <Msg msg={label} />,
+            id,
+        }}
+    />
+);
 
 SelectOption.propTypes = {
     label: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
+};
+
+SelectOption.contextTypes = {
+    selectName: PropTypes.string.isRequired,
 };
 
 export default SelectOption;
