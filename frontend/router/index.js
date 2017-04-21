@@ -1,6 +1,8 @@
 import {NAME} from './constants';
 import {routeEntered} from './actions';
+import {getCurrentPath} from './selectors';
 import saga from './saga';
+import reducer from './reducer';
 
 /**
  * ROUTER MODULE
@@ -10,6 +12,8 @@ import saga from './saga';
 const router = {
     NAME,
     routeEntered,
+    getCurrentPath,
     saga,
+    reducer,
 };
 export default router;

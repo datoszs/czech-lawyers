@@ -1,5 +1,5 @@
-import {browserHistory, formatPattern} from 'react-router';
-import querystring from 'query-string';
+import {browserHistory} from 'react-router';
+import formatRoute from './formatRoute';
 
 /**
  * Transitions application to a new route (page).
@@ -7,10 +7,4 @@ import querystring from 'query-string';
  * @param params Route parameters (optional).
  * @param query Route query (optional).
  */
-export default (module, params, query) => {
-    let route = formatPattern(module.ROUTE, params);
-    if (query) {
-        route += `?${querystring.stringify(query)}`;
-    }
-    browserHistory.push(`/${route}`);
-};
+export default (module, params, query) => browserHistory.push(`/${formatRoute(module.ROUTE, params, query)}`);

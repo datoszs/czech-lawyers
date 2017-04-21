@@ -7,6 +7,7 @@ import {Msg} from '../containers';
 
 import about from '../about';
 import contact from '../contact';
+import search from '../search';
 
 const Navigation = () => (
     <Navbar>
@@ -15,9 +16,12 @@ const Navigation = () => (
             <Navbar.Toggle />
         </Navbar.Header>
         <Navbar.Collapse>
+            <Nav>
+                <RouteNavItem module={search.NAME} route={search.ROUTE}><Msg msg="search.title" /></RouteNavItem>
+            </Nav>
             <Nav pullRight>
-                <RouteNavItem route={about.ROUTE}><Msg msg="about.title" /></RouteNavItem>
-                <RouteNavItem route={contact.ROUTE}><Msg msg="contact.title" /></RouteNavItem>
+                <RouteNavItem module={about.NAME} route={about.ROUTE}><Msg msg="about.title" /></RouteNavItem>
+                <RouteNavItem module={contact.NAME} route={contact.ROUTE}><Msg msg="contact.title" /></RouteNavItem>
             </Nav>
         </Navbar.Collapse>
     </Navbar>

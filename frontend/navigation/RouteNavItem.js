@@ -1,23 +1,37 @@
 import React, {PropTypes} from 'react';
+import {connect} from 'react-redux';
 import {NavItem} from 'react-bootstrap';
 import {routerShape} from 'react-router';
+import routerModule from '../router';
 
-const RouteNavItem = ({route, children}, {router}) => (
+const RouteNavItemComponent = ({route, path, children}, {router}) => (
     <NavItem
         active={router.isActive(route)}
-        onClick={() => router.push(`/${route}`)}
+        onClick={() => router.push(`/${path}`)}
     >
         {children}
     </NavItem>
 );
 
-RouteNavItem.propTypes = {
+RouteNavItemComponent.propTypes = {
     route: PropTypes.string.isRequired,
+    path: PropTypes.string.isRequired,
     children: PropTypes.node.isRequired,
 };
 
-RouteNavItem.contextTypes = {
+RouteNavItemComponent.contextTypes = {
     router: routerShape.isRequired,
+};
+
+const mapStateToProps = (state, {route, module}) => ({
+    path: routerModule.getCurrentPath(state, module, route),
+});
+
+const RouteNavItem = connect(mapStateToProps)(RouteNavItemComponent);
+
+RouteNavItem.propTypes = {
+    route: PropTypes.string.isRequired,
+    module: PropTypes.string.isRequired,
 };
 
 export default RouteNavItem;
