@@ -11,6 +11,7 @@ use App\Model\Documents\DocumentSupremeCourt;
 use App\Model\Services\CauseService;
 use App\Model\Services\CourtService;
 use App\Model\Services\DocumentService;
+use App\Utils\Helpers;
 use App\Utils\Normalize;
 use App\Utils\Validators;
 use app\Utils\JobCommand;
@@ -18,7 +19,6 @@ use DateTime;
 use League\Csv\Reader;
 use Nette\Utils\FileSystem;
 use Nette\Utils\Json;
-use Nette\Utils\Strings;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -278,11 +278,13 @@ class CausaImport extends Command
 		}
 	}
 
-	private function getYear($row) {
-		if (isset($row['case_year']))
+	private function getYear($row)
+	{
+		// Explicit year
+		if (isset($row['case_year'])) {
 			return $row['case_year'];
-		elseif (isset($row['ecli']))
-			return Strings::split($row['ecli'],':')[3];
-
+		}
+		// Guess from registry mark
+		return Helpers::determineYear($row['registry_mark']);
 	}
 }

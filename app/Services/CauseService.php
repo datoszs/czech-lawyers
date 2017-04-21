@@ -53,7 +53,7 @@ class CauseService
 		return $this->orm->causes->findBy(['court' => $court])->fetchAll();
 	}
 
-	public function findOrCreate(Court $court, $registrySign, $year, JobRun $jobRun = null)
+	public function findOrCreate(Court $court, $registrySign, int $year, JobRun $jobRun = null)
 	{
 		$entity = $this->orm->causes->getBy(['registrySign' => $registrySign]);
 		if (!$entity) {

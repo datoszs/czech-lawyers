@@ -106,7 +106,7 @@ class CausesMapper extends Mapper
 			$builder->andWhere('court_id = %i', $court);
 		}
 		if ($year) {
-			$builder->andWhere('SUBSTRING(registry_sign FROM \'....$\') = %s', (string) $year);
+			$builder->andWhere('year = %s', (string) $year);
 		}
 
 		$builder->leftJoin('case', 'vw_latest_tagging_advocate', 'vw_latest_tagging_advocate', 'vw_latest_tagging_advocate.case_id = id_case');

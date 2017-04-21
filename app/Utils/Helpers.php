@@ -2,6 +2,7 @@
 namespace App\Utils;
 
 
+use InvalidArgumentException;
 use Nette\Utils\Validators as NetteValidators;
 
 class Helpers
@@ -50,5 +51,31 @@ class Helpers
 		return is_array($input) && array_reduce($input, function ($carry, $value) {
 			return $carry && NetteValidators::isNumericInt($value);
 		}, true);
+	}
+
+	/**
+	 * Returns four-letter year determined from registry mark with guessing
+	 *
+	 * @param string $registryMark
+	 * @return int
+	 * @throws InvalidArgumentException when error determining year
+	 */
+	public static function determineYear(string $registryMark) : int
+	{
+		$temp = explode('/', $registryMark);
+		if (count($temp) !== 2) {
+			throw new InvalidArgumentException("Invalid registry mark [$registryMark], cannot determine year.");
+		}
+		if (strlen($temp[1]) === 4 && NetteValidators::isNumericInt($temp[1])) {
+			return (int) $temp[1];
+		}
+		if (strlen($temp[1]) === 2 && NetteValidators::isNumericInt($temp[1])) {
+			if ($temp[1] < 92) {
+				return 2000 + $temp[1];
+			} else {
+				return 1900 + $temp[1];
+			}
+		}
+		throw new InvalidArgumentException("Invalid registry mark [$registryMark], unknown error.");
 	}
 }

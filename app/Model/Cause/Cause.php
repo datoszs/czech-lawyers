@@ -11,9 +11,11 @@ use Nextras\Orm\Entity\Entity;
  * @property string				$registrySign
  * @property Court				$court				{m:1 Court, oneSided=true}
  * @property array|null			$officialData
+ * @property DateTime|null		$propositionDate
+ * @property DateTime|null		$decisionDate
  * @property DateTime			$inserted			{default now}
  * @property JobRun|null		$jobRun				{m:1 JobRun, oneSided=true}
- * @property string				$year
+ * @property int				$year
  */
 class Cause extends Entity
 {

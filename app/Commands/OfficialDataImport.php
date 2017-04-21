@@ -122,7 +122,8 @@ class OfficialDataImport extends Command
 		$new = 0;
 		$overwritten = 0;
 		foreach ($toPersist as $registryMark => $caseData) {
-			$entity = $this->causeService->findOrCreate($court, $registryMark); // explicitly create case when not already exists
+			$year = Helpers::determineYear($registryMark);
+			$entity = $this->causeService->findOrCreate($court, $year, $registryMark); // explicitly create case when not already exists
 			if ($entity->officialData) {
 				$overwritten++;
 			} else {
