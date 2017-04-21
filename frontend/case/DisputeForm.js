@@ -11,11 +11,11 @@ export default () => (
             <TextField name="full_name" label="form.name" />
             <EmailField name="from" label="form.email" />
             <SelectField name="disputed_tagging" label="case.dispute.reason">
-                <SelectOption label="dispute.result" id="case_result" />
-                <SelectOption label="dispute.advocate" id="advocate" />
-                <SelectOption label="dispute.both" id="both" />
+                <SelectOption label="case.dispute.resaon.result" id="case_result" />
+                <SelectOption label="case.dispute.reason.advocate" id="advocate" />
+                <SelectOption label="case.dispute.reason.both" id="both" />
             </SelectField>
-            <TextAreaField name="content" label="case.dispute.reason" />
+            <TextAreaField name="content" label="case.dispute.comment" />
             <Button type="submit" bsStyle="danger"><Msg msg="case.dispute.submit" /></Button>
         </CaptchaForm>
     </Panel>
