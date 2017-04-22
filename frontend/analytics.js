@@ -1,12 +1,10 @@
 import ga from 'react-ga';
 
-const production = (process.env.NODE_ENV === 'production');
-
 ga.initialize('UA-97836816-1', {
-    debug: !production,
+    debug: false,
 });
 
-if (!production) {
+if (process.env.NODE_ENV === 'development') {
     ga.set({sendHitTask: null});
 }
 
