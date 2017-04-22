@@ -29,6 +29,7 @@
     "react-async-script": "0.8.0",
     "react-bootstrap": "0.30.8",
     "react-dom": "15.4.2",
+    "react-ga": "2.2.0",
     "react-google-recaptcha": "0.8.1",
     "react-helmet": "5.0.2",
     "react-hot-loader": "3.0.0-beta.6",

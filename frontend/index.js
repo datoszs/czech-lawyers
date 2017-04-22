@@ -2,6 +2,7 @@ import React from 'react';
 import {render} from 'react-dom';
 import {AppContainer} from 'react-hot-loader';
 
+import './analytics';
 import store from './store';
 import Root from './Root';
 
