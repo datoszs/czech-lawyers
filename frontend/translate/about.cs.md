@@ -3,14 +3,14 @@ na jejichž základě se lze rozhodnout, kterého advokáta si zvolit. Krátkodo
 je **zpřístupnění informací o činnosti advokátů** v soudních řízeních, pro která si advokáta ze zákona zvolit musíte
 &mdash; **v řízeních o dovolání před Nejvyšším soudem, o kasačních stížnostech před Nejvyšším správním soudem a o ústavních
 stížnostech před Ústavním soudem**. Web cestiadvokati.cz zpřístupňuje statistiky o vystupování advokátů v těchto řízeních
-založené na konečných rozhodnutí vydaných v těchto řízeních. Cílem webu je tyto statistiky založené na zpřehlednění
+založené na konečných rozhodnutích vydaných v těchto řízeních. Cílem webu je tyto statistiky založené na zpřehlednění
 již nyní veřejně dostupných informacích nabídnout, nikoliv prosazovat jejich používání k hodnocení advokátů. Umožnění
 komentování činnosti advokáta (ať už advokáty samotnými nebo jinými osobami) zatím neplánujeme.
 
 **Statistiky advokátů nejsou počítány na základě toho, zda u soudů vyhrávají.** Advokát nemůže a nemá předvídat, jak soudci
 rozhodnou. Úkolem advokáta není vždy vyhrát, advokát nemůže a nemá brát jen případy, u nichž si je úspěchem u soudu jist.
-Jakékoliv zpřístupnění informace o úspěšnosti advokáta tedy lze požadovat za nežádoucí. Statistiky jsou počítány pouze
-na základě toho, v kolika případech se advokát na soud (ať už vlivem pochybení, na výslovnou žádost klienta či z jiných
+Zpřístupnění informace o úspěšnosti advokáta tedy lze požadovat za nežádoucí. Statistiky jsou počítány pouze
+na základě toho, kolikrát se advokát na soud (ať už vlivem pochybení, na výslovnou žádost klienta či z jiných
 důvodů) obrátil s vadnými nebo opožděnými podáními nebo například v situacích, ve kterých to zákon neumožňuje. Konkrétněji,
 **u advokátů je sledován a zobrazován počet podání (stížností, dovolání), o nichž soud rozhodl co do obsahu (meritorně),
 o nichž rozhodl nemeritorně a o nichž nakonec nerozhodoval vůbec**.
@@ -21,10 +21,7 @@ tvůrcem webu je Tomáš Vejpustek. Více viz [Kontakty](/contact).
 
 Rozsah zpracovávaných rozhodnutí
 --------------------------------
-Statistiky jsou počítány na základě konečných rozhodnutí Nejvyššího, Nejvyššího správního a Ústavního soudu, která jednou
-týdně stahujeme z webů [nsoud.cz](http://www.nsoud.cz), [nssoud.cz](http://www.nssoud.cz) a [usoud.cz](http://www.usoud.cz).
-Nyní jsou (až na ojedinělé výjimky) již všechna rozhodnutí těchto soudů veřejně dostupná online, nebylo tomu tak ale vždy.
-Rozsah zpracovávaných konečných rozhodnutí se proto pro jednotlivé soudy liší.
+Statistiky jsou počítány na základě konečných rozhodnutí Nejvyššího, Nejvyššího správního a Ústavního soudu, jejichž neautentická znění jsou bezplatně dostupná na webech [nsoud.cz](http://www.nsoud.cz), [nssoud.cz](http://www.nssoud.cz) a [usoud.cz](http://www.usoud.cz), odkud je jednou týdně stahujeme. Nyní jsou (až na ojedinělé výjimky) již všechna rozhodnutí těchto soudů veřejně dostupná online, nebylo tomu tak ale vždy. Rozsah zpracovávaných konečných rozhodnutí se proto pro jednotlivé soudy liší.
 
 - **Nejvyšší soud**:
 Konečná rozhodnutí o dovoláních v občanskoprávních věcech (rejstříky Cdo, Cdon, ICdo, NSČR, Odo, Odon)
@@ -46,7 +43,7 @@ U zpracovávaných konečných rozhodnutí automaticky zjišťujeme, zda jde o:
 Ke každému konečnému rozhodnutí (unikátní spisové značce) se pak jednou měsíčně snažíme na základě informací poskytnutých
 soudy přiřadit konkrétního advokáta, na jehož podání toto rozhodnutí reaguje. 
 
-Při zjišťování výsledku řízení jsme z XX % úspěšní. **Ne vždy se nám ale podaří tento výsledek automaticky přiřadit
+Při zjišťování výsledku řízení jsme z více než 90 % úspěšní. **Ne vždy se nám ale podaří tento výsledek automaticky přiřadit
 konkrétnímu advokátovi.** Důvody jsou různé.
 - **Advokát není a nikdy nebyl zapsaný v seznamu českých advokátů** (stahujeme jej jednou týdně z [cak.cz](http://www.cak.cz)).
 Mohlo jít například o přeshraničně působícího advokáta.
