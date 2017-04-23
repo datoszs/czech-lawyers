@@ -16,7 +16,7 @@ export default {
     'search.placeholder': 'Zadejte jméno nebo IČ',
     'back.button': 'Zpět',
 
-    'search.title': 'Advokáti',
+    'advocates.title': 'Advokáti',
 
     'advocate.ic': 'IČ',
     'advocate.registration.number': 'Evidenční číslo',

@@ -3,7 +3,7 @@ import {reducer as formReducer} from 'redux-form/immutable';
 
 import translate from './translate';
 import router from './router';
-import search from './search';
+import advocateSearch from './advocatesearch';
 import autocomplete from './autocomplete';
 import advocate from './advocate';
 import caseDetail from './case';
@@ -11,7 +11,7 @@ import caseDetail from './case';
 export default combineReducers([
     translate,
     router,
-    search,
+    advocateSearch,
     autocomplete,
     advocate,
     caseDetail,

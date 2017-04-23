@@ -1,7 +1,7 @@
 import {compose} from 'redux';
 import {connect} from 'react-redux';
 import {transition} from '../util';
-import search from '../search';
+import advocateSearch from '../advocatesearch';
 import translate from '../translate';
 import Component from './Component';
 import {setInputValue} from './actions';
@@ -21,7 +21,7 @@ const mergeProps = ({value, ...stateProps}, {...dispatchProps}) => ({
     value,
     ...stateProps,
     ...dispatchProps,
-    onSubmit: () => transition(search, undefined, {query: value}),
+    onSubmit: () => transition(advocateSearch, undefined, {query: value}),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(Component);

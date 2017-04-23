@@ -7,7 +7,7 @@ import {Msg} from '../containers';
 
 import about from '../about';
 import contact from '../contact';
-import search from '../search';
+import advocateSearch from '../advocatesearch';
 
 const Navigation = () => (
     <Navbar>
@@ -17,7 +17,7 @@ const Navigation = () => (
         </Navbar.Header>
         <Navbar.Collapse>
             <Nav>
-                <RouteNavItem module={search.NAME} route={search.ROUTE}><Msg msg="search.title" /></RouteNavItem>
+                <RouteNavItem module={advocateSearch.NAME} route={advocateSearch.ROUTE}><Msg msg="advocates.title" /></RouteNavItem>
             </Nav>
             <Nav pullRight>
                 <RouteNavItem module={about.NAME} route={about.ROUTE}><Msg msg="about.title" /></RouteNavItem>

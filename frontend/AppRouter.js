@@ -13,7 +13,7 @@ import navigation from './navigation';
 import home from './home';
 import about from './about';
 import contact from './contact';
-import search from './search';
+import advocateSearch from './advocatesearch';
 import advocate from './advocate';
 import caseDetail from './case';
 
@@ -30,7 +30,7 @@ const AppRouter = ({handleEnter, handleChange}) => {
                 <IndexRoute component={home.Container} onEnter={handleEnter(home.NAME)} />
                 {createRoute(about)}
                 {createRoute(contact)}
-                {createRoute(search)}
+                {createRoute(advocateSearch)}
                 {createRoute(advocate)}
                 {createRoute(caseDetail)}
             </Route>
