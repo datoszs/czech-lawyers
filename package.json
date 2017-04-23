@@ -13,7 +13,7 @@
     "build": "webpack --progress --env",
     "lint": "eslint frontend",
     "lint:fix": "npm run lint -- --fix",
-    "test:base": "mocha --compilers js:babel-register frontend/test.js frontend/**/*.spec.js",
+    "test:base": "mocha --compilers js:babel-register frontend/test.js \"frontend/**/*.spec.js\"",
     "test": "npm run test:base -- --reporter spec",
     "test:watch": "npm run test:base -- --reporter min --watch"
   },
