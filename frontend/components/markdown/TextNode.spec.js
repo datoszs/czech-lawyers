@@ -14,4 +14,22 @@ describe('TextNode component', () => {
     it('displays unformatted text', () => {
         shallow(<TextNode literal="some text" />).should.have.text('some text');
     });
+    it('recognizes escaped + inside', () => {
+        shallow(<TextNode literal="+some \+ text+" />).should.contain(<PositiveText text="some \+ text" />);
+    });
+    it('recognizes escaped + at end', () => {
+        shallow(<TextNode literal="+some text\+" />).should.have.text('+some text\\+');
+    });
+    it('recognizes escaped + at start', () => {
+        shallow(<TextNode literal="\+some text+" />).should.have.text('\\+some text+');
+    });
+    it('recognizes escaped - inside', () => {
+        shallow(<TextNode literal="-some \- text-" />).should.contain(<NegativeText text="some \- text" />);
+    });
+    it('recognizes escaped - at end', () => {
+        shallow(<TextNode literal="-some text\-" />).should.have.text('-some text\\-');
+    });
+    it('recognizes escaped - at start', () => {
+        shallow(<TextNode literal="\-some text-" />).should.have.text('\\-some text-');
+    });
 });

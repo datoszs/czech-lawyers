@@ -2,22 +2,24 @@ import React, {PropTypes, createElement} from 'react';
 import PositiveText from './PositiveText';
 import NegativeText from './NegativeText';
 
-const plusRegex = /\+(\\\+|[^+])*\+/;
-const minusRegex = /-(\\-|[^-])*-/;
+const plusRegex = /(^|[^\\])\+(\\\+|\\[^+]|[^+\\])*\+/;
+const minusRegex = /(^|[^\\])-(\\-|\\[^-]|[^-\\])*-/;
 
 const concat = (result, literal) => (literal.length ? result.concat(literal) : result);
 
+const adjustIndex = (match, char) => (match[0].startsWith(char) ? match.index : match.index + 1);
+
 const first = ({plusMatch, minusMatch}) => {
-    const plus = {match: plusMatch, Component: PositiveText};
-    const minus = {match: minusMatch, Component: NegativeText};
+    const plus = () => ({match: plusMatch, Component: PositiveText, index: adjustIndex(plusMatch, '+')});
+    const minus = () => ({match: minusMatch, Component: NegativeText, index: adjustIndex(minusMatch, '-')});
     if (!plusMatch) {
-        return minus;
+        return minus();
     } else if (!minusMatch) {
-        return plus;
+        return plus();
     } else if (plusMatch.index < minusMatch.index) {
-        return plus;
+        return plus();
     } else {
-        return minus;
+        return minus();
     }
 };
 
