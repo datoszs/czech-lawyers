@@ -313,8 +313,8 @@ def make_record(soup, id):
             item[key] = itemize_list(item[key])
 
         # extract names from text
-        text = soup.select_one("#uc_vytah_cellContent > span")
-        item['names'] = extract_name(text)
+        # text = soup.select_one("#uc_vytah_cellContent > span")
+        # item['names'] = extract_name(text)
     logger.debug(item)
     writer_records.writerow(item)  # write item to CSV
 
