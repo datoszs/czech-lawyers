@@ -94,13 +94,13 @@ create working directories
         logger.info("Folder was created '" + directory + "'")
 
     if b_screens:
-        screens_dir_path = join(out_dir, screens_dir)
-        if not os.path.exists(screens_dir_path):
-            os.mkdir(screens_dir_path)
-            logger.info("Folder was created '" + screens_dir_path + "'")
-        else:
+        screens_dir_path = join(join(out_dir, ".."), screens_dir)
+
+        if os.path.exists(screens_dir_path):
             logger.debug("Erasing old screens")
-            os.system("rm " + join(screens_dir_path, "*"))
+            shutil.rmtree(screens_dir_path)
+        os.mkdir(screens_dir_path)
+        logger.info("Folder was created '{}'".format(screens_dir_path))
         return screens_dir_path
 
 
@@ -321,7 +321,7 @@ def extract_information(saved_pages, extract=None):
         logger.info("%s records had a document" % count_documents)
         csv_records.close()
     else:
-        logger.warning("len(html_files) == saved_pages = %s" % len(html_files) == saved_pages)
+        logger.warning("Count of 'saved_pages'({}) and saved files({}) is differrent!".format(saved_pages, len(html_files)))
 
 
 def view_data(row_count, mark_type, value, date_from=None, date_to=None, last=None):
@@ -559,7 +559,7 @@ def main():
     if result:
         logger.info("DONE - download records")
         logger.debug("Closing browser")
-        logger.info("It was saved %s records on %s pages" % (saved_records, saved_pages))
+        logger.info("It was saved {} records on {} pages".format(saved_records, saved_pages))
         #input(":-)")
         logger.debug("=" * 20)
         logger.info("Extract informations")
@@ -572,7 +572,7 @@ def main():
             download_pdf(data)
             logger.info("DONE - Download files")
     else:
-        logger.error("Error (main)- closing browser")
+        logger.error("Error (main)- closing browser, exiting")
         return False
 
     return True
@@ -620,11 +620,9 @@ if __name__ == "__main__":
                 logger.info("Moving files")
                 shutil.move(documents_dir_path, result_dir_path)
                 shutil.move(join(out_dir, output_file), result_dir_path)
-                if not b_delete:
-                    logger.debug("Cleaning working directory")
-                    logging_process(["rm", "-rf", out_dir])
+                if not b_delete: # debug without cleaning
+                    logger.info("Cleaning working directory")
                     shutil.rmtree(html_dir_path)
-                    os.makedirs(out_dir, exist_ok=True)
             else:
                 logger.error("Result directory isn't empty.")
                 sys.exit(-1)
