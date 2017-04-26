@@ -1,4 +1,4 @@
-import {PropTypes} from 'react';
+import PropTypes from 'prop-types';
 import {Field} from 'redux-form/immutable';
 import {connect} from 'react-redux';
 import translate from '../../translate';

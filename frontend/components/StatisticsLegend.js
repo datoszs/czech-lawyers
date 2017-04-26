@@ -1,4 +1,5 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import {Popover} from 'react-bootstrap';
 
 const StatisticsLegend = ({positive, negative, neutral, placement, positionLeft, positionTop}) => (

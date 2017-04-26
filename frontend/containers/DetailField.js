@@ -1,4 +1,4 @@
-import {PropTypes} from 'react';
+import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import translate from '../translate';
 import {DetailFieldComponent} from '../components';

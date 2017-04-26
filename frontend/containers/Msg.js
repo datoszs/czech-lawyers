@@ -1,4 +1,4 @@
-import {PropTypes} from 'react';
+import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {Text} from '../components';
 import translate from '../translate';

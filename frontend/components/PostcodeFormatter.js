@@ -1,4 +1,5 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 const PostcodeFormatter = ({value}) => (
     <span>{value.substring(0, 3)}&nbsp;{value.substring(3, 5)}</span>
