@@ -27,8 +27,8 @@ export const mapDtoToCaseDetail = (dto) => ({
     id: dto.id_case,
     court: dto.id_court,
     registry: dto.registry_mark,
-    advocateId: dto.tagging_advocate.id_advocate,
-    advocateName: dto.tagging_advocate.fullname,
+    advocateId: dto.tagging_advocate && dto.tagging_advocate.id_advocate,
+    advocateName: dto.tagging_advocate && dto.tagging_advocate.fullname,
     result: dto.tagging_result,
     documents: dto.documents.map(mapDtoToDocument),
 });

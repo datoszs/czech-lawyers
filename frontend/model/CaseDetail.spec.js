@@ -86,5 +86,11 @@ describe('Case Detail model', () => {
             const document = mapDtoToDocument(dto.documents[0]);
             caseTemplate.documents[0].should.deep.equal(document);
         });
+        it('maps advocate name and id to null if there is no advocate', () => {
+            const sampleDto = Object.assign({}, dto, {tagging_advocate: null});
+            const otherCaseDetail = new CaseDetail(mapDtoToCaseDetail(sampleDto));
+            expect(otherCaseDetail.advocateName).to.be.null();
+            expect(otherCaseDetail.advocateId).to.be.null();
+        });
     });
 });
