@@ -1,16 +1,24 @@
+import {Record} from 'immutable';
 import {TestingStore} from '../util';
 import reducer from './reducer';
-import {NAME} from './constants';
-import {setQuery} from './actions';
-import {getAdvocateIds, isLoading, canLoadMore} from './selectors';
+import {setQuery as createSetQuery} from './actions';
+import {isLoading as createIsLoading, canLoadMore as createLoadMore, getIds as createGetIds} from './selectors';
 
-describe('Advocate Search module', () => {
-    const initial = new TestingStore(NAME, reducer);
+describe('Search module', () => {
+    const NAME = 'search';
+    const path = [NAME];
+    const isLoading = createIsLoading(path);
+    const canLoadMore = createLoadMore(path);
+    const getIds = createGetIds(path);
+    const setQuery = createSetQuery(NAME);
+    const Model = Record({id: 0});
+
+    const initial = new TestingStore(NAME, reducer(NAME, Model));
     let store = initial;
     describe('initial state', () => {
         it('given initial state', () => {});
         it('then there are no advocates', () => {
-            store.select(getAdvocateIds).should.be.empty();
+            store.select(getIds).should.be.empty();
         });
         it('and it is not loading', () => {
             store.select(isLoading).should.be.false();
@@ -24,7 +32,7 @@ describe('Advocate Search module', () => {
             store = initial.apply(setQuery('Novák'));
         });
         it('then there are no advocates', () => {
-            store.select(getAdvocateIds).should.be.empty();
+            store.select(getIds).should.be.empty();
         });
         it('and it can load more', () => {
             store.select(canLoadMore).should.be.true();
@@ -38,7 +46,7 @@ describe('Advocate Search module', () => {
             store = initial.apply(setQuery());
         });
         it('then there are no advocates', () => {
-            store.select(getAdvocateIds).should.be.empty();
+            store.select(getIds).should.be.empty();
         });
         it('and it is not loading', () => {
             store.select(isLoading).should.be.false();

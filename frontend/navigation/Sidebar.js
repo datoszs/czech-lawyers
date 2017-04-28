@@ -5,7 +5,7 @@ import {transition} from '../util';
 import contact from '../contact';
 import Button from './SidebarButton';
 
-const goToContact = () => transition(contact);
+const goToContact = () => transition(contact.ROUTE);
 
 class Sidebar extends Component {
     constructor(props) {

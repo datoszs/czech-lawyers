@@ -7,7 +7,7 @@ import {transition} from '../util';
 import {Statistics, DetailPanel} from '../components';
 import {Advocate, statusMsg} from '../model';
 import advocateModule from '../advocate';
-import {getAdvocate} from './selectors';
+import {search} from './modules';
 import FooterColumn from './FooterColumn';
 import Legend from './Legend';
 
@@ -40,7 +40,7 @@ AdvocateDetailComponent.propTypes = {
 };
 
 const mapStateToProps = (state, {id}) => {
-    const advocate = getAdvocate(state, id);
+    const advocate = search.getResult(state, id);
     return {
         advocate,
         msgStatus: translate.getMessage(state, statusMsg[advocate.status]),
@@ -49,7 +49,7 @@ const mapStateToProps = (state, {id}) => {
 };
 
 const mapDispatchToProps = () => ({
-    handleDetail: (id) => () => transition(advocateModule, {id}),
+    handleDetail: (id) => () => transition(advocateModule.ROUTE, {id}),
 });
 
 const mergeProps = (stateProps, {handleDetail}, {id}) => ({

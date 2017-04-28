@@ -1,12 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {FormControl} from 'react-bootstrap';
-import {Msg} from '../containers';
 import {SearchForm, SimpleFormLayout} from '../components';
 
 const AutocompleteComponent = ({value, onChange, onSubmit, msgPlaceholder, msgSearch}) => (
-    <SearchForm onSubmit={onSubmit} msgSubmit={msgSearch}>
-        <SimpleFormLayout submit={<Msg msg="search.button" />} bsStyle="primary">
+    <SearchForm onSubmit={onSubmit}>
+        <SimpleFormLayout submit={msgSearch} bsStyle="primary">
             <FormControl type="text" onChange={(event) => onChange(event.target.value)} value={value} placeholder={msgPlaceholder} />
         </SimpleFormLayout>
     </SearchForm>

@@ -1,0 +1,1 @@
+Vidíte zde méně případů (spisových značek), než byste čekali? Je možné, že se nám sem některý případ nepodařilo automaticky zařadit. Znáte-li spisovou značku případu, který zde chybí, [vyhledejte ji](/cases) a kliknutím na příslušné tlačítko zpochybněte správnost jeho automatického zpracování. Co nejdříve to lidskými silami prověříme.

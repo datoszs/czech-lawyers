@@ -41,7 +41,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = () => ({
-    goToAdvocate: (id) => () => transition(advocate, {id}),
+    goToAdvocate: (id) => () => transition(advocate.ROUTE, {id}),
 });
 
 const mergeProps = ({advocateId, ...stateProps}, {goToAdvocate}) => ({
