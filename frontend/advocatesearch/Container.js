@@ -7,7 +7,7 @@ import {TwoColumn} from '../components';
 import autocomplete from '../autocomplete';
 
 import AdvocateDetail from './AdvocateDetail';
-import {search} from './import';
+import {search} from './modules';
 
 const Container = ({advocates}) => (
     <section>

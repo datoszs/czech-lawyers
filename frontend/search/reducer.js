@@ -64,7 +64,6 @@ export default (prefix, Model) => {
 
     return (state, action) => {
         if (action.type === SET_QUERY && state && state.get('query') === action.query) {
-            console.log('Query not changed');
             return state;
         } else {
             return reducer(state, action);

@@ -7,7 +7,7 @@ import {transition} from '../util';
 import {Statistics, DetailPanel} from '../components';
 import {Advocate, statusMsg} from '../model';
 import advocateModule from '../advocate';
-import {search} from './import';
+import {search} from './modules';
 import FooterColumn from './FooterColumn';
 import Legend from './Legend';
 
