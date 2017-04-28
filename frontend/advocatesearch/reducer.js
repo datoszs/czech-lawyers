@@ -1,6 +1,7 @@
 import {combineReducers} from 'redux-immutable';
 import {List, Map} from 'immutable';
 import {Advocate} from '../model';
+import {search} from './import';
 import {LIMIT, LIMIT_INCREMENT, PAGE_SIZE} from './constants';
 import {SET_QUERY, ADD_ADVOCATES, LOAD_MORE} from './actions';
 

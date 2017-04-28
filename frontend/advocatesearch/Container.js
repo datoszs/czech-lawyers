@@ -7,7 +7,7 @@ import {TwoColumn} from '../components';
 import autocomplete from '../autocomplete';
 
 import AdvocateDetail from './AdvocateDetail';
-import {getAdvocateIds} from './selectors';
+import {search} from './import';
 
 const Container = ({advocates}) => (
     <section>
@@ -25,7 +25,7 @@ Container.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-    advocates: getAdvocateIds(state),
+    advocates: search.getIds(state),
 });
 
 export default connect(mapStateToProps)(Container);
