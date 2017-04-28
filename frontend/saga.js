@@ -6,6 +6,7 @@ import home from './home';
 import advocate from './advocate';
 import caseDetail from './case';
 import contact from './contact';
+import caseSearch from './casesearch';
 
 export default function* () {
     yield call(router.saga, [
@@ -14,5 +15,6 @@ export default function* () {
         advocate,
         caseDetail,
         contact,
+        caseSearch,
     ]);
 }

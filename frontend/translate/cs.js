@@ -45,6 +45,9 @@ export default {
     'result.negative': 'Nemeritorní',
     'result.neutral': 'Zastavení řízení',
 
+    'cases.title': 'Případy',
+    'cases.search.placeholder': 'Zadejte číslo spisovky',
+
     'case.detail.title': 'Detail případu',
     'case.advocate': 'Advokát',
     'case.court': 'Soud',

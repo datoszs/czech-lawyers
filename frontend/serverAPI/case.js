@@ -3,6 +3,8 @@ import {doGet, doPost} from './fetch';
 
 const base = '/api/case';
 
+const search = (query, start, count) => doGet(`${base}/search/${query}/${start}-${count}`);
+
 const get = (id) => doGet(`${base}/${id}`);
 
 const getByAdvocate = (id, court, year, result) => {
@@ -15,6 +17,7 @@ const getByAdvocate = (id, court, year, result) => {
 const dispute = (id, values) => doPost(`/api/dispute-case/${id}`)(values);
 
 export default {
+    search,
     get,
     getByAdvocate,
     dispute,
