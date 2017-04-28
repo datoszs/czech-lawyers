@@ -1,14 +1,14 @@
-import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
-import {transition} from '../util';
+import PropTypes from 'prop-types';
 import {CaseDetail as CaseDetailComponent} from '../components';
-import translate from '../translate';
+import {transition} from '../util';
 import {courtsMsg, resultMsg} from '../model';
-import {getCase} from './selectors';
+import translate from '../translate';
 import caseDetail from '../case';
+import {search} from './modules';
 
 const mapStateToProps = (state, {id}) => {
-    const caseObj = getCase(state, id);
+    const caseObj = search.getResult(state, id);
     return {
         registry: caseObj.registry,
         court: caseObj.court ? translate.getMessage(state, courtsMsg[caseObj.court]) : null,
@@ -16,7 +16,7 @@ const mapStateToProps = (state, {id}) => {
     };
 };
 
-const mapDispatchToProps = (state, {id}) => ({
+const mapDispatchToProps = (dispatch, {id}) => ({
     handleDetail: () => transition(caseDetail.ROUTE, {id}),
 });
 

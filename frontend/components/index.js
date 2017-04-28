@@ -11,3 +11,4 @@ export {default as StatisticsLegend} from './StatisticsLegend';
 export {default as PageSubheader} from './PageSubheader';
 export {default as SocietyOverview} from './SocietyOverview';
 export {default as SimpleFormLayout} from './SimpleFormLayout';
+export {default as CaseDetail} from './CaseDetail';
