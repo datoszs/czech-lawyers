@@ -49,7 +49,7 @@ const mapStateToProps = (state, {id}) => {
 };
 
 const mapDispatchToProps = () => ({
-    handleDetail: (id) => () => transition(advocateModule, {id}),
+    handleDetail: (id) => () => transition(advocateModule.ROUTE, {id}),
 });
 
 const mergeProps = (stateProps, {handleDetail}, {id}) => ({

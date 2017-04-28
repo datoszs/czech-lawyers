@@ -21,7 +21,7 @@ const mergeProps = ({value, ...stateProps}, {...dispatchProps}) => ({
     value,
     ...stateProps,
     ...dispatchProps,
-    onSubmit: () => transition(advocateSearch, undefined, {query: value}),
+    onSubmit: () => transition(advocateSearch.ROUTE, undefined, {query: value}),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(Component);

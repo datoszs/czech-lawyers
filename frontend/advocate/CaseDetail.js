@@ -44,7 +44,7 @@ const mapStateToProps = (state, {id}) => {
 };
 
 const mapDispatchToProps = (state, {id}) => ({
-    handleDetail: () => transition(caseDetail, {id}),
+    handleDetail: () => transition(caseDetail.ROUTE, {id}),
 });
 
 const CaseDetail = connect(mapStateToProps, mapDispatchToProps)(CaseDetailComponent);
