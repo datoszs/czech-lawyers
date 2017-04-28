@@ -3,6 +3,7 @@ import home from './home.cs.md';
 import authors from './authors.cs.md';
 import contact from './contact.cs.md';
 import dispute from './dispute.cs.md';
+import advocateCasesDisclaimer from './advocate.cases.disclaimer.cs.md';
 
 /* eslint-disable quote-props */
 export default {
@@ -31,6 +32,7 @@ export default {
 
     'advocate.detail.title': 'Detail advokáta',
     'cak.link': 'Detail na stránkách České advokátní komory',
+    'advocate.cases.disclaimer': advocateCasesDisclaimer,
 
     'stats.positive.legend': 'meritorních konečných rozhodnutí',
     'stats.negative.legend': 'nemeritorních konečných rozhodnutí',
@@ -46,7 +48,7 @@ export default {
     'result.neutral': 'Zastavení řízení',
 
     'cases.title': 'Případy',
-    'cases.search.placeholder': 'Zadejte číslo spisovky',
+    'cases.search.placeholder': 'Zadejte spisovou značku',
 
     'case.detail.title': 'Detail případu',
     'case.advocate': 'Advokát',

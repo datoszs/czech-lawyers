@@ -1,6 +1,6 @@
 import React from 'react';
 import {Row, Col} from 'react-bootstrap';
-import {Msg} from '../containers';
+import {Msg, RichText} from '../containers';
 import {PageSubheader} from '../components';
 import {TimelineScroll} from '../components/timeline';
 import Header from './Header';
@@ -29,5 +29,6 @@ export default () => (
             <TimelineContainer />
         </TimelineScroll>
         <CaseContainer />
+        <RichText msg="advocate.cases.disclaimer" />
     </section>
 );
