@@ -27,7 +27,7 @@ export const setResults = (results) => ({
     results,
 });
 
-export const setGraphFilter = (year, result = null) => ({
+export const setGraphFilter = (year = null, result = null) => ({
     type: SET_GRAPH_FILTER,
     year,
     result,

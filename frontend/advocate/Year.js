@@ -16,11 +16,12 @@ const mapStateToProps = (state, {year}) => {
 };
 
 const mapDispatchToProps = (dispatch, {year}) => ({
-    onClick: () => dispatch(setGraphFilter(year)),
+    select: () => dispatch(setGraphFilter(year)),
+    deselect: () => dispatch(setGraphFilter()),
 });
 
-const mergeProps = ({selected, childSelected, ...stateProps}, {onClick}, ownProps) => ({
-    onClick: selected && !childSelected ? () => {} : onClick,
+const mergeProps = ({selected, childSelected, ...stateProps}, {select, deselect}, ownProps) => ({
+    onClick: selected && !childSelected ? deselect : select,
     selected,
     ...stateProps,
     ...ownProps,
