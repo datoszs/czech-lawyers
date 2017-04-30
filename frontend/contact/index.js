@@ -1,4 +1,4 @@
-import {NAME, ROUTE} from './constants';
+import {NAME, ROUTE, FORM_ANCHOR} from './constants';
 import Container from './Container';
 import saga from './saga';
 
@@ -7,4 +7,5 @@ export default {
     ROUTE,
     Container,
     saga,
+    FORM_ANCHOR,
 };
