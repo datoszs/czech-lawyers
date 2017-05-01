@@ -20,6 +20,7 @@ use League\Csv\Reader;
 use Nette\Utils\FileSystem;
 use Nette\Utils\Json;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\Input;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -34,6 +35,8 @@ class CausaImport extends Command
 	const ARGUMENT_DIRECTORY = 'directory';
 	const OVERWRITE_FILES = 'overwrite';
 	const OVERWRITE_FILES_SHORTCUT = 'o';
+	const UPDATE_RECORDS = "update";
+	const UPDATE_RECORDS_SHORTCUT = "u";
 
 	const DOCUMENTS_DIRECTORY_PROJECT_RELATIVE = 'storage/documents';
 	const DOCUMENTS_DIRECTORY = __DIR__ . '/../../storage/documents';
@@ -62,6 +65,11 @@ class CausaImport extends Command
 				static::OVERWRITE_FILES_SHORTCUT,
 				InputOption::VALUE_NONE,
 				'Should the files be overwritten? Default is false.'
+			)->addOption(
+				static::UPDATE_RECORDS,
+				static::UPDATE_RECORDS_SHORTCUT,
+				InputOption::VALUE_NONE,
+				'Should the records be updated (only NSS, ÚS)? Default is false.'
 			)->addArgument(
 				static::ARGUMENT_COURT,
 				InputArgument::REQUIRED,
@@ -79,6 +87,7 @@ class CausaImport extends Command
 		$court = $input->getArgument(static::ARGUMENT_COURT);
 		$directory = $input->getArgument(static::ARGUMENT_DIRECTORY);
 		$overwrite = $input->getOption(static::OVERWRITE_FILES);
+		$update = $input->getOption(static::UPDATE_RECORDS);
 		$code = 0;
 		$output = null;
 		$message = null;
@@ -99,7 +108,11 @@ class CausaImport extends Command
 			$code = static::INVALID_CONTENT;
 			$consoleOutput->writeln($message);
 		} elseif (!is_bool($overwrite)) {
-			$message = 'Error: The overwrite flag has to be .';
+			$message = 'Error: The overwrite flag has to be.';
+			$code = static::INVALID_CONTENT;
+			$consoleOutput->writeln($message);
+		} elseif (!is_bool($update)) {
+			$message = 'Error: The update flag has to be.';
 			$code = static::INVALID_CONTENT;
 			$consoleOutput->writeln($message);
 		} else {
@@ -109,7 +122,7 @@ class CausaImport extends Command
 			$output .= $temp;
 			$consoleOutput->write($temp);
 			// import to db
-			list($imported, $duplicated) = $this->processDirectory($consoleOutput, $output, Court::$types[$court], $directory, $overwrite);
+			list($imported, $duplicated) = $this->processDirectory($consoleOutput, $output, Court::$types[$court], $directory, $overwrite, $update);
 			if ($imported > 0) {
 				$this->documentService->flush();
 			}
@@ -142,9 +155,10 @@ class CausaImport extends Command
 	 * @param int $courtId ID of court
 	 * @param string $directory
 	 * @param boolean $overwrite whether the files should be overwritten
+	 * @param boolean $update whether the records should be updated
 	 * @return array where first is number of imported and second number of duplicated items.
 	 */
-	public function processDirectory(OutputInterface $consoleOutput, &$output, $courtId, $directory, $overwrite)
+	public function processDirectory(OutputInterface $consoleOutput, &$output, $courtId, $directory, $overwrite, $update)
 	{
 		$csv = Reader::createFromPath($directory . '/metadata.csv');
 		$csv->setDelimiter(';');
@@ -159,32 +173,36 @@ class CausaImport extends Command
 			// Check if not duplicate
 			$recordId = Normalize::recordId($row['record_id']);
 			$entity = $this->documentService->findByRecordId($recordId);
-			if ($entity) {
+			if ($entity && !$update) {
 				$duplicated++;
 				$output .= sprintf("Warning: record with ID %s already found in database.", $row['record_id']) . "\n";
 				$consoleOutput->writeln(sprintf("Warning: record with ID %s already found in database.", $row['record_id']));
 				continue;
 			}
 
-
-			// Prepare for insert
-			$document = new Document();
-			$document->recordId = $recordId;
-			$document->court = $court;
-			$document->webPath = (string)$row['web_path'];
-			$document->localPath = $destinationDirRelative . (string)$row['local_path'];
-			$document->decisionDate = new DateTime($row['decision_date']);
-			// Year in ECLI can be different from date in registry_mark
-			$document->case = $this->causeService->findOrCreate($court, Normalize::registryMark($row['registry_mark']), $this->getYear($row), $this->jobRun);
-			$document->jobRun = $this->jobRun;
-			$extras = null;
+			if (!$update) {
+				// Prepare for insert
+				$document = new Document();
+				$document->recordId = $recordId;
+				$document->court = $court;
+				$document->webPath = (string)$row['web_path'];
+				$document->localPath = $destinationDirRelative . (string)$row['local_path'];
+				$document->decisionDate = new DateTime($row['decision_date']);
+				// Year in ECLI can be different from date in registry_mark
+				$document->case = $this->causeService->findOrCreate($court, Normalize::registryMark($row['registry_mark']), $this->getYear($row), $this->jobRun);
+				$document->jobRun = $this->jobRun;
+				$extras = null;
+			} elseif ($entity && $update) {
+				$document = $entity;
+				$toUpdate = $this->documentService->findExtraData($document);
+			}
 			if ($courtId == Court::TYPE_NS) {
 				$extras = new DocumentSupremeCourt();
 				$extras->document = $document;
 				$extras->ecli = $row['ecli'];
 				$extras->decisionType = $row['decision_type'];
 			} elseif ($courtId == Court::TYPE_NSS) {
-				$extras = new DocumentSupremeAdministrativeCourt();
+				$extras = ($update) ? $toUpdate : new DocumentSupremeAdministrativeCourt();
 				$extras->document = $document;
 				$extras->orderNumber = $row['order_number'];
 				$extras->decision = $row['decision'];
@@ -194,7 +212,7 @@ class CausaImport extends Command
 				$extras->sides = ($row['sides'] != "") ? Json::decode($row['sides'], true) : null;
 				$extras->prejudicate = ($row['prejudicate'] != "") ? Json::decode($row['prejudicate'], true) : null;
 			} elseif ($courtId == Court::TYPE_US) {
-				$extras = new DocumentLawCourt();
+				$extras = ($update) ? $toUpdate : new DocumentLawCourt();
 				$extras->document = $document;
 				$extras->ecli = $row['ecli'];
 				$extras->formDecision = $row['form_decision'];
