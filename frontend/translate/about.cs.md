@@ -27,7 +27,7 @@ Statistiky jsou počítány na základě konečných rozhodnutí Nejvyššího, 
 Konečná rozhodnutí o dovoláních v občanskoprávních věcech (rejstříky Cdo, Cdon, ICdo, NSČR, Odo, Odon)
 podaných po 1. 1. 2001 a v trestněprávních věcech (rejstřík Tdo) podaných po 1. 1. 2002.
 - **Nejvyšší správní soud**:
-Konečná rozhodnutí o kasačních stížnostech (rejstříky As, Ads, Afs, Ars, Azs) podaných po 1. 1. 2006.
+Konečná rozhodnutí o kasačních stížnostech (rejstříky As, Ads, Afs, Ans, Aos, Aps, Ars, Azs) podaných po 1. 1. 2006.
 - **Ústavní soud**:
 Konečná rozhodnutí o všech návrzích podaných od počátku činnosti soudu do 31. 12. 2006 (v tomto období nebyla nijak rozlišována rozhodnutí o ústavních stížnostech a rozhodnutí vydaná v jiných typech řízení, rozhodnutí o ústavních stížnostech ale vždy tvořila většinu). Z rozhodnutí o návrzích podaných po 1. 1. 2007 již vybíráme jen konečná rozhodnutí o ústavních stížnostech. 
     
