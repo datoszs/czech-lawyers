@@ -44,7 +44,6 @@ log_dir = "log_us"
 
 global_ncols = 120
 main_timeout = 10000
-USERAGENT = "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101 Firefox/45.0"
 
 
 def convert_date(date, formats=('%d. %m. %Y', '%Y-%m-%d')):
@@ -61,7 +60,10 @@ def itemize_text(item):
             items = [item.strip().replace('"',"'") for item in clear_child.split("<br>") if len(item) > 1]
             buffer.extend(items)
         else:
-            child = child.strip().replace('"',"'")
+            try:
+                child = child.strip().replace('"',"'")
+            except TypeError:
+                child = ''
             if child != '':
                 buffer.append(child)
     if len(buffer):
@@ -183,6 +185,18 @@ def view_data(date_from, records_per_page, date_to=None, days=None):
     :param records_per_page: how many records is on one page
     :return: Bool
     """
+    session.open(search_url, wait=True)
+    if days or int(date_from.strip()[-5:]) > 2006:
+        # print(session.content)
+        logger.debug("Set typ_rizeni as 'O ústavních stížnostech'")
+        session.open(
+                "http://nalus.usoud.cz/dialogs/PopupCiselnik.aspx?control=ctl00_MainContent_typ_rizeni&type=typ_rizeni")
+        session.evaluate("javascript:saveSelected('0')", expect_loading=True)
+        if b_screens:
+            session.capture_to(join(screens_dir_path, "dialog_check.png"))
+        result, resources = session.click("#bSave", expect_loading=True)
+        session.open(search_url)
+
     if days and session.exists("#ctl00_MainContent_dle_data_zpristupneni"):
         logger.debug("Select check button")
         #session.set_field_value("#ctl00_MainContent_dle_data_zpristupneni", True)
@@ -193,13 +207,13 @@ def view_data(date_from, records_per_page, date_to=None, days=None):
     else:
         if session.exists("#ctl00_MainContent_availableFrom"):
             logger.debug("Set date_from '%s'" % date_from)
-            session.set_field_value("#ctl00_MainContent_availableFrom", date_from)
+            session.set_field_value("#ctl00_MainContent_submissionFrom", date_from)
             # datetime.strptime(date_from, '%d.%m.%Y').strftime('%Y/%m/%d'))
             if b_screens:
                 session.capture_to(join(screens_dir_path, "set_from.png"))
             if date_to is not None:  # ctl00_MainContent_decidedFrom
                 logger.debug("Set date_to '%s'" % date_to)
-                session.set_field_value("#ctl00_MainContent_availableTo", date_to)
+                session.set_field_value("#ctl00_MainContent_submissionTo", date_to)
                 # datetime.strptime(date_to, '%d.%m.%Y').strftime('%Y/%m/%d'))
             logger.info("Records from the period %s -> %s", date_from, date_to)
             if b_screens:
@@ -278,9 +292,14 @@ def make_record(soup, id):
         'subject_index', 'ruling_language', 'note', 'web_path', 'local_path', 'record_id', 'names', 'case_year']
 
     table = soup.find("div", id="recordCardPanel")
-    if "NALUS" in soup.title.text:
-        logger.debug("%s, %s, %s" % (soup.title.text, id, type(table)))
+    try:
+        if "NALUS" in soup.title.string:  # soup.string
+            logger.debug("{}, {}, {}".format(soup.title.string, id, type(table)))
+            return
+    except AttributeError:
+        logger.error("{} (soup.title) - {}".format(soup.title, id))
         return
+
     if (table is not None) and (table.tbody is not None):
         for key, index in zip(entities[:-4], range(1, 27)):
             item[key] = table.select_one(
@@ -350,6 +369,7 @@ def extract_information(records):
         from tqdm import tqdm
         i = 0
         t = html_files
+        # t = tqdm(html_files, ncols=global_ncols)
         for html_f in t:
             id = os.path.basename(html_f)
             make_record(make_soup(html_f), id)
@@ -386,10 +406,12 @@ def extract_data(html_file, response):
 
 
 def get_links(response):
-    """get all relevant links to detail's page of record
+    """
+    get all relevant links to detail's page of record
 
-    :response: HTML code
-    :return: list of links to detail
+    :param response: HTML code current page
+    :return: last page
+
     """
     list_of_links = []
     soup = BeautifulSoup(response, "html.parser", parse_only=only_a_tags)
@@ -409,10 +431,13 @@ def get_links(response):
 
 
 def walk_pages(page_from, pages):
-    """make a walk through pages of results
+    """
+    make a walk through pages of results
 
-    :page_from: from which page start the walk
-    :pages: over how many pages we have to go
+    :param page_from: from which page start the walk
+    :param pages: over how many pages we have to go
+    :return page: last page which is processed
+
     """
     t = tqdm(range(page_from, pages), ncols=global_ncols, position=0)
     page = -1
@@ -423,51 +448,21 @@ def walk_pages(page_from, pages):
         logger.debug("-------------------------")
         logger.debug("page={} <=> Page: {}".format(page, page + 1))
         response = session.content
-        links_to_info.extend(get_links(response))
+        links_to_info = (get_links(response))
 
-        session.open(urljoin(results_url, "?page={}".format(str(page + 1))))  # go to next page
+        if len(links_to_info) > 0:
+            for link in links_to_info:
+                id = link.split("?")[1].split("&")[0]
+                html_file = id + ".html"
+                if not os.path.exists(join(documents_dir_path, html_file)):
+                    logger.debug("Go to link to detail")
+                    session.open(urljoin(results_url, link), wait=True)
+                    extract_data(html_file, response=session.content)
+        session.open(urljoin(results_url, "?page={}".format(page + 1)), wait=True)  # go to next page
         # save number of processing page
         with codecs.open(join(out_dir, "current_page.ini"), "w", encoding="utf-8") as f:
             f.write(str(page))
 
-    if len(links_to_info) > 0:
-        for link in links_to_info:
-            #element = "a[href=\"{}\"]".format(link)
-            # print(element)
-            id = link.split("?")[1].split("&")[0]
-            html_file = id + ".html"
-            if not os.path.exists(join(documents_dir_path, html_file)):
-                try:
-                    #if session.exists(element):
-                    logger.debug("Go to link to detail")
-                    #session.click(element, expect_loading=True)
-                    #print(urljoin(results_url, link))
-                    session.open(urljoin(results_url, link), wait=True)
-
-                    # else:
-                    #     logger.warning(
-                    #             "Save file with nonexist element '%s'" % element)
-                    #     with codecs.open(join(out_dir, "real" + str(time.time()) + ".html"), "w",
-                    #                      encoding="utf-8") as e_f:
-                    #         e_f.write(response)
-                except Exception:
-                    logger.error("ERROR - click to detail (%s)" % element)
-                    logger.info(response)
-                    if b_screens:
-                        session.capture_to(
-                                join(screens_dir_path, "error-page=%s.png" % str(page)))
-                    sys.exit(-1)
-                # print(session.content)
-                title, resources = session.evaluate("document.title")
-                if "NALUS" not in title:
-                    extract_data(html_file, response=session.content)
-                    # print(ecli)
-                    # f.write(ecli+"\n")
-                    #logger.debug("Back to result page")
-
-                    # back to results
-                    #session.evaluate(
-                    #        "window.history.back()", expect_loading=True)
     return page
 
 
@@ -477,10 +472,10 @@ def main():
     global session
     session = ghost.start(download_images=False, java_enabled=False,
                           show_scrollbars=False, wait_timeout=main_timeout,
-                          display=False, plugins_enabled=False, user_agent=USERAGENT)
-    session.open(search_url)
-    # print(session.content)
-    records_per_page = 20
+                          display=False, plugins_enabled=False)
+    # session.display = True
+    # session.show()
+    records_per_page = 80
     if view_data(date_from, records_per_page, date_to, days):
         response = session.content
         if b_screens:
@@ -575,7 +570,7 @@ if __name__ == "__main__":
                     if not b_delete:
                         logger.debug("Cleaning working directory")
                         shutil.rmtree(out_dir)
-                        os.makedirs(out_dir, exist_ok=True)
+                        os.mkdir(out_dir)
 
             else:
                 logger.error("Result directory isn't empty.")
