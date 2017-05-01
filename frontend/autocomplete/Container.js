@@ -1,8 +1,8 @@
+import {compose} from 'redux';
 import {connect} from 'react-redux';
-import {transition} from '../util';
-import advocateSearch from '../advocatesearch';
 import translate from '../translate';
 import Component from './Component';
+import {submit} from './actions';
 import {getInputValue} from './selectors';
 
 const mapStateToProps = (state) => ({
@@ -10,10 +10,8 @@ const mapStateToProps = (state) => ({
     msgSearch: translate.getMessage(state, 'search.button'),
 });
 
-const mergeProps = ({value, msgSearch}) => ({
-    value,
-    msgSearch,
-    onSubmit: () => transition(advocateSearch.ROUTE, undefined, {query: value}),
+const mapDispatchToProps = (dispatch) => ({
+    onSubmit: compose(dispatch, submit),
 });
 
-export default connect(mapStateToProps, undefined, mergeProps)(Component);
+export default connect(mapStateToProps, mapDispatchToProps)(Component);
