@@ -243,14 +243,15 @@ def make_record(soup):
         sides = []
         for side in columns[5].contents:
             if side.string is not None:
-                text = side.string.strip()
+                text = side.string.strip().replace('"', "'")
                 if text != '':
                     sides.append(text)
             else:
-                sides.extend([x.strip() for x in re.split(r"</?br>", str(side)) if x != ''])
+                sides.extend([x.strip().replace('"', "'") for x in re.split(r"</?br>", str(side)) if x != ''])
 
         complaint = columns[6].getText().strip()
         prejudicate = [x.text.strip() for x in columns[7].findAll("a")]
+        prejudicate = [x for x in prejudicate if x != '']
 
         date = [x.strip() for x in str_date.split("/ ")]
         if len(date) >= 1:
@@ -363,6 +364,9 @@ def view_data(row_count, mark_type, value, date_from=None, date_to=None, last=No
     if session.exists("#_ctl0_ContentPlaceMasterPage__ctl0_ddlSortName"):
         session.set_field_value("#_ctl0_ContentPlaceMasterPage__ctl0_ddlSortName", "2")
         session.set_field_value("#_ctl0_ContentPlaceMasterPage__ctl0_ddlSortDirection", "0")
+
+    if session.exists("#_ctl0_ContentPlaceMasterPage__ctl0_rbTypDatum_1"):
+        session.set_field_value("#_ctl0_ContentPlaceMasterPage__ctl0_rbTypDatum_1", True)
 
     if session.exists("#_ctl0_ContentPlaceMasterPage__ctl0_btnFind"):  # click on find button
         logger.debug("Click - find")
@@ -547,6 +551,8 @@ def main():
             wait_timeout=main_timeout, display=False,
             plugins_enabled=False)
     logger.info(u"Start - NSS")
+    # session.display = True
+    # session.show()
     session.open(url)
 
     if b_screens:
