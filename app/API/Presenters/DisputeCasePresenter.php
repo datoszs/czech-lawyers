@@ -105,7 +105,7 @@ class DisputeCasePresenter extends Presenter
 	public function actionCreate(int $id) : void
 	{
 		// Load data from GET and POST request
-		$case = $this->causeService->get($id);
+		$case = $this->causeService->getRelevantForAdvocates($id);
 		if (!$case) {
 			throw new BadRequestException("No such case [{$id}]", 404);
 		}
