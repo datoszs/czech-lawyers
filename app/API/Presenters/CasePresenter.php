@@ -79,6 +79,8 @@ class CasePresenter extends Presenter
 	 *  - <b>positive</b>
 	 *  - <b>null</b> - when tagging is invalid
 	 *
+	 * Note: provides only cases which are relevant for advocates portal.
+	 *
 	 * @ApiRoute(
 	 *     "/api/case/<id>",
 	 *     parameters={
@@ -101,7 +103,7 @@ class CasePresenter extends Presenter
 	public function actionRead(int $id) : void
 	{
 		// Load data
-		$case = $this->causeService->get($id);
+		$case = $this->causeService->getRelevantForAdvocates($id);
 		if (!$case) {
 			throw new BadRequestException("No such case [{$id}]", 404);
 		}

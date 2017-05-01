@@ -47,6 +47,8 @@ class CaseSearchPresenter extends Presenter
 	 * There is one optional GET parameter:
 	 *  - strategy - determines the matching strategy (from <b>start</b>, to <b>end</b> or anywhere in the <b>middle</b>).
 	 *
+	 * Note: provides only cases which are relevant for advocates portal.
+	 *
 	 * @ApiRoute(
 	 *     "/api/case/search[/<query>/[<start>-<count>]]",
 	 *     parameters={

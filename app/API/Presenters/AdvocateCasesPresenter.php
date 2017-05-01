@@ -70,6 +70,8 @@ class AdvocateCasesPresenter extends Presenter
 	 *
 	 * When additional filter is provided its value is returned in response.
 	 *
+	 * Note: provides only cases which are relevant for advocates portal.
+	 *
 	 * @ApiRoute(
 	 *     "/api/advocate-cases/<advocate>",
 	 *     parameters={

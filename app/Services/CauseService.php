@@ -23,6 +23,11 @@ class CauseService
 		return $this->orm->causes->getById($causeId);
 	}
 
+	public function getRelevantForAdvocates($causeId)
+	{
+		return $this->orm->causes->getRelevantForAdvocatesById($causeId);
+	}
+
 	public function find($registrySign)
 	{
 		return $this->orm->causes->getBy(['registrySign' => $registrySign]);

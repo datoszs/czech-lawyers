@@ -72,6 +72,8 @@ class AdvocateSearchPresenter extends Presenter
 	 *  - <b>neutral</b>
 	 *  - <b>positive</b>
 	 *
+	 * Note: statistics take into account only cases which are relevant for advocates portal.
+	 *
 	 * @ApiRoute(
 	 *     "/api/advocate/search[/<query>/[<start>-<count>]]",
 	 *     parameters={

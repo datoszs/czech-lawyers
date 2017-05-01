@@ -547,7 +547,7 @@ pre.apiDocu-json {
 
 			<h2>Description</h2>
 
-			<div class="apiDocu-description apiDocu-description-main">Get relevant case<br />Returns list of matched cases.<br /><br><pre class="apiDocu-json">    [<br />        {<br />            id_case: 234000,<br />            id_court: 3,<br />            registry_mark: <span class="apiDocu-string">"22 Cdo 2045/2012"</span><br />        },<br />    ]<br /></pre><br />There is one optional GET parameter:<br /> - strategy - determines the matching strategy (from <b>start</b>, to <b>end</b> or anywhere in the <b>middle</b>).</div>
+			<div class="apiDocu-description apiDocu-description-main">Get relevant case<br />Returns list of matched cases.<br /><br><pre class="apiDocu-json">    [<br />        {<br />            id_case: 234000,<br />            id_court: 3,<br />            registry_mark: <span class="apiDocu-string">"22 Cdo 2045/2012"</span><br />        },<br />    ]<br /></pre><br />There is one optional GET parameter:<br /> - strategy - determines the matching strategy (from <b>start</b>, to <b>end</b> or anywhere in the <b>middle</b>).<br />Note: provides only cases which are relevant for advocates portal.</div>
 
 
 		<h2>Methods</h2>

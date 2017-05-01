@@ -54,6 +54,8 @@ class AdvocateResultsPresenter extends Presenter
 	 * For statistics for all courts the <b>id_court</b> field is null.
 	 * Each year has its key, however if there are no data for year then the year is ommited.
 	 *
+	 * Note: statistics take into account only cases which are relevant for advocates portal.
+	 *
 	 * @ApiRoute(
 	 *     "/api/advocate-results/<advocate>[/<court>]",
 	 *     parameters={

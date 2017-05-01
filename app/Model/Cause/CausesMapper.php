@@ -4,6 +4,7 @@ namespace App\Model\Cause;
 use App\Enums\TaggingStatus;
 use Mikulas\OrmExt\MappingFactory;
 use Nextras\Dbal\QueryBuilder\QueryBuilder;
+use Nextras\Orm\Entity\IEntity;
 use Nextras\Orm\Mapper\Mapper;
 
 class CausesMapper extends Mapper
@@ -23,6 +24,23 @@ class CausesMapper extends Mapper
 	public function getTableName()
 	{
 		return 'case';
+	}
+
+	/**
+	 * Return cause but only when it is relevant for advocates portal
+	 * Note: filters cases only to allowed ones for advocate portal
+	 *
+	 * @param int $causeId
+	 * @return IEntity
+	 */
+	public function getRelevantForAdvocatesById(int $causeId)
+	{
+		$builder = $this->builder();
+		$builder->innerJoin('case', 'vw_case_for_advocates', 'vw_case_for_advocates', '"case".id_case = vw_case_for_advocates.id_case');
+		$builder->where('"case".id_case = %i', $causeId);
+		$builder->limitBy(1);
+		$collection = $this->toCollection($builder);
+		return $collection->fetch();
 	}
 
 	/**
@@ -55,6 +73,7 @@ class CausesMapper extends Mapper
 	/**
 	 * Search and return all cases for given phrase.
 	 * Note: case insensitive search is used.
+	 * Note: filters cases only to allowed ones for advocate portal
 	 *
 	 * @param string $phrase Phrase to be searched
 	 * @param int $start Offset of results
@@ -71,7 +90,9 @@ class CausesMapper extends Mapper
 		} else {
 			$matchStrategy = '%_like_';
 		}
-		$builder = $this->builder()->where('unaccent(registry_sign) ILIKE unaccent(' . $matchStrategy . ')', $phrase);
+		$builder = $this->builder()
+			->innerJoin('case', 'vw_case_for_advocates', 'vw_case_for_advocates', '"case".id_case = vw_case_for_advocates.id_case')
+			->where('unaccent("case".registry_sign) ILIKE unaccent(' . $matchStrategy . ')', $phrase);
 		$builder->limitBy($count, $start);
 		return $builder;
 	}
@@ -98,6 +119,15 @@ class CausesMapper extends Mapper
 		return $builder;
 	}
 
+	/**
+	 * Returns all cases of given advocate
+	 * Note: filters cases only to allowed ones for advocate portal
+	 * @param int $advocateId
+	 * @param int|null $court
+	 * @param int|null $year
+	 * @param null|string $result
+	 * @return QueryBuilder
+	 */
 	public function findFromAdvocate(int $advocateId, ?int $court, ?int $year, ?string $result)
 	{
 		$builder = $this->builder();
@@ -109,11 +139,13 @@ class CausesMapper extends Mapper
 			$builder->andWhere('year = %s', (string) $year);
 		}
 
-		$builder->leftJoin('case', 'vw_latest_tagging_advocate', 'vw_latest_tagging_advocate', 'vw_latest_tagging_advocate.case_id = id_case');
+		$builder->innerJoin('case', 'vw_case_for_advocates', 'vw_case_for_advocates', '"case".id_case = vw_case_for_advocates.id_case');
+
+		$builder->leftJoin('case', 'vw_latest_tagging_advocate', 'vw_latest_tagging_advocate', 'vw_latest_tagging_advocate.case_id = "case".id_case');
 		$builder->andWhere('vw_latest_tagging_advocate.advocate_id = %i AND vw_latest_tagging_advocate.status = %s', $advocateId, TaggingStatus::STATUS_PROCESSED);
 
 		if ($result) {
-			$builder->leftJoin('case', 'vw_latest_tagging_case_result', 'vw_latest_tagging_case_result', 'vw_latest_tagging_case_result.case_id = id_case');
+			$builder->leftJoin('case', 'vw_latest_tagging_case_result', 'vw_latest_tagging_case_result', 'vw_latest_tagging_case_result.case_id = "case".id_case');
 			$builder->andWhere('vw_latest_tagging_case_result.case_result = %s AND vw_latest_tagging_case_result.status = %s', $result, TaggingStatus::STATUS_PROCESSED);
 		}
 		return $builder;

@@ -104,6 +104,11 @@ class TaggingService
 		return $this->orm->taggingAdvocates->findLatestTagging($casesIds)->fetchAll();
 	}
 
+	/**
+	 * Note: filters cases only to allowed ones for advocate portal
+	 * @param array $advocatesIds
+	 * @return array
+	 */
 	public function computeAdvocatesStatistics(array $advocatesIds)
 	{
 		if (count($advocatesIds) === 0) {
@@ -115,6 +120,7 @@ class TaggingService
 			case_result,
 			COUNT(*) AS count
 		FROM "case"
+		JOIN vw_case_for_advocates ON "case".id_case = "vw_case_for_advocates".id_case 
 		JOIN vw_latest_tagging_case_result AS last_taggings ON "case".id_case = last_taggings.case_id AND last_taggings.status = %s
 		JOIN vw_latest_tagging_advocate AS last_taggings_advocate ON "case".id_case = last_taggings_advocate.case_id AND last_taggings_advocate.status = %s
 		WHERE advocate_id IN %?i[]
@@ -131,18 +137,25 @@ class TaggingService
 		return $output;
 	}
 
+	/**
+	 * Note: filters cases only to allowed ones for advocate portal
+	 * @param int $advocateId
+	 * @param int|null $courtId
+	 * @return array
+	 */
 	public function computeAdvocateStatisticsPerYear(int $advocateId, ?int $courtId)
 	{
 		$data = $this->connection->query('
 		SELECT
-			year,
+			"case".year,
 			case_result,
 			COUNT(*) AS count
 		FROM "case"
+		JOIN vw_case_for_advocates ON "case".id_case = "vw_case_for_advocates".id_case
 		JOIN vw_latest_tagging_case_result AS last_taggings ON "case".id_case = last_taggings.case_id AND last_taggings.status = %s 
 		JOIN vw_latest_tagging_advocate AS last_taggings_advocate ON "case".id_case = last_taggings_advocate.case_id AND last_taggings_advocate.status = %s
-		WHERE advocate_id = %i AND (%?i IS NULL OR court_id = %?i)
-		GROUP BY year, case_result
+		WHERE advocate_id = %i AND (%?i IS NULL OR "case".court_id = %?i)
+		GROUP BY "case".year, case_result
 		',
 			TaggingStatus::STATUS_PROCESSED,
 			TaggingStatus::STATUS_PROCESSED,

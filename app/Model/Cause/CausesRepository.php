@@ -2,6 +2,7 @@
 namespace App\Model\Cause;
 
 use Nextras\Orm\Collection\ICollection;
+use Nextras\Orm\Entity\IEntity;
 use Nextras\Orm\Repository\Repository;
 
 /**
@@ -11,6 +12,7 @@ use Nextras\Orm\Repository\Repository;
  * @method ICollection|Cause[] search(?string $query, int $start, int $count, string $strategy)
  * @method ICollection|Cause[] findForManualTagging(?int $court, bool $onlyDisputed, string $filter)
  * @method ICollection|Cause[] findFromAdvocate(int $advocateId, ?int $court, ?int $year, ?string $result)
+ * @method IEntity             getRelevantForAdvocatesById($causeId)
  */
 class CausesRepository extends Repository
 {
