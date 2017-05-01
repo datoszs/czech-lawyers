@@ -20,10 +20,12 @@ const mapDispatchToProps = (dispatch, {year}) => ({
     deselect: () => dispatch(setGraphFilter()),
 });
 
-const mergeProps = ({selected, childSelected, ...stateProps}, {select, deselect}, ownProps) => ({
-    onClick: selected && !childSelected ? deselect : select,
+const mergeProps = ({selected, childSelected, positive, negative, neutral}, {select, deselect}, ownProps) => ({
+    onClick: (positive || negative || neutral) && ((selected && !childSelected) ? deselect : select),
     selected,
-    ...stateProps,
+    positive,
+    negative,
+    neutral,
     ...ownProps,
     BarComponent: Bar,
 });
