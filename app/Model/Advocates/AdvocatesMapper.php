@@ -24,7 +24,7 @@ class AdvocatesMapper extends Mapper
 	{
 		$builder = $this
 			->builder()
-			->where('registration_number = %s OR id_advocate IN (SELECT advocate_id FROM advocate_info WHERE concat_ws(\' \', degree_before, name, surname, degree_after) ILIKE %_like_ AND advocate_id = id_advocate)', $phrase, $phrase);
+			->where('registration_number = %s OR id_advocate IN (SELECT advocate_id FROM advocate_info WHERE unaccent(concat_ws(\' \', degree_before, name, surname, degree_after)) ILIKE unaccent(%_like_) AND advocate_id = id_advocate)', $phrase, $phrase);
 		if ($limit) {
 			$builder->limitBy($limit, $start);
 		} else {

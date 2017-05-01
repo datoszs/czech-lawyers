@@ -59,7 +59,7 @@ class CausesMapper extends Mapper
 	 * @param string $phrase Phrase to be searched
 	 * @param int $start Offset of results
 	 * @param int $count Number of results
-	 * @param string $strategy Matching strategy. Null: %he%, start: he%, end: %he
+	 * @param string $strategy Matching strategy. middle: %he%, start: he%, end: %he
 	 * @return QueryBuilder
 	 */
 	public function search(?string $phrase, int $start, int $count, string $strategy)
@@ -71,7 +71,7 @@ class CausesMapper extends Mapper
 		} else {
 			$matchStrategy = '%_like_';
 		}
-		$builder = $this->builder()->where('registry_sign ILIKE ' . $matchStrategy, $phrase);
+		$builder = $this->builder()->where('unaccent(registry_sign) ILIKE unaccent(' . $matchStrategy . ')', $phrase);
 		$builder->limitBy($count, $start);
 		return $builder;
 	}
