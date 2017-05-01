@@ -2,6 +2,7 @@ import {NAME} from './constants';
 
 export const SET_INPUT_VALUE = `${NAME}/SET_INPUT_VALUE`;
 export const INITIALIZE_VALUE = `${NAME}/INITIALIZE_VALUE`;
+export const SET_AUTOCOMPLETE_RESULTS = `${NAME}/SET_AUTOCOMPLETE_RESULTS`;
 
 export const setInputValue = (value) => ({
     type: SET_INPUT_VALUE,
@@ -11,4 +12,9 @@ export const setInputValue = (value) => ({
 export const initializeValue = (value = '') => ({
     type: INITIALIZE_VALUE,
     value,
+});
+
+export const setAutocompleteResults = (results) => ({
+    type: SET_AUTOCOMPLETE_RESULTS,
+    results,
 });
