@@ -1,6 +1,7 @@
 <?php
 namespace App\Model\Services;
 
+use App\Exceptions\AlreadyValidatedDisputeRequestException;
 use App\Exceptions\ExpiredDisputeRequestException;
 use App\Exceptions\NoSuchDisputeException;
 use App\Exceptions\NoSuchDisputeRequestException;
@@ -112,11 +113,41 @@ class DisputationService
 	}
 
 	/**
+	 * Fetch case disputation request if it exists
+	 * @param string $email
+	 * @param string $code
+	 * @return Dispute
+	 * @throws AlreadyValidatedDisputeRequestException when this request was already validated
+	 * @throws ExpiredDisputeRequestException when request is expired
+	 * @throws NoSuchDisputeRequestException when no reguest for such email and validation code
+	 */
+	public function getDispute(string $email, string $code)
+	{
+		/** @var Dispute $entity */
+		$entity = $this->orm->disputes->getBy([
+			'code' => $code,
+			'email' => $email,
+		]);
+		if (!$entity) {
+			throw new NoSuchDisputeRequestException();
+		}
+		if ($entity->validUntil < new DateTimeImmutable()) {
+			throw new ExpiredDisputeRequestException();
+		}
+		if ($entity->validatedAt) {
+			throw new AlreadyValidatedDisputeRequestException();
+		}
+		return $entity;
+	}
+
+
+	/**
 	 * Confirms case disputation request if it exists
 	 * @param string $email
 	 * @param string $code
 	 * @throws ExpiredDisputeRequestException when request is expired
 	 * @throws NoSuchDisputeRequestException when no reguest for such email and validation code
+	 * @throws AlreadyValidatedDisputeRequestException when the request was already validated
 	 */
 	public function confirmDispute(string $email, string $code)
 	{
@@ -130,6 +161,9 @@ class DisputationService
 		}
 		if ($entity->validUntil < new DateTimeImmutable()) {
 			throw new ExpiredDisputeRequestException();
+		}
+		if ($entity->validatedAt) {
+			throw new AlreadyValidatedDisputeRequestException();
 		}
 		$entity->validatedAt = new DateTimeImmutable();
 		$this->orm->persistAndFlush($entity);
