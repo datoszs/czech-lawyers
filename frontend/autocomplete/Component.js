@@ -1,22 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {FormControl} from 'react-bootstrap';
-import {SearchForm, SimpleFormLayout} from '../components';
+import {SearchForm, SimpleFormLayout, AutocompleteLayout} from '../components';
+import AutocompleteList from './AutocompleteList';
+import AutocompleteInput from './AutocompleteInput';
 
-const AutocompleteComponent = ({value, onChange, onSubmit, msgPlaceholder, msgSearch}) => (
+const AutocompleteComponent = ({onSubmit, msgSearch}) => (
     <SearchForm onSubmit={onSubmit}>
         <SimpleFormLayout submit={msgSearch} bsStyle="primary">
-            <FormControl type="text" onChange={(event) => onChange(event.target.value)} value={value} placeholder={msgPlaceholder} />
+            <AutocompleteLayout
+                input={<AutocompleteInput />}
+                list={<AutocompleteList />}
+            />
         </SimpleFormLayout>
     </SearchForm>
 );
 
 AutocompleteComponent.propTypes = {
-    value: PropTypes.string.isRequired,
-    onChange: PropTypes.func.isRequired,
     onSubmit: PropTypes.func.isRequired,
     msgSearch: PropTypes.string.isRequired,
-    msgPlaceholder: PropTypes.string.isRequired,
 };
 
 export default AutocompleteComponent;
