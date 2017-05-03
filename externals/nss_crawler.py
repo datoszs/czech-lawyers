@@ -104,6 +104,14 @@ create working directories
         return screens_dir_path
 
 
+def clean_directory(root):
+    for f in os.listdir(root):
+        try:
+            shutil.rmtree(f)
+        except NotADirectoryError:
+            os.remove(f)
+
+
 def logging_process(arguments):
     """
     settings logging for subprocess
@@ -628,7 +636,7 @@ if __name__ == "__main__":
                 shutil.move(join(out_dir, output_file), result_dir_path)
                 if not b_delete: # debug without cleaning
                     logger.info("Cleaning working directory")
-                    shutil.rmtree(html_dir_path)
+                    clean_directory(out_dir)
             else:
                 logger.error("Result directory isn't empty.")
                 sys.exit(-1)
