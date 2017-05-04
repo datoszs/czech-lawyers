@@ -133,10 +133,10 @@ class CausesMapper extends Mapper
 		$builder = $this->builder();
 		$builder->orderBy('id_case');
 		if ($court) {
-			$builder->andWhere('court_id = %i', $court);
+			$builder->andWhere('"case".court_id = %i', $court);
 		}
 		if ($year) {
-			$builder->andWhere('year = %s', (string) $year);
+			$builder->andWhere('"case".year = %s', (string) $year);
 		}
 
 		$builder->innerJoin('case', 'vw_case_for_advocates', 'vw_case_for_advocates', '"case".id_case = vw_case_for_advocates.id_case');
