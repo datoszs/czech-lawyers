@@ -35,7 +35,7 @@ const selectedItemReducer = (state = null, action) => {
             return action.id;
         case SET_AUTOCOMPLETE_RESULTS:
             return action.results.some(({id}) => (id === state)) ? state : null;
-        case SUBMIT:
+        case INITIALIZE_VALUE:
             return null;
         default:
             return state;

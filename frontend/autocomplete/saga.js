@@ -1,10 +1,9 @@
 import {call, put, select, takeEvery, takeLatest} from 'redux-saga/effects';
 import {advocateAPI} from '../serverAPI';
 import {mapDtoToAdvocateAutocomplete} from '../model';
-import {transition} from '../util';
-import advocateSearch from '../advocatesearch';
 import {SET_INPUT_VALUE, SUBMIT, SHOW_DROPDOWN, setAutocompleteResults} from './actions';
-import {getInputValue} from './selectors';
+import {getInputValue, getSelectedItem} from './selectors';
+import {setQuery, setAdvocate} from './transition';
 
 const loadOptionsSaga = function* loadOptions() {
     const value = yield select(getInputValue);
@@ -17,8 +16,13 @@ const loadOptionsSaga = function* loadOptions() {
 };
 
 const submitSaga = function* submit() {
-    const query = yield select(getInputValue);
-    yield call(transition, advocateSearch.ROUTE, undefined, {query});
+    const selectedItem = yield select(getSelectedItem);
+    if (selectedItem) {
+        yield call(setAdvocate, selectedItem);
+    } else {
+        const query = yield select(getInputValue);
+        yield call(setQuery, query);
+    }
 };
 
 export default function* autocomplete() {

@@ -3,6 +3,7 @@ import {ListGroupItem} from 'react-bootstrap';
 import {connect} from 'react-redux';
 import {getResult, getSelectedItem} from './selectors';
 import {setSelection} from './actions';
+import {setAdvocate} from './transition';
 
 const mapStateToProps = (state, {id}) => ({
     children: getResult(state, id).name,
@@ -16,6 +17,7 @@ const mapDispatchToProps = (dispatch) => ({
 const mergeProps = (stateProps, {handleSelection}, {id}) => ({
     ...stateProps,
     onMouseOver: handleSelection(id),
+    onClick: () => setAdvocate(id),
 });
 
 const AutocompleteItem = connect(mapStateToProps, mapDispatchToProps, mergeProps)(ListGroupItem);

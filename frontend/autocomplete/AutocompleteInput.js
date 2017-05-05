@@ -29,7 +29,7 @@ const handleKeyDown = (dispatch) => (event) => {
 const mapDispatchToProps = (dispatch) => ({
     onChange: (event) => dispatch(setInputValue(event.target.value)),
     onKeyDown: handleKeyDown(dispatch),
-    onBlur: () => dispatch(hideDropdown()),
+    onBlur: () => setTimeout(() => dispatch(hideDropdown()), 100),
     onFocus: () => dispatch(showDropdown()),
 });
 
