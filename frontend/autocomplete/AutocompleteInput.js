@@ -2,7 +2,7 @@ import {FormControl} from 'react-bootstrap';
 import {connect} from 'react-redux';
 import translate from '../translate';
 import {getInputValue} from './selectors';
-import {setInputValue, hideDropdown, showDropdown} from './actions';
+import {setInputValue, hideDropdown, showDropdown, moveSelectionUp, moveSelectionDown} from './actions';
 
 const mapStateToProps = (state) => ({
     placeholder: translate.getMessage(state, 'search.placeholder'),
@@ -13,6 +13,12 @@ const handleKeyDown = (dispatch) => (event) => {
     switch (event.key) {
         case 'Escape':
             dispatch(hideDropdown());
+            break;
+        case 'ArrowDown':
+            dispatch(moveSelectionDown());
+            break;
+        case 'ArrowUp':
+            dispatch(moveSelectionUp());
             break;
         default:
             // do nothing

@@ -1,7 +1,8 @@
 import {combineReducers} from 'redux-immutable';
 import {List, Map} from 'immutable';
 import {AdvocateAutocomplete} from '../model';
-import {SET_INPUT_VALUE, INITIALIZE_VALUE, SET_AUTOCOMPLETE_RESULTS, SUBMIT} from './actions';
+import {SET_INPUT_VALUE, INITIALIZE_VALUE, SET_AUTOCOMPLETE_RESULTS,
+    SUBMIT, MOVE_SELECTION, SET_SELECTION, setSelection} from './actions';
 
 const inputReducer = (state = '', action) =>
     (action.type === SET_INPUT_VALUE || action.type === INITIALIZE_VALUE ? action.value : state);
@@ -28,8 +29,34 @@ const resultReducer = (state = Map(), action) => {
     }
 };
 
-export default combineReducers({
+const selectedItemReducer = (state = null, action) => {
+    switch (action.type) {
+        case SET_SELECTION:
+            return action.id;
+        case SET_AUTOCOMPLETE_RESULTS:
+            return action.results.some(({id}) => (id === state)) ? state : null;
+        case SUBMIT:
+            return null;
+        default:
+            return state;
+    }
+};
+
+const reducer = combineReducers({
     input: inputReducer,
     resultIds: resultIdsReducer,
     results: resultReducer,
+    selected: selectedItemReducer,
 });
+
+export default (state, action) => {
+    if (action.type === MOVE_SELECTION) {
+        const ids = state.get('resultIds');
+        const index = ids.indexOf(state.get('selected'));
+        const resultIndex = (index !== -1 || action.increment > 0) ? index + action.increment : action.increment;
+        const result = ids.get(resultIndex % ids.size);
+        return reducer(state, setSelection(result));
+    } else {
+        return reducer(state, action);
+    }
+};
