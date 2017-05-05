@@ -22,6 +22,7 @@ Year.defaultProps = {
     negative: null,
     neutral: null,
     selected: false,
+    onClick: () => {},
 };
 
 Year.propTypes = {
@@ -31,7 +32,7 @@ Year.propTypes = {
     neutral: PropTypes.number,
     BarComponent: PropTypes.func.isRequired,
     selected: PropTypes.bool,
-    onClick: PropTypes.func.isRequired,
+    onClick: PropTypes.func,
 };
 
 export default Year;
