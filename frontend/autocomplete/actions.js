@@ -7,6 +7,7 @@ export const SET_AUTOCOMPLETE_RESULTS = `${NAME}/SET_AUTOCOMPLETE_RESULTS`;
 export const SHOW_DROPDOWN = `${NAME}/SHOW_DROPDOWN`;
 export const MOVE_SELECTION = `${NAME}/MOVE_SELECTION`;
 export const SET_SELECTION = `${NAME}/SET_SELECTION`;
+export const MOVE_SELECTION_INTERNAL = `${NAME}/MOVE_SELECTION/internal`;
 
 export const submit = () => ({
     type: SUBMIT,
@@ -42,4 +43,8 @@ export const moveSelectionDown = () => moveSelection(+1);
 export const setSelection = (id) => ({
     type: SET_SELECTION,
     id,
+});
+export const moveSelectionInternal = (increment) => ({
+    type: MOVE_SELECTION_INTERNAL,
+    increment,
 });

@@ -2,7 +2,7 @@ import {combineReducers} from 'redux-immutable';
 import {List, Map} from 'immutable';
 import {AdvocateAutocomplete} from '../model';
 import {SET_INPUT_VALUE, INITIALIZE_VALUE, SET_AUTOCOMPLETE_RESULTS,
-    SUBMIT, MOVE_SELECTION, SET_SELECTION, setSelection} from './actions';
+    SUBMIT, MOVE_SELECTION_INTERNAL, SET_SELECTION, setSelection} from './actions';
 
 const inputReducer = (state = '', action) =>
     (action.type === SET_INPUT_VALUE || action.type === INITIALIZE_VALUE ? action.value : state);
@@ -50,7 +50,7 @@ const reducer = combineReducers({
 });
 
 export default (state, action) => {
-    if (action.type === MOVE_SELECTION) {
+    if (action.type === MOVE_SELECTION_INTERNAL) {
         const ids = state.get('resultIds');
         const index = ids.indexOf(state.get('selected'));
         const resultIndex = (index !== -1 || action.increment > 0) ? index + action.increment : action.increment;

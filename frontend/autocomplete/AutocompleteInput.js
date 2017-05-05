@@ -15,9 +15,11 @@ const handleKeyDown = (dispatch) => (event) => {
             dispatch(hideDropdown());
             break;
         case 'ArrowDown':
+            event.preventDefault();
             dispatch(moveSelectionDown());
             break;
         case 'ArrowUp':
+            event.preventDefault();
             dispatch(moveSelectionUp());
             break;
         default:
