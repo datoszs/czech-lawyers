@@ -81,11 +81,14 @@ class CasePresenter extends Presenter
 	 *
 	 * Note: provides only cases which are relevant for advocates portal.
 	 *
+	 * Errors:
+	 *  - Returns HTTP 404 with error <b>no_case</b> when such case doesn't exist
+	 *
 	 * @ApiRoute(
 	 *     "/api/case/<id>",
 	 *     parameters={
 	 *         "id"={
-	 *             "requirement": "\d+",
+	 *             "requirement": "-?\d+",
 	 *             "type": "integer",
 	 *             "description": "Case ID.",
 	 *         },
@@ -105,7 +108,9 @@ class CasePresenter extends Presenter
 		// Load data
 		$case = $this->causeService->getRelevantForAdvocates($id);
 		if (!$case) {
-			throw new BadRequestException("No such case [{$id}]", 404);
+			$this->getHttpResponse()->setCode(404);
+			$this->sendJson(['error' => 'no_case', 'message' => "No such case [{$id}]"]);
+			return;
 		}
 		$documents = $this->documentService->findByCaseId($case->id);
 		$results = $this->prepareCasesResults([$case]);

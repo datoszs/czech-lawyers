@@ -74,11 +74,14 @@ class AdvocatePresenter extends Presenter
 	 *
 	 * Note: statistics take into account only cases which are relevant for advocates portal.
 	 *
+	 * Errors:
+	 *  - Returns HTTP 404 with error <b>no_advocate</b> when such advocate doesn't exist
+	 *
 	 * @ApiRoute(
 	 *     "/api/advocate/<id>",
 	 *     parameters={
 	 *         "id"={
-	 *             "requirement": "\d+",
+	 *             "requirement": "-?\d+",
 	 *             "type": "integer",
 	 *             "description": "Advocate ID.",
 	 *         },
@@ -90,7 +93,7 @@ class AdvocatePresenter extends Presenter
 	 *     },
 	 * )
 	 * @param int $id Advocate ID
-	 * @throws AbortException when redirection happens
+	 * @throws AbortException when redirecting/forwarding
 	 * @throws BadRequestException when advocate was not found
 	 */
 	public function actionRead(int $id) : void
@@ -98,7 +101,9 @@ class AdvocatePresenter extends Presenter
 		// Load data
 		$advocate = $this->advocateService->get($id);
 		if (!$advocate) {
-			throw new BadRequestException("No such advocate [{$id}]", 404);
+			$this->getHttpResponse()->setCode(404);
+			$this->sendJson(['error' => 'no_advocate', 'message' => "No such advocate [{$id}]"]);
+			return;
 		}
 		$statistics = $this->taggingService->computeAdvocatesStatistics([$id]);
 		// Transform to output

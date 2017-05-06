@@ -61,15 +61,15 @@ class DisputeCaseVerificationPresenter extends Presenter
 	 *     }
 	 * </json>
 	 *
-	 * Potential results of disputing:
-	 *  - <b>invalid_input</b> when input is invalid
-	 *  - <b>expired</b> when validation request is expired
-	 *  - <b>no_request</b> when no such request found
-	 *  - <b>already_validates</b> when the request was already validates
-	 *  - <b>inconsistent_already_final</b> when at least of one taggings has final flag (was added meanwhile)
-	 *  - <b>inconsistent_changed_meanwhile</b> when at least of of the taggings is differing from disputed state
-	 *  - <b>success</b> when succeeded
-	 *  - <b>fail</b> when other error state happens
+	 * Successes & errors:
+	 *  - Returns HTTP 200 with result <b>success</b> when everything was OK and dispustation was created.
+	 *  - Returns HTTP 400 with error <b>invalid_input</b> when input is invalid
+	 *  - Returns HTTP 400 with error <b>expired</b> when validation request is expired
+	 *  - Returns HTTP 404 with error <b>no_request</b> when no such request found
+	 *  - Returns HTTP 400 with error <b>already_validated</b> when the request was already validates
+	 *  - Returns HTTP 409 with error <b>inconsistent_already_final</b> when at least of one taggings has final flag (was added meanwhile)
+	 *  - Returns HTTP 409 with error <b>inconsistent_changed_meanwhile</b> when at least of of the taggings is differing from disputed state
+	 *  - Returns HTTP 500 with error <b>fail</b> when other error state happens
 	 *
 	 * @ApiRoute(
 	 *     "/api/dispute-case-verification/",
@@ -88,7 +88,9 @@ class DisputeCaseVerificationPresenter extends Presenter
 		$code = $this->request->getPost('code');
 		// Validate data
 		if (!$email || !Validators::isEmail($email) || !$code) {
-			$this->sendJson(['result' => 'invalid_input']);
+			$this->getHttpResponse()->setCode(400);
+			$this->sendJson(['error' => 'invalid_input']);
+			return;
 		}
 
 		// Confirm dispute
@@ -111,18 +113,30 @@ class DisputeCaseVerificationPresenter extends Presenter
 			}
 			$this->disputationService->confirmDispute($email, $code);
 		} catch (NoSuchDisputeRequestException $exception) {
-			$this->sendJson(['result' => 'no_request']);
+			$this->getHttpResponse()->setCode(404);
+			$this->sendJson(['error' => 'no_request']);
+			return;
 		} catch (AlreadyValidatedDisputeRequestException $exception) {
-			$this->sendJson(['result' => 'already_validated']);
+			$this->getHttpResponse()->setCode(400);
+			$this->sendJson(['error' => 'already_validated']);
+			return;
 		} catch (ExpiredDisputeRequestException $exception) {
-			$this->sendJson(['result' => 'expired']);
+			$this->getHttpResponse()->setCode(400);
+			$this->sendJson(['error' => 'expired']);
+			return;
 		} catch (InconsistentStateAlreadyFinalTagging $exception) {
-			$this->sendJson(['result' => 'inconsistent_already_final']);
+			$this->getHttpResponse()->setCode(409);
+			$this->sendJson(['error' => 'inconsistent_already_final']);
+			return;
 		} catch (InconsistentStateChangedMeanwhile $exception) {
-			$this->sendJson(['result' => 'inconsistent_changed_meanwhile']);
+			$this->getHttpResponse()->setCode(409);
+			$this->sendJson(['error' => 'inconsistent_changed_meanwhile']);
+			return;
 		} catch (Throwable $exception) {
 			Debugger::log($exception);
-			$this->sendJson(['result' => 'fail']);
+			$this->getHttpResponse()->setCode(500);
+			$this->sendJson(['error' => 'fail']);
+			return;
 		}
 
 		$this->sendJson(['result' => 'success']);

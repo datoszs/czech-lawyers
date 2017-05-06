@@ -47,10 +47,10 @@ class FeedbackPresenter extends Presenter
 	 * </json>
 	 *
 	 * Potential results of sending feedback:
-	 *  - <b>invalid_input</b> when input data missing or invalid
-	 *  - <b>invalid_captcha</b> when captcha is invalid
-	 *  - <b>success</b> when sending succeed
-	 *  - <b>fail</b> when sending fails
+	 *  - Returns HTTP 200 with result <b>success</b> when sending succeed
+	 *  - Returns HTTP 400 with error <b>invalid_input</b> when input data missing or invalid
+	 *  - Returns HTTP 401 with error <b>invalid_captcha</b> when captcha is invalid
+	 *  - Returns HTTP 500 with error <b>fail</b> when sending fails
 	 *
 	 * @ApiRoute(
 	 *     "/api/feedback/",
@@ -71,10 +71,14 @@ class FeedbackPresenter extends Presenter
 		$captchaToken = $this->request->getPost('captcha_token');
 		// Validate data
 		if (!$fullname || !$from || !Validators::isEmail($from) || !$content || !$captchaToken) {
-			$this->sendJson(['result' => 'invalid_input']);
+			$this->getHttpResponse()->setCode(400);
+			$this->sendJson(['error' => 'invalid_input']);
+			return;
 		}
 		if (!$this->validCaptcha($captchaToken)) {
-			$this->sendJson(['result' => 'invalid_captcha']);
+			$this->getHttpResponse()->setCode(401);
+			$this->sendJson(['error' => 'invalid_captcha']);
+			return;
 		}
 		// Send e-mail
 		$message = $this->mailService->createMessage('feedback', ['content' => $content]);
@@ -84,7 +88,9 @@ class FeedbackPresenter extends Presenter
 		try {
 			$this->mailService->send($message);
 		} catch (SendException $exception) {
-			$this->sendJson(['result' => 'fail']);
+			$this->getHttpResponse()->setCode(500);
+			$this->sendJson(['error' => 'fail']);
+			return;
 		}
 		$this->sendJson(['result' => 'success']);
 	}
