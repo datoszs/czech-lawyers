@@ -549,9 +549,6 @@ pre.apiDocu-json {
 
 			<div class="apiDocu-description apiDocu-description-main">Get up to 30 advocates suggestions according to given search query (search is performed in full name or identification number).<br />Returns list of matched advocates, matched determines whether the given string was matched in identification number (<b>ic</b>), or name (<b>fullname</b>).<br /><br><pre class="apiDocu-json">    [<br />        {<br />            <span class="apiDocu-string">"id_advocate"</span>: 123,<br />            <span class="apiDocu-string">"fullname"</span>: <span class="apiDocu-string">"JUDr. Ing. Petr Omáčka, PhD."</span>,<br />            <span class="apiDocu-string">"matched"</span>: {<br />                <span class="apiDocu-string">"type"</span>: <span class="apiDocu-string">"ic"</span>,<br />                <span class="apiDocu-string">"value"</span>: <span class="apiDocu-string">"11223344"</span><br />            }<br />        }<br />    ]<br /></pre></div>
 
-			<h2>Format</h2>
-
-			<p class="apiDocu-description">json <small>(application/json)</small></p>
 
 		<h2>Methods</h2>
 
