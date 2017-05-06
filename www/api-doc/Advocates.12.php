@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>ApiDocu - /api/advocate-cases/</title>
+	<title>ApiDocu - /api/advocate/search</title>
 	<style>html, body {
 	margin: 0;
 	padding: 0;
@@ -551,7 +551,7 @@ pre.apiDocu-json {
 
 	<div class="apiDocu-container">
 		<div class="apiDocu-url">
-			/api/advocate-cases/
+			/api/advocate/search
 
 			<div class="apiDocu-url-method"></div>
 
@@ -559,7 +559,7 @@ pre.apiDocu-json {
 
 			<h2>Description</h2>
 
-			<div class="apiDocu-description apiDocu-description-main">API for obtaining information about advocate</div>
+			<div class="apiDocu-description apiDocu-description-main">API for retrieving list of advocates for search results (more detailed than autocomplete)</div>
 
 
 		<h2>Methods</h2>

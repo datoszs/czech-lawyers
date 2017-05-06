@@ -58,6 +58,9 @@ class AdvocatePresenter extends Presenter
 	 *             "negative": 12,
 	 *             "neutral": 2,
 	 *             "positive": 59,
+	 *         },
+	 *         "rankings": {
+	 *             "decile": 2
 	 *         }
 	 *     }
 	 * </json>
@@ -106,13 +109,14 @@ class AdvocatePresenter extends Presenter
 			return;
 		}
 		$statistics = $this->taggingService->computeAdvocatesStatistics([$id]);
+		$decile = $this->advocateService->getAdvocateDecile($advocate);
 		// Transform to output
-		$output = $this->mapAdvocate($advocate, $statistics[$advocate->id] ?? []);
+		$output = $this->mapAdvocate($advocate, $statistics[$advocate->id] ?? [], $decile);
 		// Send output
 		$this->sendJson($output);
 	}
 
-	private function mapAdvocate(Advocate $advocate, array $statistics)
+	private function mapAdvocate(Advocate $advocate, array $statistics, ?int $decile)
 	{
 		/** @var AdvocateInfo $currentInfo */
 		$currentInfo = $advocate->advocateInfo->get()->fetch();
@@ -134,6 +138,9 @@ class AdvocatePresenter extends Presenter
 				CaseResult::RESULT_NEGATIVE => $statistics[CaseResult::RESULT_NEGATIVE] ?? 0,
 				CaseResult::RESULT_NEUTRAL => $statistics[CaseResult::RESULT_NEUTRAL] ?? 0,
 				CaseResult::RESULT_POSITIVE => $statistics[CaseResult::RESULT_POSITIVE] ?? 0,
+			],
+			'rankings' => [
+				'decile' => $decile
 			]
 		];
 	}
