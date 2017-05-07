@@ -9,8 +9,9 @@ use Nextras\Orm\Mapper\Mapper;
 
 class CausesMapper extends Mapper
 {
-	const INVALID_ADVOCATE = 'invalid_advocate';
-	const INVALID_RESULT = 'invalid_result';
+	const FILTER_OK = 'ok';
+	const FILTER_FAILED = 'failed';
+	const FILTER_DISPUTED = 'disputed';
 
 
 	protected function createStorageReflection()
@@ -97,24 +98,33 @@ class CausesMapper extends Mapper
 		return $builder;
 	}
 
-	public function findForManualTagging(?int $court, bool $onlyDisputed, ?string $filter)
+	public function findForManualTagging(?int $court, ?string $registryMark, string $advocateFilter, string $resultFilter)
 	{
 		$builder = $this->builder();
 		$builder->orderBy('id_case');
 		if ($court) {
 			$builder->andWhere('court_id = %i', $court);
 		}
-		if ($onlyDisputed) {
-			// TBD
+		if ($registryMark) {
+			$builder->andWhere('registry_sign ILIKE %like_', $registryMark);
 		}
-		if ($filter === static::INVALID_ADVOCATE) {
+		if ($advocateFilter === static::FILTER_FAILED) {
 			$builder->leftJoin('case', 'vw_latest_tagging_advocate', 'vw_latest_tagging_advocate', 'vw_latest_tagging_advocate.case_id = id_case');
 			$builder->andWhere('vw_latest_tagging_advocate.status IS NULL OR (vw_latest_tagging_advocate.status NOT IN (%s) AND NOT vw_latest_tagging_advocate.is_final)', TaggingStatus::STATUS_PROCESSED);
-
+		} elseif ($advocateFilter === static::FILTER_DISPUTED) {
+			$builder->innerJoin('case', 'case_disputation', 'case_disputation', 'case_disputation.case_id = id_case AND tagging_advocate_id IS NOT NULL AND validated_at IS NOT NULL AND resolved IS NULL');
+		} else {
+			$builder->leftJoin('case', 'vw_latest_tagging_advocate', 'vw_latest_tagging_advocate', 'vw_latest_tagging_advocate.case_id = id_case');
+			$builder->andWhere('vw_latest_tagging_advocate.status IN (%s) OR vw_latest_tagging_advocate.is_final', TaggingStatus::STATUS_PROCESSED);
 		}
-		if ($filter === static::INVALID_RESULT) {
+		if ($resultFilter === static::FILTER_FAILED) {
 			$builder->leftJoin('case', 'vw_latest_tagging_case_result', 'vw_latest_tagging_case_result', 'vw_latest_tagging_case_result.case_id = id_case');
 			$builder->andWhere('vw_latest_tagging_case_result.status IS NULL OR (vw_latest_tagging_case_result.status NOT IN (%s) AND NOT vw_latest_tagging_case_result.is_final)', TaggingStatus::STATUS_PROCESSED);
+		} elseif ($resultFilter === static::FILTER_DISPUTED) {
+			$builder->innerJoin('case', 'case_disputation', 'case_disputation', 'case_disputation.case_id = id_case AND tagging_case_result_id IS NOT NULL AND validated_at IS NOT NULL AND resolved IS NULL');
+		} else {
+			$builder->leftJoin('case', 'vw_latest_tagging_case_result', 'vw_latest_tagging_case_result', 'vw_latest_tagging_case_result.case_id = id_case');
+			$builder->andWhere('vw_latest_tagging_case_result.status IN (%s) OR vw_latest_tagging_case_result.is_final', TaggingStatus::STATUS_PROCESSED);
 		}
 		return $builder;
 	}

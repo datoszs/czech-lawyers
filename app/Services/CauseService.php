@@ -5,6 +5,7 @@ use App\Model\Cause\Cause;
 use App\Model\Court\Court;
 use App\Model\Jobs\JobRun;
 use App\Model\Orm;
+use Nextras\Orm\Collection\ICollection;
 use Nextras\Orm\Entity\IEntity;
 
 class CauseService
@@ -43,9 +44,18 @@ class CauseService
 		return $this->orm->causes->findAll()->fetchAll();
 	}
 
-	public function findForManualTagging(?int $court, bool $onlyDisputed, ?string $filter)
+	/**
+	 * Finds causes according to given conditions
+	 *
+	 * @param int|null $court
+	 * @param null|string $registryMark Optional registry mark (to match prefix)
+	 * @param string $advocateFilter Filtering of case result tagging status (ok, failed, disputed)
+	 * @param string $resultFilter Filtering of advocate tagging status (ok, failed, disputed)
+	 * @return Cause[]|ICollection
+	 */
+	public function findForManualTagging(?int $court, ?string $registryMark, string $advocateFilter, string $resultFilter)
 	{
-		return $this->orm->causes->findForManualTagging($court, $onlyDisputed, $filter);
+		return $this->orm->causes->findForManualTagging($court, $registryMark, $advocateFilter, $resultFilter);
 	}
 
 	public function findFromAdvocate(int $advocateId, ?int $court, ?int $year, ?string $result)

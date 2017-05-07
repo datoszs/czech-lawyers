@@ -83,14 +83,14 @@ class TaggingPresenter extends SecuredPresenter
 	}
 
 	/** @privilege(App\Utils\Resources::TAGGING, App\Utils\Actions::VIEW) */
-	public function actionDefault(?string $court = null, ?bool $onlyDisputed = false, ?string $filter = null, ?int $count = null)
+	public function actionDefault(?string $court = null, ?string $registryMark = null, ?string $result = null, ?string $advocate = null)
 	{
 		$court = ($court && array_key_exists($court, Court::$types)) ? Court::$types[$court] : null;
-		$count = ($count) ? min(100, max($count, 1)) : 100;
+		$count = 100;
 
 		/** @var Control $visualPaginator */
 		$visualPaginator = $this->getComponent('visualPaginator');
-		$cases = $this->causeService->findForManualTagging($court, $onlyDisputed, $filter);
+		$cases = $this->causeService->findForManualTagging($court, $registryMark, $advocate ?? 'ok', $result ?? 'ok');
 		$totalCount = $cases->countStored();
 		$paginator = $visualPaginator->getPaginator();
 		$paginator->itemsPerPage = $count;
@@ -100,9 +100,11 @@ class TaggingPresenter extends SecuredPresenter
 		$advocatesTaggings = $this->prepareAdvocates($cases->fetchAll());
 		$disputations = $this->disputationService->findDisputationCounts(array_map(function (Cause $cause) { return $cause->id; }, $cases->fetchAll()));
 
-		$this->template->onlyDisputed = $onlyDisputed;
-		$this->template->filter = $filter;
+		$this->template->registryMark = $registryMark;
+		$this->template->advocate = $advocate;
+		$this->template->result = $result;
 		$this->template->court = $court;
+
 		$this->template->paginator = $paginator;
 		$this->template->cases = $cases;
 		$this->template->results = $results;
@@ -133,7 +135,7 @@ class TaggingPresenter extends SecuredPresenter
 	protected function createComponentVisualPaginator()
 	{
 		$control = new Control();
-		$control->setTemplateFile('bootstrap.latte');
+		$control->setTemplateFile(__DIR__ . '/templates/pagination.latte');
 		return $control;
 	}
 

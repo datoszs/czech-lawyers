@@ -4,51 +4,36 @@
 {block content}
 	<h1>Tagování případů</h1>
 
-	<div class="filter">
-		Soud:
-		<div class="dropdown">
-			<button class="btn btn-default dropdown-toggle" type="button" id="sorting" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-				{if $court === App\Enums\Court::TYPE_US}Ústavní soud{elseif $court === App\Enums\Court::TYPE_NS}Nejvyšší soud{elseif $court === App\Enums\Court::TYPE_NSS}Nejvyšší správní soud{else}Všechny{/if}
-				<span class="caret"></span>
-			</button>
-			<ul class="dropdown-menu" aria-labelledby="sorting">
-				<li><a href="{plink this, court => null}">Všechny</a></li>
-				<li><a href="{plink this, court => 'us'}">Ústavní soud</a></li>
-				<li><a href="{plink this, court => 'ns'}">Nejvyšší soud</a></li>
-				<li><a href="{plink this, court => 'nss'}">Nejvyšší správní soud</a></li>
-			</ul>
-		</div>
-	</div>
+	<form action="{plink this}" method="get" class="form-horizontal">
+		<label for="registry_mark">Spisová značka: <input name="registryMark" value="{$registryMark}" class="form-control"></label>
+		<label for="court">Soud:
+			<select name="court" class="form-control">
+				<option value="">Všechny</option>
+				<option value="us" {if $court === App\Enums\Court::TYPE_US}selected="selected"{/if}>Ústavní soud</option>
+				<option value="ns" {if $court === App\Enums\Court::TYPE_NS}selected="selected"{/if}>Nejvyšší soud</option>
+				<option value="nss" {if $court === App\Enums\Court::TYPE_NSS}selected="selected"{/if}>Nejvyšší správní soud</option>
+			</select>
+		</label>
+		<label>Stav výsledku:
+			<select name="result" class="form-control">
+				<option value="ok" {if $result === 'ok'}selected="selected"{/if}>V pořádku</option>
+				<option value="failed" {if $result === 'failed'}selected="selected"{/if}>Selhalo</option>
+				<option value="disputed" {if $result === 'disputed'}selected="selected"{/if}>Rozporováno</option>
+			</select>
+		</label>
+		<label>Stav advokáta:
+			<select name="advocate" class="form-control">
+				<option value="ok" {if $advocate === 'ok'}selected="selected"{/if}>V pořádku</option>
+				<option value="failed" {if $advocate === 'failed'}selected="selected"{/if}>Selhalo</option>
+				<option value="disputed" {if $advocate === 'disputed'}selected="selected"{/if}>Rozporováno</option>
+			</select>
+		</label>
+		<input type="submit" class="btn btn-default" value="Filtrovat">
+	</form>
 
-	<div class="filter">
-		Pouze zpochybněné:
-		<div class="dropdown">
-			<button class="btn btn-default dropdown-toggle" type="button" id="sorting" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-				{if $onlyDisputed === true}Ano{else}Ne{/if}
-				<span class="caret"></span>
-			</button>
-			<ul class="dropdown-menu" aria-labelledby="sorting">
-				<li><a href="{plink this, onlyDisputed => false}">Ne</a></li>
-				<li><a href="{plink this, onlyDisputed => true}">Ano</a></li>
-			</ul>
-		</div>
-	</div>
-
-	<div class="filter">
-		Filtr:
-		<div class="dropdown">
-			<button class="btn btn-default dropdown-toggle" type="button" id="sorting" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-				{if $filter === 'invalid_result'}Neplatný výsledek{elseif $filter === 'invalid_advocate'}Neplatný advokát{else}Žádný{/if}
-				<span class="caret"></span>
-			</button>
-			<ul class="dropdown-menu" aria-labelledby="sorting">
-				<li><a href="{plink this, filter => null}">Žádný</a></li>
-				<li><a href="{plink this, filter => invalid_result}">Neplatný výsledek</a></li>
-				<li><a href="{plink this, filter => invalid_advocate}">Neplatný advokát</a></li>
-			</ul>
-		</div>
-	</div>
 	<div class="clearfix"></div>
+
+	{control visualPaginator}
 
 	<p><i>Zobrazovány případy {$paginator->getOffset()+1}&ndash;{$paginator->getOffset()+$paginator->getItemsPerPage()} z {$paginator->getItemCount()} případů.</i></p>
 

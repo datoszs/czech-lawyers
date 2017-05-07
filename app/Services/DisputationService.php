@@ -13,8 +13,8 @@ use App\Model\Taggings\TaggingCaseResult;
 use DateTimeImmutable;
 use Nette\Utils\Random;
 use Nextras\Dbal\Connection;
+use Nextras\Dbal\QueryException;
 use Nextras\Orm\Collection\ICollection;
-use Nextras\Orm\Entity\IEntity;
 
 
 class DisputationService
@@ -169,7 +169,14 @@ class DisputationService
 		$this->orm->persistAndFlush($entity);
 	}
 
-	public function findDisputationCounts($causesId)
+	/**
+	 * Find number of validated but not resolved disputation counts of given causes
+	 *
+	 * @param array $causesId
+	 * @return array
+	 * @throws QueryException
+	 */
+	public function findDisputationCounts(array $causesId)
 	{
 		if (count($causesId) === 0) {
 			$causesId[] = null;
@@ -179,7 +186,7 @@ class DisputationService
 				case_id,
 				COUNT(*) AS count
 			FROM case_disputation
-			WHERE case_id IN %?i[] AND validated_at IS NOT NULL
+			WHERE case_id IN %?i[] AND validated_at IS NOT NULL AND resolved IS NULL
 			GROUP BY case_id
 			',
 			$causesId
