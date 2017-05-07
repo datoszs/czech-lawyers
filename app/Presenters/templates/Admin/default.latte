@@ -2,5 +2,53 @@
 {var $pageTitle = 'Přehled'}
 
 {block content}
-    <h1 class="page-header">Přehled</h1>
+	<h1 class="page-header">Přehled</h1>
+
+	<div class="row">
+		<div class="col-xs-12 col-sm-6 col-md-4">
+			<div class="panel panel-default">
+				<div class="panel-heading"><a href="{plink Job:}">Pravidelné úlohy</a></div>
+				<div class="panel-body">
+					<table class="table table-striped table-condensed">
+						<tbody>
+							<tr n:foreach="$failedJobRuns as $day => $fails" class="{if $fails > 0}danger{else}success{/if}">
+								<td><small>{$day}</small></td>
+								<td><small>{$fails}</small></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-12 col-sm-6 col-md-4">
+			<div class="panel panel-default">
+				<div class="panel-heading"><a href="{plink Tagging:}">Rozporování</a></div>
+				<div class="panel-body">
+					<table class="table table-striped">
+						<tbody>
+							<tr class="no-top-border {if $disputations['unresolved'] > 0}warning{/if}">
+								<th><small>Čeká na odpověď</small></th>
+								<td>
+									<small>{ifset $disputations['unresolved']}{$disputations['unresolved']}{else}?{/ifset}</small>
+								</td>
+							</tr>
+							<tr>
+								<th><small>Čeká na potvrzení uživatelem</small></th>
+								<td>
+									<small>{ifset $disputations['pending']}{$disputations['pending']}{else}?{/ifset}</small>
+								</td>
+							</tr>
+							<tr>
+								<th><small>Celkem zvalidovaných</small></th>
+								<td>
+									<small>{ifset $disputations['total_valid']}{$disputations['total_valid']}{else}?{/ifset}</small>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
+	</div>
 {/block}

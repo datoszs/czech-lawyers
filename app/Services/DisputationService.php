@@ -15,6 +15,8 @@ use Nette\Utils\Random;
 use Nextras\Dbal\Connection;
 use Nextras\Dbal\QueryException;
 use Nextras\Orm\Collection\ICollection;
+use Tracy\Debugger;
+use Tracy\ILogger;
 
 
 class DisputationService
@@ -196,5 +198,28 @@ class DisputationService
 			$output[$row->case_id] = $row->count;
 		}
 		return $output;
+	}
+
+	/**
+	 * Returns statistics about case disputations (total of valid, number of unresolved and number of pending)
+	 * @return array
+	 */
+	public function getStatistics()
+	{
+		try {
+			$row = $this->connection->query('
+				SELECT
+					(SELECT COUNT(*) FROM case_disputation WHERE validated_at IS NOT NULL) AS total_valid,
+					(SELECT COUNT(*) FROM case_disputation WHERE validated_at IS NOT NULL AND resolved IS NULL) AS unresolved,
+					(SELECT COUNT(*) FROM case_disputation WHERE validated_at IS NULL AND valid_until > NOW()) AS pending
+			')->fetch();
+			if ($row) {
+				return $row->toArray();
+			}
+			return [];
+		} catch (QueryException $exception) {
+			Debugger::log($exception, ILogger::EXCEPTION);
+			return [];
+		}
 	}
 }

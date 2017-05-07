@@ -5,7 +5,13 @@ namespace App\Model\Services;
 use App\Model\Jobs\Job;
 use App\Model\Jobs\JobRun;
 use App\Model\Orm;
+use DateInterval;
+use DatePeriod;
 use DateTime;
+use Nextras\Dbal\Connection;
+use Nextras\Dbal\QueryException;
+use Tracy\Debugger;
+use Tracy\ILogger;
 
 class JobService
 {
@@ -13,9 +19,14 @@ class JobService
 	/** @var Orm */
 	private $orm;
 
-	public function __construct(Orm $orm)
+	/** @var Connection */
+	private $connection;
+
+
+	public function __construct(Orm $orm, Connection $connection)
 	{
 		$this->orm = $orm;
+		$this->connection = $connection;
 	}
 
 	/** @return Job */
@@ -71,5 +82,37 @@ class JobService
 		$jobRun->output = $output;
 		$jobRun->message = $message;
 		$this->orm->jobRuns->persistAndFlush($jobRun);
+	}
+
+	/**
+	 * Returns associative array indexed by dates (Y-m-d format) containing number of failed job runs on given date.
+	 *
+	 * @return array
+	 */
+	public function getFailedInLastTwoWeeks()
+	{
+		try {
+			$rows = $this->connection->query('
+				SELECT (executed::date)::text AS day, COUNT(*) AS count FROM job_run WHERE return_code != 0 AND executed > NOW () - INTERVAL \'10 days\' GROUP BY executed::date
+			')->fetchPairs('day', 'count');
+			$period = new DatePeriod(
+				new DateTime('-10 days'),
+				new DateInterval('P1D'),
+				new DateTime()
+			);
+			$output = [];
+			/** @var DateTime $day */
+			foreach ($period as $day) {
+				if (isset($rows[$day->format('Y-m-d')])) {
+					$output[$day->format('Y-m-d')] = $rows[$day->format('Y-m-d')];
+				} else {
+					$output[$day->format('Y-m-d')] = 0;
+				}
+			}
+			return $output;
+		} catch (QueryException $exception) {
+			Debugger::log($exception, ILogger::EXCEPTION);
+			return [];
+		}
 	}
 }
