@@ -55,13 +55,15 @@ def itemize_text(item):
     for child in item.contents:
         if "<br>" in str(child):
             clear_child = str(child).replace("</br>", "").strip()
+            clear_child = clear_child.replace("<br/>", "").strip()
             if clear_child == '':
                 continue
-            items = [item.strip().replace('"',"'") for item in clear_child.split("<br>") if len(item) > 1]
+            items = [item.strip().replace('"', "'")
+                     for item in clear_child.split("<br>") if len(item) > 1]
             buffer.extend(items)
         else:
             try:
-                child = child.strip().replace('"',"'")
+                child = child.strip().replace('"', "'")
             except TypeError:
                 child = ''
             if child != '':
@@ -88,8 +90,8 @@ def extract_name(text):
     if text:
         buffer = []
         m = re.findall(
-                r'zast[.|\w]+(?<!zastupitelství)\s([^A-Z]+)?\s?(([A-Ž]\w+\.?\s?)+)(?=se\ssídlem|,)',
-                text.contents[0], re.UNICODE | re.MULTILINE)
+            r'zast[.|\w]+(?<!zastupitelství)\s([^A-Z]+)?\s?(([A-Ž]\w+\.?\s?)+)(?=se\ssídlem|,)',
+            text.contents[0], re.UNICODE | re.MULTILINE)
         if m:
             buffer = [x[1] for x in m]
             return json.dumps(dict(zip(range(1, len(buffer) + 1), buffer)), sort_keys=True,
@@ -135,6 +137,14 @@ def logging_process(arguments):
         logger.debug("%s" % stderr)
 
 
+def clean_directory(root):
+    for f in os.listdir(root):
+        try:
+            shutil.rmtree(join(root, f))
+        except NotADirectoryError:
+            os.remove(join(root, f))
+
+
 def create_directories():
     """create working directories"""
     for directory in [out_dir, documents_dir_path, result_dir_path]:
@@ -148,7 +158,7 @@ def create_directories():
             logger.info("Folder was created '" + screens_dir_path + "'")
         else:
             logger.debug("Erasing old screens")
-            shutil.rmtree(screens_dir_path)
+            clean_directory(screens_dir_path)
         return screens_dir_path
 
 
@@ -190,7 +200,7 @@ def view_data(date_from, records_per_page, date_to=None, days=None):
         # print(session.content)
         logger.debug("Set typ_rizeni as 'O ústavních stížnostech'")
         session.open(
-                "http://nalus.usoud.cz/dialogs/PopupCiselnik.aspx?control=ctl00_MainContent_typ_rizeni&type=typ_rizeni")
+            "http://nalus.usoud.cz/dialogs/PopupCiselnik.aspx?control=ctl00_MainContent_typ_rizeni&type=typ_rizeni")
         session.evaluate("javascript:saveSelected('0')", expect_loading=True)
         if b_screens:
             session.capture_to(join(screens_dir_path, "dialog_check.png"))
@@ -199,21 +209,26 @@ def view_data(date_from, records_per_page, date_to=None, days=None):
 
     if days and session.exists("#ctl00_MainContent_dle_data_zpristupneni"):
         logger.debug("Select check button")
-        #session.set_field_value("#ctl00_MainContent_dle_data_zpristupneni", True)
-        session.click("#ctl00_MainContent_dle_data_zpristupneni", expect_loading=False)
+        # session.set_field_value("#ctl00_MainContent_dle_data_zpristupneni",
+        # True)
+        session.click("#ctl00_MainContent_dle_data_zpristupneni",
+                      expect_loading=False)
         if session.exists("#ctl00_MainContent_zpristupneno_pred"):
             logger.info("Select last %s days" % days)
-            session.set_field_value("#ctl00_MainContent_zpristupneno_pred", days)
+            session.set_field_value(
+                "#ctl00_MainContent_zpristupneno_pred", days)
     else:
         if session.exists("#ctl00_MainContent_availableFrom"):
             logger.debug("Set date_from '%s'" % date_from)
-            session.set_field_value("#ctl00_MainContent_submissionFrom", date_from)
+            session.set_field_value(
+                "#ctl00_MainContent_submissionFrom", date_from)
             # datetime.strptime(date_from, '%d.%m.%Y').strftime('%Y/%m/%d'))
             if b_screens:
                 session.capture_to(join(screens_dir_path, "set_from.png"))
             if date_to is not None:  # ctl00_MainContent_decidedFrom
                 logger.debug("Set date_to '%s'" % date_to)
-                session.set_field_value("#ctl00_MainContent_submissionTo", date_to)
+                session.set_field_value(
+                    "#ctl00_MainContent_submissionTo", date_to)
                 # datetime.strptime(date_to, '%d.%m.%Y').strftime('%Y/%m/%d'))
             logger.info("Records from the period %s -> %s", date_from, date_to)
             if b_screens:
@@ -222,7 +237,7 @@ def view_data(date_from, records_per_page, date_to=None, days=None):
     session.set_field_value("#ctl00_MainContent_razeni", "3")
     logger.debug("Set counter records per page")
     session.set_field_value(
-            "#ctl00_MainContent_resultsPageSize", str(records_per_page))
+        "#ctl00_MainContent_resultsPageSize", str(records_per_page))
     if b_screens:
         session.capture_to(join(screens_dir_path, "set_form.png"))
 
@@ -252,7 +267,7 @@ def how_many(response, records_per_page):
     result_table = soup.select_one("#Content")
     if result_table is not None:
         info = result_table.select_one(
-                "table > tbody > tr:nth-of-type(1) > td > table > tbody > tr > td")
+            "table > tbody > tr:nth-of-type(1) > td > table > tbody > tr > td")
         if info is not None:
             pages = info.text
             m = re.compile("\w+ (\d+) - (\d+) z \w+ (\d+).*").search(pages)
@@ -260,7 +275,7 @@ def how_many(response, records_per_page):
                 # print(m.group(3))
                 number_of_records = m.group(3)
                 count_of_pages = math.ceil(
-                        int(number_of_records) / records_per_page)
+                    int(number_of_records) / records_per_page)
                 # print(count_of_pages)
                 if pages is not None:
                     pages = int(count_of_pages)
@@ -294,7 +309,8 @@ def make_record(soup, id):
     table = soup.find("div", id="recordCardPanel")
     try:
         if "NALUS" in soup.title.string:  # soup.string
-            logger.debug("{}, {}, {}".format(soup.title.string, id, type(table)))
+            logger.debug("{}, {}, {}".format(
+                soup.title.string, id, type(table)))
             return
     except AttributeError:
         logger.error("{} (soup.title) - {}".format(soup.title, id))
@@ -303,12 +319,12 @@ def make_record(soup, id):
     if (table is not None) and (table.tbody is not None):
         for key, index in zip(entities[:-4], range(1, 27)):
             item[key] = table.select_one(
-                    "table > tbody > tr:nth-of-type({}) > td:nth-of-type(2)".format(index)).text.strip()
+                "table > tbody > tr:nth-of-type({}) > td:nth-of-type(2)".format(index)).text.strip()
             if 'date' in key and item[key]:
                 item[key] = convert_date(item[key]) if item[key] != '' else ''
             elif key in only_text_elements or key in only_list_elements:
                 item[key] = table.select_one(
-                        "table > tbody > tr:nth-of-type({}) > td:nth-of-type(2)".format(index))
+                    "table > tbody > tr:nth-of-type({}) > td:nth-of-type(2)".format(index))
                 # print('{}, {} - {}'.format(key, item[key], index))
         item['record_id'] = item['ecli']
         item['local_path'] = id
@@ -363,13 +379,13 @@ def extract_information(records):
                            newline='', encoding="utf-8")
 
         writer_records = csv.DictWriter(
-                csv_records, fieldnames=fieldnames, delimiter=";", quoting=csv.QUOTE_ALL, quotechar='"')
+            csv_records, fieldnames=fieldnames, delimiter=";", quoting=csv.QUOTE_ALL, quotechar='"')
         writer_records.writeheader()
 
         from tqdm import tqdm
         i = 0
-        t = html_files
-        # t = tqdm(html_files, ncols=global_ncols)
+        # t = html_files
+        t = tqdm(html_files, ncols=global_ncols)
         for html_f in t:
             id = os.path.basename(html_f)
             make_record(make_soup(html_f), id)
@@ -382,7 +398,8 @@ def extract_information(records):
         csv_records.close()
         return True
     else:
-        logger.info("{} != {} ({})".format(len(html_files), records, type(records)))
+        logger.info("{} != {} ({})".format(
+            len(html_files), records, type(records)))
         return False
 
 
@@ -393,12 +410,15 @@ def extract_data(html_file, response):
     :response: HTML code for saving
     """
     response = BeautifulSoup(response, "html.parser")
-    del response.find("div", id="docContentPanel")["style"]  # remove inline style
-    del response.find("div", id="recordCardPanel")["style"]  # remove inline style
+    del response.find("div", id="docContentPanel")[
+        "style"]  # remove inline style
+    del response.find("div", id="recordCardPanel")[
+        "style"]  # remove inline style
     link_elem = response.select_one(
-            "#recordCardPanel > table > tbody > tr:nth-of-type(26) > td:nth-of-type(2)")
+        "#recordCardPanel > table > tbody > tr:nth-of-type(26) > td:nth-of-type(2)")
     link_elem.string.wrap(response.new_tag("a", href=link_elem.string))
-    response.body.script.decompose()  # remove script, which manipulate size of document
+    # remove script, which manipulate size of document
+    response.body.script.decompose()
     del response.body["onload"]  # remove calling script on loading page
     logger.debug("Saving file '%s'" % html_file)
     with codecs.open(join(documents_dir_path, html_file), "w", encoding="utf-8") as f:
@@ -439,6 +459,8 @@ def walk_pages(page_from, pages):
     :return page: last page which is processed
 
     """
+    page_from = page_from if page_from > 0 else 0
+    logger.debug("{}, {} -> {}".format(page_from, pages, range(page_from, pages)))
     t = tqdm(range(page_from, pages), ncols=global_ncols, position=0)
     page = -1
     links_to_info = []
@@ -458,7 +480,8 @@ def walk_pages(page_from, pages):
                     logger.debug("Go to link to detail")
                     session.open(urljoin(results_url, link), wait=True)
                     extract_data(html_file, response=session.content)
-        session.open(urljoin(results_url, "?page={}".format(page + 1)), wait=True)  # go to next page
+        session.open(urljoin(results_url, "?page={}".format(
+            page + 1)), wait=True)  # go to next page
         # save number of processing page
         with codecs.open(join(out_dir, "current_page.ini"), "w", encoding="utf-8") as f:
             f.write(str(page))
@@ -480,7 +503,7 @@ def main():
         response = session.content
         if b_screens:
             session.capture_to(
-                    join(screens_dir_path, "errors.png"), selector=".searchValidator")
+                join(screens_dir_path, "errors.png"), selector=".searchValidator")
         records = 0
         if not session.exists("#ctl00_MainContent_lbError"):
             pages, records = how_many(response, records_per_page)
@@ -501,13 +524,12 @@ def main():
             if pages is not None and records is not None:
                 if (page_from + 1) > pages:
                     logger.debug(
-                            "Loaded page number is greater than count of pages")
+                        "Loaded page number is greater than count of pages")
                     page_from = 0
-                if pages != (page_from + 1):  # parameter page is from zero
-                    last_page = page_from
+                if pages != (page_from + 1) or (pages == 1):  # parameter page is from zero
+                    last_page = page_from if page_from else -1
                     while (last_page + 1) != pages:
                         last_page = walk_pages(last_page, pages)
-                    print("\n")
                     logger.info("DONE - download")
                 else:
                     logger.debug("I am complete!")
@@ -569,8 +591,7 @@ if __name__ == "__main__":
                     shutil.move(join(out_dir, output_file), result_dir_path)
                     if not b_delete:
                         logger.debug("Cleaning working directory")
-                        shutil.rmtree(out_dir)
-                        os.mkdir(out_dir)
+                        clean_directory(out_dir)
 
             else:
                 logger.error("Result directory isn't empty.")
