@@ -384,8 +384,8 @@ def extract_information(records):
 
         from tqdm import tqdm
         i = 0
-        # t = html_files
-        t = tqdm(html_files, ncols=global_ncols)
+        t = html_files
+        # t = tqdm(html_files, ncols=global_ncols)
         for html_f in t:
             id = os.path.basename(html_f)
             make_record(make_soup(html_f), id)
@@ -460,7 +460,8 @@ def walk_pages(page_from, pages):
 
     """
     page_from = page_from if page_from > 0 else 0
-    logger.debug("{}, {} -> {}".format(page_from, pages, range(page_from, pages)))
+    logger.debug("{}, {} -> {}".format(page_from,
+                                       pages, range(page_from, pages)))
     t = tqdm(range(page_from, pages), ncols=global_ncols, position=0)
     page = -1
     links_to_info = []
