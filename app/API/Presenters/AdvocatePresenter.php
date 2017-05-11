@@ -59,14 +59,14 @@ class AdvocatePresenter extends Presenter
 	 *             "neutral": 2,
 	 *             "positive": 59,
 	 *         },
-	 *         advocates_with_same_name: [
+	 *         "advocates_with_same_name": [
 	 *             {
-	 *                 id_advocate: 125,
-	 *                 fullname: "Mgr. Petr Omáčka"
+	 *                 "id_advocate": 125,
+	 *                 "fullname": "Mgr. Petr Omáčka"
 	 *             },
 	 *             {
-	 *                 id_advocate: 125,
-	 *                 fullname: "JUDr. Petr Ostrý"
+	 *                 "id_advocate": 125,
+	 *                 "fullname": "JUDr. Petr Ostrý"
 	 *             },
 	 *         ]
 	 *     }
