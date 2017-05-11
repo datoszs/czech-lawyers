@@ -61,6 +61,18 @@ class AdvocateService
 	}
 
 	/**
+	 * Returns advocates with same name (without degrees) now or in history.
+	 * Note: takes previous names of given advocates also into account.
+	 * Note: ignores the advocate itself
+	 * @param Advocate $advocate
+	 * @return Advocate[]
+	 */
+	public function findOfSameName(Advocate $advocate)
+	{
+		return $this->orm->advocates->findOfSameName($advocate->id)->fetchAll();
+	}
+
+	/**
 	 * @param string $identificationNumber
 	 * @return Advocate|null
 	 */

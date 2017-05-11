@@ -6,6 +6,7 @@ use Nextras\Orm\Repository\Repository;
 
 /**
  * @method ICollection|Advocate[] search($phrase, int $start = 0, ?int $limit = null)
+ * @method ICollection|Advocate[] findOfSameName(int $advocateId)
  */
 class AdvocatesRepository extends Repository
 {

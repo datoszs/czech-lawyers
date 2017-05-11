@@ -32,4 +32,14 @@ class AdvocatesMapper extends Mapper
 		}
 		return $builder;
 	}
+
+	public function findOfSameName(int $advocateId)
+	{
+		return $this->connection->createQueryBuilder()
+			->from('advocate', 'advocate')
+			->innerJoin('advocate', 'advocate_info', 'advocate_info', 'advocate.id_advocate = advocate_info.advocate_id')
+			->where('concat_ws(\' \', name, surname) IN (SELECT concat_ws(\' \', name, surname) FROM advocate_info WHERE advocate_id = %i)', $advocateId)
+			->andWhere('id_advocate != %i', $advocateId)
+			->groupBy('advocate.id_advocate');
+	}
 }

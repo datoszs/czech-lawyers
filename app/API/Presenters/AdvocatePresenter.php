@@ -58,7 +58,17 @@ class AdvocatePresenter extends Presenter
 	 *             "negative": 12,
 	 *             "neutral": 2,
 	 *             "positive": 59,
-	 *         }
+	 *         },
+	 *         advocates_with_same_name: [
+	 *             {
+	 *                 id_advocate: 125,
+	 *                 fullname: "Mgr. Petr Omáčka"
+	 *             },
+	 *             {
+	 *                 id_advocate: 125,
+	 *                 fullname: "JUDr. Petr Ostrý"
+	 *             },
+	 *         ]
 	 *     }
 	 * </json>
 	 *
@@ -73,6 +83,10 @@ class AdvocatePresenter extends Presenter
 	 *  - <b>positive</b>
 	 *
 	 * Note: statistics take into account only cases which are relevant for advocates portal.
+	 *
+	 * Note: advocates with same name also match historic names on both sides, but shows only up-to-date names.
+	 * In example Petr Ostrý was previously named Petr Omáčka or the queried advocate was names Petr Ostrý.
+	 * Match is performed on names only (without degrees).
 	 *
 	 * @ApiRoute(
 	 *     "/api/advocate/<id>",
@@ -100,14 +114,15 @@ class AdvocatePresenter extends Presenter
 		if (!$advocate) {
 			throw new BadRequestException("No such advocate [{$id}]", 404);
 		}
+		$advocatesOfSameName = $this->advocateService->findOfSameName($advocate);
 		$statistics = $this->taggingService->computeAdvocatesStatistics([$id]);
 		// Transform to output
-		$output = $this->mapAdvocate($advocate, $statistics[$advocate->id] ?? []);
+		$output = $this->mapAdvocate($advocate, $statistics[$advocate->id] ?? [], $advocatesOfSameName);
 		// Send output
 		$this->sendJson($output);
 	}
 
-	private function mapAdvocate(Advocate $advocate, array $statistics)
+	private function mapAdvocate(Advocate $advocate, array $statistics, array $advocatesOfSameName)
 	{
 		/** @var AdvocateInfo $currentInfo */
 		$currentInfo = $advocate->advocateInfo->get()->fetch();
@@ -129,7 +144,23 @@ class AdvocatePresenter extends Presenter
 				CaseResult::RESULT_NEGATIVE => $statistics[CaseResult::RESULT_NEGATIVE] ?? 0,
 				CaseResult::RESULT_NEUTRAL => $statistics[CaseResult::RESULT_NEUTRAL] ?? 0,
 				CaseResult::RESULT_POSITIVE => $statistics[CaseResult::RESULT_POSITIVE] ?? 0,
-			]
+			],
+			'advocates_with_same_name' => $this->mapAdvocateWithSameName($advocatesOfSameName)
 		];
+	}
+
+	private function mapAdvocateWithSameName(array $advocatesOfSameName)
+	{
+		$output = [];
+		/** @var Advocate $advocate */
+		foreach ($advocatesOfSameName as $advocate) {
+			/** @var AdvocateInfo $currentInfo */
+			$currentInfo = $advocate->advocateInfo->get()->fetch();
+			$output[] = [
+				'id_advocate' => $advocate->id,
+				'fullname' => TemplateFilters::formatName($currentInfo->name, $currentInfo->surname, $currentInfo->degreeBefore, $currentInfo->degreeAfter),
+			];
+		}
+		return $output;
 	}
 }
