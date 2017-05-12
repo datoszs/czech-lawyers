@@ -6,6 +6,7 @@ describe('DTO to Document mapping', () => {
         mark: 'ECLI:CZ:NS:2010:20.CDO.2696.2010.1',
         decision_date: '2010-08-17T02:00:00+02:00',
         public_link: 'http://nsoud.cz/Judikatura/judikatura_ns.nsf/WebPrint/06FEB14C62D9D3B9C1257A4E0065FDFD?openDocument',
+        public_local_link: 'https://www.cestiadvokati.cz/public/document/view/108429',
     };
     it('creates valid object', () => {
         const document = new Document(mapDtoToDocument(dto));
@@ -22,6 +23,6 @@ describe('DTO to Document mapping', () => {
         document.date.should.equal(1282003200000);
     });
     it('maps link', () => {
-        document.link.should.equal(dto.public_link);
+        document.link.should.equal(dto.public_local_link);
     });
 });
