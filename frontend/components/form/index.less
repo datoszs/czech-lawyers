@@ -1,3 +1,5 @@
+@import "../../variables";
+
 .input-email {
     width: 100% !important;
 }
@@ -9,4 +11,11 @@
 
 .input-text {
     width: 100% !important;
+}
+
+.form-required {
+    &:after {
+        content: '*';
+        color: @brand-danger;
+    }
 }

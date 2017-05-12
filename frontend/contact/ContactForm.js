@@ -9,9 +9,9 @@ export default () => (
     <section>
         <RichText msg="contact.us.text" />
         <CaptchaForm form={CONTACT_FORM} action={sendEmail}>
-            <TextField name="full_name" label="form.name" />
-            <EmailField name="from" label="form.email" />
-            <TextAreaField name="content" label="contact.form.message" />
+            <TextField name="full_name" label="form.name" required />
+            <EmailField name="from" label="form.email" required />
+            <TextAreaField name="content" label="contact.form.message" required />
             <Button type="submit" bsStyle="primary"><Msg msg="contact.form.submit" /></Button>
         </CaptchaForm>
     </section>
