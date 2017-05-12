@@ -82,4 +82,6 @@ export default {
 
     'form.email': 'Váš e-mail',
     'form.name': 'Vaše jméno',
+    'form.error.required': 'Toto pole je povinné',
+    'form.error.email': 'Toto pole musí obsahovat validní e-mailovou adresu',
 };

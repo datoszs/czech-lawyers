@@ -8,6 +8,7 @@ const InputTextArea = ({input}) => (
         className="input-text-area"
         value={input.value}
         onChange={input.onChange}
+        onBlur={input.onBlur}
     />
 );
 
@@ -15,6 +16,7 @@ InputTextArea.propTypes = {
     input: PropTypes.shape({
         value: PropTypes.string,
         onChange: PropTypes.func.isRequired,
+        onBlur: PropTypes.func.isRequired,
     }).isRequired,
 };
 

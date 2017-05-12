@@ -8,10 +8,12 @@ NewTextField.propTypes = {
     name: PropTypes.string.isRequired,
     label: PropTypes.string.isRequired,
     placeholder: PropTypes.string,
+    required: PropTypes.bool,
 };
 
 NewTextField.defaultProps = {
     placeholder: null,
+    required: false,
 };
 
 export default NewTextField;

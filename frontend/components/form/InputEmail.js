@@ -9,6 +9,7 @@ const InputEmail = ({input, placeholder}) => (
         placeholder={placeholder}
         value={input.value}
         onChange={input.onChange}
+        onBlur={input.onBlur}
     />
 );
 
@@ -16,6 +17,7 @@ InputEmail.propTypes = {
     input: PropTypes.shape({
         value: PropTypes.string,
         onChange: PropTypes.func.isRequired,
+        onBlur: PropTypes.func.isRequired,
     }).isRequired,
     placeholder: PropTypes.string,
 };

@@ -7,10 +7,12 @@ const TextAreaField = BasicFieldComponent()(InputTextArea);
 TextAreaField.propTypes = {
     name: PropTypes.string.isRequired,
     label: PropTypes.string,
+    required: PropTypes.bool,
 };
 
 TextAreaField.defaultProps = {
     label: null,
+    required: false,
 };
 
 export default TextAreaField;
