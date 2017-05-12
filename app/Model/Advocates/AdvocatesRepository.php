@@ -5,6 +5,7 @@ use Nextras\Orm\Collection\ICollection;
 use Nextras\Orm\Repository\Repository;
 
 /**
+ * @method ICollection|Advocate[] findFromDecile(int $decile, int $start, int $count, bool $reverse)
  * @method ICollection|Advocate[] search($phrase, int $start = 0, ?int $limit = null)
  * @method ICollection|Advocate[] findOfSameName(int $advocateId)
  */

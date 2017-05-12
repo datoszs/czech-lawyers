@@ -57,7 +57,9 @@ class CasePresenter extends Presenter
 	 *             "id_advocate": 123,
 	 *             "fullname": "JUDr. Ing. Petr Omáčka, PhD."
 	 *         },
+	 *         "tagging_advocate_final": true,
 	 *         "tagging_result": "negative",
+	 *         "tagging_result_final": false,
 	 *         "documents": [
 	 *             {
 	 *                 "id_document": 543,
@@ -73,19 +75,28 @@ class CasePresenter extends Presenter
 	 * Potential tagging advocate:
 	 *  - <b>array</b> when tagging present and valid
 	 *  - <b>null</b> when null, or tagging is invalid
+	 *
 	 * Potential tagging result (@see CaseResult):
 	 *  - <b>negative</b>
 	 *  - <b>neutral</b>
 	 *  - <b>positive</b>
 	 *  - <b>null</b> - when tagging is invalid
 	 *
+	 * Potential tagging final result:
+	 *  - <b>null</b> when tagging doesn't exist
+	 *  - <b>true</b> when tagging is final
+	 *  - <b>false</b> when tagging is not final
+	 *
 	 * Note: provides only cases which are relevant for advocates portal.
+	 *
+	 * Errors:
+	 *  - Returns HTTP 404 with error <b>no_case</b> when such case doesn't exist
 	 *
 	 * @ApiRoute(
 	 *     "/api/case/<id>",
 	 *     parameters={
 	 *         "id"={
-	 *             "requirement": "\d+",
+	 *             "requirement": "-?\d+",
 	 *             "type": "integer",
 	 *             "description": "Case ID.",
 	 *         },
@@ -105,7 +116,9 @@ class CasePresenter extends Presenter
 		// Load data
 		$case = $this->causeService->getRelevantForAdvocates($id);
 		if (!$case) {
-			throw new BadRequestException("No such case [{$id}]", 404);
+			$this->getHttpResponse()->setCode(404);
+			$this->sendJson(['error' => 'no_case', 'message' => "No such case [{$id}]"]);
+			return;
 		}
 		$documents = $this->documentService->findByCaseId($case->id);
 		$results = $this->prepareCasesResults([$case]);
@@ -132,7 +145,7 @@ class CasePresenter extends Presenter
 	{
 		/** @var AdvocateInfo $currentInfo */
 		$advocate = null;
-		if ($taggingAdvocate && $taggingAdvocate->status === TaggingStatus::STATUS_PROCESSED) {
+		if ($taggingAdvocate && $taggingAdvocate->status === TaggingStatus::STATUS_PROCESSED && $taggingAdvocate->advocate && $taggingAdvocate->advocate->advocateInfo) {
 			$currentInfo = $taggingAdvocate->advocate->advocateInfo->get()->fetch();
 			$advocate = [
 				'id_advocate' => $taggingAdvocate->advocate->id,
@@ -144,7 +157,9 @@ class CasePresenter extends Presenter
 			'id_court' => $case->court->id,
 			'registry_mark' => TemplateFilters::formatRegistryMark($case->registrySign),
 			'tagging_advocate' => $advocate,
+			'tagging_advocate_final' => $taggingAdvocate ? $taggingAdvocate->isFinal : null,
 			'tagging_result' => ($result && $result->status === TaggingStatus::STATUS_PROCESSED) ? $result->caseResult : null,
+			'tagging_result_final' => $result ? $result->isFinal : null,
 			'documents' => array_map(function (Document $document) {
 				return [
 					'id_document' => $document->id,

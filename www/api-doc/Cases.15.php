@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>ApiDocu - /api/dispute-case/&lt;id&gt;</title>
+	<title>ApiDocu - /api/case/search[/&lt;query&gt;/[&lt;start&gt;-&lt;count&gt;]]</title>
 	<style>html, body {
 	margin: 0;
 	padding: 0;
@@ -406,7 +406,7 @@ pre.apiDocu-json {
 
 	</a>
 	<a href="Advocates.7.php" class="apiDocu-url">
-		/api/advocate-results/<span class="apiDocu-mask-param"&gt;</span>&lt;advocate&gt;</span>[/<span class="apiDocu-mask-param"&gt;</span>&lt;court&gt;</span>]
+		/api/advocate-rankings/<span class="apiDocu-mask-param"&gt;</span>&lt;decile&gt;</span>[/[<span class="apiDocu-mask-param"&gt;</span>&lt;start&gt;</span>-<span class="apiDocu-mask-param"&gt;</span>&lt;count&gt;</span>]]
 
 		<div class="apiDocu-url-method">GET</div>
 
@@ -416,13 +416,13 @@ pre.apiDocu-json {
 		</div>
 	</a>
 	<a href="Advocates.8.php" class="apiDocu-url">
-		/api/advocate-results/
+		/api/advocate-rankings/
 
 		<div class="apiDocu-url-method"></div>
 
 	</a>
 	<a href="Advocates.9.php" class="apiDocu-url">
-		/api/advocate/search[/<span class="apiDocu-mask-param"&gt;</span>&lt;query&gt;</span>/[<span class="apiDocu-mask-param"&gt;</span>&lt;start&gt;</span>-<span class="apiDocu-mask-param"&gt;</span>&lt;count&gt;</span>]]
+		/api/advocate-results/<span class="apiDocu-mask-param"&gt;</span>&lt;advocate&gt;</span>[/<span class="apiDocu-mask-param"&gt;</span>&lt;court&gt;</span>]
 
 		<div class="apiDocu-url-method">GET</div>
 
@@ -432,6 +432,22 @@ pre.apiDocu-json {
 		</div>
 	</a>
 	<a href="Advocates.10.php" class="apiDocu-url">
+		/api/advocate-results/
+
+		<div class="apiDocu-url-method"></div>
+
+	</a>
+	<a href="Advocates.11.php" class="apiDocu-url">
+		/api/advocate/search[/<span class="apiDocu-mask-param"&gt;</span>&lt;query&gt;</span>/[<span class="apiDocu-mask-param"&gt;</span>&lt;start&gt;</span>-<span class="apiDocu-mask-param"&gt;</span>&lt;count&gt;</span>]]
+
+		<div class="apiDocu-url-method">GET</div>
+
+		<div class="apiDocu-url-tags">
+			
+				<span style="background-color: #9b59b6;" class="apiDocu-url-tag">public</span>
+		</div>
+	</a>
+	<a href="Advocates.12.php" class="apiDocu-url">
 		/api/advocate/search
 
 		<div class="apiDocu-url-method"></div>
@@ -442,7 +458,7 @@ pre.apiDocu-json {
 				<h2 class="apiDocu-section-title">Cases</h2>
 
 				<div class="apiDocu-section">
-	<a href="Cases.11.php" class="apiDocu-url">
+	<a href="Cases.13.php" class="apiDocu-url">
 		/api/case/<span class="apiDocu-mask-param"&gt;</span>&lt;id&gt;</span>
 
 		<div class="apiDocu-url-method">GET</div>
@@ -452,13 +468,13 @@ pre.apiDocu-json {
 				<span style="background-color: #9b59b6;" class="apiDocu-url-tag">public</span>
 		</div>
 	</a>
-	<a href="Cases.12.php" class="apiDocu-url">
+	<a href="Cases.14.php" class="apiDocu-url">
 		/api/case/
 
 		<div class="apiDocu-url-method"></div>
 
 	</a>
-	<a href="Cases.13.php" class="apiDocu-url">
+	<a href="Cases.15.php" class="apiDocu-url">
 		/api/case/search[/<span class="apiDocu-mask-param"&gt;</span>&lt;query&gt;</span>/[<span class="apiDocu-mask-param"&gt;</span>&lt;start&gt;</span>-<span class="apiDocu-mask-param"&gt;</span>&lt;count&gt;</span>]]
 
 		<div class="apiDocu-url-method">GET</div>
@@ -468,30 +484,14 @@ pre.apiDocu-json {
 				<span style="background-color: #9b59b6;" class="apiDocu-url-tag">public</span>
 		</div>
 	</a>
-	<a href="Cases.14.php" class="apiDocu-url">
+	<a href="Cases.16.php" class="apiDocu-url">
 		/api/case/search/
 
 		<div class="apiDocu-url-method"></div>
 
 	</a>
-	<a href="Cases.15.php" class="apiDocu-url">
-		/api/dispute-case/<span class="apiDocu-mask-param"&gt;</span>&lt;id&gt;</span>
-
-		<div class="apiDocu-url-method">POST</div>
-
-		<div class="apiDocu-url-tags">
-			
-				<span style="background-color: #9b59b6;" class="apiDocu-url-tag">public</span>
-		</div>
-	</a>
-	<a href="Cases.16.php" class="apiDocu-url">
-		/api/dispute-case/
-
-		<div class="apiDocu-url-method"></div>
-
-	</a>
 	<a href="Cases.17.php" class="apiDocu-url">
-		/api/dispute-case-verification/
+		/api/dispute-case/<span class="apiDocu-mask-param"&gt;</span>&lt;id&gt;</span>
 
 		<div class="apiDocu-url-method">POST</div>
 
@@ -506,12 +506,28 @@ pre.apiDocu-json {
 		<div class="apiDocu-url-method"></div>
 
 	</a>
+	<a href="Cases.19.php" class="apiDocu-url">
+		/api/dispute-case-verification/
+
+		<div class="apiDocu-url-method">POST</div>
+
+		<div class="apiDocu-url-tags">
+			
+				<span style="background-color: #9b59b6;" class="apiDocu-url-tag">public</span>
+		</div>
+	</a>
+	<a href="Cases.20.php" class="apiDocu-url">
+		/api/dispute-case/
+
+		<div class="apiDocu-url-method"></div>
+
+	</a>
 				</div>
 
 				<h2 class="apiDocu-section-title">Feedback</h2>
 
 				<div class="apiDocu-section">
-	<a href="Feedback.19.php" class="apiDocu-url">
+	<a href="Feedback.21.php" class="apiDocu-url">
 		/api/feedback/
 
 		<div class="apiDocu-url-method">POST</div>
@@ -521,7 +537,7 @@ pre.apiDocu-json {
 				<span style="background-color: #9b59b6;" class="apiDocu-url-tag">public</span>
 		</div>
 	</a>
-	<a href="Feedback.20.php" class="apiDocu-url">
+	<a href="Feedback.22.php" class="apiDocu-url">
 		/api/feedback/
 
 		<div class="apiDocu-url-method"></div>
@@ -535,9 +551,9 @@ pre.apiDocu-json {
 
 	<div class="apiDocu-container">
 		<div class="apiDocu-url">
-			/api/dispute-case/<span class="apiDocu-mask-param"&gt;</span>&lt;id&gt;</span>
+			/api/case/search[/<span class="apiDocu-mask-param"&gt;</span>&lt;query&gt;</span>/[<span class="apiDocu-mask-param"&gt;</span>&lt;start&gt;</span>-<span class="apiDocu-mask-param"&gt;</span>&lt;count&gt;</span>]]
 
-			<div class="apiDocu-url-method">POST</div>
+			<div class="apiDocu-url-method">GET</div>
 
 			<div class="apiDocu-url-tags">
 				
@@ -547,12 +563,12 @@ pre.apiDocu-json {
 
 			<h2>Description</h2>
 
-			<div class="apiDocu-description apiDocu-description-main">Dispute given case (case result, advocate or both).<br />Apart from case ID following parameters are expected (and mandatory) in POST params:<br /> - full_name - an non-empty string with sender full name<br /> - from - non-empty valid e-mail address of sender<br /> - content - non-empty text explaining why the tagging(s) should be re-considered<br /> - disputed_tagging - what is disputed<br /> - captcha_token - an non-empty captcha token which will be used to validate it<br /> - datetime - datetime of moment when the disputation happens, see warning below. In DATE_ATOM format<br />Field disputed_tagging can contain:<br /> - <b>case_result</b><br /> - <b>advocate</b><br /> - <b>both</b><br />Warning: datetime should be the moment of loading taggins (or slightly in the past) as there are no IDs what is disputed.<br />This time is used to detect when tagging changed while user was filling up the form. In such case fail is inevitable.<br />Outcome:<br /><br><pre class="apiDocu-json">    {<br />        <span class="apiDocu-string">"result"</span>: <span class="apiDocu-string">"success"</span><br />    }<br /></pre><br />Potential results of disputing:<br /> - <b>invalid_input</b> when input is invalid<br /> - <b>invalid_captcha</b> when captcha is invalid<br /> - <b>no_advocate_tagging</b> when disputed advocate but there is no such for given case<br /> - <b>no_case_result_tagging</b> when disputed case_result but there is no such for given case<br /> - <b>inconsistent</b> when there are taggings newer than given datetime<br /> - <b>fail</b> when storing fails<br /> - <b>success</b> when succeeded</div>
+			<div class="apiDocu-description apiDocu-description-main">Get relevant case<br />Returns list of matched cases.<br /><br><pre class="apiDocu-json">    [<br />        {<br />            id_case: 234000,<br />            id_court: 3,<br />            registry_mark: <span class="apiDocu-string">"22 Cdo 2045/2012"</span><br />        },<br />    ]<br /></pre><br />There is one optional GET parameter:<br /> - strategy - determines the matching strategy (from <b>start</b>, to <b>end</b> or anywhere in the <b>middle</b>).<br />Note: provides only cases which are relevant for advocates portal.</div>
 
 
 		<h2>Methods</h2>
 
-		<p class="apiDocu-description">POST</p>
+		<p class="apiDocu-description">GET</p>
 
 		<div class="apiDocu-parameters">
 			<h2>Mask parameters</h2>
@@ -560,7 +576,25 @@ pre.apiDocu-json {
 			<table>
 					<tr>
 						<th>
-							<span class="apiDocu-mask-param">&lt;id&gt;</span>
+							<span class="apiDocu-mask-param">&lt;query&gt;</span>
+							<div class="apiDocu-mask-param-description">
+								<ul>
+									<li>
+										<strong>requirement</strong>: .+
+									</li>
+									<li>
+										<strong>type</strong>: string
+									</li>
+									<li>
+										<strong>description</strong>: Non empty string query to be matched anywhere in case registry mark.
+									</li>
+								</ul>
+							</div>
+						</th>
+					</tr>
+					<tr>
+						<th>
+							<span class="apiDocu-mask-param">&lt;start&gt;</span>
 							<div class="apiDocu-mask-param-description">
 								<ul>
 									<li>
@@ -570,7 +604,31 @@ pre.apiDocu-json {
 										<strong>type</strong>: integer
 									</li>
 									<li>
-										<strong>description</strong>: Case ID.
+										<strong>description</strong>: Specifies where to start.
+									</li>
+									<li>
+										<strong>default</strong>: 0
+									</li>
+								</ul>
+							</div>
+						</th>
+					</tr>
+					<tr>
+						<th>
+							<span class="apiDocu-mask-param">&lt;count&gt;</span>
+							<div class="apiDocu-mask-param-description">
+								<ul>
+									<li>
+										<strong>requirement</strong>: \d+
+									</li>
+									<li>
+										<strong>type</strong>: integer
+									</li>
+									<li>
+										<strong>description</strong>: Specifies how many results to return. Maximum is 100.
+									</li>
+									<li>
+										<strong>default</strong>: 20
 									</li>
 								</ul>
 							</div>

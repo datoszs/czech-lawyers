@@ -8,6 +8,7 @@ use App\Enums\Court;
 use App\Model\Advocates\Advocate;
 use App\Model\Services\AdvocateService;
 use App\Model\Services\TaggingService;
+use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Presenter;
 use Ublaboo\ApiRouter\ApiRoute;
@@ -56,16 +57,20 @@ class AdvocateResultsPresenter extends Presenter
 	 *
 	 * Note: statistics take into account only cases which are relevant for advocates portal.
 	 *
+	 * Errors:
+	 *  - Returns HTTP 404 with error <b>no_advocate</b> when such advocate doesn't exist
+	 *  - Returns HTTP 404 with error <b>no_court</b> when given court is invalid
+	 *
 	 * @ApiRoute(
 	 *     "/api/advocate-results/<advocate>[/<court>]",
 	 *     parameters={
 	 *         "advocate"={
-	 *             "requirement": "\d+",
+	 *             "requirement": "-?\d+",
 	 *             "type": "integer",
 	 *             "description": "Advocate ID.",
 	 *         },
 	 *         "court"={
-	 *             "requirement": "\d+",
+	 *             "requirement": "-?\d+",
 	 *             "type": "integer",
 	 *             "description": "Court ID.",
 	 *         },
@@ -79,17 +84,21 @@ class AdvocateResultsPresenter extends Presenter
 	 * @param int $advocate Advocate ID
 	 * @param int|null $court
 	 * @throws BadRequestException when advocate was not found
-	 * @internal param $ ?int $court Court ID
+	 * @throws AbortException when redirecting/forwarding
 	 */
 	public function actionRead(int $advocate, ?int $court = null) : void
 	{
 		if ($court && !in_array($court, Court::$types, true)) {
-			throw new BadRequestException("No such court [{$court}]", 404);
+			$this->getHttpResponse()->setCode(404);
+			$this->sendJson(['error' => 'no_court', 'message' => "No such court [{$court}]"]);
+			return;
 		}
 		// Load data
 		$advocateEntity = $this->advocateService->get($advocate);
 		if (!$advocateEntity) {
-			throw new BadRequestException("No such advocate [{$advocate}]", 404);
+			$this->getHttpResponse()->setCode(404);
+			$this->sendJson(['error' => 'no_advocate', 'message' => "No such advocate [{$advocate}]"]);
+			return;
 		}
 		$statistics = $this->taggingService->computeAdvocateStatisticsPerYear($advocate, $court);
 		// Transform to output

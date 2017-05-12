@@ -12,6 +12,7 @@ use App\Model\Services\AdvocateService;
 use App\Model\Services\CauseService;
 use App\Model\Services\TaggingService;
 use App\Utils\TemplateFilters;
+use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Presenter;
 use Nextras\Orm\Collection\ICollection;
@@ -72,11 +73,16 @@ class AdvocateCasesPresenter extends Presenter
 	 *
 	 * Note: provides only cases which are relevant for advocates portal.
 	 *
+	 * Errors:
+	 *  - Returns HTTP 404 with error <b>no_advocate</b> when such advocate doesn't exist
+	 *  - Returns HTTP 400 with error <b>invalid_court</b> when given court is invalid
+	 *  - Returns HTTP 400 with error <b>invalid_result</b> when given case result type is invalid
+	 *
 	 * @ApiRoute(
 	 *     "/api/advocate-cases/<advocate>",
 	 *     parameters={
 	 *         "advocate"={
-	 *             "requirement": "\d+",
+	 *             "requirement": "-?\d+",
 	 *             "type": "integer",
 	 *             "description": "Advocate ID.",
 	 *         },
@@ -89,6 +95,7 @@ class AdvocateCasesPresenter extends Presenter
 	 * )
 	 * @param int $advocate Advocate ID
 	 * @throws BadRequestException when advocate was not found
+	 * @throws AbortException when redirecting/forwarding
 	 */
 	public function actionRead(int $advocate) : void
 	{
@@ -101,19 +108,25 @@ class AdvocateCasesPresenter extends Presenter
 		if ($court) {
 			$court = (int) $court;
 			if (!in_array($court, Court::$types, true)) {
-				throw new BadRequestException("No such court [{$court}]", 404);
+				$this->getHttpResponse()->setCode(400);
+				$this->sendJson(['error' => 'invalid_court', 'message' => "No such court [{$court}]"]);
+				return;
 			}
 		}
 		if ($year) {
 			$year = (int) $year;
 		}
 		if ($result && !isset(CaseResult::$statuses[$result])) {
-			throw new BadRequestException("No such result [{$result}]", 404);
+			$this->getHttpResponse()->setCode(400);
+			$this->sendJson(['error' => 'invalid_result', 'message' => "No such result [{$result}]"]);
+			return;
 		}
 		// Load data
 		$advocateEntity = $this->advocateService->get($advocate);
 		if (!$advocateEntity) {
-			throw new BadRequestException("No such advocate [{$advocate}]", 404);
+			$this->getHttpResponse()->setCode(404);
+			$this->sendJson(['error' => 'no_advocate', 'message' => "No such advocate [{$advocate}]"]);
+			return;
 		}
 		$cases = $this->causeService->findFromAdvocate($advocate, $court, $year, $result);
 		$results = $this->prepareCasesResults($cases->fetchAll());

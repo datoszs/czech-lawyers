@@ -69,6 +69,9 @@ class AdvocatePresenter extends Presenter
 	 *                 "fullname": "JUDr. Petr Ostrý"
 	 *             },
 	 *         ]
+	 *         "rankings": {
+	 *             "decile": 2
+	 *         }
 	 *     }
 	 * </json>
 	 *
@@ -88,11 +91,14 @@ class AdvocatePresenter extends Presenter
 	 * In example Petr Ostrý was previously named Petr Omáčka or the queried advocate was names Petr Ostrý.
 	 * Match is performed on names only (without degrees).
 	 *
+	 * Errors:
+	 *  - Returns HTTP 404 with error <b>no_advocate</b> when such advocate doesn't exist
+	 *
 	 * @ApiRoute(
 	 *     "/api/advocate/<id>",
 	 *     parameters={
 	 *         "id"={
-	 *             "requirement": "\d+",
+	 *             "requirement": "-?\d+",
 	 *             "type": "integer",
 	 *             "description": "Advocate ID.",
 	 *         },
@@ -104,7 +110,7 @@ class AdvocatePresenter extends Presenter
 	 *     },
 	 * )
 	 * @param int $id Advocate ID
-	 * @throws AbortException when redirection happens
+	 * @throws AbortException when redirecting/forwarding
 	 * @throws BadRequestException when advocate was not found
 	 */
 	public function actionRead(int $id) : void
@@ -112,17 +118,20 @@ class AdvocatePresenter extends Presenter
 		// Load data
 		$advocate = $this->advocateService->get($id);
 		if (!$advocate) {
-			throw new BadRequestException("No such advocate [{$id}]", 404);
+			$this->getHttpResponse()->setCode(404);
+			$this->sendJson(['error' => 'no_advocate', 'message' => "No such advocate [{$id}]"]);
+			return;
 		}
 		$advocatesOfSameName = $this->advocateService->findOfSameName($advocate);
 		$statistics = $this->taggingService->computeAdvocatesStatistics([$id]);
+		$decile = $this->advocateService->getAdvocateDecile($advocate);
 		// Transform to output
-		$output = $this->mapAdvocate($advocate, $statistics[$advocate->id] ?? [], $advocatesOfSameName);
+		$output = $this->mapAdvocate($advocate, $statistics[$advocate->id] ?? [], $advocatesOfSameName, $decile);
 		// Send output
 		$this->sendJson($output);
 	}
 
-	private function mapAdvocate(Advocate $advocate, array $statistics, array $advocatesOfSameName)
+	private function mapAdvocate(Advocate $advocate, array $statistics, array $advocatesOfSameName, ?int $decile)
 	{
 		/** @var AdvocateInfo $currentInfo */
 		$currentInfo = $advocate->advocateInfo->get()->fetch();
@@ -145,7 +154,10 @@ class AdvocatePresenter extends Presenter
 				CaseResult::RESULT_NEUTRAL => $statistics[CaseResult::RESULT_NEUTRAL] ?? 0,
 				CaseResult::RESULT_POSITIVE => $statistics[CaseResult::RESULT_POSITIVE] ?? 0,
 			],
-			'advocates_with_same_name' => $this->mapAdvocateWithSameName($advocatesOfSameName)
+			'advocates_with_same_name' => $this->mapAdvocateWithSameName($advocatesOfSameName),
+			'rankings' => [
+				'decile' => $decile
+			]
 		];
 	}
 

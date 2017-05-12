@@ -42,4 +42,25 @@ class AdvocatesMapper extends Mapper
 			->andWhere('id_advocate != %i', $advocateId)
 			->groupBy('advocate.id_advocate');
 	}
+
+	/**
+	 * Returns all advocates whose decile (in ranking) is same as given one.
+	 * Ordered by score.
+	 *
+	 * @param int $decile Decile to be obtained, expected value 1-10.
+	 * @param int $start Where to starts
+	 * @param int $count Number of results
+	 * @param bool $reverse Whether the results should be reversed
+	 * @return QueryBuilder
+	 */
+	public function findFromDecile(int $decile, int $start, int $count, bool $reverse)
+	{
+		return $this
+			->builder()
+			->innerJoin('advocate', 'vm_advocate_score', 'vm_advocate_score', 'vm_advocate_score.id_advocate = advocate.id_advocate')
+			->where('decile = %i', $decile)
+			->limitBy($count, $start)
+			->orderBy('score ' . ($reverse ? 'ASC' : 'DESC'));
+
+	}
 }

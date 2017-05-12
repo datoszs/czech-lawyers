@@ -74,20 +74,24 @@ class DisputeCasePresenter extends Presenter
 	 *     }
 	 * </json>
 	 *
-	 * Potential results of disputing:
-	 *  - <b>invalid_input</b> when input is invalid
-	 *  - <b>invalid_captcha</b> when captcha is invalid
-	 *  - <b>no_advocate_tagging</b> when disputed advocate but there is no such for given case
-	 *  - <b>no_case_result_tagging</b> when disputed case_result but there is no such for given case
-	 *  - <b>inconsistent</b> when there are taggings newer than given datetime
-	 *  - <b>fail</b> when storing fails
-	 *  - <b>success</b> when succeeded
+	 * Successes & errors:
+	 *  - Returns HTTP 200 with result <b>success</b> when everything was OK and dispustation was created.
+	 *  - Returns HTTP 404 with error <b>no_case</b> when such case doesn't exist
+	 *  - Returns HTTP 400 with error <b>invalid_input</b> when input is invalid
+	 *  - Returns HTTP 401 with error <b>invalid_captcha</b> when captcha is invalid
+	 *  - Returns HTTP 400 with error <b>no_advocate_tagging</b> when disputed advocate but there is no such for given case
+	 *  - Returns HTTP 400 with error <b>no_case_result_tagging</b> when disputed case_result but there is no such for given case
+	 *  - Returns HTTP 409 with error <b>final_both_taggings</b> when disputed advocate tagging and case result tagging are already final
+	 *  - Returns HTTP 409 with error <b>final_advocate_tagging</b> when disputed advocate tagging is already final
+	 *  - Returns HTTP 409 with error <b>final_case_result_tagging</b> when disputed case result tagging is already final
+	 *  - Returns HTTP 409 with error <b>inconsistent</b> when there are taggings newer than given datetime.
+	 *  - Returns HTTP 500 with error <b>fail</b> when storing fails
 	 *
 	 * @ApiRoute(
 	 *     "/api/dispute-case/<id>",
 	 *     parameters={
 	 *         "id"={
-	 *             "requirement": "\d+",
+	 *             "requirement": "-?\d+",
 	 *             "type": "integer",
 	 *             "description": "Case ID.",
 	 *         },
@@ -107,7 +111,9 @@ class DisputeCasePresenter extends Presenter
 		// Load data from GET and POST request
 		$case = $this->causeService->getRelevantForAdvocates($id);
 		if (!$case) {
-			throw new BadRequestException("No such case [{$id}]", 404);
+			$this->getHttpResponse()->setCode(404);
+			$this->sendJson(['error' => 'no_case', 'message' => "No such case [{$id}]"]);
+			return;
 		}
 
 		$fullname = $this->request->getPost('full_name');
@@ -118,30 +124,60 @@ class DisputeCasePresenter extends Presenter
 		$datetime = $this->parseDatetime($this->request->getPost('datetime'));
 		// Validate data
 		if (!$fullname || !$from || !Validators::isEmail($from) || !$content || !$disputedTagging || !in_array($disputedTagging, ['case_result', 'advocate', 'both'], true) || !$datetime || !$captchaToken) {
-			$this->sendJson(['result' => 'invalid_input']);
+			$this->getHttpResponse()->setCode(400);
+			$this->sendJson(['error' => 'invalid_input']);
+			return;
 		}
 		if (!$this->validCaptcha($captchaToken)) {
-			$this->sendJson(['result' => 'invalid_captcha']);
+			$this->getHttpResponse()->setCode(401);
+			$this->sendJson(['error' => 'invalid_captcha']);
+			return;
 		}
 
 		// find what is disputed
 		$advocateTagging = $this->taggingService->getLatestAdvocateTaggingFor($case);
-
 		$caseResultTagging = $this->getLatestCaseResultTagging($case);
+
 		// check if disputed thing really exists
 		if (($disputedTagging === 'both' || $disputedTagging === 'advocate') && !$advocateTagging) {
-			$this->sendJson(['result' => 'no_advocate_tagging']);
+			$this->getHttpResponse()->setCode(400);
+			$this->sendJson(['error' => 'no_advocate_tagging']);
+			return;
 		}
 		if (($disputedTagging === 'both' || $disputedTagging === 'case_result') && !$caseResultTagging) {
-			$this->sendJson(['result' => 'no_case_result_tagging']);
+			$this->getHttpResponse()->setCode(400);
+			$this->sendJson(['error' => 'no_case_result_tagging']);
+			return;
 		}
+
+		// find if tagging is not already final
+		if (($disputedTagging === 'both') && $advocateTagging->isFinal && $caseResultTagging->isFinal) {
+			$this->getHttpResponse()->setCode(409);
+			$this->sendJson(['error' => 'final_both_taggings']);
+			return;
+		}
+		if (($disputedTagging === 'both' || $disputedTagging === 'advocate') && $advocateTagging->isFinal) {
+			$this->getHttpResponse()->setCode(409);
+			$this->sendJson(['error' => 'final_advocate_tagging']);
+			return;
+		}
+		if (($disputedTagging === 'both' || $disputedTagging === 'case_result') && $caseResultTagging->isFinal) {
+			$this->getHttpResponse()->setCode(409);
+			$this->sendJson(['error' => 'final_case_result_tagging']);
+			return;
+		}
+
 
 		// check consistency
 		if (($disputedTagging === 'both' || $disputedTagging === 'advocate') && $advocateTagging->inserted > $datetime) {
-			$this->sendJson(['result' => 'inconsistent']);
+			$this->getHttpResponse()->setCode(409);
+			$this->sendJson(['error' => 'inconsistent']);
+			return;
 		}
 		if (($disputedTagging === 'both' || $disputedTagging === 'case_result') && $caseResultTagging->inserted > $datetime) {
-			$this->sendJson(['result' => 'inconsistent']);
+			$this->getHttpResponse()->setCode(409);
+			$this->sendJson(['error' => 'inconsistent']);
+			return;
 		}
 
 		// store disputation in invalid status
@@ -156,7 +192,8 @@ class DisputeCasePresenter extends Presenter
 			);
 		} catch (Throwable $ex) {
 			Debugger::log($ex);
-			$this->sendJson(['result' => 'fail']);
+			$this->getHttpResponse()->setCode(500);
+			$this->sendJson(['error' => 'fail']);
 			return;
 		}
 
@@ -173,7 +210,9 @@ class DisputeCasePresenter extends Presenter
 		try {
 			$this->mailService->send($message);
 		} catch (SendException $exception) {
-			$this->sendJson(['result' => 'fail']);
+			$this->getHttpResponse()->setCode(500);
+			$this->sendJson(['error' => 'fail']);
+			return;
 		}
 		$this->sendJson(['result' => 'success']);
 	}

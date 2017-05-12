@@ -85,6 +85,7 @@ console:
 		- App\Commands\CausaUnifier
 		- App\Commands\TagAdvocates
 		- App\Commands\NSAdvocateTagger
+		- App\Commands\AdvocateScoreUpdate
 
 orm:
 	model: App\Model\Orm

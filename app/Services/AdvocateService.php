@@ -6,7 +6,12 @@ use App\Model\Advocates\AdvocateInfo;
 use App\Model\Orm;
 use DateTimeImmutable;
 use Nette\NotImplementedException;
+use Nextras\Dbal\Connection;
+use Nextras\Dbal\QueryException;
+use Nextras\Orm\Collection\ICollection;
 use Nextras\Orm\Entity\IEntity;
+use PDOException;
+use Tracy\Debugger;
 
 class AdvocateService
 {
@@ -14,9 +19,13 @@ class AdvocateService
 	/** @var Orm */
 	private $orm;
 
-	public function __construct(Orm $orm)
+	/** @var Connection */
+	private $connection;
+
+	public function __construct(Orm $orm, Connection $connection)
 	{
 		$this->orm = $orm;
+		$this->connection = $connection;
 	}
 
 	public function get($advocateId)
@@ -88,6 +97,58 @@ class AdvocateService
 	public function findbyRemoteIdentificator($remoteIdentificator)
 	{
 		return $this->orm->advocates->findBy(['remoteIdentificator' => $remoteIdentificator])->fetch();
+	}
+
+	/**
+	 * Returns advocates from given decile
+	 *
+	 * @param int $decile
+	 * @param int $start
+	 * @param int $count
+	 * @param bool $reverse
+	 * @return Advocate[]|ICollection
+	 */
+	public function findFromDecile(int $decile, int $start, int $count, bool $reverse)
+	{
+		return $this->orm->advocates->findFromDecile($decile, $start, $count, $reverse);
+	}
+
+	/**
+	 * Updates advocate scores
+	 *
+	 * @return bool True if update was successful, false otherwise
+	 */
+	public function updateScores()
+	{
+		try {
+			$this->connection->query('REFRESH MATERIALIZED VIEW CONCURRENTLY vm_advocate_score');
+			return true;
+		} catch (QueryException $exception) {
+			Debugger::log($exception);
+			return false;
+		}
+	}
+
+	/**
+	 * Returns advocate decile or null
+	 *
+	 * @param Advocate $advocate
+	 * @return int|NULL
+	 */
+	public function getAdvocateDecile(Advocate $advocate) : ?int
+	{
+		try {
+			$field = $this->connection
+				->query('SELECT decile FROM vm_advocate_score WHERE id_advocate = %i', $advocate->id)
+				->fetchField();
+			if ($field !== null) {
+				return (int) $field;
+			}
+			return null;
+		} catch (QueryException $exception) {
+			Debugger::log($exception);
+			return null;
+		}
 	}
 
 }
