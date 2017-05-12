@@ -3,3 +3,4 @@ export {default as InputTextArea} from './InputTextArea';
 export {default as InputText} from './InputText';
 export {default as SelectOptionComponent} from './SelectOptionComponent';
 export {default as SimpleInputText} from './SimpleInputText';
+export {default as BasicInputLayout} from './BasicInputLayout';
