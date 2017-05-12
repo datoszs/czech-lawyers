@@ -25,7 +25,7 @@ describe('Case Detail model', () => {
         const caseDetail = new CaseDetail(template);
         caseDetail.result.should.equal(result.POSITIVE);
     });
-    it('marks unknown result as empty', () => {
+    it('treats unknown result as empty', () => {
         const template = createTemplate({result: 'UNKNOWN'});
         const caseDetail = new CaseDetail(template);
         expect(caseDetail.result).to.be.null();
@@ -34,6 +34,15 @@ describe('Case Detail model', () => {
         const caseDetail = new CaseDetail(createTemplate());
         caseDetail.documents.should.be.an.instanceOf(List);
     });
+    it('treats unspecified advocate tagging finality as false', () => {
+        const caseDetail = new CaseDetail(createTemplate());
+        caseDetail.advocateFinal.should.be.false();
+    });
+    it('treats unspecified result tagging finality as false', () => {
+        const caseDetail = new CaseDetail(createTemplate());
+        caseDetail.resultFinal.should.be.false();
+    });
+    it('treats null advocate tagging finality as false');
     it('maps documents into their ids', () => {
         const template = createTemplate({documents: [{
             id: 94001,
@@ -51,11 +60,14 @@ describe('Case Detail model', () => {
             registry_mark: '20 CDO 2696/2010',
             tagging_advocate: {id_advocate: 121, fullname: 'JUDr. Tomáš Sokol'},
             tagging_result: 'negative',
+            tagging_advocate_final: true,
+            tagging_result_final: false,
             documents: [{
                 id_document: 94001,
                 mark: 'ECLI:CZ:NS:2010:20.CDO.2696.2010.1',
                 decision_date: '2010-08-17T02:00:00+02:00',
                 public_link: 'http://nsoud.cz/Judikatura/judikatura_ns.nsf/WebPrint/06FEB14C62D9D3B9C1257A4E0065FDFD?openDocument',
+                public_local_link: 'https://www.cestiadvokati.cz/public/document/view/108429',
             }],
         };
         it('creates valid object', () => {
@@ -81,6 +93,13 @@ describe('Case Detail model', () => {
         it('maps result', () => {
             caseDetail.result.should.equal(dto.tagging_result);
         });
+        it('maps advocate tagging finality', () => {
+            caseDetail.advocateFinal.should.equal(dto.tagging_advocate_final);
+        });
+        it('maps result tagging finality', () => {
+            caseDetail.resultFinal.should.equal(dto.tagging_result_final);
+        });
+        it('maps result tagging finality');
         it('maps documents with appropriate mapping function', () => {
             const caseTemplate = mapDtoToCaseDetail(dto);
             const document = mapDtoToDocument(dto.documents[0]);
@@ -91,6 +110,14 @@ describe('Case Detail model', () => {
             const otherCaseDetail = new CaseDetail(mapDtoToCaseDetail(sampleDto));
             expect(otherCaseDetail.advocateName).to.be.null();
             expect(otherCaseDetail.advocateId).to.be.null();
+        });
+        it('treats null advocate tagging finality as false', () => {
+            const customCaseDetail = new CaseDetail(mapDtoToCaseDetail(Object.assign({}, dto, {tagging_advocate_final: null})));
+            customCaseDetail.advocateFinal.should.be.false();
+        });
+        it('treats null result tagging finality as false', () => {
+            const customCaseDetail = new CaseDetail(mapDtoToCaseDetail(Object.assign({}, dto, {tagging_result_final: null})));
+            customCaseDetail.resultFinal.should.be.false();
         });
     });
 });

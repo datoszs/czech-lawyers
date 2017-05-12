@@ -12,6 +12,8 @@ class CaseDetail extends Record({
     advocateName: null,
     result: null,
     documents: [],
+    advocateFinal: false,
+    resultFinal: false,
 }) {
     constructor(values) {
         invariant(values.id, 'Case id must be specified');
@@ -31,6 +33,8 @@ export const mapDtoToCaseDetail = (dto) => ({
     advocateName: dto.tagging_advocate && dto.tagging_advocate.fullname,
     result: dto.tagging_result,
     documents: dto.documents.map(mapDtoToDocument),
+    advocateFinal: !!dto.tagging_advocate_final,
+    resultFinal: !!dto.tagging_result_final,
 });
 
 export default CaseDetail;
