@@ -1,32 +1,17 @@
 import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
-import {Field} from 'redux-form/immutable';
-import translate from '../../translate';
 import {InputText} from '../../components/form';
+import BasicFieldComponent from './BasicFieldComponent';
 
-const mapStateToProps = (state, {label, placeholder}) => ({
-    label: label && translate.getMessage(state, label),
-    placeholder: placeholder && translate.getMessage(state, placeholder),
-});
+const NewTextField = BasicFieldComponent()(InputText);
 
-const mergeProps = ({label, placeholder}, dispatchProps, {name}) => ({
-    component: InputText,
-    label,
-    placeholder,
-    name,
-});
-
-const TextField = connect(mapStateToProps, undefined, mergeProps)(Field);
-
-TextField.propTypes = {
+NewTextField.propTypes = {
     name: PropTypes.string.isRequired,
-    label: PropTypes.string,
+    label: PropTypes.string.isRequired,
     placeholder: PropTypes.string,
 };
 
-TextField.defaultProps = {
-    label: null,
+NewTextField.defaultProps = {
     placeholder: null,
 };
 
-export default TextField;
+export default NewTextField;

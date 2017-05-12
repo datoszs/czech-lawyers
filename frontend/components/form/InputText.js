@@ -1,18 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {FormGroup, FormControl, ControlLabel} from 'react-bootstrap';
+import {FormControl} from 'react-bootstrap';
 
-const InputText = ({input, label, placeholder}) => (
-    <FormGroup>
-        {label && <ControlLabel>{label}</ControlLabel>}
-        <FormControl
-            type="text"
-            className="input-text"
-            placeholder={placeholder}
-            value={input.value}
-            onChange={input.onChange}
-        />
-    </FormGroup>
+const InputText = ({input, placeholder}) => (
+    <FormControl
+        type="text"
+        placeholder={placeholder}
+        value={input.value}
+        onChange={input.onChange}
+    />
 );
 
 InputText.propTypes = {
@@ -20,12 +16,10 @@ InputText.propTypes = {
         value: PropTypes.string,
         onChange: PropTypes.func.isRequired,
     }).isRequired,
-    label: PropTypes.string,
     placeholder: PropTypes.string,
 };
 
 InputText.defaultProps = {
-    label: null,
     placeholder: '',
 };
 
