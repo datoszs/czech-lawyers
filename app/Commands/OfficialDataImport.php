@@ -8,6 +8,7 @@ use App\Model\Services\CourtService;
 use App\Utils\Helpers;
 use App\Utils\Normalize;
 use app\Utils\JobCommand;
+use DateTimeImmutable;
 use League\Csv\Reader;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
@@ -28,12 +29,17 @@ class OfficialDataImport extends Command
 	const OPTION_KEYS_SHORTCUT = 'k';
 	const OPTION_SKIP = 'skip';
 	const OPTION_SKIP_SHORTCUT = 's';
+	const OPTION_PROPOSITION_KEY = 'proposition-key';
+	const OPTION_DECISION_KEY = 'decision-key';
+	const OPTION_DRY_RUN = 'dry-run';
+	const OPTION_DATE_FORMAT = 'date-format';
 
 	const RETURN_CODE_SUCCESS = 0;
 	const RETURN_CODE_INVALID_FILE = 1;
 	const RETURN_CODE_INVALID_NAMES = 2;
 	const RETURN_CODE_INVALID_SKIP = 3;
 	const RETURN_CODE_INVALID_COURT = 4;
+	const RETURN_CODE_INVALID_DATE_FORMAT = 5;
 
 	/** @var CauseService @inject */
 	public $causeService;
@@ -44,7 +50,7 @@ class OfficialDataImport extends Command
 	protected function configure()
 	{
 		$this->setName('app:import-official-data')
-			->setDescription('Imports information from official data (aggregates, make them unique and overwrite old data). May require more of memory_limit.')
+			->setDescription('Imports information from official data (aggregates, make them unique and overwrite old data). May require increase of memory_limit. Expects registry mark in first column.')
 			->addArgument(
 				static::ARGUMENT_COURT,
 				InputArgument::REQUIRED,
@@ -63,13 +69,33 @@ class OfficialDataImport extends Command
 				static::OPTION_KEYS,
 				static::OPTION_KEYS_SHORTCUT,
 				InputOption::VALUE_REQUIRED,
-				'Names of all columns delimited by |. Must match count of columns in the CSV file.'
+				'Stored names of all columns delimited by |. Must match count of columns in the CSV file. Names should be the same as already used in given court previously stored official data.'
 			)
 			->addOption(
 				static::OPTION_SKIP,
 				static::OPTION_SKIP_SHORTCUT,
 				InputOption::VALUE_OPTIONAL,
 				'Indexes of columns (from 1) which will be skipped. Delimited by |.'
+			)->addOption(
+				static::OPTION_PROPOSITION_KEY,
+				null,
+				InputOption::VALUE_OPTIONAL,
+				sprintf('Key name (from the --%s option) which contains proposition date. Used for persisting such date to case.', static::OPTION_KEYS)
+			)->addOption(
+				static::OPTION_DECISION_KEY,
+				null,
+				InputOption::VALUE_OPTIONAL,
+				sprintf('Key name (from the --%s option) which contains decision date. Used for persisting such date to case.', static::OPTION_KEYS)
+			)->addOption(
+				static::OPTION_DATE_FORMAT,
+				null,
+				InputOption::VALUE_OPTIONAL,
+				sprintf('Format of dates, mandatory when --%s or --%s are set.', static::OPTION_PROPOSITION_KEY, static::OPTION_DECISION_KEY)
+			)->addOption(
+				static::OPTION_DRY_RUN,
+				null,
+				InputOption::VALUE_NONE,
+				'Dry run, nothing is persisted, just printed to standard output.'
 			);
 	}
 
@@ -82,9 +108,13 @@ class OfficialDataImport extends Command
 	 * @param string $delimiter
 	 * @param array $keys
 	 * @param array $skip
+	 * @param string|null $decisionKey
+	 * @param string|null $propositionKey
+	 * @param null|string $dateFormat
+	 * @param bool $dryRun
 	 * @return array where first is number of newly inserted and second number of overwritten items.
 	 */
-	public function processFile(OutputInterface $consoleOutput, $courtId, $file, $delimiter, $keys, $skip)
+	public function processFile(OutputInterface $consoleOutput, $courtId, $file, $delimiter, $keys, $skip, ?string $decisionKey, ?string $propositionKey, ?string $dateFormat, bool $dryRun)
 	{
 		// Ensure that the file is in UTF-8
 		if (!mb_check_encoding(file_get_contents($file), 'UTF-8')) {
@@ -123,16 +153,49 @@ class OfficialDataImport extends Command
 		$overwritten = 0;
 		foreach ($toPersist as $registryMark => $caseData) {
 			$year = Helpers::determineYear($registryMark);
-			$entity = $this->causeService->findOrCreate($court, $year, $registryMark); // explicitly create case when not already exists
+			$entity = $this->causeService->findOrCreate($court, $registryMark, $year, $this->jobRun); // explicitly create case when not already exists
 			if ($entity->officialData) {
 				$overwritten++;
 			} else {
 				$new++;
 			}
 			$entity->officialData = array_values(array_unique($caseData, SORT_REGULAR));
-			$this->causeService->save($entity);
+			// Process proposition date if requested
+			if ($propositionKey && is_array($entity->officialData)) {
+				$propositionDate = $this->extractDate($entity->officialData, $propositionKey, $dateFormat);
+				if ($propositionDate) {
+					$entity->propositionDate = $propositionDate;
+				}
+			}
+			// Process decision date if requested
+			if ($decisionKey && is_array($entity->officialData)) {
+				$decisionDate = $this->extractDate($entity->officialData, $decisionKey, $dateFormat);
+				if ($decisionDate) {
+					$entity->decisionDate = $decisionDate;
+				}
+			}
+			// Store result
+			if ($dryRun) {
+				$consoleOutput->writeln(sprintf("%s\n%s\n\n", $registryMark, print_r($caseData, true)));
+			} else {
+				$this->causeService->save($entity);
+			}
 		}
 		return [$new, $overwritten];
+	}
+
+	private function extractDate(array $data, string $key, string $format) : ?DateTimeImmutable
+	{
+		$temp = array_unique(array_column($data, $key));
+		// Check if all dates in one case are the same
+		if (count($temp) !== 1) {
+			return null;
+		}
+		$datetime = DateTimeImmutable::createFromFormat($format, reset($temp));
+		if ($datetime === false || $datetime === null || DateTimeImmutable::getLastErrors()['warning_count'] !== 0 || DateTimeImmutable::getLastErrors()['error_count'] !== 0) {
+			return null;
+		}
+		return $datetime;
 	}
 
 	protected function execute(InputInterface $input, OutputInterface $consoleOutput)
@@ -141,6 +204,10 @@ class OfficialDataImport extends Command
 		$court = $input->getArgument(static::ARGUMENT_COURT);
 		$file = $input->getArgument(static::ARGUMENT_FILE);
 		$delimiter = $input->getOption(static::OPTION_DELIMITER);
+		$decisionKey = $input->getOption(static::OPTION_DECISION_KEY);
+		$propositionKey = $input->getOption(static::OPTION_PROPOSITION_KEY);
+		$dateFormat = $input->getOption(static::OPTION_DATE_FORMAT);
+		$dryRun = (bool) $input->getOption(static::OPTION_DRY_RUN);
 		$keys = Helpers::safeExplode('|', $input->getOption(static::OPTION_KEYS));
 		$skip = Helpers::safeExplode('|', $input->getOption(static::OPTION_SKIP));
 		$code = 0;
@@ -159,13 +226,20 @@ class OfficialDataImport extends Command
 		} elseif ($skip && !Helpers::isIntArray($skip)) {
 			$message = 'Error: List of columns to skip has to be numerical.';
 			$code = static::RETURN_CODE_INVALID_SKIP;
+		} elseif (($propositionKey || $decisionKey) && !$dateFormat) {
+			$message = 'Error: Missing or invalid date format.';
+			$code = static::RETURN_CODE_INVALID_DATE_FORMAT;
 		} else {
 			// import to db
-			list($new, $overwritten) = $this->processFile($consoleOutput, Court::$types[$court], $file, $delimiter, $keys, $skip);
-			if ($new > 0 || $overwritten > 0) {
+			list($new, $overwritten) = $this->processFile($consoleOutput, Court::$types[$court], $file, $delimiter, $keys, $skip, $decisionKey, $propositionKey, $dateFormat, $dryRun);
+			if (!$dryRun && ($new > 0 || $overwritten > 0)) {
 				$this->causeService->flush();
 			}
-			$message = "Inserted new information to {$new} cases and {$overwritten} overwritten with new data.\n";
+			if ($dryRun) {
+				$message = "[Dry run] Inserted new information to {$new} cases and {$overwritten} overwritten with new data.\n";
+			} else {
+				$message = "Inserted new information to {$new} cases and {$overwritten} overwritten with new data.\n";
+			}
 			$consoleOutput->write($message);
 		}
 		$this->finalize($code, $output, $message);
