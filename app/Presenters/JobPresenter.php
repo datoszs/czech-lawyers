@@ -4,6 +4,7 @@ namespace App\Presenters;
 
 use App\Model\Services\JobService;
 use App\Utils\Responses\OriginalMimeTypeFileResponse;
+use IPub\VisualPaginator\Components\Control;
 
 
 class JobPresenter extends SecuredPresenter
@@ -33,6 +34,20 @@ class JobPresenter extends SecuredPresenter
 	}
 
 	/** @privilege(App\Utils\Resources::JOBS, App\Utils\Actions::VIEW) */
+	public function actionFailedRuns()
+	{
+		$runs = $this->jobService->findFailedRuns();
+		$visualPaginator = $this->getComponent('visualPaginator');
+		$totalCount = $runs->countStored();
+		$paginator = $visualPaginator->getPaginator();
+		$paginator->itemsPerPage = 20;
+		$paginator->itemCount = $totalCount;
+		$runs = $runs->limitBy($paginator->itemsPerPage, $paginator->offset);
+
+		$this->template->runs = $runs;
+	}
+
+	/** @privilege(App\Utils\Resources::JOBS, App\Utils\Actions::VIEW) */
 	public function actionRun($runId)
 	{
 		$this->template->run = $this->jobService->findRun($runId);
@@ -45,5 +60,12 @@ class JobPresenter extends SecuredPresenter
 	{
 		$filename = static::JOB_RUN_LOGS_DIR . $runId . '.bz';
 		$this->sendResponse(new OriginalMimeTypeFileResponse($filename));
+	}
+
+	protected function createComponentVisualPaginator()
+	{
+		$control = new Control();
+		$control->setTemplateFile(__DIR__ . '/templates/pagination.latte');
+		return $control;
 	}
 }

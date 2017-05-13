@@ -10,6 +10,7 @@ use DatePeriod;
 use DateTime;
 use Nextras\Dbal\Connection;
 use Nextras\Dbal\QueryException;
+use Nextras\Orm\Collection\ICollection;
 use Tracy\Debugger;
 use Tracy\ILogger;
 
@@ -57,6 +58,13 @@ class JobService
 	public function findRuns($jobId)
 	{
 		return $this->orm->jobRuns->findBy(['job' => $jobId])->orderBy('executed', 'DESC')->fetchAll();
+	}
+
+	public function findFailedRuns(): ICollection
+	{
+		return $this->orm->jobRuns
+			->findBy(['returnCode!=' => 0])
+			->orderBy('executed', 'DESC');
 	}
 
 	/** @return JobRun */

@@ -1,0 +1,44 @@
+{layout '../@admin.latte'}
+{var $pageTitle = 'Selhané úlohy'}
+
+{block content}
+	<h1 class="page-header">Selhané úlohy</h1>
+	{include ../flashes.latte}
+
+	{control visualPaginator}
+
+	<div class="table-responsive">
+		<table class="table table-striped table-condensed table-hover">
+			<thead>
+			<tr>
+				<th>ID</th>
+				<th>Úloha</th>
+				<th>Návratový&nbsp;kód</th>
+				<th>Zpráva</th>
+				<th>Výstup</th>
+			</tr>
+			</thead>
+		   {foreach $runs as $run}
+				<tr>
+					<td><b>{$run->id}</b></td>
+					<td>
+						<b>{$run->job->name}</b>
+						<br>{$run->executed|date: 'j. n. Y H:i'}
+						<br><span class="{if $run->returnCode === 0}text-success{else}text-danger{/if}">{if !$run->finished}<span class="text-danger"><b>FAIL</b></span>{else}{$run->finished|date: 'j. n. Y H:i'}{/if}</span>
+						<br>
+						{if $run->finished}
+							{var $interval = $run->finished->diff($run->executed)}
+							{$interval->format('%h:%i:%s')}&nbsp;s
+						{/if}
+					</td>
+					<td class="{if $run->returnCode === 0}text-success{else}text-danger{/if}"><b>{$run->returnCode}</b></td>
+					<td class="{if $run->returnCode === 0}text-success{else}text-danger{/if}">{$run->message}</td>
+					<td><a href="{link run, $run->id}"><span class="glyphicon glyphicon-search"></span></a></td>
+				</tr>
+			{/foreach}
+		</table>
+	</div>
+
+	{control visualPaginator}
+
+{/block}
