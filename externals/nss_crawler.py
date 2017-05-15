@@ -32,7 +32,7 @@ from urllib.parse import urljoin
 import pandas as pd
 from bs4 import BeautifulSoup
 from ghost import Ghost
-from tqdm import tqdm
+from tqdm import tqdm # view progress bar for debug
 
 base_url = "http://nssoud.cz/"
 url = "http://nssoud.cz/main0Col.aspx?cls=JudikaturaBasicSearch&pageSource=0"
@@ -107,9 +107,9 @@ create working directories
 def clean_directory(root):
     for f in os.listdir(root):
         try:
-            shutil.rmtree(f)
+            shutil.rmtree(join(root, f))
         except NotADirectoryError:
-            os.remove(f)
+            os.remove(join(root, f))
 
 
 def logging_process(arguments):
@@ -322,7 +322,8 @@ def extract_information(saved_pages, extract=None):
         writer_records = csv.DictWriter(csv_records, fieldnames=fieldnames, delimiter=";", quoting=csv.QUOTE_ALL)
         writer_records.writeheader()
 
-        t = tqdm(html_files, ncols=global_ncols)
+        # t = tqdm(html_files, ncols=global_ncols) # view progress bar
+        t = html_files
         count_documents = 0
         for html_f in t:
             logger.debug(html_f)
@@ -416,7 +417,8 @@ def walk_pages(count_of_pages, case_type):
         return True
     logger.debug("count_of_pages: %d", count_of_pages)
     positions = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-    t = tqdm(range(1, count_of_pages + 1), ncols=global_ncols)
+    t = range(1, count_of_pages + 1)
+    # t = tqdm(t, ncols=global_ncols) # view progress bar
     for i in t:  # walk pages
         response = session.content
         #soup = BeautifulSoup(response,"html.parser")
@@ -542,12 +544,12 @@ def download_pdf(data):
     """
 
     frame = data[["web_path", "local_path"]].dropna()
-    t = tqdm(frame, ncols=global_ncols)
+    # t = tqdm(frame, ncols=global_ncols) # view progress bar
     for row in frame.itertuples():
         filename = row[2]
         if not os.path.exists(join(documents_dir_path, filename)):
             logging_process(["curl", row[1], "-o", join(documents_dir_path, filename)])
-        t.update()
+        # t.update() # update progress bar
 
 
 def main():
