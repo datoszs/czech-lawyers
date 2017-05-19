@@ -10,7 +10,7 @@ const loadOptionsSaga = function* loadOptions() {
     const value = yield select(getInputValue);
     if (value) {
         const result = yield call(advocateAPI.autocomplete, value);
-        yield put(setAutocompleteResults(result.map(mapDtoToAdvocateAutocomplete)));
+        yield put(setAutocompleteResults(result.slice(0, 10).map(mapDtoToAdvocateAutocomplete)));
     } else {
         yield put(setAutocompleteResults([]));
     }
