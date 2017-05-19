@@ -59,10 +59,14 @@ export default {
     'case.dispute.submit': 'Rozporovat',
     'case.dispute': 'Rozporovat výsledek',
     'case.dispute.reason': 'Důvod k rozporování',
-    'case.dispute.resaon.result': 'Špatně přiřazený advokát',
-    'case.dispute.reason.advocate': 'Špatně přiřazený výsledek',
+    'case.dispute.reason.result': 'Špatně přiřazený výsledek',
+    'case.dispute.reason.advocate': 'Špatně přiřazený advokát',
     'case.dispute.reason.both': 'Špatně přiřazený advokát i výsledek',
     'case.dispute.comment': 'Vysvětlení',
+
+    'case.dispute.final.advocate': 'Advokáta tomuto případu přiřadil živý člověk a jsme si jím poměrně jistí. Pokud přesto nesouhlasíte s naším úsudkem, neváhejte a [kontaktujte nás](/contact#form.)',
+    'case.dispute.final.result': 'Výsledek tomuto případu přiřadil živý člověk a jsme si jím poměrně jistí. Pokud přesto nesouhlasíte s naším úsudkem, neváhejte a [kontaktujte nás](/contact#form.)',
+    'case.dispute.final.both': 'Advokáta i výsledek tomuto případu přiřadil živý člověk a jsme si jimi poměrně jistí. Pokud přesto nesouhlasíte s naším úsudkem, neváhejte a [kontaktujte nás](/contact#form.)',
 
     'home.above': 'Zadejte advokáta a zobrazte si statistiky o jeho vystupování před třemi nejdůležitějšími soudy v ČR.',
     'home.below': home,

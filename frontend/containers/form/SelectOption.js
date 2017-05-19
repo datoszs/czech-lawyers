@@ -3,11 +3,14 @@ import PropTypes from 'prop-types';
 import {Field} from 'redux-form/immutable';
 import {SelectOptionComponent} from '../../components/form';
 import Msg from '../Msg';
+import selectFieldContextType from './selectFieldContextType';
+import {isRequired} from './validations';
 
-const SelectOption = ({id, label}, {selectName}) => (
+const SelectOption = ({id, label}, {selectField: {name, required}}) => (
     <Field
         component={SelectOptionComponent}
-        name={selectName}
+        name={name}
+        validate={required ? isRequired : null}
         props={{
             children: <Msg msg={label} />,
             id,
@@ -21,7 +24,7 @@ SelectOption.propTypes = {
 };
 
 SelectOption.contextTypes = {
-    selectName: PropTypes.string.isRequired,
+    selectField: selectFieldContextType,
 };
 
 export default SelectOption;
