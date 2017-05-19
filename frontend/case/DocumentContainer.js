@@ -9,7 +9,11 @@ import DocumentDetail from './DocumentDetail';
 const DocumentContainer = ({documents}) => (
     <section>
         <header><h1><Msg msg="case.documents" /></h1></header>
-        {documents.map((document) => <DocumentDetail key={document} id={document} />)}
+        {
+            documents.size > 0
+                ? documents.map((document) => <DocumentDetail key={document} id={document} />)
+                : <Msg msg="case.documents.empty" />
+        }
     </section>
 );
 

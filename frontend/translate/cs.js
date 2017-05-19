@@ -55,6 +55,7 @@ export default {
     'case.court': 'Soud',
     'case.result': 'Výsledek',
     'case.documents': 'Dokumenty',
+    'case.documents.empty': 'K tomuto případu nemáme žádné dokumenty.',
     'case.dispute.text': dispute,
     'case.dispute.submit': 'Rozporovat',
     'case.dispute': 'Rozporovat výsledek',
