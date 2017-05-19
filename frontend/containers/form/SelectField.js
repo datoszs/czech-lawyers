@@ -1,36 +1,36 @@
-import React, {Component, PropTypes} from 'react';
-import {FormGroup, ControlLabel} from 'react-bootstrap';
-import Msg from '../Msg';
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
+import BasicFieldComponent from './BasicFieldComponent';
+import ChildrenDisplay from './ChildrenDisplay';
+import selectFieldContextType from './selectFieldContextType';
 
-const SelectField = class extends Component {
+class SelectField extends Component {
     getChildContext() {
         return {
-            selectName: this.props.name,
+            selectField: {
+                name: this.props.name,
+                required: this.props.required,
+            },
         };
     }
 
     render() {
-        return (
-            <FormGroup>
-                {this.props.label && <ControlLabel><Msg msg={this.props.label} /></ControlLabel>}
-                {this.props.children}
-            </FormGroup>
-        );
+        return React.createElement(BasicFieldComponent()(ChildrenDisplay), this.props, this.props.children);
     }
-};
+}
 
 SelectField.propTypes = {
     name: PropTypes.string.isRequired,
-    label: PropTypes.string,
+    required: PropTypes.bool,
     children: PropTypes.node.isRequired,
 };
 
 SelectField.defaultProps = {
-    label: null,
+    required: false,
 };
 
 SelectField.childContextTypes = {
-    selectName: PropTypes.string.isRequired,
+    selectField: selectFieldContextType,
 };
 
 export default SelectField;

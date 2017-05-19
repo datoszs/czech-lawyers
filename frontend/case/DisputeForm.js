@@ -10,7 +10,7 @@ export default () => (
         <CaptchaForm form="dispute" action={dispute}>
             <TextField name="full_name" label="form.name" required />
             <EmailField name="from" label="form.email" required />
-            <SelectField name="disputed_tagging" label="case.dispute.reason">
+            <SelectField name="disputed_tagging" label="case.dispute.reason" required>
                 <SelectOption label="case.dispute.resaon.result" id="case_result" />
                 <SelectOption label="case.dispute.reason.advocate" id="advocate" />
                 <SelectOption label="case.dispute.reason.both" id="both" />
