@@ -1,6 +1,7 @@
 export {default as transition} from './transition';
 export {default as TestingStore} from './TestingStore';
 export {default as formatRoute} from './formatRoute';
+export {default as LifecycleListener} from './LifecycleListener';
 
 export const wrapEventStop = (handler) => (event) => {
     event.stopPropagation();

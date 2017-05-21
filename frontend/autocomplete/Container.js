@@ -1,5 +1,6 @@
 import {compose} from 'redux';
 import {connect} from 'react-redux';
+import {LifecycleListener} from '../util';
 import translate from '../translate';
 import Component from './Component';
 import {submit, hideDropdown} from './actions';
@@ -12,7 +13,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     onSubmit: compose(dispatch, submit),
-    hide: compose(dispatch, hideDropdown),
+    onUnmount: compose(dispatch, hideDropdown),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Component);
+export default connect(mapStateToProps, mapDispatchToProps)(LifecycleListener(Component));
