@@ -9,3 +9,4 @@ export {default as result, classNameResult, resultMsg} from './result';
 export {default as Case, mapDtoToCase} from './Case';
 export {default as CaseDetail, mapDtoToCaseDetail} from './CaseDetail';
 export {default as Document} from './Document';
+export {default as AdvocateAutocomplete, mapDtoToAdvocateAutocomplete} from './AdvocateAutocomplete';

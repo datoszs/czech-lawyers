@@ -1,27 +1,19 @@
 import {compose} from 'redux';
 import {connect} from 'react-redux';
-import {transition} from '../util';
-import advocateSearch from '../advocatesearch';
+import {LifecycleListener} from '../util';
 import translate from '../translate';
 import Component from './Component';
-import {setInputValue} from './actions';
+import {submit, hideDropdown} from './actions';
 import {getInputValue} from './selectors';
 
 const mapStateToProps = (state) => ({
     value: getInputValue(state),
-    msgPlaceholder: translate.getMessage(state, 'search.placeholder'),
     msgSearch: translate.getMessage(state, 'search.button'),
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    onChange: compose(dispatch, setInputValue),
+    onSubmit: compose(dispatch, submit),
+    onUnmount: compose(dispatch, hideDropdown),
 });
 
-const mergeProps = ({value, ...stateProps}, {...dispatchProps}) => ({
-    value,
-    ...stateProps,
-    ...dispatchProps,
-    onSubmit: () => transition(advocateSearch.ROUTE, undefined, {query: value}),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(Component);
+export default connect(mapStateToProps, mapDispatchToProps)(LifecycleListener(Component));
