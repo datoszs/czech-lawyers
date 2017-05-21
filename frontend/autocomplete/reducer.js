@@ -1,11 +1,10 @@
 import {combineReducers} from 'redux-immutable';
 import {List, Map} from 'immutable';
 import {AdvocateAutocomplete} from '../model';
-import {SET_INPUT_VALUE, INITIALIZE_VALUE, SET_AUTOCOMPLETE_RESULTS,
+import {SET_INPUT_VALUE, SET_AUTOCOMPLETE_RESULTS,
     SUBMIT, MOVE_SELECTION_INTERNAL, SET_SELECTION, setSelection} from './actions';
 
-const inputReducer = (state = '', action) =>
-    (action.type === SET_INPUT_VALUE || action.type === INITIALIZE_VALUE ? action.value : state);
+const inputReducer = (state = '', action) => (action.type === SET_INPUT_VALUE ? action.value : state);
 
 const resultIdsReducer = (state = List(), action) => {
     switch (action.type) {
@@ -35,8 +34,6 @@ const selectedItemReducer = (state = null, action) => {
             return action.id;
         case SET_AUTOCOMPLETE_RESULTS:
             return action.results.some(({id}) => (id === state)) ? state : null;
-        case INITIALIZE_VALUE:
-            return null;
         default:
             return state;
     }
