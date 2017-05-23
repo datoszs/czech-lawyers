@@ -1,9 +1,10 @@
 <?php
 /**
  * Created by IntelliJ IDEA.
- * User: Xorel
- * Date: 07.12.2016
+ * User: Radim Jílek
+ * Year: 2017
  * Time: 20:33
+ * License: GNU GPL
  */
 
 namespace App\Commands;
