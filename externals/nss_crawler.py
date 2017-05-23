@@ -15,6 +15,7 @@ __license__ = "GNU GPL"
 
 import codecs
 import csv
+import json
 import logging
 import math
 import os
@@ -22,7 +23,6 @@ import re
 import shutil
 import subprocess
 import sys
-import json
 from collections import OrderedDict
 from datetime import datetime
 from optparse import OptionParser
@@ -32,7 +32,6 @@ from urllib.parse import urljoin
 import pandas as pd
 from bs4 import BeautifulSoup
 from ghost import Ghost
-from tqdm import tqdm # view progress bar for debug
 
 base_url = "http://nssoud.cz/"
 url = "http://nssoud.cz/main0Col.aspx?cls=JudikaturaBasicSearch&pageSource=0"
@@ -43,20 +42,23 @@ documents_dir = "documents"
 txt_dir = "txt"
 html_dir = "html"
 log_dir = "log_nss"
-
+logger, writer_records, ghost, session, list_of_links = (None,) * 5
 main_timeout = 100000
 global_ncols = 90
 saved_pages = 0
 saved_records = 0
-
+# set view progress bar and view browser window
+progress, view = (False, False)
 b_screens = False  # capture screenshots?
 # precompile regex
 p_re_records = re.compile(r'(\d+)$')
 p_re_decisions = re.compile(r'[a-z<>]{4}\s+(.+)\s+')
 
-def make_json(collection):
-    return json.dumps(dict(zip(range(1, len(collection) + 1), collection)), sort_keys=True,
-                          ensure_ascii=False)
+#
+# service functions
+#
+
+
 def set_logging():
     """
     settings of logging
@@ -87,8 +89,8 @@ def set_logging():
 
 def create_directories():
     """
-create working directories
-"""
+    create working directories
+    """
     for directory in [out_dir, documents_dir_path, html_dir_path, result_dir_path]:
         os.makedirs(directory, exist_ok=True)
         logger.info("Folder was created '" + directory + "'")
@@ -105,6 +107,11 @@ create working directories
 
 
 def clean_directory(root):
+    """
+    clear directory (after successfully run)
+
+    :param root: path to directory
+    """
     for f in os.listdir(root):
         try:
             shutil.rmtree(join(root, f))
@@ -125,6 +132,10 @@ def logging_process(arguments):
 
 
 def parameters():
+    """
+
+    :return: dict with all options
+    """
     usage = "usage: %prog [options]"
     parser = OptionParser(usage)
     parser.add_option("-w", "--without-download", action="store_true", dest="download", default=False,
@@ -151,8 +162,29 @@ def parameters():
     #print(args,options,type(options))
     return options
 
+#
+# help functions
+#
+
+
+def make_json(collection):
+    """
+    make correct json format
+
+    :param collection:
+    :return: JSON
+    """
+    return json.dumps(dict(zip(range(1, len(collection) + 1), collection)), sort_keys=True,
+                          ensure_ascii=False)
+
 
 def make_soup(path):
+    """
+    make BeautifulSoup object Soup from input HTML file
+
+    :param path: path to HTMl file
+    :return: BeautifulSoup object Soup
+    """
     soup = BeautifulSoup(codecs.open(path, encoding="utf-8"), "html.parser")
     return soup
 
@@ -166,8 +198,6 @@ def how_many(str_info, displayed_records):
 
     :type displayed_records: int
     :param displayed_records: number of displayed records
-
-
     """
 
     m = p_re_records.search(str_info)
@@ -201,9 +231,45 @@ def extract_data(response, html_file):
         f.write(response)
 
 
+def load_data(csv_file):
+    """
+    load data from csv file
+
+    :param csv_file: name of CSV file
+
+    """
+
+    data = pd.read_csv(csv_file, sep=";", na_values=['', "nan"])
+    return data
+
+
+def download_pdf(data):
+    """
+    download PDF files
+
+    :type data: DataFrame
+    :param data: Pandas object
+
+    """
+
+    frame = data[["web_path", "local_path"]].dropna()
+    if progress:
+        t = tqdm(frame.itertuples(), ncols=global_ncols)  # view progress bar
+    for row in t:
+        filename = row[2]
+        if not os.path.exists(join(documents_dir_path, filename)):
+            logging_process(["curl", row[1], "-o", join(documents_dir_path, filename)])
+        # t.update() # update progress bar
+
+#
+# process functions
+#
+
+
 def make_record(soup):
     """
     extract relevant data from page
+
     :param soup: bs4 soup object
 
     """
@@ -222,7 +288,6 @@ def make_record(soup):
         m = p_re_decisions.search(decisions_str)
         line = m.group(1)
         decision_result = [x.replace('\"', '\'').strip() for x in line.split("<br>")]
-        form_decision = ""
         decisions = ""
         if len(decision_result) > 1:
             decisions = "|".join(decision_result[1:])
@@ -232,7 +297,6 @@ def make_record(soup):
         decision_result = decisions
 
         link_elem = columns[1].select_one('a[href*=SOUDNI_VYKON]')
-        link = ""
         # link to the decision's document
         if link_elem is not None:
             link = link_elem['href']
@@ -311,7 +375,6 @@ def extract_information(saved_pages, extract=None):
 
     html_files = [join(html_dir_path, fn) for fn in next(os.walk(html_dir_path))[2]]
     if len(html_files) == saved_pages or extract:
-        global writer_links
         global writer_records
 
         fieldnames = ['court_name', 'record_id', 'registry_mark', 'decision_date',
@@ -322,7 +385,8 @@ def extract_information(saved_pages, extract=None):
         writer_records = csv.DictWriter(csv_records, fieldnames=fieldnames, delimiter=";", quoting=csv.QUOTE_ALL)
         writer_records.writeheader()
 
-        # t = tqdm(html_files, ncols=global_ncols) # view progress bar
+
+
         t = html_files
         count_documents = 0
         for html_f in t:
@@ -338,6 +402,8 @@ def view_data(row_count, mark_type, value, date_from=None, date_to=None, last=No
     """
     sets forms parameters for viewing data
 
+    :param row_count: haw many record would be showing on page
+    :param last: how many days ago
     :type mark_type: text
     :param mark_type: text identificator of mark type
     :param value: mark type number identificator for formular
@@ -418,7 +484,8 @@ def walk_pages(count_of_pages, case_type):
     logger.debug("count_of_pages: %d", count_of_pages)
     positions = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     t = range(1, count_of_pages + 1)
-    # t = tqdm(t, ncols=global_ncols) # view progress bar
+    if progress:
+        t = tqdm(t, ncols=global_ncols)  # progress progress bar
     for i in t:  # walk pages
         response = session.content
         #soup = BeautifulSoup(response,"html.parser")
@@ -522,37 +589,11 @@ def process_court():
     return True
 
 
-def load_data(csv_file):
-    """
-    load data from csv file
-
-    :param csv_file: name of CSV file
-
-    """
-
-    data = pd.read_csv(csv_file, sep=";", na_values=['', "nan"])
-    return data
-
-
-def download_pdf(data):
-    """
-    download PDF files
-
-    :type data: DataFrame
-    :param data: Pandas object
-
-    """
-
-    frame = data[["web_path", "local_path"]].dropna()
-    # t = tqdm(frame, ncols=global_ncols) # view progress bar
-    for row in frame.itertuples():
-        filename = row[2]
-        if not os.path.exists(join(documents_dir_path, filename)):
-            logging_process(["curl", row[1], "-o", join(documents_dir_path, filename)])
-        # t.update() # update progress bar
-
-
 def main():
+    """
+    main function of this program
+    :return:
+    """
     global ghost
     ghost = Ghost()
     global session
@@ -561,8 +602,9 @@ def main():
             wait_timeout=main_timeout, display=False,
             plugins_enabled=False)
     logger.info(u"Start - NSS")
-    # session.display = True
-    # session.show()
+    if view:
+        session.display = True
+        session.show()
     session.open(url)
 
     if b_screens:
