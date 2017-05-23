@@ -2,11 +2,18 @@
 # -*- encoding: utf-8 -*-
 # coding=utf-8
 
-import json
-import os
+"""
+This program assigns cases to lawyers
+
+according to the name of the decision and the Czech Bar Association
+"""
+
+__author__ = "Radim Jílek"
+__copyright__ = "Copyright 2017, DATOS - data o spravedlnosti, z.s."
+__license__ = "GNU GPL"
+
 import re
 import sys
-import time
 from collections import namedtuple, OrderedDict
 from datetime import datetime
 
@@ -23,13 +30,25 @@ threshold = 5
 
 
 def load_config(path_to_neon):
+    """
+    load configuration from local 'neon' file
+
+    :param path_to_neon: path to neon file with configuration
+    :return: dict of values
+    """
     with open(path_to_neon, 'r') as fd:
         config = neon.decode(fd.read())
-    print("Load config file...")
+    # print("Load config file...")
     return config
 
 
 def connection(path_to_neon):
+    """
+    make coonection to the database
+
+    :param path_to_neon: path to neon file with configuration
+    :return: connection psycopg2 object
+    """
     config = load_config(path_to_neon)
     dbal = config["dbal"]
     print("Conecting...")
@@ -40,6 +59,11 @@ def connection(path_to_neon):
 
 
 def print_statistic(tagger):
+    """
+    print computed statistics on standard output
+
+    :param tagger: instance of 'tagger' object
+    """
     print("----\n"
           "Causes: {}, unique advocates: {}\n"
           "Matched: {}, No matched: {}, Without changes: {}\n"
@@ -48,62 +72,90 @@ def print_statistic(tagger):
           "Size of match_cache: {}, Size of no_match_cache: {}\n"
           "Compare full: {}, Compare normal: {}, Compare reverse: {}\n"
           "Compare only surname: {}\n".format(
-              len(tagger.causes), len(tagger.advocates),
-              tagger.matched, tagger.no_matched, tagger.without_changes,
-              tagger.bad, tagger.empty,
-              tagger.processed, tagger.failed, tagger.hit,
-              len(tagger.match_cache), len(tagger.no_match_cache),
-              tagger.cmp_full, tagger.cmp_normal, tagger.cmp_reverse, tagger.cmp_surname)
-          )
+            len(tagger.causes), len(tagger.advocates),
+            tagger.matched, tagger.no_matched, tagger.without_changes,
+            tagger.bad, tagger.empty,
+            tagger.processed, tagger.failed, tagger.hit,
+            len(tagger.match_cache), len(tagger.no_match_cache),
+            tagger.cmp_full, tagger.cmp_normal, tagger.cmp_reverse, tagger.cmp_surname)
+    )
 
 
 class QueryDB(object):
+    """
+    The class that caters to the database and defines database queries
+
+    """
 
     def __init__(self, cursor):
         self.cur = cursor
 
     def find_unique_advocates(self):
+        """
+        Find unique three 'degree_before, name, surname' in the database
+
+        :return:
+        """
         self.cur.execute(
-            "SELECT concat(degree_before,'/',name,' ',surname) AS fullname, string_agg(DISTINCT advocate_id::text, ' ') AS advocate_id "
-            "FROM advocate_info "
-            "GROUP BY degree_before, name, surname "
-            "HAVING array_length(array_agg(DISTINCT advocate_id), 1) = 1"
-            "ORDER BY degree_before DESC"
-            ";")
+                "SELECT concat(degree_before,'/',name,' ',surname) AS fullname, string_agg(DISTINCT advocate_id::text, ' ') AS advocate_id "
+                "FROM advocate_info "
+                "GROUP BY degree_before, name, surname "
+                "HAVING array_length(array_agg(DISTINCT advocate_id), 1) = 1"
+                "ORDER BY degree_before DESC"
+                ";")
         return self.cur.fetchall()
 
     def find_for_advocate_tagging(self, court):
+        """
+        Find all cases to be tagged by an advocate
+        """
         self.cur.execute(
-            "SELECT *"
-            "FROM \"case\""
-            "WHERE court_id = %s AND id_case NOT IN (SELECT case_id FROM tagging_advocate WHERE is_final);" % court)
+                "SELECT *"
+                "FROM \"case\""
+                "WHERE court_id = %s AND id_case NOT IN (SELECT case_id FROM tagging_advocate WHERE is_final);" % court)
         return self.cur.fetchall()
 
     def insert_to_db(self, record):
+        """
+        insert new result to the database
+        """
         self.cur.execute(
-            "INSERT INTO tagging_advocate ({}) VALUES ({},{},'{}',{},'{}',{},{},{},{})".format(
-                ",".join(record.keys()),
-                record["document_id"],
-                record["advocate_id"],
-                record["status"],
-                record["is_final"],
-                record["debug"],
-                record["inserted"],
-                record["inserted_by"],
-                record["job_run_id"],
-                record["case_id"]
-            ))
+                "INSERT INTO tagging_advocate ({}) VALUES ({},{},'{}',{},'{}',{},{},{},{})".format(
+                        ",".join(record.keys()),
+                        record["document_id"],
+                        record["advocate_id"],
+                        record["status"],
+                        record["is_final"],
+                        record["debug"],
+                        record["inserted"],
+                        record["inserted_by"],
+                        record["job_run_id"],
+                        record["case_id"]
+                ))
 
     def get_last_tagging(self, cause_id):
+        """
+        get last tagging of 'case' with cause_id
+
+        :param cause_id: id of case
+        :return: dict with information about last tagging for this case
+        """
         self.cur.execute(
-            "SELECT * "
-            "FROM tagging_advocate "
-            "WHERE case_id=%i "
-            "ORDER BY inserted DESC "
-            "LIMIT 1" % int(cause_id))
+                "SELECT * "
+                "FROM tagging_advocate "
+                "WHERE case_id=%i "
+                "ORDER BY inserted DESC "
+                "LIMIT 1" % int(cause_id))
         return self.cur.fetchone()
 
     def insert_if_differs(self, new, old):
+        """
+        compare old and new result of tagging advocate
+
+        :param new: result of new tagging
+        :param old: result of last tagging
+        :return: bool
+        """
         if new and old:
             diff = []
             for key in ["advocate_id", "status", "case_id"]:
@@ -123,9 +175,18 @@ class QueryDB(object):
 
 
 class NameCleaner:
+    """
+    This class takes care of string cleaning
+    """
 
     @staticmethod
     def extract_name(string):
+        """
+        extract only name and surname from text
+
+        :param string: text for extraction
+        :return: extracted name and his length - tuple
+        """
         string = string.replace(".", ". ")
         string = string.replace(',', " ,")
 
@@ -152,6 +213,12 @@ class NameCleaner:
         return extracted_name, length
 
     def advance(self, raw_string):
+        """
+        extract name(s) from complicated text
+
+        :param raw_string: text for extraction
+        :return: one or more names and type of extracted data
+        """
         strings = raw_string.split(',')
         names = []
         for string in strings:
@@ -175,6 +242,12 @@ class NameCleaner:
 
     def clear(self, string):
         # print(string.lower())
+        """
+        clear text with many spaces and other irrelevant information's
+
+        :param string: text for cleaning
+        :return: clear name
+        """
         if string is None:
             return None, None
         if any(s in string.lower() for s in skip_word):
@@ -182,7 +255,7 @@ class NameCleaner:
         elif any(s in string.lower() for s in bad_word):
             return self.advance(string)
 
-        # remove all after last ','
+        # remove all after last '-'
         m = re.compile(r'^(.*)[-].*$').search(string)
         if m:
             result = m.group(1)
@@ -192,18 +265,30 @@ class NameCleaner:
 
     @staticmethod
     def prepare_advocate(raw_string):
+        """
+        prepare variants of advocate name for later using
+        - full name with degrees
+        - only name and surname (in this order)
+        - only surname and name (in this order)
+
+        :param raw_string: advocate full name with degrees before separated by '/'
+        :return:
+        """
         parts = raw_string.split('/')
         # print(parts)
         normalize = list(filter(str.strip, parts))
         variants = Variants(
-            " ".join(normalize),
-            normalize[-1],
-            " ".join(reversed(normalize[-1].split(" ")))
+                " ".join(normalize),
+                normalize[-1],
+                " ".join(reversed(normalize[-1].split(" ")))
         )
         return variants
 
 
 class AdvocateTagger(QueryDB):
+    """
+    The class includes the methods needed for the lawyer's case assignment process
+    """
 
     def __init__(self, path_to_neon, court_id, job_id):
         self.court = int(court_id)
@@ -219,12 +304,19 @@ class AdvocateTagger(QueryDB):
         self.bad, self.empty = 0, 0
         self.matched, self.no_matched, self.without_changes = (0,) * 3
         self.cmp_full, self.cmp_normal, self.cmp_reverse, self.cmp_surname = (
-            0, ) * 4
-        self.processed, self.failed, self.hit = (0, ) * 3
+                                                                                 0,) * 4
+        self.processed, self.failed, self.hit = (0,) * 3
         self.no_match_cache, self.match_cache = {}, {}
 
     @staticmethod
     def get_name(off_data, court_id):
+        """
+        prepare information of name from structure specific for court
+
+        :param off_data: structure of data
+        :param court_id: id for specific court
+        :return: full name of advocate
+        """
         if court_id == 1:
             return (off_data["names"]).strip()
         elif court_id == 3:
@@ -234,12 +326,32 @@ class AdvocateTagger(QueryDB):
 
     @staticmethod
     def print_info(case, text, name, advocate_name, advocate_id, type_of_comparison):
+        """
+        print info with information about assign
+
+        :param case: registry sign
+        :param text: input text of process
+        :param name: extracted name
+        :param advocate_name: name of advocate which was assigned
+        :param advocate_id: id of this advocate
+        :param type_of_comparison: which method was used for comparison
+        """
         print(
-            "{} - '{}' -> {}".format(case["registry_sign"], text, name).encode())
+                "{} - '{}' -> {}".format(case["registry_sign"], text, name).encode())
         print("\t {}, {}, >> \"{}\". <<".format(
-            advocate_name, advocate_id, type_of_comparison).encode())
+                advocate_name, advocate_id, type_of_comparison).encode())
 
     def prepare_tagging(self, cause, status, debug, advocate="NULL", role=2):
+        """
+        prepare record for saving from input result
+
+        :param cause: dict with information's about case
+        :param status: how ended process
+        :param debug: information used for manual checking
+        :param advocate: id of advocate
+        :param role: system role for insert record - tagging
+        :return: prepared record
+        """
         record = OrderedDict([
             ("document_id", "NULL"),
             ("advocate_id", advocate),
@@ -254,6 +366,15 @@ class AdvocateTagger(QueryDB):
         return record
 
     def choice_best_match(self, matches, text, name):
+        """
+        get best match or list of probably names
+
+        :param matches: list of matches
+        :param text: full variant of text (with degrees)
+        :param name: name of advocate from court data
+        :return: one or more the best matches
+        """
+        records = distance = None
         for i in range(0, threshold):
             if matches.get(i):
                 records = matches.get(i)
@@ -284,9 +405,17 @@ class AdvocateTagger(QueryDB):
             return (None,) * 5
 
     def process_case(self, cause, text):
+        """
+        control process of comparison
+
+        :param cause: cause for assignments
+        :param text: full variant of text
+        :return: bool
+        """
         # check_cache record with the same name in match_cache
         exist = self.match_cache.get(text)
         name = self.cleaner.extract_name(text)[0].title()
+        debug = advocate_name = None
         if exist is not None:
             new, advocate_name, status, type_of_comparison = exist
             new["case_id"] = cause["id_case"]
@@ -315,36 +444,36 @@ class AdvocateTagger(QueryDB):
                     distance = lev.distance(variants.normal.title(), name)
                     if distance < threshold:
                         matches.setdefault(distance, []).append(
-                            (variants, advocate["advocate_id"], "contains normal - levenshtein"))
+                                (variants, advocate["advocate_id"], "contains normal - levenshtein"))
                 # reverse variant of name
                 if variants.reverse.title() in text:
                     distance = lev.distance(variants.reverse.title(), name)
                     if distance < threshold:
                         matches.setdefault(distance, []).append(
-                            (variants, advocate["advocate_id"], "contains reverse - levenshtein"))
-                # special compare only with surname
+                                (variants, advocate["advocate_id"], "contains reverse - levenshtein"))
+                # special compare only with surname (for ÚS)
                 if self.court == 3:
                     if name in variants.normal:
                         distance = lev.distance(
-                            variants.normal.split()[-1], name)
+                                variants.normal.split()[-1], name)
                         if distance < threshold:
                             matches.setdefault(distance, []).append(
-                                (variants, advocate["advocate_id"], "contains only surname - levenshtein"))
+                                    (variants, advocate["advocate_id"], "contains only surname - levenshtein"))
 
             if advocate_id:
                 advocate_name = variants.full
                 debug = "was tagged from: %s (%s)" % (text, name)
             elif matches:
                 advocate_id, advocate_name, debug, status, type_of_comparison = self.choice_best_match(
-                    matches, text, name)
+                        matches, text, name)
 
             if advocate_id is not None:
                 new = self.prepare_tagging(
-                    cause, status, debug, advocate=advocate_id)
+                        cause, status, debug, advocate=advocate_id)
             else:
                 return False
         self.match_cache.setdefault(
-            text, (new, advocate_name, status, type_of_comparison))
+                text, (new, advocate_name, status, type_of_comparison))
         if self.insert_if_differs(new, self.get_last_tagging(cause["id_case"])):
             if new["status"] == states["ok"]:
                 self.processed += 1
@@ -357,6 +486,10 @@ class AdvocateTagger(QueryDB):
             return None
 
     def run(self):
+        """
+        Entry point of this class
+
+        """
         bad = []
         for cause in self.causes:
             official_data = cause["official_data"]
@@ -392,6 +525,7 @@ class AdvocateTagger(QueryDB):
         self.conn.commit()
         # print(bad, len(bad))
 
+
 if __name__ == "__main__":
     if len(sys.argv) == 4:
         # print(sys.argv)
@@ -402,7 +536,7 @@ if __name__ == "__main__":
         print("Usage:\n"
               "- first arg is jobID\n"
               "- second arg is courtID\n"
-              "- third arg is path to Command folder")
+              "- third arg is path to 'Command' folder")
         sys.exit(-1)
     t0 = datetime.now()
     print(t0.replace(microsecond=0))
