@@ -9,7 +9,8 @@ import {CONTACT_FORM} from './constants';
 export default () => (
     <section>
         <RichText msg="contact.us.text" />
-        <formstatus.Container formName={CONTACT_FORM} />
+        <formstatus.SuccessContainer formName={CONTACT_FORM} msg="form.error.email" />
+        <formstatus.ErrorContainer formName={CONTACT_FORM} defaultMsg="form.error.email" />
         <CaptchaForm form={CONTACT_FORM} action={sendEmail}>
             <TextField name="full_name" label="form.name" required />
             <EmailField name="from" label="form.email" required />

@@ -1,26 +1,27 @@
+import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {Alert} from 'react-bootstrap';
-import {getError, isSuccess} from './selectors';
+import {LifecycleListener} from '../util';
+import translate from '../translate';
 import {clear} from './actions';
 
-const mapStateToProps = (state, {formName}) => {
-    if (isSuccess(state, formName)) {
-        return {
-            bsStyle: 'success',
-            children: 'Success!',
-        };
-    } else {
-        return {
-            bsStyle: 'danger',
-            children: getError(state, formName),
-        };
-    }
-};
-
-const mapDispatchToProps = (dispatch, {formName}) => ({
-    onDismiss: () => dispatch(clear(formName)),
+const mapStateToProps = (state, {msg}) => ({
+    children: translate.getMessage(state, msg),
 });
 
-const mergeProps = ({bsStyle, children}, {onDismiss}) => ({bsStyle, onDismiss, children});
+const mapDispatchToProps = (dispatch, {formName}) => {
+    const doClear = () => dispatch(clear(formName));
+    return {
+        onDismiss: doClear,
+        onUnmount: doClear,
+    };
+};
 
-export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(Alert);
+const AlertContainer = connect(mapStateToProps, mapDispatchToProps)(LifecycleListener(Alert));
+AlertContainer.propTypes = {
+    formName: PropTypes.string.isRequired,
+    msg: PropTypes.string.isRequired,
+    bsStyle: PropTypes.string.isRequired,
+};
+
+export default AlertContainer;

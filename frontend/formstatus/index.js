@@ -1,11 +1,13 @@
 import {NAME} from './constants';
 import reducer from './reducer';
-import Container from './Container';
+import SuccessContainer from './SuccessContainer';
+import ErrorContainer from './ErrorContainer';
 import saga from './saga';
 
 export default {
     NAME,
     reducer,
-    Container,
+    SuccessContainer,
+    ErrorContainer,
     saga,
 };
