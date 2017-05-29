@@ -14,7 +14,7 @@ const getByAdvocate = (id, court, year, result) => {
     return doGet(`/api/advocate-cases/${id}?${querystring.stringify(query)}`);
 };
 
-const dispute = (id, values) => doPost(`/api/dispute-case/${id}`)(values);
+const dispute = (id) => doPost(`/api/dispute-case/${id}`);
 
 export default {
     search,
