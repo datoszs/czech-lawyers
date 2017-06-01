@@ -1,17 +1,19 @@
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
+import {Alert} from 'react-bootstrap';
+import {LifecycleListener, If} from '../util';
+import translate from '../translate';
 import {getError} from './selectors';
 import {clearError} from './actions';
-import StatusContainer from './StatusContainer';
 
 const mapStateToProps = (state, {formName, errorMap, defaultMsg}) => {
     const error = getError(state, formName);
     if (error) {
         const msg = errorMap[error];
         if (msg) {
-            return {msg};
+            return {msg: translate.getMessage(state, msg)};
         } else {
-            return {msg: defaultMsg};
+            return {msg: translate.getMessage(state, defaultMsg)};
         }
     } else {
         return {msg: null};
@@ -22,14 +24,16 @@ const mapDispatchToProps = (dispatch, {formName}) => ({
     handleClear: () => dispatch(clearError(formName)),
 });
 
-const mergeProps = ({msg}, {handleClear}, {formName}) => ({
-    msg,
-    formName,
-    handleClear,
+const mergeProps = ({msg}, {handleClear}) => ({
+    children: msg,
+    onDismiss: handleClear,
+    onUnmount: handleClear,
     bsStyle: 'danger',
+    test: !!msg,
+    Component: LifecycleListener(Alert),
 });
 
-const ErrorContainer = connect(mapStateToProps, mapDispatchToProps, mergeProps)(StatusContainer);
+const ErrorContainer = connect(mapStateToProps, mapDispatchToProps, mergeProps)(If);
 
 ErrorContainer.propTypes = {
     formName: PropTypes.string.isRequired,

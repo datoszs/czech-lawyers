@@ -1,25 +1,29 @@
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
-import StatusContainer from './StatusContainer';
+import {Alert} from 'react-bootstrap';
+import {LifecycleListener, If} from '../util';
+import translate from '../translate';
 import {clearSuccess} from './actions';
 import {isSuccess} from './selectors';
 
 const mapStateToProps = (state, {formName, msg}) => ({
-    msg: isSuccess(state, formName) ? msg : null,
+    msg: isSuccess(state, formName) ? translate.getMessage(state, msg) : null,
 });
 
 const mapDispatchToProps = (dispatch, {formName}) => ({
     handleClear: () => dispatch(clearSuccess(formName)),
 });
 
-const mergeProps = ({msg}, {handleClear}, {formName}) => ({
-    msg,
-    formName,
-    handleClear,
+const mergeProps = ({msg}, {handleClear}) => ({
+    children: msg,
+    onDismiss: handleClear,
+    onUnmount: handleClear,
     bsStyle: 'success',
+    test: !!msg,
+    Component: LifecycleListener(Alert),
 });
 
-const SuccessContainer = connect(mapStateToProps, mapDispatchToProps, mergeProps)(StatusContainer);
+const SuccessContainer = connect(mapStateToProps, mapDispatchToProps, mergeProps)(If);
 
 SuccessContainer.propTypes = {
     msg: PropTypes.string.isRequired,
