@@ -49,7 +49,7 @@ export default ({dev}) => ({
                 },
             },
             {
-                test: /\.less$/,
+                test: /\.(less|css)$/,
                 loader: dev
                     ? ['style-loader', 'css-loader', 'less-loader']
                     : ExtractTextPlugin.extract({

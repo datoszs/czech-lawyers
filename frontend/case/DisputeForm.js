@@ -1,16 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
-import {Panel, Button} from 'react-bootstrap';
+import {Panel} from 'react-bootstrap';
 import {RichText, Msg} from '../containers';
 import {EmailField, TextField, CaptchaForm, TextAreaField, SelectOption, SelectField} from '../containers/form';
+import formstatus from '../formstatus';
+import {FORM} from './constants';
 import {dispute} from './actions';
 import {getDetail} from './selectors';
 
 const DisputeForm = ({advocateFinal, resultFinal}) => (
     <Panel bsStyle="danger" header={<Msg msg="case.dispute" />}>
         <RichText msg="case.dispute.text" />
-        <CaptchaForm form="dispute" action={dispute}>
+        <CaptchaForm form={FORM} action={dispute}>
             <TextField name="full_name" label="form.name" required />
             <EmailField name="from" label="form.email" required />
             <SelectField name="disputed_tagging" label="case.dispute.reason" required>
@@ -21,7 +23,12 @@ const DisputeForm = ({advocateFinal, resultFinal}) => (
                 {resultFinal && <RichText msg="case.dispute.final.result" />}
             </SelectField>
             <TextAreaField name="content" label="case.dispute.comment" required />
-            <Button type="submit" bsStyle="danger"><Msg msg="case.dispute.submit" /></Button>
+            <formstatus.ErrorContainer
+                formName={FORM}
+                defaultMsg="case.dispute.error.default"
+                errorMap={{inconsistent: 'case.dispute.error.inconsistent'}}
+            />
+            <formstatus.SubmitButton bsStyle="danger" msg="case.dispute.submit" formName={FORM} />
         </CaptchaForm>
     </Panel>
 );

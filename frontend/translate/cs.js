@@ -64,6 +64,9 @@ export default {
     'case.dispute.reason.advocate': 'Špatně přiřazený advokát',
     'case.dispute.reason.both': 'Špatně přiřazený advokát i výsledek',
     'case.dispute.comment': 'Vysvětlení',
+    'case.dispute.success': 'Váš požadavek byl zaznamenán. Během chvíle by Vám měl přijít e-mail s potvrzovacím odkazem.',
+    'case.dispute.error.default': 'Případ se bohužel nepodařilo rozporovat. Zkuste to znova, možná budete mít více štěstí.',
+    'case.dispute.error.inconsistent': 'Vypadá to, že rozporujete zastaralá data. Obnovte, prosím, stránku a zkuste to znova.',
 
     'case.dispute.final.advocate': 'Advokáta tomuto případu přiřadil živý člověk a jsme si jím poměrně jistí. Pokud přesto nesouhlasíte s naším úsudkem, neváhejte a [kontaktujte nás](/contact#form.)',
     'case.dispute.final.result': 'Výsledek tomuto případu přiřadil živý člověk a jsme si jím poměrně jistí. Pokud přesto nesouhlasíte s naším úsudkem, neváhejte a [kontaktujte nás](/contact#form.)',
@@ -79,6 +82,8 @@ export default {
     'contact.us.text': contact,
     'contact.form.message': 'Vaše zpráva',
     'contact.form.submit': 'Odeslat',
+    'contact.form.success': 'Vaše zpráva byla odeslána. Děkujeme Vám za Váš názor.',
+    'contact.form.error.default': 'Vaši zprávu se bohužel nepodařilo odeslat. Zkuste to znova, možná budete mít více štěstí.',
 
     'society.name': 'DATOS \u{2014} data o spravedlnosti z. s.',
     'society.ic': 'IČ: 05003997',

@@ -1,17 +1,20 @@
 import {put, call, select, takeEvery} from 'redux-saga/effects';
 import {caseAPI} from '../serverAPI';
 import {mapDtoToCaseDetail} from '../model';
-import {setId, setDetail, DISPUTE} from './actions';
+import formstatus from '../formstatus';
+import {FORM} from './constants';
+import {setId, setDetail, DISPUTE, setDisputed} from './actions';
 import {isDetailLoaded, getLoadTime} from './selectors';
 
 const sendDisputeSaga = function* sendDispute(id, {values}) {
     try {
         const loadTime = yield select(getLoadTime);
-        yield call(caseAPI.dispute, id, Object.assign(values.toJS(), {
+        yield call(formstatus.saga, FORM, caseAPI.dispute(id), Object.assign(values.toJS(), {
             datetime: loadTime,
         }));
+        yield put(setDisputed());
     } catch (ex) {
-        console.error('Unable to send dispute');
+        // expected
     }
 };
 

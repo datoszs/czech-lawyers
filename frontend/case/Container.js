@@ -1,5 +1,7 @@
 import React from 'react';
 import {Row, Col} from 'react-bootstrap';
+import formstatus from '../formstatus';
+import {FORM} from './constants';
 import Header from './Header';
 import Detail from './Detail';
 import Documents from './DocumentContainer';
@@ -11,6 +13,7 @@ const Container = () => (
         <Row>
             <Col sm={6}>
                 <Detail />
+                <formstatus.SuccessContainer formName={FORM} msg="case.dispute.success" />
                 <DisputeButton />
             </Col>
             <Col sm={6}>

@@ -4,6 +4,7 @@ export const SET_ID = `${NAME}/SET_ID`;
 export const SET_DETAIL = `${NAME}/SET_DETAIL`;
 export const OPEN_DISPUTE_FORM = `${NAME}/OPEN_DISPUTE_FORM`;
 export const DISPUTE = `${NAME}/DISPUTE`;
+export const SET_DISPUTED = `${NAME}/SET_DISPUTED`;
 
 export const setId = (id) => ({
     type: SET_ID,
@@ -22,4 +23,8 @@ export const openDisputeForm = () => ({
 export const dispute = (values) => ({
     type: DISPUTE,
     values,
+});
+
+export const setDisputed = () => ({
+    type: SET_DISPUTED,
 });

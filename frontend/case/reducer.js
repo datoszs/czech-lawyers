@@ -3,7 +3,7 @@ import {Map} from 'immutable';
 import moment from 'moment';
 import {dateFormat} from '../util';
 import {CaseDetail, Document} from '../model';
-import {SET_ID, SET_DETAIL, OPEN_DISPUTE_FORM, DISPUTE} from './actions';
+import {SET_ID, SET_DETAIL, OPEN_DISPUTE_FORM, SET_DISPUTED} from './actions';
 
 const idReducer = (state = null, action) => (action.type === SET_ID ? action.id : state);
 
@@ -34,7 +34,7 @@ const disputeFormReducer = (state = false, action) => {
         case OPEN_DISPUTE_FORM:
             return true;
         case SET_ID:
-        case DISPUTE:
+        case SET_DISPUTED:
             return false;
         default:
             return state;
@@ -42,7 +42,7 @@ const disputeFormReducer = (state = false, action) => {
 };
 const disputedReducer = (state = false, action) => {
     switch (action.type) {
-        case DISPUTE:
+        case SET_DISPUTED:
             return true;
         case SET_ID:
             return false;
