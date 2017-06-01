@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import {List} from 'immutable';
 import {Panel} from 'react-bootstrap';
 import {TwoColumn} from '../components';
+import {Msg} from '../containers';
 import autocomplete from '../autocomplete';
 
 import AdvocateDetail from './AdvocateDetail';
@@ -11,6 +12,7 @@ import {search} from './modules';
 
 const Container = ({advocates}) => (
     <section>
+        <header><h1><Msg msg="advocate.search.title" /></h1></header>
         <Panel>
             <autocomplete.Container />
         </Panel>

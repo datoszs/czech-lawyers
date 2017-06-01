@@ -19,6 +19,7 @@ export default {
     'back.button': 'Zpět',
 
     'advocates.title': 'Advokáti',
+    'advocate.search.title': 'Vyhledávání advokátů',
 
     'advocate.ic': 'IČ',
     'advocate.registration.number': 'Evidenční číslo',
@@ -49,6 +50,7 @@ export default {
     'result.neutral': 'Zastavení řízení',
 
     'cases.title': 'Případy',
+    'case.search.title': 'Vyhledávání případů',
     'cases.search.placeholder': 'Zadejte spisovou značku',
 
     'case.detail.title': 'Detail případu',
