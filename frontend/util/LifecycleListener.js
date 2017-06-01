@@ -7,8 +7,8 @@ export default (Component) => {
             this.props.onUnmount();
         }
         render() {
-            const props = Object.assign({}, this.props, {onUnmount: undefined});
-            return <Component {...props} />;
+            const {onUnmount, ...rest} = this.props; // filter out lifecycle listeners
+            return <Component {...rest} />;
         }
     }
     LifecycleListener.propTypes = {
