@@ -10,3 +10,16 @@ export const result = {
     INCONSISTENT_CHANGED: 'inconsistent_changed_meanwhile',
     FAIL: 'fail',
 };
+
+export const resultStyle = {
+    [result.SUCCESS]: 'success',
+    [result.VALIDATED]: 'success',
+};
+
+export const resultMsg = {
+    [result.SUCCESS]: 'case.dispute.verify.success',
+    [result.VALIDATED]: 'case.dispute.verify.success',
+    [result.NO_REQUEST]: 'case.dispute.verify.no.request',
+    [result.INCONSISTENT_CHANGED]: 'case.dispute.verify.inconsistent',
+    [result.INCONSISTENT_FINAL]: 'case.dispute.verify.inconsistent',
+};
