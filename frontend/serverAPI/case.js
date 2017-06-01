@@ -16,9 +16,12 @@ const getByAdvocate = (id, court, year, result) => {
 
 const dispute = (id) => doPost(`/api/dispute-case/${id}`);
 
+const disputeVerify = (email, code) => doPost('/api/dispute-case-verification/')({email, code});
+
 export default {
     search,
     get,
     getByAdvocate,
     dispute,
+    disputeVerify,
 };
