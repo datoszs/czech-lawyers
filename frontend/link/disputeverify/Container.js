@@ -1,3 +1,8 @@
 import React from 'react';
+import CaseButtonContainer from './CaseButtonContainer';
 
-export default () => <div>BAF!</div>;
+export default () => (
+    <section>
+        <CaseButtonContainer />
+    </section>
+);

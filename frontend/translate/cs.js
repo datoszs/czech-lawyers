@@ -72,6 +72,8 @@ export default {
     'case.dispute.final.result': 'Výsledek tomuto případu přiřadil živý člověk a jsme si jím poměrně jistí. Pokud přesto nesouhlasíte s naším úsudkem, neváhejte a [kontaktujte nás](/contact#form.)',
     'case.dispute.final.both': 'Advokáta i výsledek tomuto případu přiřadil živý člověk a jsme si jimi poměrně jistí. Pokud přesto nesouhlasíte s naším úsudkem, neváhejte a [kontaktujte nás](/contact#form.)',
 
+    'case.dispute.verify.case': 'Přejít na stránku případu',
+
     'home.above': 'Zadejte advokáta a zobrazte si statistiky o jeho vystupování před třemi nejdůležitějšími soudy v ČR.',
     'home.below': home,
 
