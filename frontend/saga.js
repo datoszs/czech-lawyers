@@ -8,6 +8,7 @@ import advocate from './advocate';
 import caseDetail from './case';
 import contact from './contact';
 import caseSearch from './casesearch';
+import link from './link';
 
 export default function* () {
     yield [autocomplete.saga].map(fork);
@@ -17,5 +18,6 @@ export default function* () {
         caseDetail,
         contact,
         caseSearch,
+        link,
     ]);
 }
