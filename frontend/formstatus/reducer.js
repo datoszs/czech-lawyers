@@ -1,11 +1,11 @@
 import {combineReducers} from 'redux-immutable';
 import {Map, Set} from 'immutable';
-import {CLEAR, ERROR, SUCCESS, START_SUBMIT} from './actions';
+import {CLEAR_ERROR, CLEAR_SUCCESS, ERROR, SUCCESS, START_SUBMIT} from './actions';
 
 const successReducer = (state = Set(), action) => {
     switch (action.type) {
-        case CLEAR:
         case ERROR:
+        case CLEAR_SUCCESS:
             return state.remove(action.formName);
         case SUCCESS:
             return state.add(action.formName);
@@ -16,7 +16,7 @@ const successReducer = (state = Set(), action) => {
 
 const errorReducer = (state = Map(), action) => {
     switch (action.type) {
-        case CLEAR:
+        case CLEAR_ERROR:
         case SUCCESS:
             return state.remove(action.formName);
         case ERROR:

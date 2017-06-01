@@ -1,13 +1,26 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import AlertContainer from './AlertContainer';
+import {Alert} from 'react-bootstrap';
+import {LifecycleListener} from '../util';
+import {Msg} from '../containers';
 
-const StatusContainer = ({msg, formName, bsStyle}) => msg && <AlertContainer formName={formName} msg={msg} bsStyle={bsStyle} />;
+const AlertComponent = LifecycleListener(Alert);
+
+const StatusContainer = ({msg, bsStyle, handleClear}) =>
+msg && (
+    <AlertComponent
+        bsStyle={bsStyle}
+        onDismiss={handleClear}
+        onUnmount={handleClear}
+    >
+        <Msg msg={msg} />
+    </AlertComponent>
+);
 
 StatusContainer.propTypes = {
-    msg: PropTypes.string,
-    formName: PropTypes.string.isRequired,
+    text: PropTypes.string,
     bsStyle: PropTypes.string.isRequired,
+    handleClear: PropTypes.func.isRequired,
 };
 
 StatusContainer.defaultProps = {
