@@ -12,6 +12,7 @@ export default {
     'contact.title': 'Kontakt',
     'contact.appeal': 'Napište nám',
     'copyright': '\u{A9} 2017 DATOS \u{2014} data o spravedlnosti, z. s.',
+    'loading.alert': 'Váš požadavek se zpracovává, počkejte, prosím.',
 
     'search.button': 'Hledat',
     'search.placeholder': 'Zadejte jméno nebo IČ',
@@ -71,6 +72,13 @@ export default {
     'case.dispute.final.advocate': 'Advokáta tomuto případu přiřadil živý člověk a jsme si jím poměrně jistí. Pokud přesto nesouhlasíte s naším úsudkem, neváhejte a [kontaktujte nás](/contact#form.)',
     'case.dispute.final.result': 'Výsledek tomuto případu přiřadil živý člověk a jsme si jím poměrně jistí. Pokud přesto nesouhlasíte s naším úsudkem, neváhejte a [kontaktujte nás](/contact#form.)',
     'case.dispute.final.both': 'Advokáta i výsledek tomuto případu přiřadil živý člověk a jsme si jimi poměrně jistí. Pokud přesto nesouhlasíte s naším úsudkem, neváhejte a [kontaktujte nás](/contact#form.)',
+
+    'case.dispute.verify.title': 'Rozporování případu',
+    'case.dispute.verify.case': 'Přejít na stránku případu',
+    'case.dispute.verify.success': 'Případ byl úspěšně rozporován.',
+    'case.dispute.verify.fail': 'Z nám neznámého důvodu se případ nepodařilo rozporovat. Zkuste to znova, možná budete mít více štěstí.',
+    'case.dispute.verify.no.request': 'Váš požadavek na rozporování se nám někde ztratl. Rozporujte, prosím, případ, znova.',
+    'case.dispute.verify.inconsistent': 'Někdo byl rychlejší než Vy a případ dříve, než byl rozporován, změnil. Podívejte se, prosím, na stránku případu a ověřte přiřazeného advokáta a/nebo výsledek.',
 
     'home.above': 'Zadejte advokáta a zobrazte si statistiky o jeho vystupování před třemi nejdůležitějšími soudy v ČR.',
     'home.below': home,

@@ -9,6 +9,7 @@ import advocate from './advocate';
 import caseDetail from './case';
 import caseSearch from './casesearch';
 import formstatus from './formstatus';
+import link from './link';
 
 export default combineReducers([
     translate,
@@ -19,6 +20,7 @@ export default combineReducers([
     caseDetail,
     caseSearch,
     formstatus,
+    link,
 ].reduce((result, module) => Object.assign({[module.NAME]: module.reducer}, result), {
     form: formReducer,
 }));

@@ -18,6 +18,7 @@ import advocateSearch from './advocatesearch';
 import advocate from './advocate';
 import caseDetail from './case';
 import caseSearch from './casesearch';
+import link from './link';
 
 const AppRouter = ({handleEnter, handleChange}) => {
     const createRoute = (module) => <Route
@@ -36,6 +37,7 @@ const AppRouter = ({handleEnter, handleChange}) => {
                 {createRoute(advocate)}
                 {createRoute(caseSearch)}
                 {createRoute(caseDetail)}
+                {createRoute(link)}
             </Route>
         </Router>
     );
