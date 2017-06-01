@@ -82,6 +82,8 @@ export default {
 
     'home.above': 'Zadejte advokáta a zobrazte si statistiky o jeho vystupování před třemi nejdůležitějšími soudy v ČR.',
     'home.below': home,
+    'leaderboard.top': 'Nejúspěšnější advokáti',
+    'leaderboard.bottom': 'Nejméně úspěšní advokáti',
 
     'about.text': about,
 
