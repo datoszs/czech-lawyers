@@ -10,6 +10,7 @@ import caseDetail from './case';
 import caseSearch from './casesearch';
 import formstatus from './formstatus';
 import link from './link';
+import home from './home';
 
 export default combineReducers([
     translate,
@@ -21,6 +22,7 @@ export default combineReducers([
     caseSearch,
     formstatus,
     link,
+    home,
 ].reduce((result, module) => Object.assign({[module.NAME]: module.reducer}, result), {
     form: formReducer,
 }));
