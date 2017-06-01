@@ -1,9 +1,10 @@
 import {call, put} from 'redux-saga/effects';
 import {RequestError} from '../serverAPI';
-import {setError, setSuccess} from './actions';
+import {setError, setSuccess, startSubmit} from './actions';
 
 export default function* sendForm(formName, api, values) {
     try {
+        yield put(startSubmit(formName));
         yield call(api, values);
         yield put(setSuccess(formName));
     } catch (ex) {

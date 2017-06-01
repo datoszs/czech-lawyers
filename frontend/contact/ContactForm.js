@@ -1,6 +1,5 @@
 import React from 'react';
-import {Button} from 'react-bootstrap';
-import {RichText, Msg} from '../containers';
+import {RichText} from '../containers';
 import formstatus from '../formstatus';
 import {CaptchaForm, TextAreaField, EmailField, TextField} from '../containers/form';
 import {sendEmail} from './actions';
@@ -15,7 +14,7 @@ export default () => (
             <TextAreaField name="content" label="contact.form.message" required />
             <formstatus.SuccessContainer formName={CONTACT_FORM} msg="contact.form.success" />
             <formstatus.ErrorContainer formName={CONTACT_FORM} defaultMsg="contact.form.error.default" />
-            <Button type="submit" bsStyle="primary"><Msg msg="contact.form.submit" /></Button>
+            <formstatus.SubmitButton formName={CONTACT_FORM} msg="contact.form.submit" />
         </CaptchaForm>
     </section>
 );

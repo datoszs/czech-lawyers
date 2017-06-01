@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
-import {Panel, Button} from 'react-bootstrap';
+import {Panel} from 'react-bootstrap';
 import {RichText, Msg} from '../containers';
 import {EmailField, TextField, CaptchaForm, TextAreaField, SelectOption, SelectField} from '../containers/form';
 import formstatus from '../formstatus';
@@ -23,8 +23,12 @@ const DisputeForm = ({advocateFinal, resultFinal}) => (
                 {resultFinal && <RichText msg="case.dispute.final.result" />}
             </SelectField>
             <TextAreaField name="content" label="case.dispute.comment" required />
-            <formstatus.ErrorContainer formName={FORM} defaultMsg="case.dispute.error.default" />
-            <Button type="submit" bsStyle="danger"><Msg msg="case.dispute.submit" /></Button>
+            <formstatus.ErrorContainer
+                formName={FORM}
+                defaultMsg="case.dispute.error.default"
+                errorMap={{inconsistent: 'case.dispute.error.inconsistent'}}
+            />
+            <formstatus.SubmitButton bsStyle="danger" msg="case.dispute.submit" formName={FORM} />
         </CaptchaForm>
     </Panel>
 );
