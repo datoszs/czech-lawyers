@@ -23,3 +23,6 @@ export const getResultFilter = (state) => getModel(state).get('resultFilter');
 export const getCases = (state) => getModel(state).get('caseList');
 export const getCase = (state, id) => getModel(state).getIn(['cases', id]);
 export const areCasesLoaded = (state) => !!getCases(state).size;
+
+/* STATISTICS */
+export const getStatistics = (state, court = null) => getModel(state).getIn(['statistics', court]);
