@@ -7,6 +7,7 @@ export default (Component) => {
             this.props.onUnmount();
         }
         render() {
+			// eslint-disable-next-line no-unused-vars
             const {onUnmount, ...rest} = this.props; // filter out lifecycle listeners
             return <Component {...rest} />;
         }
