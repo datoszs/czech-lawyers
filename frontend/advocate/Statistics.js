@@ -1,5 +1,5 @@
 import {connect} from 'react-redux';
-import {BigStatistics} from '../components';
+import {BigStatistics} from '../components/statistics';
 import translate from '../translate';
 import {getAdvocate} from './selectors';
 

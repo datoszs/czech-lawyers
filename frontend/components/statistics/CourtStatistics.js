@@ -11,15 +11,9 @@ const CourtStatistics = ({positive, negative, neutral, court}) => (
 
 CourtStatistics.propTypes = {
     court: PropTypes.string.isRequired,
-    positive: PropTypes.number,
-    negative: PropTypes.number,
-    neutral: PropTypes.number,
-};
-
-CourtStatistics.defaultProps = {
-    positive: 0,
-    negative: 0,
-    neutral: 0,
+    positive: PropTypes.number.isRequired,
+    negative: PropTypes.number.isRequired,
+    neutral: PropTypes.number.isRequired,
 };
 
 export default CourtStatistics;

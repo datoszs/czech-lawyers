@@ -2,41 +2,30 @@
 @import "timeline/index";
 @import "form/index";
 @import "markdown/index";
+@import "statistics/index";
 @import (reference) "TwoColumn";
 @import (reference) "SearchForm";
-@import (reference) "Statistics";
 @import (reference) "PanelBody";
 @import (reference) "DetailPanel";
 @import (reference) "DetailFieldComponent";
-@import (reference) "BigStatistics";
 @import (reference) "PageSubheader";
 @import (reference) "SocietyOverview";
-@import (reference) "StatisticsBar";
 @import (reference) "SimpleFormLayout";
-@import (reference) "StatisticsLegend";
 @import (reference) "AutocompleteLayout";
 @import (reference) "LoadingAlert";
 @import (reference) "LeaderBoard";
 @import (reference) "CurrentSearch";
-@import (reference) "CourtStatistics";
 
 .two-column { .two-column(); }
 .search-form { .search-form(); }
-.statistics { .statistics(); }
 .custom-panel-body { .panel-body(); }
 .detail-panel { .detail-panel(); }
 .detail-field { .detail-field(); }
-.big-statistics { .big-statistics(); }
 .page-subheader { .page-subheader(); }
 .society-overview { .society-overview(); }
-.statistics-column.positive { .statistics-column(@stats-positive); }
-.statistics-column.negative { .statistics-column(@stats-negative); }
-.statistics-column.neutral { .statistics-column(@stats-neutral); }
 .simple-form { .simple-form(); }
-.statistics-legend { .statistics-legend(); }
 .autocomplete { .autocomplete(); }
 .loading-alert { .loading-alert(); }
 .leader-board.positive { .leader-board(@stats-positive); }
 .leader-board.negative { .leader-board(@stats-negative); }
 .current-search { .current-search(); }
-.court-statistics { .court-statistics(); }

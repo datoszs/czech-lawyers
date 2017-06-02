@@ -1,5 +1,5 @@
 import {connect} from 'react-redux';
-import {StatisticsLegend} from '../components';
+import {StatisticsLegend} from '../components/statistics';
 import translate from '../translate';
 
 const mapStateToProps = (state) => ({

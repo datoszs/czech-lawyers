@@ -59,7 +59,7 @@ const maxCasesReducer = (state = null, action) => {
                 state,
                 Object.values(action.results)
                     .map((statistics) => (statistics.positive || 0) + (statistics.negative || 0) + (statistics.neutral || 0))
-                    .reduce((result, year) => Math.max(result, year), 0),
+                    .reduce((maximum, year) => Math.max(maximum, year), 0),
             );
         case SET_ID:
             return null;
