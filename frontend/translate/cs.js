@@ -17,6 +17,7 @@ export default {
     'search.button': 'Hledat',
     'search.placeholder': 'Zadejte jméno nebo IČ',
     'back.button': 'Zpět',
+    'search.results': 'Zobrazeny výsledky pro:',
 
     'advocates.title': 'Advokáti',
     'advocate.search.title': 'Vyhledávání advokátů',

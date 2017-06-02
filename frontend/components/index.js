@@ -15,3 +15,4 @@ export {default as CaseDetail} from './CaseDetail';
 export {default as AutocompleteLayout} from './AutocompleteLayout';
 export {default as LoadingAlert} from './LoadingAlert';
 export {default as LeaderBoard} from './LeaderBoard';
+export {default as CurrentSearch} from './CurrentSearch';

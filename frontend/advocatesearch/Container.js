@@ -8,6 +8,7 @@ import {Msg} from '../containers';
 import autocomplete from '../autocomplete';
 
 import AdvocateDetail from './AdvocateDetail';
+import CurrentSearch from './CurrentSearchContainer';
 import {search} from './modules';
 
 const Container = ({advocates}) => (
@@ -16,6 +17,7 @@ const Container = ({advocates}) => (
         <Panel>
             <autocomplete.Container />
         </Panel>
+        <CurrentSearch />
         <TwoColumn>
             {advocates.map((id) => <AdvocateDetail key={id} id={id} />)}
         </TwoColumn>
