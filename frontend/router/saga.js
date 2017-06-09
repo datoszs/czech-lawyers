@@ -1,5 +1,5 @@
 import ga from 'react-ga';
-import {take, cancel, fork, call, takeEvery, select} from 'redux-saga/effects';
+import {all, take, cancel, fork, call, takeEvery, select} from 'redux-saga/effects';
 import history from '../history';
 import {toObject, formatRoute} from '../util';
 import {ROUTE_ENTERED, TRANSITION, NAVIGATE} from './actions';
@@ -43,10 +43,10 @@ const transitionListener = (routeMap, {name, params, query, anchor}) => {
 const navigateSaga = function* navigateSaga(routeMap, {name}) {
     const route = routeMap[name];
     if (route) {
-        const [params, query] = yield [
+        const [params, query] = yield all([
             select(getParams, name),
             select(getQuery, name),
-        ];
+        ]);
         const path = formatRoute(route, params, query);
         history.push(path);
     } else {
@@ -61,4 +61,4 @@ export default function* routerMainSaga(modules) {
     yield takeEvery(TRANSITION, transitionListener, routeMap);
     yield takeEvery(NAVIGATE, navigateSaga, routeMap);
     yield call(routerSaga, sagaMap);
-};
+}

@@ -1,4 +1,4 @@
-import {call, fork} from 'redux-saga/effects';
+import {all, call, fork} from 'redux-saga/effects';
 
 import autocomplete from './autocomplete';
 
@@ -13,7 +13,7 @@ import home from './home';
 import about from './about';
 
 export default function* () {
-    yield [autocomplete.saga].map(fork);
+    yield all([autocomplete.saga].map(fork));
     yield call(router.saga, [
         advocateSearch,
         advocate,

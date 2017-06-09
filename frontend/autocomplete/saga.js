@@ -1,4 +1,4 @@
-import {call, put, select, takeEvery, takeLatest} from 'redux-saga/effects';
+import {all, call, put, select, takeEvery, takeLatest} from 'redux-saga/effects';
 import {advocateAPI} from '../serverAPI';
 import {mapDtoToAdvocateAutocomplete} from '../model';
 import {SET_INPUT_VALUE, SUBMIT, SHOW_DROPDOWN, MOVE_SELECTION,
@@ -43,8 +43,8 @@ const submitSaga = function* submit() {
 };
 
 export default function* autocomplete() {
-    yield [
+    yield all([
         takeLatest([SET_INPUT_VALUE, SHOW_DROPDOWN, MOVE_SELECTION], loadOptionsControllerSaga),
         takeEvery(SUBMIT, submitSaga),
-    ];
+    ]);
 }
