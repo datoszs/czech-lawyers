@@ -1,5 +1,5 @@
 import React from 'react';
-import {Jumbotron, PageHeader, Row, Col} from 'react-bootstrap';
+import {Jumbotron, Row, Col} from 'react-bootstrap';
 import {Msg, RichText} from '../containers';
 import autocomplete from '../autocomplete';
 import {getTop, getBottom} from './selectors';
