@@ -1,8 +1,9 @@
 import ga from 'react-ga';
-import {browserHistory} from 'react-router';
-import {take, cancel, fork, call, takeEvery} from 'redux-saga/effects';
+import {take, cancel, fork, call, takeEvery, select} from 'redux-saga/effects';
+import history from '../history';
 import {toObject, formatRoute} from '../util';
-import {ROUTE_ENTERED, TRANSITION} from './actions';
+import {ROUTE_ENTERED, TRANSITION, NAVIGATE} from './actions';
+import {getQuery, getParams} from './selectors';
 
 const setGaPage = (page) => {
     ga.set({page});
@@ -33,7 +34,21 @@ const transitionListener = (routeMap, {name, params, query, anchor}) => {
     const route = routeMap[name];
     if (route) {
         const path = formatRoute(route, params, query, anchor);
-        browserHistory.push(path);
+        history.push(path);
+    } else {
+        console.error(`Unknown route name: ${name}`);
+    }
+};
+
+const navigateSaga = function* navigateSaga(routeMap, {name}) {
+    const route = routeMap[name];
+    if (route) {
+        const [params, query] = yield [
+            select(getParams, name),
+            select(getQuery, name),
+        ];
+        const path = formatRoute(route, params, query);
+        history.push(path);
     } else {
         console.error(`Unknown route name: ${name}`);
     }
@@ -44,5 +59,6 @@ export default function* routerMainSaga(modules) {
     const routeMap = modules.map((module) => [module.NAME, module.ROUTE]).reduce(toObject, {});
 
     yield takeEvery(TRANSITION, transitionListener, routeMap);
+    yield takeEvery(NAVIGATE, navigateSaga, routeMap);
     yield call(routerSaga, sagaMap);
 };

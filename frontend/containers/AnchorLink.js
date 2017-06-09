@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {Element, scroller} from 'react-scroll';
-import {browserHistory} from 'react-router';
+import history from '../history';
 
 class Anchor extends Component {
     componentDidMount() {
         this.scroll(window.location.hash, false);
-        this.stopListening = browserHistory.listen((location) => this.scroll(location.hash, true));
+        this.stopListening = history.listen((location) => this.scroll(location.hash, true));
     }
 
     componentWillUnmount() {

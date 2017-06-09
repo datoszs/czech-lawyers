@@ -10,7 +10,10 @@ const routeInfoReducer = (property) => (state = Map(), action) => {
     }
 };
 
+const routeReducer = (state = null, action) => (action.type === ROUTE_ENTERED ? action.name : state);
+
 export default combineReducers({
     params: routeInfoReducer('params'),
     query: routeInfoReducer('query'),
+    route: routeReducer,
 });
