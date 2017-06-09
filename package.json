@@ -38,7 +38,7 @@
     "react-markdown": "2.5.0",
     "react-redux": "5.0.5",
     "react-router-dom": "^4.1.1",
-    "react-scroll": "1.n5.2",
+    "react-scroll": "1.5.2",
     "react-spinkit": "3.0.0",
     "redux": "3.6.0",
     "redux-form": "6.7.0",
