@@ -2,25 +2,19 @@ import PropTypes from 'prop-types';
 import {ListGroupItem} from 'react-bootstrap';
 import {connect} from 'react-redux';
 import {getResult, getSelectedItem} from './selectors';
-import {setSelection} from './actions';
-import {setAdvocate} from './transition';
+import {setSelection, setAdvocate} from './actions';
 
 const mapStateToProps = (state, {id}) => ({
     children: getResult(state, id).name,
     active: id === getSelectedItem(state),
 });
 
-const mapDispatchToProps = (dispatch) => ({
-    handleSelection: (id) => () => dispatch(setSelection(id)),
+const mapDispatchToProps = (dispatch, {id}) => ({
+    onMouseOver: () => dispatch(setSelection(id)),
+    onClick: () => dispatch(setAdvocate(id)),
 });
 
-const mergeProps = (stateProps, {handleSelection}, {id}) => ({
-    ...stateProps,
-    onMouseOver: handleSelection(id),
-    onClick: () => setAdvocate(id),
-});
-
-const AutocompleteItem = connect(mapStateToProps, mapDispatchToProps, mergeProps)(ListGroupItem);
+const AutocompleteItem = connect(mapStateToProps, mapDispatchToProps)(ListGroupItem);
 
 AutocompleteItem.propTypes = {
     id: PropTypes.number.isRequired,
