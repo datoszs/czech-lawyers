@@ -1,14 +1,11 @@
 import React from 'react';
-import {Link} from 'react-router';
+import {Link} from 'react-router-dom';
 import {Navbar, Nav} from 'react-bootstrap';
 import RouteNavItem from './RouteNavItem';
 
 import {Msg} from '../containers';
 
-import about from '../about';
-import contact from '../contact';
-import advocateSearch from '../advocatesearch';
-import caseSearch from '../casesearch';
+import {ABOUT, CONTACT, ADVOCATE_SEARCH, CASE_SEARCH} from '../routes';
 
 const Navigation = () => (
     <Navbar>
@@ -18,12 +15,12 @@ const Navigation = () => (
         </Navbar.Header>
         <Navbar.Collapse>
             <Nav>
-                <RouteNavItem module={advocateSearch.NAME} route={advocateSearch.ROUTE}><Msg msg="advocates.title" /></RouteNavItem>
-                <RouteNavItem module={caseSearch.NAME} route={caseSearch.ROUTE}><Msg msg="cases.title" /></RouteNavItem>
+                <RouteNavItem module={ADVOCATE_SEARCH}><Msg msg="advocates.title" /></RouteNavItem>
+                <RouteNavItem module={CASE_SEARCH}><Msg msg="cases.title" /></RouteNavItem>
             </Nav>
             <Nav pullRight>
-                <RouteNavItem module={about.NAME} route={about.ROUTE}><Msg msg="about.title" /></RouteNavItem>
-                <RouteNavItem module={contact.NAME} route={contact.ROUTE}><Msg msg="contact.title" /></RouteNavItem>
+                <RouteNavItem module={ABOUT}><Msg msg="about.title" /></RouteNavItem>
+                <RouteNavItem module={CONTACT}><Msg msg="contact.title" /></RouteNavItem>
             </Nav>
         </Navbar.Collapse>
     </Navbar>

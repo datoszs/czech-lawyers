@@ -1,4 +1,4 @@
-import {put, select, fork, call, race, take, takeLatest} from 'redux-saga/effects';
+import {put, select, fork, call, race, take, takeLatest, all} from 'redux-saga/effects';
 import {advocateAPI, caseAPI} from '../serverAPI';
 import {mapDtoToAdvocateDetail, mapDtoToAdvocateResults, mapDtoToCase} from '../model';
 import {setId, setAdvocate, setResults, SET_COURT_FILTER, SET_GRAPH_FILTER, setCases} from './actions';
@@ -32,11 +32,11 @@ const loadResultsSaga = function* loadResults(id) {
 };
 
 const loadFilteredCasesSaga = function* loadFilteredCases(id) {
-    const [court, year, result] = yield [
+    const [court, year, result] = yield all([
         select(getCourtFilter),
         select(getYearFilter),
         select(getResultFilter),
-    ];
+    ]);
     try {
         const {cases} = yield call(caseAPI.getByAdvocate, id, court, year, result);
         yield put(setCases(cases.map(mapDtoToCase)));
@@ -61,9 +61,9 @@ const loadCasesSaga = function* loadCases(id) {
 
 export default function* advocateDetail({id}) {
     yield put(setId(id));
-    yield [
+    yield all([
         fork(loadAdvocateSaga, id),
         fork(loadResultsSaga, id),
         fork(loadCasesSaga, id),
-    ];
+    ]);
 }

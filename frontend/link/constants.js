@@ -1,2 +1,4 @@
-export const NAME = 'route-link';
-export const ROUTE = 'link/:request';
+import {LINK} from '../routes';
+
+export const NAME = LINK;
+export const ROUTE = '/link/:request';

@@ -1,3 +1,5 @@
+import router from '../router';
+import {ADVOCATE_SEARCH, ADVOCATE_DETAIL} from '../routes';
 import {NAME} from './constants';
 
 export const SET_INPUT_VALUE = `${NAME}/SET_INPUT_VALUE`;
@@ -42,3 +44,6 @@ export const moveSelectionInternal = (increment) => ({
     type: MOVE_SELECTION_INTERNAL,
     increment,
 });
+
+export const setQuery = (query) => router.transition(ADVOCATE_SEARCH, undefined, {query});
+export const setAdvocate = (id) => router.transition(ADVOCATE_DETAIL, {id});

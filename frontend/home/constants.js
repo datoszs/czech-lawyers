@@ -1,1 +1,4 @@
-export const NAME = 'route-home';
+import {HOME} from '../routes';
+
+export const NAME = HOME;
+export const ROUTE = '/';

@@ -1,8 +1,9 @@
 import {NAME} from './constants';
-import {routeEntered} from './actions';
-import {getCurrentPath} from './selectors';
+import {transition, navigate} from './actions';
+import {isActive} from './selectors';
 import saga from './saga';
 import reducer from './reducer';
+import Component from './Component';
 
 /**
  * ROUTER MODULE
@@ -11,8 +12,10 @@ import reducer from './reducer';
  */
 const router = {
     NAME,
-    routeEntered,
-    getCurrentPath,
+    Component,
+    transition,
+    navigate,
+    isActive,
     saga,
     reducer,
 };
