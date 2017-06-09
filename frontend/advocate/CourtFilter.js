@@ -17,15 +17,15 @@ const CourtFilterComponent = ({activeCourt, setActiveCourt}) => (
         >
             <Msg msg="court.all" />
         </Button>
-        {Object.values(courts).map((court) =>
+        {Object.values(courts).map((court) => (
             <Button
                 key={court}
                 onClick={() => (court !== activeCourt ? setActiveCourt(court) : {})}
                 active={court === activeCourt}
             >
                 <Msg msg={courtsMsg[court]} />
-            </Button>,
-        )}
+            </Button>
+        ))}
     </ButtonGroup>
 );
 

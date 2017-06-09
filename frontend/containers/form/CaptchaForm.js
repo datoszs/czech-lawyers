@@ -13,15 +13,19 @@ const CaptchaFormComponent = ({inline, children, handleSubmit}) => {
             {children}
             <Field
                 name="captcha_token"
-                component={({input}) => <Captcha
-                    onChange={(value) => {
-                        input.onChange(value);
-                        handleSubmit();
-                    }}
-                    sitekey={siteKey}
-                    size="invisible"
-                    ref={(component) => { captcha = component; }}
-                />}
+                component={({input}) => (
+                    <Captcha
+                        onChange={(value) => {
+                            input.onChange(value);
+                            handleSubmit();
+                        }}
+                        sitekey={siteKey}
+                        size="invisible"
+                        ref={(component) => {
+                            captcha = component;
+                        }}
+                    />
+                )}
             />
         </Form>
     );

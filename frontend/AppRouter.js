@@ -21,12 +21,14 @@ import caseSearch from './casesearch';
 import link from './link';
 
 const AppRouter = ({handleEnter, handleChange}) => {
-    const createRoute = (module) => <Route
-        path={module.ROUTE}
-        component={module.Container}
-        onEnter={handleEnter(module.NAME)}
-        onChange={handleChange(module.NAME)}
-    />;
+    const createRoute = (module) => (
+        <Route
+            path={module.ROUTE}
+            component={module.Container}
+            onEnter={handleEnter(module.NAME)}
+            onChange={handleChange(module.NAME)}
+        />
+    );
     return (
         <Router history={browserHistory}>
             <Route path="/" component={navigation.AppContainer}>

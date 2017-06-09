@@ -7,10 +7,7 @@ const Timeline = ({YearComponent, startYear}) => (
         {
             sequence((getCurrentYear() - startYear) + 1)
                 .map((year) => year + startYear)
-                .map((year) => <YearComponent
-                    key={year}
-                    year={year}
-                />)
+                .map((year) => <YearComponent key={year} year={year} />)
         }
 
     </div>
