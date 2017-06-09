@@ -29,7 +29,7 @@ const routerSaga = function* routerSaga(sagaMap) {
     }
 };
 
-const transitionListener = ({name, params, query, anchor}, routeMap) => {
+const transitionListener = (routeMap, {name, params, query, anchor}) => {
     const route = routeMap[name];
     if (route) {
         const path = formatRoute(route, params, query, anchor);

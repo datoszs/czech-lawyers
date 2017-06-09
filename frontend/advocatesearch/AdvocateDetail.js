@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {Row} from 'react-bootstrap';
 import translate from '../translate';
-import {transition} from '../util';
+import router from '../router';
+import {ADVOCATE_DETAIL} from '../routes';
 import {Statistics} from '../components/statistics';
 import {DetailPanel} from '../components';
 import {Advocate, statusMsg} from '../model';
-import advocateModule from '../advocate';
 import {search} from './modules';
 import FooterColumn from './FooterColumn';
 import Legend from './Legend';
@@ -49,16 +49,11 @@ const mapStateToProps = (state, {id}) => {
     };
 };
 
-const mapDispatchToProps = () => ({
-    handleDetail: (id) => () => transition(advocateModule.ROUTE, {id}),
+const mapDispatchToProps = (dispatch, {id}) => ({
+    handleDetail: () => dispatch(router.transition(ADVOCATE_DETAIL, {id})),
 });
 
-const mergeProps = (stateProps, {handleDetail}, {id}) => ({
-    handleDetail: handleDetail(id),
-    ...stateProps,
-});
-
-const AdvocateDetail = connect(mapStateToProps, mapDispatchToProps, mergeProps)(AdvocateDetailComponent);
+const AdvocateDetail = connect(mapStateToProps, mapDispatchToProps)(AdvocateDetailComponent);
 
 AdvocateDetail.propTypes = {
     id: PropTypes.number.isRequired,

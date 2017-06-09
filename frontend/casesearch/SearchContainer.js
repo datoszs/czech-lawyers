@@ -1,8 +1,9 @@
 import {connect} from 'react-redux';
 import {reduxForm} from 'redux-form/immutable';
 import translate from '../translate';
-import {transition} from '../util';
-import {SEARCH_FORM, ROUTE} from './constants';
+import router from '../router';
+import {CASE_SEARCH} from '../routes';
+import {SEARCH_FORM} from './constants';
 import SearchComponent from './SearchComponent';
 
 const mapStateToProps = (state) => ({
@@ -10,7 +11,7 @@ const mapStateToProps = (state) => ({
     msgPlaceholder: translate.getMessage(state, 'cases.search.placeholder'),
 });
 
-const onSubmit = (values) => transition(ROUTE, undefined, values.toJS());
+const onSubmit = (values, dispatch) => dispatch(router.transition(CASE_SEARCH, undefined, values.toJS()));
 
 export default reduxForm({
     form: SEARCH_FORM,

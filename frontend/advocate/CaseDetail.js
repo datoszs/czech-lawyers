@@ -1,11 +1,11 @@
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
-import {transition} from '../util';
 import {CaseDetail as CaseDetailComponent} from '../components';
+import {CASE_DETAIL} from '../routes';
+import router from '../router';
 import translate from '../translate';
 import {courtsMsg, resultMsg} from '../model';
 import {getCase} from './selectors';
-import caseDetail from '../case';
 
 const mapStateToProps = (state, {id}) => {
     const caseObj = getCase(state, id);
@@ -16,8 +16,8 @@ const mapStateToProps = (state, {id}) => {
     };
 };
 
-const mapDispatchToProps = (state, {id}) => ({
-    handleDetail: () => transition(caseDetail.ROUTE, {id}),
+const mapDispatchToProps = (dispatch, {id}) => ({
+    handleDetail: () => dispatch(router.transition(CASE_DETAIL, {id})),
 });
 
 const CaseDetail = connect(mapStateToProps, mapDispatchToProps)(CaseDetailComponent);

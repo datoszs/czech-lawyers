@@ -1,8 +1,9 @@
 import {connect} from 'react-redux';
 import {Button} from 'react-bootstrap';
-import {If, transition} from '../../util';
+import {If} from '../../util';
 import translate from '../../translate';
-import caseDetail from '../../case';
+import router from '../../router';
+import {CASE_DETAIL} from '../../routes';
 import {getCaseId, isLoading} from './selectors';
 
 const mapStateToProps = (state) => ({
@@ -11,13 +12,17 @@ const mapStateToProps = (state) => ({
     disabled: isLoading(state),
 });
 
-const mergeProps = ({caseId, disabled, children}) => ({
+const mapDispatchToProps = (dispatch) => ({
+    transition: (id) => () => dispatch(router.transition(CASE_DETAIL, {id})),
+});
+
+const mergeProps = ({caseId, disabled, children}, {transition}) => ({
     test: !!caseId,
     Component: Button,
-    onClick: () => transition(caseDetail.ROUTE, {id: caseId}),
+    onClick: transition(caseId),
     disabled,
     children,
 });
 
-export default connect(mapStateToProps, undefined, mergeProps)(If);
+export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(If);
 

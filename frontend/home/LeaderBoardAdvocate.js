@@ -1,20 +1,19 @@
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {ListGroupItem} from 'react-bootstrap';
-import {transition} from '../util';
-import advocate from '../advocate';
+import router from '../router';
+import {ADVOCATE_DETAIL} from '../routes';
 import {getName} from './selectors';
 
 const mapStateToProps = (state, {id}) => ({
     children: getName(state, id),
 });
 
-const mergeProps = ({children}, dispatchProps, {id}) => ({
-    children,
-    onClick: () => transition(advocate.ROUTE, {id}),
+const mapDispatchToProps = (dispatch, {id}) => ({
+    onClick: () => dispatch(router.transition(ADVOCATE_DETAIL, {id})),
 });
 
-const LeaderBoardAdvocate = connect(mapStateToProps, undefined, mergeProps)(ListGroupItem);
+const LeaderBoardAdvocate = connect(mapStateToProps, mapDispatchToProps)(ListGroupItem);
 
 LeaderBoardAdvocate.propTypes = {
     id: PropTypes.number.isRequired,

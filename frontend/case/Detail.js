@@ -3,9 +3,10 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {courtsMsg, resultMsg} from '../model';
 import {DetailField} from '../containers';
-import {transition, wrapEventStop} from '../util';
+import {wrapEventStop} from '../util';
 import translate from '../translate';
-import advocate from '../advocate';
+import router from '../router';
+import {ADVOCATE_DETAIL} from '../routes';
 import {getDetail} from './selectors';
 
 
@@ -40,8 +41,8 @@ const mapStateToProps = (state) => {
     });
 };
 
-const mapDispatchToProps = () => ({
-    goToAdvocate: (id) => () => transition(advocate.ROUTE, {id}),
+const mapDispatchToProps = (dispatch) => ({
+    goToAdvocate: (id) => () => dispatch(router.transition(ADVOCATE_DETAIL, {id})),
 });
 
 const mergeProps = ({advocateId, ...stateProps}, {goToAdvocate}) => ({
