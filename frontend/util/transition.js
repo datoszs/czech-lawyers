@@ -8,4 +8,4 @@ import formatRoute from './formatRoute';
  * @param query Route query (optional).
  * @param anchor Anchor (#, optional).
  */
-export default (route, params, query, anchor) => browserHistory.push(`/${formatRoute(route, params, query, anchor)}`);
+export default (route, params, query, anchor) => browserHistory.push(formatRoute(route, params, query, anchor));

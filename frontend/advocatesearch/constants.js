@@ -1,3 +1,4 @@
-export const NAME = 'route-search-advocates';
+import {ADVOCATE_SEARCH} from '../routes';
 
-export const ROUTE = 'advocates';
+export const NAME = ADVOCATE_SEARCH;
+export const ROUTE = '/advocates';

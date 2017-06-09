@@ -8,7 +8,7 @@ import routerModule from '../router';
 const RouteNavItemComponent = ({route, path, children}, {router}) => (
     <NavItem
         active={router.isActive(route)}
-        onClick={() => router.push(`/${path}`)}
+        onClick={() => router.push(path)}
     >
         {children}
     </NavItem>

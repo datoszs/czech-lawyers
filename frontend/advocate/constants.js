@@ -1,2 +1,4 @@
-export const NAME = 'route-advocate';
-export const ROUTE = 'advocate/:id(/:name)';
+import {ADVOCATE_DETAIL} from '../routes';
+
+export const NAME = ADVOCATE_DETAIL;
+export const ROUTE = '/advocate/:id(/:name)';
