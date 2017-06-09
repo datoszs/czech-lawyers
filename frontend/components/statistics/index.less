@@ -3,6 +3,7 @@
 @import (reference) "StatisticsBar";
 @import (reference) "StatisticsLegend";
 @import (reference) "CourtStatistics";
+@import (reference) "StatisticsBarInverse";
 
 .statistics-column.positive { .statistics-column(@stats-positive); }
 .statistics-column.negative { .statistics-column(@stats-negative); }
@@ -11,3 +12,8 @@
 .court-statistics { .court-statistics(); }
 .statistics-legend { .statistics-legend(); }
 .statistics { .statistics(); }
+@lp: luminance(@stats-positive);
+@ln: luminance(@stats-negative);
+.statistics-column-inverse.positive { .statistics-inverse(rgb(@lp, @lp, @lp)); }
+.statistics-column-inverse.negative { .statistics-inverse(rgb(@ln, @ln, @ln)); }
+.statistics-column-inverse.neutral { .statistics-inverse(@stats-neutral); }
