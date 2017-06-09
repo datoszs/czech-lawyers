@@ -8,7 +8,6 @@ import LeaderBoard from './LeaderBoard';
 const Container = () => (
     <section>
         <Jumbotron>
-            <h1><Msg msg="app.title" /></h1>
             <p><Msg msg="home.above" /></p>
             <autocomplete.Container />
         </Jumbotron>
