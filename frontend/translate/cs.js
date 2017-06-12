@@ -4,6 +4,7 @@ import authors from './authors.cs.md';
 import contact from './contact.cs.md';
 import dispute from './dispute.cs.md';
 import advocateCasesDisclaimer from './advocate.cases.disclaimer.cs.md';
+import leaderboard from './leaderboard.cs.md';
 
 /* eslint-disable quote-props */
 export default {
@@ -85,6 +86,7 @@ export default {
 
     'home.above': 'Zadejte advokáta a zobrazte si statistiky o jeho vystupování před třemi nejdůležitějšími soudy v ČR.',
     'home.below': home,
+    'home.leaderboard': leaderboard,
     'leaderboard.top': 'Nejúspěšnější advokáti',
     'leaderboard.bottom': 'Nejméně úspěšní advokáti',
 
