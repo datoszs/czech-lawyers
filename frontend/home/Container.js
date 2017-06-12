@@ -15,7 +15,7 @@ const Container = () => (
         </Jumbotron>
         <Row>
             <Col sm={6} lg={4}><LeaderBoard msg="leaderboard.top" type="positive" selector={getTop} /></Col>
-            <Col sm={6} lg={4}><RichText msg="home.leaderboard"/></Col>
+            <Col sm={6} lg={4}><RichText msg="home.leaderboard" /></Col>
             <Col sm={6} lg={4}><LeaderBoard msg="leaderboard.bottom" type="negative" selector={getBottom} /></Col>
         </Row>
     </section>
