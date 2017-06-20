@@ -199,7 +199,7 @@ class DisputeCasePresenter extends Presenter
 		}
 
 		// send email.
-		$link = $this->getConfirmLink($entity->email, $entity->code);
+		$link = $this->getConfirmLink($entity->email, $entity->code, $case->id);
 		$message = $this->mailService->createMessage('disputation-verification', [
 			'case' => $case,
 			'link' => $link,
@@ -245,7 +245,7 @@ class DisputeCasePresenter extends Presenter
 		return $this->captchaVerificator->verify($token);
 	}
 
-	private function getConfirmLink($email, $code)
+	private function getConfirmLink($email, $code, $caseId)
 	{
 		$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
 		$domainName = $_SERVER['HTTP_HOST'].'/';
@@ -254,7 +254,8 @@ class DisputeCasePresenter extends Presenter
 			'type' => 'disputation-verification',
 			'params' => [
 				'email' => $email,
-				'code' => $code
+				'code' => $code,
+				'id_case' => $caseId
 			]
 		];
 		$link = $protocol . $domainName . 'link/' . base64_encode(Json::encode($request));
