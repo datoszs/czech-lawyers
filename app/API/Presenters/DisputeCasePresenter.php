@@ -16,6 +16,7 @@ use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Presenter;
 use Nette\Mail\SendException;
+use Nette\Utils\Json;
 use Nette\Utils\Validators;
 use Throwable;
 use Tracy\Debugger;
@@ -249,10 +250,14 @@ class DisputeCasePresenter extends Presenter
 		$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
 		$domainName = $_SERVER['HTTP_HOST'].'/';
 
-		// TODO
-		$link = $protocol . $domainName . '?email=__EMAIL__&code=__CODE__';
-		$link = str_replace('__EMAIL__', $email, $link);
-		$link = str_replace('__CODE__', $code, $link);
+		$request = [
+			'type' => 'disputation-verification',
+			'params' => [
+				'email' => $email,
+				'code' => $code
+			]
+		];
+		$link = $protocol . $domainName . 'link/' . base64_encode(Json::encode($request));
 		return $link;
 	}
 }
