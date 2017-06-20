@@ -43,6 +43,20 @@ class TemplateFilters
 	}
 
 	/**
+	 * Format given name according to sorting standard (Surname, Name)
+	 * @param string $firstname
+	 * @param string $lastname
+	 * @return string
+	 */
+	public static function formatSortingName(string $firstname, string $lastname)
+	{
+		$output = [];
+		$output[] = $lastname;
+		$output[] = $firstname;
+		return implode(', ', array_filter($output));
+	}
+
+	/**
 	 * Formats given normalized (canonized) registry mark to appropriate format
 	 * See: https://github.com/datoszs/czech-lawyers/issues/91
 	 * @param string $value

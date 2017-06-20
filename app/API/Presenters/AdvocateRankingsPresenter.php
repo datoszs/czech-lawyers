@@ -34,11 +34,13 @@ class AdvocateRankingsPresenter extends Presenter
 	 *     {
 	 *         [
 	 *             "id_advocate": 123,
-	 *             "fullname": "JUDr. Ing. Petr Omáčka, PhD."
+	 *             "fullname": "JUDr. Ing. Petr Omáčka, PhD.",
+	 *             "sorting_name": "Omáčka, Petr",
 	 *         ],
 	 *         [
 	 *             "id_advocate": 1118,
-	 *             "fullname": "JUDr. Stanislav Morče"
+	 *             "fullname": "JUDr. Stanislav Morče",
+	 *             "sorting_name": "Morče, Stanislav",
 	 *         ]
 	 *     }
 	 * </json>
@@ -103,7 +105,8 @@ class AdvocateRankingsPresenter extends Presenter
 		$currentInfo = $advocate->advocateInfo->get()->fetch();
 		return [
 			'id_advocate' => $advocate->id,
-			'fullname' => TemplateFilters::formatName($currentInfo->name, $currentInfo->surname, $currentInfo->degreeBefore, $currentInfo->degreeAfter)
+			'fullname' => TemplateFilters::formatName($currentInfo->name, $currentInfo->surname, $currentInfo->degreeBefore, $currentInfo->degreeAfter),
+			'sorting_name' => TemplateFilters::formatSortingName($currentInfo->name, $currentInfo->surname),
 		];
 	}
 }
