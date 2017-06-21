@@ -13,6 +13,8 @@ use Nextras\Orm\Entity\IEntity;
 
 class TaggingService
 {
+	const ALL = 'all';
+
 	/** @var Orm */
 	private $orm;
 
@@ -109,13 +111,14 @@ class TaggingService
 	 * @param array $advocatesIds
 	 * @return array
 	 */
-	public function computeAdvocatesStatistics(array $advocatesIds)
+	public function computeAdvocatesStatisticsPerCourt(array $advocatesIds)
 	{
 		if (count($advocatesIds) === 0) {
 			$advocatesIds[] = null;
 		}
 		$data = $this->connection->query('
 		SELECT
+			"case".court_id,
 			advocate_id,
 			case_result,
 			COUNT(*) AS count
@@ -124,7 +127,7 @@ class TaggingService
 		JOIN vw_latest_tagging_case_result AS last_taggings ON "case".id_case = last_taggings.case_id AND last_taggings.status = %s
 		JOIN vw_latest_tagging_advocate AS last_taggings_advocate ON "case".id_case = last_taggings_advocate.case_id AND last_taggings_advocate.status = %s
 		WHERE advocate_id IN %?i[]
-		GROUP BY advocate_id, case_result
+		GROUP BY "case".court_id, advocate_id, case_result
 		',
 			TaggingStatus::STATUS_PROCESSED,
 			TaggingStatus::STATUS_PROCESSED,
@@ -132,7 +135,11 @@ class TaggingService
 		)->fetchAll();
 		$output = [];
 		foreach ($data as $row) {
-			$output[$row->advocate_id][$row->case_result] = $row->count;
+			$output[$row->advocate_id][$row->court_id][$row->case_result] = $row->count;
+			if (!isset($output[$row->advocate_id][static::ALL][$row->case_result])) {
+				$output[$row->advocate_id][static::ALL][$row->case_result] = 0;
+			}
+			$output[$row->advocate_id][static::ALL][$row->case_result] += $row->count;
 		}
 		return $output;
 	}

@@ -119,10 +119,10 @@ class AdvocateSearchPresenter extends Presenter
 		// Load data
 		$advocates = $this->advocateService->search($query, $start, $count);
 		$advocatesIds = array_map(function (Advocate $advocate) { return $advocate->id; }, $advocates);
-		$statistics = $this->taggingService->computeAdvocatesStatistics($advocatesIds);
+		$statistics = $this->taggingService->computeAdvocatesStatisticsPerCourt($advocatesIds);
 		// Transform to output
 		$output = array_map(function (Advocate $advocate) use ($query, $statistics) {
-			return $this->mapAdvocate($advocate, $query, $statistics[$advocate->id] ?? []);
+			return $this->mapAdvocate($advocate, $query, $statistics[$advocate->id][TaggingService::ALL] ?? []);
 		}, $advocates);
 		// Send output
 		$this->sendJson($output);

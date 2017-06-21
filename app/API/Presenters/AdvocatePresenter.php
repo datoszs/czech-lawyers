@@ -59,6 +59,18 @@ class AdvocatePresenter extends Presenter
 	 *             "neutral": 2,
 	 *             "positive": 59,
 	 *         },
+	 *         "court_statistics": {
+	 *             "1": {
+	 *                 "negative": 11,
+	 *                 "neutral": 1,
+	 *                 "positive": 57,
+	 *             },
+	 *             "2": {
+	 *                 "negative": 1,
+	 *                 "neutral": 1,
+	 *                 "positive": 2,
+	 *             }
+	 *         }
 	 *         "advocates_with_same_name": [
 	 *             {
 	 *                 "id_advocate": 125,
@@ -123,16 +135,17 @@ class AdvocatePresenter extends Presenter
 			return;
 		}
 		$advocatesOfSameName = $this->advocateService->findOfSameName($advocate);
-		$statistics = $this->taggingService->computeAdvocatesStatistics([$id]);
+		$statistics = $this->taggingService->computeAdvocatesStatisticsPerCourt([$id]);
 		$decile = $this->advocateService->getAdvocateDecile($advocate);
 		// Transform to output
-		$output = $this->mapAdvocate($advocate, $statistics[$advocate->id] ?? [], $advocatesOfSameName, $decile);
+		$output = $this->mapAdvocate($advocate, $statistics[$advocate->id][TaggingService::ALL] ?? [], $statistics[$advocate->id] ?? [], $advocatesOfSameName, $decile);
 		// Send output
 		$this->sendJson($output);
 	}
 
-	private function mapAdvocate(Advocate $advocate, array $statistics, array $advocatesOfSameName, ?int $decile)
+	private function mapAdvocate(Advocate $advocate, array $statistics, array $courtStatistics, array $advocatesOfSameName, ?int $decile)
 	{
+		unset($courtStatistics[TaggingService::ALL]);
 		/** @var AdvocateInfo $currentInfo */
 		$currentInfo = $advocate->advocateInfo->get()->fetch();
 		return [
@@ -154,6 +167,7 @@ class AdvocatePresenter extends Presenter
 				CaseResult::RESULT_NEUTRAL => $statistics[CaseResult::RESULT_NEUTRAL] ?? 0,
 				CaseResult::RESULT_POSITIVE => $statistics[CaseResult::RESULT_POSITIVE] ?? 0,
 			],
+			'court_statistics' => $courtStatistics,
 			'advocates_with_same_name' => $this->mapAdvocateWithSameName($advocatesOfSameName),
 			'rankings' => [
 				'decile' => $decile
