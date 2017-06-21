@@ -146,6 +146,35 @@ class TaggingService
 
 	/**
 	 * Note: filters cases only to allowed ones for advocate portal
+	 * @param array $advocatesIds
+	 * @return array
+	 */
+	public function computeCourtStatisticsPerCourt()
+	{
+		$data = $this->connection->query('
+		SELECT
+			"case".court_id,
+			case_result,
+			COUNT(*) AS count
+		FROM "case"
+		JOIN vw_case_for_advocates ON "case".id_case = "vw_case_for_advocates".id_case 
+		JOIN vw_latest_tagging_case_result AS last_taggings ON "case".id_case = last_taggings.case_id AND last_taggings.status = %s
+		JOIN vw_latest_tagging_advocate AS last_taggings_advocate ON "case".id_case = last_taggings_advocate.case_id AND last_taggings_advocate.status = %s
+		WHERE TRUE
+		GROUP BY "case".court_id, case_result
+		',
+			TaggingStatus::STATUS_PROCESSED,
+			TaggingStatus::STATUS_PROCESSED
+		)->fetchAll();
+		$output = [];
+		foreach ($data as $row) {
+			$output[$row->court_id][$row->case_result] = $row->count;
+		}
+		return $output;
+	}
+
+	/**
+	 * Note: filters cases only to allowed ones for advocate portal
 	 * @param int $advocateId
 	 * @param int|null $courtId
 	 * @return array

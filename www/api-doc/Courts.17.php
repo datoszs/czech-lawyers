@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>ApiDocu - /api/advocate-cases/&lt;advocate&gt;</title>
+	<title>ApiDocu - /api/court-statistics</title>
 	<style>html, body {
 	margin: 0;
 	padding: 0;
@@ -572,7 +572,7 @@ pre.apiDocu-json {
 
 	<div class="apiDocu-container">
 		<div class="apiDocu-url">
-			/api/advocate-cases/<span class="apiDocu-mask-param"&gt;</span>&lt;advocate&gt;</span>
+			/api/court-statistics
 
 			<div class="apiDocu-url-method">GET</div>
 
@@ -584,37 +584,13 @@ pre.apiDocu-json {
 
 			<h2>Description</h2>
 
-			<div class="apiDocu-description apiDocu-description-main">Get advocate cases fulfilling given filters (or all when no filters given)<br /><br><pre class="apiDocu-json">    {<br />        <span class="apiDocu-string">"id_advocate"</span>: 123,<br />        <span class="apiDocu-string">"id_court"</span>: 2,<br />        <span class="apiDocu-string">"year"</span>: 2016<br />        <span class="apiDocu-string">"result"</span>:<br />        <span class="apiDocu-string">"cases"</span> : [<br />            {<br />                <span class="apiDocu-string">"id_case"</span>: 25,<br />                <span class="apiDocu-string">"id_court"</span>: 2,<br />                <span class="apiDocu-string">"registry_mark"</span>: <span class="apiDocu-string">"42 CDO 4000/2016"</span>,<br />                <span class="apiDocu-string">"result"</span>: <span class="apiDocu-string">"negative"</span>,<br />            }<br />        ]<br />    }<br /></pre><br />Through query object additional filters can be provided:<br /> - <b>id_court</b> (e.g. 2)<br /> - <b>year</b> (e.g. 2016)<br /> - <b>result</b> (e.g. negative)<br />Available results (@see CaseResult):<br /> - <b>negative</b><br /> - <b>neutral</b><br /> - <b>positive</b><br /> - <b><i>null</i></b> when no result available<br />When additional filter is provided its value is returned in response.<br />Note: provides only cases which are relevant for advocates portal.<br />Errors:<br /> - Returns HTTP 404 with error <b>no_advocate</b> when such advocate doesn't exist<br /> - Returns HTTP 400 with error <b>invalid_court</b> when given court is invalid<br /> - Returns HTTP 400 with error <b>invalid_result</b> when given case result type is invalid</div>
+			<div class="apiDocu-description apiDocu-description-main">Get statistics of all courts.<br /><br><pre class="apiDocu-json">    {<br />        <span class="apiDocu-string">"court_statistics"</span>: {<br />            <span class="apiDocu-string">"1"</span>: {<br />                <span class="apiDocu-string">"negative"</span>: 11,<br />                <span class="apiDocu-string">"neutral"</span>: 1,<br />                <span class="apiDocu-string">"positive"</span>: 57,<br />            },<br />            <span class="apiDocu-string">"2"</span>: {<br />                <span class="apiDocu-string">"negative"</span>: 1,<br />                <span class="apiDocu-string">"neutral"</span>: 1,<br />                <span class="apiDocu-string">"positive"</span>: 2,<br />            },<br />            <span class="apiDocu-string">"3"</span>: {<br />                <span class="apiDocu-string">"negative"</span>: 12,<br />                <span class="apiDocu-string">"neutral"</span>: 13,<br />                <span class="apiDocu-string">"positive"</span>: 21,<br />            }<br />        }<br />    }<br /></pre><br />Available statistics results (@see CaseResult):<br /> - <b>negative</b><br /> - <b>neutral</b><br /> - <b>positive</b><br />Note: statistics take into account only cases which are relevant for advocates portal, which are tagged with result AND with advocate</div>
 
 
 		<h2>Methods</h2>
 
 		<p class="apiDocu-description">GET</p>
 
-		<div class="apiDocu-parameters">
-			<h2>Mask parameters</h2>
-
-			<table>
-					<tr>
-						<th>
-							<span class="apiDocu-mask-param">&lt;advocate&gt;</span>
-							<div class="apiDocu-mask-param-description">
-								<ul>
-									<li>
-										<strong>requirement</strong>: -?\d+
-									</li>
-									<li>
-										<strong>type</strong>: integer
-									</li>
-									<li>
-										<strong>description</strong>: Advocate ID.
-									</li>
-								</ul>
-							</div>
-						</th>
-					</tr>
-			</table>
-		</div>
 
 
 	</div>

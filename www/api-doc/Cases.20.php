@@ -490,24 +490,8 @@ pre.apiDocu-json {
 		<div class="apiDocu-url-method"></div>
 
 	</a>
-	<a href="Cases.17.php" class="apiDocu-url">
-		/api/dispute-case/<span class="apiDocu-mask-param"&gt;</span>&lt;id&gt;</span>
-
-		<div class="apiDocu-url-method">POST</div>
-
-		<div class="apiDocu-url-tags">
-			
-				<span style="background-color: #9b59b6;" class="apiDocu-url-tag">public</span>
-		</div>
-	</a>
-	<a href="Cases.18.php" class="apiDocu-url">
-		/api/dispute-case/
-
-		<div class="apiDocu-url-method"></div>
-
-	</a>
 	<a href="Cases.19.php" class="apiDocu-url">
-		/api/dispute-case-verification/
+		/api/dispute-case/<span class="apiDocu-mask-param"&gt;</span>&lt;id&gt;</span>
 
 		<div class="apiDocu-url-method">POST</div>
 
@@ -522,12 +506,49 @@ pre.apiDocu-json {
 		<div class="apiDocu-url-method"></div>
 
 	</a>
+	<a href="Cases.21.php" class="apiDocu-url">
+		/api/dispute-case-verification/
+
+		<div class="apiDocu-url-method">POST</div>
+
+		<div class="apiDocu-url-tags">
+			
+				<span style="background-color: #9b59b6;" class="apiDocu-url-tag">public</span>
+		</div>
+	</a>
+	<a href="Cases.22.php" class="apiDocu-url">
+		/api/dispute-case/
+
+		<div class="apiDocu-url-method"></div>
+
+	</a>
+				</div>
+
+				<h2 class="apiDocu-section-title">Courts</h2>
+
+				<div class="apiDocu-section">
+	<a href="Courts.17.php" class="apiDocu-url">
+		/api/court-statistics
+
+		<div class="apiDocu-url-method">GET</div>
+
+		<div class="apiDocu-url-tags">
+			
+				<span style="background-color: #9b59b6;" class="apiDocu-url-tag">public</span>
+		</div>
+	</a>
 				</div>
 
 				<h2 class="apiDocu-section-title">Feedback</h2>
 
 				<div class="apiDocu-section">
-	<a href="Feedback.21.php" class="apiDocu-url">
+	<a href="Feedback.18.php" class="apiDocu-url">
+		/api/court-statistics/
+
+		<div class="apiDocu-url-method"></div>
+
+	</a>
+	<a href="Feedback.23.php" class="apiDocu-url">
 		/api/feedback/
 
 		<div class="apiDocu-url-method">POST</div>
@@ -537,7 +558,7 @@ pre.apiDocu-json {
 				<span style="background-color: #9b59b6;" class="apiDocu-url-tag">public</span>
 		</div>
 	</a>
-	<a href="Feedback.22.php" class="apiDocu-url">
+	<a href="Feedback.24.php" class="apiDocu-url">
 		/api/feedback/
 
 		<div class="apiDocu-url-method"></div>
@@ -559,7 +580,7 @@ pre.apiDocu-json {
 
 			<h2>Description</h2>
 
-			<div class="apiDocu-description apiDocu-description-main">* API for disputing cases</div>
+			<div class="apiDocu-description apiDocu-description-main">API for disputing cases</div>
 
 
 		<h2>Methods</h2>
