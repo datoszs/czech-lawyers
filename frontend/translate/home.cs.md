@@ -1,4 +1,9 @@
-Zjistíte, kolikrát se advokátovými podáními tyto soudy co do obsahu nezabývaly (tj. rozhodly o nich **-nemeritorně-**), tedy kolikrát se na ně advokát obrátil s vadnými nebo opožděnými podáními nebo například v situacích, ve kterých to zákon neumožňoval. A naopak. Dozvíte se, kolikrát advokát dokázal napsat takové podání, kterým se soudy skutečně (co do obsahu) zabývaly (tj. rozhodly o něm **+meritorně+**). Než ale učiníte jakékoliv závěry o advokátových schopnostech, přečtěte si, [na základě čeho a jak přesně statistiky počítáme](/about).
+U advokátů zobrazujeme počet jejich podání, o kterých soudy rozhodly:
+- **+meritorně+** - soudy se jimi alespoň zčásti zabývaly (to ale neznamená, že advokát v daném případě vyhrál);
+- **-nemeritorně-** - soudy se jimi co do obsahu nezabývaly, protože podání byla například vadná, opožděná nebo podaná v situaci, ve které to zákon neumožňuje;
+- o **zastavení řízení** - soudy o podání nerozhodovaly vůbec, protože bylo například vzato zpět.
+
+Než ale učiníte jakékoliv závěry o advokátových schopnostech, přečtěte si, [na základě čeho a jak přesně statistiky počítáme](/about).
 
 Pokud advokáta, jehož statistiky byste si chtěli zobrazit, teprve hledáte, využijte možnost [vyhledávání advokátů podle
 zaměření nebo sídla](http://vyhledavac.cak.cz) na stránkách České advokátní komory.
