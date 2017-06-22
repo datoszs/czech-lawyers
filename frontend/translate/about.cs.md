@@ -74,7 +74,7 @@ Chcete-li zpochybnit správnost “ručního” zpracování, [napiště nám](/
 Na závěr dvě upozornění. Zaprvé je třeba upozornit, že **Nejvyšší soud a Ústavní soud** nemeritorní konečná rozhodnutí
 (tedy rozhodnutí nezabývající se obsahem podání) vydávají nejen tehdy, když se na ně advokát obrátí pozdě, například
 nepřiloží potřebné materiály nebo když tak učiní v situaci, kdy to zákon nepřipouští. **Nemeritorní konečná rozhodnutí
-mohou vydat také v případě, že advokátovo podání považují za “zjevně neopodstatněné”.** Pro advokáta může být naneštěst
+mohou vydat také v případě, že advokátovo podání považují za “zjevně neopodstatněné”.** Pro advokáta může být naneštěstí
 (vzhledem k ne zcela konzistentní rozhodovací praxi těchto soudů) obtížné z jejich předchozích rozhodnutí vysledovat,
 co ještě za “opodstatněné” považují a co už nikoliv.
 
