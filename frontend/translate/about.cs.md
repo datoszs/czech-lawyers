@@ -38,8 +38,8 @@ U zpracovávaných konečných rozhodnutí automaticky zjišťujeme, zda jde o:
 - **nemeritorní konečné rozhodnutí** (to znamená, že se jeho podáním soud co do obsahu vůbec nezabýval)
 - **rozhodnutí o zastavení řízení** (to znamená, že podání bylo pravděpodobně vzato zpět).
 
-Ke každému konečnému rozhodnutí (unikátní spisové značce) se pak jednou měsíčně snažíme na základě informací poskytnutých
-soudy přiřadit konkrétního advokáta, na jehož podání toto rozhodnutí reaguje. 
+Ke každému konečnému rozhodnutí (unikátní spisové značce) se pak jednou za čtvrt roku snažíme na základě informací poskytnutých
+soudy přiřadit konkrétního advokáta, na jehož podání toto rozhodnutí reaguje.
 
 Při zjišťování výsledku řízení jsme z více než 90 % úspěšní. **Ne vždy se nám ale podaří tento výsledek automaticky přiřadit
 konkrétnímu advokátovi.** Důvody jsou různé.
