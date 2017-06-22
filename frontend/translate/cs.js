@@ -31,7 +31,7 @@ export default {
 
     'status.active': 'Aktivní',
     'status.suspended': 'Pozastavený',
-    'status.removed': 'Vyškrtnutý',
+    'status.removed': 'Neaktivní', // Originally: Vyškrtnutý
 
     'advocate.detail.title': 'Detail advokáta',
     'cak.link': 'Detail na stránkách České advokátní komory',

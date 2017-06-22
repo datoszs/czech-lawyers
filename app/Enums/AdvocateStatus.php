@@ -11,6 +11,6 @@ class AdvocateStatus
 	static $statuses = [
 		self::STATUS_ACTIVE => 'Aktivní',
 		self::STATUS_SUSPENDED => 'Pozastavený',
-		self::STATUS_REMOVED => 'Vyškrtnutý',
+		self::STATUS_REMOVED => 'Neaktivní', // originally: Vyškrtnutý
 	];
 }
