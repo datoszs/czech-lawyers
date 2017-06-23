@@ -25,4 +25,4 @@ export const getCase = (state, id) => getModel(state).getIn(['cases', id]);
 export const areCasesLoaded = (state) => !!getCases(state).size;
 
 /* STATISTICS */
-export const getStatistics = (state, court = null) => getModel(state).getIn(['statistics', court]);
+export const getStatistics = (state, court) => getModel(state).getIn(['statistics', court]);

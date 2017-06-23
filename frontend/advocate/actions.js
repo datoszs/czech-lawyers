@@ -6,6 +6,7 @@ export const SET_COURT_FILTER = `${NAME}/SET_COURT_FILTER`;
 export const SET_RESULTS = `${NAME}/SET_RESULTS`;
 export const SET_GRAPH_FILTER = `${NAME}/SET_GRAPH_FILTER`;
 export const SET_CASES = `${NAME}/SET_CASES`;
+export const SET_STATISTICS = `${NAME}/SET_STATISTICS`;
 
 export const setId = (id) => ({
     type: SET_ID,
@@ -36,4 +37,9 @@ export const setGraphFilter = (year = null, result = null) => ({
 export const setCases = (cases) => ({
     type: SET_CASES,
     cases,
+});
+
+export const setStatistics = (statistics) =>  ({
+    type: SET_STATISTICS,
+    statistics,
 });

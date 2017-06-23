@@ -1,13 +1,14 @@
 import {put, select, fork, call, race, take, takeLatest, all} from 'redux-saga/effects';
 import {advocateAPI, caseAPI} from '../serverAPI';
 import {mapDtoToAdvocateDetail, mapDtoToAdvocateResults, mapDtoToCase} from '../model';
-import {setId, setAdvocate, setResults, SET_COURT_FILTER, SET_GRAPH_FILTER, setCases} from './actions';
+import {setId, setAdvocate, setResults, SET_COURT_FILTER, SET_GRAPH_FILTER, setCases, setStatistics} from './actions';
 import {isAdvocateLoaded, isResultsLoaded, getCourtFilter, areCasesLoaded, getYearFilter, getResultFilter} from './selectors';
 
 const loadAdvocateSaga = function* loadAdvocate(id) {
     if (!(yield select(isAdvocateLoaded))) {
         const advocate = yield call(advocateAPI.get, id);
         yield put(setAdvocate(mapDtoToAdvocateDetail(advocate)));
+        yield put(setStatistics(advocate.court_statistics));
     }
 };
 

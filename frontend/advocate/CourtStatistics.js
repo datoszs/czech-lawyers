@@ -7,8 +7,12 @@ import {getStatistics} from './selectors';
 
 const mapStateToProps = (state, {court}) => {
     const statistics = getStatistics(state, court);
-    const statisticsProps = statistics ? statistics.toJS() : {positive: 0, negative: 0, neutral: 0};
-    return Object.assign({court: translate.getMessage(state, courtsMsg[court])}, statisticsProps);
+    return {
+        court: translate.getMessage(state, courtsMsg[court]),
+        positive: (statistics && statistics.positive) || 0,
+        negative: (statistics && statistics.negative) || 0,
+        neutral: (statistics && statistics.neutral) || 0,
+    };
 };
 
 const CourtStatistics = connect(mapStateToProps)(StatisticsComponent);
