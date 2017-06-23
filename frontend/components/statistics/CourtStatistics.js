@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Statistics} from '../../model';
-import StatisticsColumn from './StatisticsColumn'
+import StatisticsColumn from './StatisticsColumn';
 import StatisticsBar from './StatisticsBar';
 
 const statMax = (statistics) => Math.max(statistics.positive, statistics.negative, statistics.neutral);

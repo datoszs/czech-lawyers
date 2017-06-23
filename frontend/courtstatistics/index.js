@@ -1,5 +1,5 @@
 import {NAME} from './constants';
-import {getStatistics, isAvailable} from './selectors';
+import {getStatistics} from './selectors';
 import reducer from './reducer';
 import saga from './saga';
 

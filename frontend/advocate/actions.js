@@ -39,7 +39,7 @@ export const setCases = (cases) => ({
     cases,
 });
 
-export const setStatistics = (statistics) =>  ({
+export const setStatistics = (statistics) => ({
     type: SET_STATISTICS,
     statistics,
 });
