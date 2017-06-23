@@ -5,7 +5,6 @@ import saga from './saga';
 
 export default {
     NAME,
-    isAvailable,
     getStatistics,
     reducer,
     saga,
