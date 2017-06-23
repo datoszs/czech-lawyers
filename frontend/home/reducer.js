@@ -3,7 +3,7 @@ import {Map, List} from 'immutable';
 import {SET_LEADERBOARD} from './actions';
 
 const getId = (advocate) => advocate.id_advocate;
-const compare = (advocateA, advocateB) => advocateA.fullname.localeCompare(advocateB.fullname);
+const compare = (advocateA, advocateB) => advocateA.sorting_name.localeCompare(advocateB.sorting_name);
 const getIdList = (advocates) => List(advocates.sort(compare).map(getId));
 const topReducer = (state = List(), action) => (action.type === SET_LEADERBOARD ? getIdList(action.top) : state);
 const bottomReducer = (state = List(), action) => (action.type === SET_LEADERBOARD ? getIdList(action.bottom) : state);
