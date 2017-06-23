@@ -1,40 +1,33 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import StatisticsBar from './StatisticsBar';
+import {Statistics} from '../../model';
+import StatisticsColumn from './StatisticsColumn';
 
-const BigStatistics = ({positive, negative, neutral, msgPositive, msgNegative, msgNeutral}) => {
-    const max = Math.max(positive, negative, neutral);
+const BigStatistics = ({statistics, msgPositive, msgNegative, msgNeutral}) => {
+    const max = Math.max(statistics.positive, statistics.negative, statistics.neutral);
+    const createColumn = (property, legend) => (
+        <StatisticsColumn scale={5} max={max} type={property} number={statistics[property]}>
+            <div className="statistics-big-text">{legend}</div>
+        </StatisticsColumn>
+    );
     return (
-        <div className="big-statistics">
-            <div>
-                <div className="big-bar">
-                    <StatisticsBar number={positive} max={max} type="positive" />
-                </div>
-                <div>{msgPositive}</div>
-            </div>
-            <div>
-                <div className="big-bar">
-                    <StatisticsBar number={negative} max={max} type="negative" />
-                </div>
-                <div>{msgNegative}</div>
-            </div>
-            <div>
-                <div className="big-bar">
-                    <StatisticsBar number={neutral} max={max} type="neutral" />
-                </div>
-                <div>{msgNeutral}</div>
-            </div>
+        <div className="statistics-big">
+            {createColumn('positive', msgPositive)}
+            {createColumn('negative', msgNegative)}
+            {createColumn('neutral', msgNeutral)}
         </div>
     );
 };
 
 BigStatistics.propTypes = {
-    positive: PropTypes.number.isRequired,
-    negative: PropTypes.number.isRequired,
-    neutral: PropTypes.number.isRequired,
+    statistics: PropTypes.instanceOf(Statistics),
     msgPositive: PropTypes.string.isRequired,
     msgNegative: PropTypes.string.isRequired,
     msgNeutral: PropTypes.string.isRequired,
+};
+
+BigStatistics.defaultProps = {
+    statistics: new Statistics(),
 };
 
 export default BigStatistics;

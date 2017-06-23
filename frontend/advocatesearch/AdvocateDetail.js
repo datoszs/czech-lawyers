@@ -5,7 +5,7 @@ import {Row} from 'react-bootstrap';
 import translate from '../translate';
 import router from '../router';
 import {ADVOCATE_DETAIL} from '../routes';
-import {Statistics} from '../components/statistics';
+import {BasicStatistics} from '../components/statistics';
 import {DetailPanel} from '../components';
 import {Advocate, statusMsg} from '../model';
 import {search} from './modules';
@@ -24,12 +24,7 @@ const AdvocateDetailComponent = ({advocate, handleDetail, msgStatus, msgIc}) => 
         title={advocate.name}
         onClick={handleDetail}
     >
-        <Statistics
-            positive={advocate.statistics.positive}
-            negative={advocate.statistics.negative}
-            neutral={advocate.statistics.neutral}
-            legend={Legend}
-        />
+        <BasicStatistics statistics={advocate.statistics} legend={Legend} />
     </DetailPanel>
 );
 

@@ -2,19 +2,20 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const StatisticsBar = ({number, max, type}) => (
-    <div className={`statistics-column ${type}`}>
-        <div className="text">{number}</div>
-        <div
-            className="bar"
-            style={{height: `${(number / max) * 150}%`}}
-        />
-    </div>
+    <div
+        className={`statistics-bar-${type}`}
+        style={{height: `${(number / max) * 1.5}em`}}
+    />
 );
 
 StatisticsBar.propTypes = {
-    number: PropTypes.number.isRequired,
+    number: PropTypes.number,
     max: PropTypes.number.isRequired,
-    type: PropTypes.oneOf(['positive', 'negative', 'neutral']).isRequired,
+    type: PropTypes.string.isRequired,
+};
+
+StatisticsBar.defaultProps = {
+    number: 0,
 };
 
 export default StatisticsBar;
