@@ -5,15 +5,10 @@ import {CourtStatistics as StatisticsComponent} from '../components/statistics';
 import translate from '../translate';
 import {getStatistics} from './selectors';
 
-const mapStateToProps = (state, {court}) => {
-    const statistics = getStatistics(state, court);
-    return {
-        court: translate.getMessage(state, courtsMsg[court]),
-        positive: (statistics && statistics.positive) || 0,
-        negative: (statistics && statistics.negative) || 0,
-        neutral: (statistics && statistics.neutral) || 0,
-    };
-};
+const mapStateToProps = (state, {court}) => ({
+    statistics: getStatistics(state, court),
+    court: translate.getMessage(state, courtsMsg[court]),
+});
 
 const CourtStatistics = connect(mapStateToProps)(StatisticsComponent);
 

@@ -1,0 +1,27 @@
+.statistics-column (@color) {
+    margin: 1px;
+
+
+    .statistics-column-top {
+        height: 1.5em;
+
+        display: flex;
+        flex-direction: column-reverse;
+        position: relative;
+
+        .statistics-column-text {
+            color: @color;
+            padding: 0 2px;
+            text-align: center;
+            min-width: 2.5ex;
+        }
+
+        .statistics-column-bar {
+            position: absolute;
+            z-index: -1;
+            bottom: 0;
+
+            width: 100%;
+        }
+    }
+}

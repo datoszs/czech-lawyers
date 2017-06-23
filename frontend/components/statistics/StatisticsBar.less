@@ -1,27 +1,5 @@
-.statistics-column (@color) {
-    margin: 1px;
-    text-align: center;
-    min-width: 2.5ex;
-
-    z-index: 1;
-    position: relative;
-
-    color: @color;
-
-    .bar {
-        position: absolute;
-        bottom: 0;
-        width: 100%;
-        z-index: -1;
-
-        border: 1px solid;
-        border-radius: 2px;
-
-        border-color: lighten(@color, 25%);
-        background-color: lighten(@color, 50%);
-    }
-
-    .text {
-        padding: 0 2px;
-    }
+.statistics-bar(@color) {
+    border: solid 1px lighten(@color, 25%);
+    background-color: lighten(@color, 50%);
+    border-radius: 2px;
 }

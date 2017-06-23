@@ -1,13 +1,24 @@
-@import (reference) "Statistics";
-@import (reference) "BigStatistics";
+@import "../../variables";
 @import (reference) "StatisticsBar";
-@import (reference) "StatisticsLegend";
+@import (reference) "StatisticsColumn";
+@import (reference) "BasicStatistics";
 @import (reference) "CourtStatistics";
+@import (reference) "BigStatistics";
+@import (reference) "StatisticsLegend";
 
-.statistics-column.positive { .statistics-column(@stats-positive); }
-.statistics-column.negative { .statistics-column(@stats-negative); }
-.statistics-column.neutral { .statistics-column(@stats-neutral); }
-.big-statistics { .big-statistics(); }
-.court-statistics { .court-statistics(); }
+.statistics-column-positive { .statistics-column(@stats-positive); }
+.statistics-column-negative { .statistics-column(@stats-negative); }
+.statistics-column-neutral { .statistics-column(@stats-neutral); }
+
+.statistics-bar-positive { .statistics-bar(@stats-positive); }
+.statistics-bar-negative { .statistics-bar(@stats-negative); }
+.statistics-bar-neutral { .statistics-bar(@stats-neutral); }
+
+.statistics-bar-positive-court { .statistics-bar(greyscale(@stats-positive)); }
+.statistics-bar-negative-court { .statistics-bar(greyscale(@stats-negative)); }
+.statistics-bar-neutral-court { .statistics-bar(greyscale(@stats-neutral)); }
+
+.statistics-basic { .basic-statistics(); }
+.statistics-court { .court-statistics(); }
+.statistics-big { .big-statistics(); }
 .statistics-legend { .statistics-legend(); }
-.statistics { .statistics(); }
