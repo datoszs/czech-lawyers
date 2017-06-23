@@ -3,3 +3,4 @@ export {default as advocateAPI} from './advocate';
 export {default as caseAPI} from './case';
 export {default as siteKey} from './recaptcha';
 export {default as feedbackAPI} from './feedback';
+export {default as courtAPI} from './court';
