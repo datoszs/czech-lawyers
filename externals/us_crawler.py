@@ -22,12 +22,17 @@ import re
 import shutil
 import subprocess
 import sys
+from tqdm import tqdm
 from datetime import datetime
 from optparse import OptionParser
 from os.path import join
 from urllib.parse import urljoin
 
-from bs4 import BeautifulSoup, SoupStrainer
+try:
+    from bs4 import BeautifulSoup, SoupStrainer
+except ImportError:
+    from beautifulsoup4 import BeautifulSoup, SoupStrainer
+
 from ghost import Ghost
 
 only_a_tags = SoupStrainer("a")
@@ -37,7 +42,7 @@ search_url = urljoin(base_action_url, "Search.aspx")
 results_url = urljoin(base_action_url, "Results.aspx")
 hash_id = datetime.now().strftime("%d-%m-%Y")
 # set view progress bar and view browser window
-progress, view = (False, False)
+# progress, view = (True, False)
 working_dir = "working"
 screens_dir = "screens"
 documents_dir = "documents"
@@ -150,6 +155,10 @@ def parameters():
                       help="Name of output CSV file")
     parser.add_option("-e", "--extraction", action="store_true", dest="extraction", default=False,
                       help="Make only extraction without download new data")
+    parser.add_option("--progress-bar", action="store_true", dest="progress", default=False,
+                      help="Show progress bar during operations")
+    parser.add_option("--view", action="store_true", dest="view", default=False,
+                      help="View window during operations")
     (run_options, args) = parser.parse_args()
     run_options = vars(run_options)
 
@@ -239,14 +248,22 @@ def extract_name(text):
     :param text: decision text
     :return: list of extracted names
     """
-    if text:
+    if text and text.contents[0]:
         m = re.findall(
-                r'zast[.|\w]+(?<!zastupitelství)\s([^A-Z]+)?\s?(([A-Ž]\w+\.?\s?)+)(?=se\ssídlem|,)',
-                text.contents[0], re.UNICODE | re.MULTILINE)
+            # r'zast[.|\w]+(?<!zastupitelství)\s([^A-Z]+)?\s?(([A-Ž]\w+\.?\s?)+)(?=se\ssídlem|,)',
+            # r'zast[.|\w]+(?<![zastupitelství,zastavením])\s([^A-Z]+)?\s?(([A-Ž]\w+\.?\s?)+)(?=se\ssídlem|,)',
+            # r'(?<!ne)zast(\.|(oupen(ého|ých|ým|ými|ému|ém|ou|é|ý|i)?))\s*(advokát(em|kou)\s*)?(([A-Ž]\w+\.?,?\s?)+)(?=se\ssídlem|,)',
+            # r'(?<!ne)zast(\.|(oupen(ého|ých|ým|ými|ému|ém|ou|é|ý|i)?))\s*(advokát(em|kou)\s*)?(([A-Ž]\w+\.?\s?)+)(?=se\ssídlem|,)',
+            r'(?<!ne)zast(\.|(oupen(ého|ých|ým|ými|ému|ém|ou|é|ý|i)?))\s*(advokát(em|kou)\s*)?(([A-Ž]\w+\.?\s?)+)(?=sídlem|,)',
+            text.contents[0], re.UNICODE | re.MULTILINE)
         if m:
-            buffer = [x[1] for x in m]
+            logger.debug("re.findall() -> {}".format(m))
+            buffer = [x[5] for x in m]
+            logger.debug(buffer)
+
             return json.dumps(dict(zip(range(1, len(buffer) + 1), buffer)), sort_keys=True,
                               ensure_ascii=False)
+
         else:
             return ""
 
@@ -263,8 +280,11 @@ def extract_data(html_file, response):
     del response.find("div", id="recordCardPanel")[
         "style"]  # remove inline style
     link_elem = response.select_one(
-            "#recordCardPanel > table > tbody > tr:nth-of-type(26) > td:nth-of-type(2)")
-    link_elem.string.wrap(response.new_tag("a", href=link_elem.string))
+        "#recordCardPanel > table > tbody > tr:nth-of-type(26) > td:nth-of-type(2)")
+    if link_elem and link_elem.string:
+        link_elem.string.wrap(response.new_tag("a", href=link_elem.string))
+    else:
+        logger.warning(link_elem)
     # remove script, which manipulate size of document
     response.body.script.decompose()
     del response.body["onload"]  # remove calling script on loading page
@@ -312,7 +332,7 @@ def how_many(response, records_per_page):
     result_table = soup.select_one("#Content")
     if result_table is not None:
         info = result_table.select_one(
-                "table > tbody > tr:nth-of-type(1) > td > table > tbody > tr > td")
+            "table > tbody > tr:nth-of-type(1) > td > table > tbody > tr > td")
         if info is not None:
             pages = info.text
             m = re.compile("\w+ (\d+) - (\d+) z \w+ (\d+).*").search(pages)
@@ -320,7 +340,7 @@ def how_many(response, records_per_page):
                 # print(m.group(3))
                 number_of_records = m.group(3)
                 count_of_pages = math.ceil(
-                        int(number_of_records) / records_per_page)
+                    int(number_of_records) / records_per_page)
                 # print(count_of_pages)
                 if pages is not None:
                     pages = int(count_of_pages)
@@ -347,7 +367,7 @@ def view_data(date_from, records_per_page, date_to=None, days=None):
         # print(session.content)
         logger.debug("Set typ_rizeni as 'O ústavních stížnostech'")
         session.open(
-                "http://nalus.usoud.cz/dialogs/PopupCiselnik.aspx?control=ctl00_MainContent_typ_rizeni&type=typ_rizeni")
+            "http://nalus.usoud.cz/dialogs/PopupCiselnik.aspx?control=ctl00_MainContent_typ_rizeni&type=typ_rizeni")
         session.evaluate("javascript:saveSelected('0')", expect_loading=True)
         if b_screens:
             session.capture_to(join(screens_dir_path, "dialog_check.png"))
@@ -363,19 +383,19 @@ def view_data(date_from, records_per_page, date_to=None, days=None):
         if session.exists("#ctl00_MainContent_zpristupneno_pred"):
             logger.info("Select last %s days" % days)
             session.set_field_value(
-                    "#ctl00_MainContent_zpristupneno_pred", days)
+                "#ctl00_MainContent_zpristupneno_pred", days)
     else:
         if session.exists("#ctl00_MainContent_availableFrom"):
             logger.debug("Set date_from '%s'" % date_from)
             session.set_field_value(
-                    "#ctl00_MainContent_submissionFrom", date_from)
+                "#ctl00_MainContent_submissionFrom", date_from)
             # datetime.strptime(date_from, '%d.%m.%Y').strftime('%Y/%m/%d'))
             if b_screens:
                 session.capture_to(join(screens_dir_path, "set_from.png"))
             if date_to is not None:  # ctl00_MainContent_decidedFrom
                 logger.debug("Set date_to '%s'" % date_to)
                 session.set_field_value(
-                        "#ctl00_MainContent_submissionTo", date_to)
+                    "#ctl00_MainContent_submissionTo", date_to)
                 # datetime.strptime(date_to, '%d.%m.%Y').strftime('%Y/%m/%d'))
             logger.info("Records from the period %s -> %s", date_from, date_to)
             if b_screens:
@@ -384,7 +404,7 @@ def view_data(date_from, records_per_page, date_to=None, days=None):
     session.set_field_value("#ctl00_MainContent_razeni", "3")
     logger.debug("Set counter records per page")
     session.set_field_value(
-            "#ctl00_MainContent_resultsPageSize", str(records_per_page))
+        "#ctl00_MainContent_resultsPageSize", str(records_per_page))
     if b_screens:
         session.capture_to(join(screens_dir_path, "set_form.png"))
 
@@ -424,7 +444,7 @@ def make_record(soup, id):
     try:
         if "NALUS" in soup.title.string:  # soup.string
             logger.debug("{}, {}, {}".format(
-                    soup.title.string, id, type(table)))
+                soup.title.string, id, type(table)))
             return
     except AttributeError:
         logger.error("{} (soup.title) - {}".format(soup.title, id))
@@ -433,12 +453,12 @@ def make_record(soup, id):
     if (table is not None) and (table.tbody is not None):
         for key, index in zip(entities[:-4], range(1, 27)):
             item[key] = table.select_one(
-                    "table > tbody > tr:nth-of-type({}) > td:nth-of-type(2)".format(index)).text.strip()
+                "table > tbody > tr:nth-of-type({}) > td:nth-of-type(2)".format(index)).text.strip()
             if 'date' in key and item[key]:
                 item[key] = convert_date(item[key]) if item[key] != '' else ''
             elif key in only_text_elements or key in only_list_elements:
                 item[key] = table.select_one(
-                        "table > tbody > tr:nth-of-type({}) > td:nth-of-type(2)".format(index))
+                    "table > tbody > tr:nth-of-type({}) > td:nth-of-type(2)".format(index))
                 # print('{}, {} - {}'.format(key, item[key], index))
         item['record_id'] = item['ecli']
         item['local_path'] = id
@@ -462,8 +482,9 @@ def make_record(soup, id):
             item[key] = itemize_list(item[key])
 
         # extract names from text
-        # text = soup.select_one("#uc_vytah_cellContent > span")
-        # item['names'] = extract_name(text)
+        text = soup.select_one("#uc_vytah_cellContent > span")
+        logger.debug("\n{} -> {}".format(item["web_path"], item["local_path"]))
+        item['names'] = extract_name(text)
     logger.debug(item)
     writer_records.writerow(item)  # write item to CSV
 
@@ -494,13 +515,13 @@ def extract_information(records):
                            newline='', encoding="utf-8")
 
         writer_records = csv.DictWriter(
-                csv_records, fieldnames=fieldnames, delimiter=";", quoting=csv.QUOTE_ALL, quotechar='"')
+            csv_records, fieldnames=fieldnames, delimiter=";", quoting=csv.QUOTE_ALL, quotechar='"')
         writer_records.writeheader()
 
         # i = 0
         t = html_files
         if progress:
-            t = tqdm(html_files, ncols=global_ncols) # view progress bar
+            t = tqdm(html_files, ncols=global_ncols)  # view progress bar
         for html_f in t:
             id = os.path.basename(html_f)
             make_record(make_soup(html_f), id)
@@ -510,7 +531,7 @@ def extract_information(records):
         return True
     else:
         logger.info("{} != {} ({})".format(
-                len(html_files), records, type(records)))
+            len(html_files), records, type(records)))
         return False
 
 
@@ -547,7 +568,7 @@ def walk_pages(page_from, pages):
                     session.open(urljoin(results_url, link), wait=True)
                     extract_data(html_file, response=session.content)
         session.open(urljoin(results_url, "?page={}".format(
-                page + 1)), wait=True)  # go to next page
+            page + 1)), wait=True)  # go to next page
         # save number of processing page
         with codecs.open(join(out_dir, "current_page.ini"), "w", encoding="utf-8") as f:
             f.write(str(page))
@@ -575,7 +596,7 @@ def main():
         response = session.content
         if b_screens:
             session.capture_to(
-                    join(screens_dir_path, "errors.png"), selector=".searchValidator")
+                join(screens_dir_path, "errors.png"), selector=".searchValidator")
         records = 0
         if not session.exists("#ctl00_MainContent_lbError"):
             pages, records = how_many(response, records_per_page)
@@ -596,7 +617,7 @@ def main():
             if pages is not None and records is not None:
                 if (page_from + 1) > pages:
                     logger.debug(
-                            "Loaded page number is greater than count of pages")
+                        "Loaded page number is greater than count of pages")
                     page_from = 0
                 if pages != (page_from + 1) or (pages == 1):  # parameter page is from zero
                     last_page = page_from if page_from else -1
@@ -627,13 +648,16 @@ if __name__ == "__main__":
     b_delete = options["delete"]
     output_file = options["filename"]
     days = options["last"]
+    progress = options["progress"]
+    view = options["view"]
 
     if ".csv" not in output_file:
         output_file += ".csv"
 
     if not os.path.exists(out_dir):
         os.mkdir(out_dir)
-        print("Folder was created '{}'".format(out_dir))  # on this time is not 'logger' ready
+        # on this time is not 'logger' ready
+        print("Folder was created '{}'".format(out_dir))
     set_logging()
     logger.info(hash_id)
     logger.info(U"Start US")
@@ -658,7 +682,8 @@ if __name__ == "__main__":
             if not os.listdir(result_dir_path):
                 if os.path.exists(join(out_dir, output_file)):
                     logger.info("Moving files")
-                    shutil.move(documents_dir_path, result_dir_path)
+                    shutil.copytree(documents_dir_path, join(
+                        result_dir_path, documents_dir))
                     shutil.move(join(out_dir, output_file), result_dir_path)
                     if not b_delete:
                         logger.debug("Cleaning working directory")
