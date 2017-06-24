@@ -28,7 +28,7 @@ from datetime import datetime
 from optparse import OptionParser
 from os.path import join
 from urllib.parse import urljoin
-
+from tqdm import tqdm
 import pandas as pd
 from bs4 import BeautifulSoup
 from ghost import Ghost
@@ -48,7 +48,7 @@ global_ncols = 90
 saved_pages = 0
 saved_records = 0
 # set view progress bar and view browser window
-progress, view = (False, False)
+#progress, view = (False, False)
 b_screens = False  # capture screenshots?
 # precompile regex
 p_re_records = re.compile(r'(\d+)$')
@@ -123,7 +123,8 @@ def logging_process(arguments):
     """
     settings logging for subprocess
     """
-    p = subprocess.Popen(arguments, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    p = subprocess.Popen(arguments, stdout=subprocess.PIPE,
+                         stderr=subprocess.PIPE)
     stdout, stderr = p.communicate()
     if stdout:
         logger.debug("%s" % stdout)
@@ -156,10 +157,14 @@ def parameters():
                       help="Name of output CSV file")
     parser.add_option("-e", "--extraction", action="store_true", dest="extraction", default=False,
                       help="Make only extraction without download new data")
+    parser.add_option("--progress-bar", action="store_true", dest="progress", default=False,
+                      help="Show progress bar during operations")
+    parser.add_option("--view", action="store_true", dest="view", default=False,
+                      help="View window during operations")
     (options, args) = parser.parse_args()
     options = vars(options)
 
-    #print(args,options,type(options))
+    print(args,options,type(options))
     return options
 
 #
@@ -175,7 +180,7 @@ def make_json(collection):
     :return: JSON
     """
     return json.dumps(dict(zip(range(1, len(collection) + 1), collection)), sort_keys=True,
-                          ensure_ascii=False)
+                      ensure_ascii=False)
 
 
 def make_soup(path):
@@ -211,7 +216,8 @@ def first_page():
     """
     go to first page on find query
     """
-    session.click("#_ctl0_ContentPlaceMasterPage__ctl0_pnPaging1_Repeater2__ctl0_Linkbutton2", expect_loading=True)
+    session.click(
+        "#_ctl0_ContentPlaceMasterPage__ctl0_pnPaging1_Repeater2__ctl0_Linkbutton2", expect_loading=True)
 
 
 def extract_data(response, html_file):
@@ -253,13 +259,16 @@ def download_pdf(data):
     """
 
     frame = data[["web_path", "local_path"]].dropna()
+    t = frame.itertuples()
     if progress:
-        t = tqdm(frame.itertuples(), ncols=global_ncols)  # view progress bar
+        t = tqdm(t, ncols=global_ncols)  # view progress bar
     for row in t:
         filename = row[2]
         if not os.path.exists(join(documents_dir_path, filename)):
-            logging_process(["curl", row[1], "-o", join(documents_dir_path, filename)])
-        # t.update() # update progress bar
+            logging_process(
+                ["curl", row[1], "-o", join(documents_dir_path, filename)])
+        if progress:
+            t.update()  # update progress bar
 
 #
 # process functions
@@ -287,7 +296,8 @@ def make_record(soup):
         decisions_str = str(columns[2]).replace("\n", '').strip()
         m = p_re_decisions.search(decisions_str)
         line = m.group(1)
-        decision_result = [x.replace('\"', '\'').strip() for x in line.split("<br>")]
+        decision_result = [x.replace('\"', '\'').strip()
+                           for x in line.split("<br>")]
         decisions = ""
         if len(decision_result) > 1:
             decisions = "|".join(decision_result[1:])
@@ -305,7 +315,8 @@ def make_record(soup):
         else:
             continue  # case without document
 
-        mark = case_number.split("-")[0].strip()  # registry mark isn't case number
+        # registry mark isn't case number
+        mark = case_number.split("-")[0].strip()
 
         court = columns[3].getText().replace("\n", '').strip()
 
@@ -319,7 +330,8 @@ def make_record(soup):
                 if text != '':
                     sides.append(text)
             else:
-                sides.extend([x.strip().replace('"', "'") for x in re.split(r"</?br>", str(side)) if x != ''])
+                sides.extend([x.strip().replace('"', "'")
+                              for x in re.split(r"</?br>", str(side)) if x != ''])
 
         complaint = columns[6].getText().strip()
         prejudicate = [x.text.strip() for x in columns[7].findAll("a")]
@@ -336,30 +348,31 @@ def make_record(soup):
             case_year = link.split('/')[-2]
             filename = os.path.basename(link)
         logger.debug(
-                "Contents: {}\nSides: {}; Complaint: {}; Year: {}; Prejudicate: {}\n{}".format(columns[5].contents,
-                                                                                               sides,
-                                                                                               complaint, case_year,
-                                                                                               prejudicate, link))
+            "Contents: {}\nSides: {}; Complaint: {}; Year: {}; Prejudicate: {}\n{}".format(columns[5].contents,
+                                                                                           sides,
+                                                                                           complaint, case_year,
+                                                                                           prejudicate, link))
 
         item = {
             "registry_mark": mark,
-            "record_id"    : case_number,
+            "record_id": case_number,
             "decision_date": date,
-            "court_name"   : court,
-            "web_path"     : link,
-            "local_path"   : filename,
+            "court_name": court,
+            "web_path": link,
+            "local_path": filename,
             "decision_type": form_decision,
-            "decision"     : decision_result,
-            "order_number" : case_number,
-            "sides"        : make_json(sides) if len(sides) else None,
-            "prejudicate"  : make_json(prejudicate) if len(prejudicate) else None,
-            "complaint"    : complaint if len(complaint) else None,
-            "case_year"    : case_year
+            "decision": decision_result,
+            "order_number": case_number,
+            "sides": make_json(sides) if len(sides) else None,
+            "prejudicate": make_json(prejudicate) if len(prejudicate) else None,
+            "complaint": complaint if len(complaint) else None,
+            "case_year": case_year
         }
 
         writer_records.writerow(item)  # write item to CSV
         logger.debug(case_number)
-    logger.debug("Find %s records with document on this page" % count_records_with_document)
+    logger.debug("Find %s records with document on this page" %
+                 count_records_with_document)
     return count_records_with_document
 
 
@@ -373,29 +386,33 @@ def extract_information(saved_pages, extract=None):
 
     """
 
-    html_files = [join(html_dir_path, fn) for fn in next(os.walk(html_dir_path))[2]]
+    html_files = [join(html_dir_path, fn)
+                  for fn in next(os.walk(html_dir_path))[2]]
     if len(html_files) == saved_pages or extract:
         global writer_records
 
         fieldnames = ['court_name', 'record_id', 'registry_mark', 'decision_date',
                       'web_path', 'local_path', 'decision_type', 'decision',
                       'order_number', 'sides', 'complaint', 'prejudicate', 'case_year']
-        csv_records = open(join(out_dir, output_file), 'w', newline='', encoding="utf-8")
+        csv_records = open(join(out_dir, output_file), 'w',
+                           newline='', encoding="utf-8")
 
-        writer_records = csv.DictWriter(csv_records, fieldnames=fieldnames, delimiter=";", quoting=csv.QUOTE_ALL)
+        writer_records = csv.DictWriter(
+            csv_records, fieldnames=fieldnames, delimiter=";", quoting=csv.QUOTE_ALL)
         writer_records.writeheader()
-
-
 
         t = html_files
         count_documents = 0
+        if progress:
+            t = tqdm(t, ncols=global_ncols)
         for html_f in t:
             logger.debug(html_f)
             count_documents += make_record(make_soup(html_f))
         logger.info("%s records had a document" % count_documents)
         csv_records.close()
     else:
-        logger.warning("Count of 'saved_pages'({}) and saved files({}) is differrent!".format(saved_pages, len(html_files)))
+        logger.warning("Count of 'saved_pages'({}) and saved files({}) is differrent!".format(
+            saved_pages, len(html_files)))
 
 
 def view_data(row_count, mark_type, value, date_from=None, date_to=None, last=None):
@@ -414,10 +431,12 @@ def view_data(row_count, mark_type, value, date_from=None, date_to=None, last=No
 
     if last and session.exists("#_ctl0_ContentPlaceMasterPage__ctl0_chkPrirustky"):
         logger.debug("Select check button")
-        session.set_field_value("#_ctl0_ContentPlaceMasterPage__ctl0_chkPrirustky", True)
+        session.set_field_value(
+            "#_ctl0_ContentPlaceMasterPage__ctl0_chkPrirustky", True)
         if session.exists("#_ctl0_ContentPlaceMasterPage__ctl0_ddlPosledniDny"):
             logger.info("Select last %s days" % last)
-            session.set_field_value("#_ctl0_ContentPlaceMasterPage__ctl0_ddlPosledniDny", last)
+            session.set_field_value(
+                "#_ctl0_ContentPlaceMasterPage__ctl0_ddlPosledniDny", last)
 
     else:
         if date_from is not None:
@@ -425,47 +444,59 @@ def view_data(row_count, mark_type, value, date_from=None, date_to=None, last=No
             logger.info("Records from the period %s -> %s", date_from, date_to)
             # id (input - text) = _ctl0_ContentPlaceMasterPage__ctl0_txtDatumOd
             if session.exists("#_ctl0_ContentPlaceMasterPage__ctl0_txtDatumOd"):
-                session.set_field_value("#_ctl0_ContentPlaceMasterPage__ctl0_txtDatumOd", date_from)
+                session.set_field_value(
+                    "#_ctl0_ContentPlaceMasterPage__ctl0_txtDatumOd", date_from)
         if date_to is not None:
             # id (input - text) = _ctl0_ContentPlaceMasterPage__ctl0_txtDatumDo
             if session.exists("#_ctl0_ContentPlaceMasterPage__ctl0_txtDatumDo"):
-                session.set_field_value("#_ctl0_ContentPlaceMasterPage__ctl0_txtDatumDo", date_to)
+                session.set_field_value(
+                    "#_ctl0_ContentPlaceMasterPage__ctl0_txtDatumDo", date_to)
 
     # shows several first records
-    if session.exists("#_ctl0_ContentPlaceMasterPage__ctl0_ddlRejstrik"):  # change mark type in select
+    # change mark type in select
+    if session.exists("#_ctl0_ContentPlaceMasterPage__ctl0_ddlRejstrik"):
         logger.debug("Change mark type - %s", mark_type)
-        session.set_field_value("#_ctl0_ContentPlaceMasterPage__ctl0_ddlRejstrik", value)
-    #time.sleep(1)
+        session.set_field_value(
+            "#_ctl0_ContentPlaceMasterPage__ctl0_ddlRejstrik", value)
+    # time.sleep(1)
     if session.exists("#_ctl0_ContentPlaceMasterPage__ctl0_ddlSortName"):
-        session.set_field_value("#_ctl0_ContentPlaceMasterPage__ctl0_ddlSortName", "2")
-        session.set_field_value("#_ctl0_ContentPlaceMasterPage__ctl0_ddlSortDirection", "0")
+        session.set_field_value(
+            "#_ctl0_ContentPlaceMasterPage__ctl0_ddlSortName", "2")
+        session.set_field_value(
+            "#_ctl0_ContentPlaceMasterPage__ctl0_ddlSortDirection", "0")
 
     if session.exists("#_ctl0_ContentPlaceMasterPage__ctl0_rbTypDatum_1"):
-        session.set_field_value("#_ctl0_ContentPlaceMasterPage__ctl0_rbTypDatum_1", True)
+        session.set_field_value(
+            "#_ctl0_ContentPlaceMasterPage__ctl0_rbTypDatum_1", True)
 
     if session.exists("#_ctl0_ContentPlaceMasterPage__ctl0_btnFind"):  # click on find button
         logger.debug("Click - find")
-        session.click("#_ctl0_ContentPlaceMasterPage__ctl0_btnFind", expect_loading=True)
+        session.click(
+            "#_ctl0_ContentPlaceMasterPage__ctl0_btnFind", expect_loading=True)
 
         if b_screens:
             logger.debug("\t_find_screen_" + mark_type + ".png")
-            session.capture_to(join(screens_dir_path, "_find_screen_" + mark_type + ".png"))
+            session.capture_to(
+                join(screens_dir_path, "_find_screen_" + mark_type + ".png"))
     # change value of row count on page
     if session.exists("#_ctl0_ContentPlaceMasterPage__ctl0_ddlRowCount"):
         value, resources = session.evaluate(
-                "document.getElementById('_ctl0_ContentPlaceMasterPage__ctl0_ddlRowCount').value")
+            "document.getElementById('_ctl0_ContentPlaceMasterPage__ctl0_ddlRowCount').value")
         #print("value != '30'",value != "30")
         if value != "30":
             logger.debug("Change row count")
-            session.set_field_value("#_ctl0_ContentPlaceMasterPage__ctl0_ddlRowCount", str(row_count))
+            session.set_field_value(
+                "#_ctl0_ContentPlaceMasterPage__ctl0_ddlRowCount", str(row_count))
 
             if session.exists("#_ctl0_ContentPlaceMasterPage__ctl0_btnChangeCount"):
                 logger.debug("Click - Change")
                 result, resources = session.click("#_ctl0_ContentPlaceMasterPage__ctl0_btnChangeCount",
                                                   expect_loading=True)
                 if b_screens:
-                    logger.debug("\tfind_screen_" + mark_type + "_change_row_count.png")
-                    session.capture_to(join(screens_dir_path, "/_find_screen_" + mark_type + "_change_row_count.png"))
+                    logger.debug("\tfind_screen_" + mark_type +
+                                 "_change_row_count.png")
+                    session.capture_to(
+                        join(screens_dir_path, "/_find_screen_" + mark_type + "_change_row_count.png"))
 
 
 def walk_pages(count_of_pages, case_type):
@@ -497,13 +528,14 @@ def walk_pages(count_of_pages, case_type):
         else:
             logger.debug("Skip file '%s'" % html_file)
 
-        ## TO DO - danger
+        # TO DO - danger
         if i >= 12 and count_of_pages > 22:
             logger.debug("(%d) - %d < 10 --> %s <== (count_of_pages ) - (i) < 10 = Boolean", count_of_pages, i,
                          count_of_pages - i < 10)
             # special compute for last pages
             if count_of_pages - (i + 1) < 10:
-                logger.debug("positions[(i-(count_of_pages))] = %d", positions[(i - count_of_pages)])
+                logger.debug(
+                    "positions[(i-(count_of_pages))] = %d", positions[(i - count_of_pages)])
                 page_number = str(positions[(i - count_of_pages)] + 12)
             else:
                 page_number = "12"  # next page element has constant ID
@@ -517,22 +549,26 @@ def walk_pages(count_of_pages, case_type):
                                selector="#pagingBox0")
 
         if session.exists(
-                                "#_ctl0_ContentPlaceMasterPage__ctl0_pnPaging1_Repeater2__ctl" + page_number + "_LinkButton1") and i + 1 < (
-                    count_of_pages + 1):
+                "#_ctl0_ContentPlaceMasterPage__ctl0_pnPaging1_Repeater2__ctl" + page_number + "_LinkButton1") and i + 1 < (
+                count_of_pages + 1):
             #link_id = "_ctl0_ContentPlaceMasterPage__ctl0_pnPaging1_Repeater2__ctl"+page_number+"_LinkButton1"
-            link = "_ctl0:ContentPlaceMasterPage:_ctl0:pnPaging1:Repeater2:_ctl" + page_number + ":LinkButton1"
+            link = "_ctl0:ContentPlaceMasterPage:_ctl0:pnPaging1:Repeater2:_ctl" + \
+                page_number + ":LinkButton1"
             logger.debug("\tGo to next - Page %d (%s)", (i + 1), link)
             try:
-                #result, resources = session.click("#"+link_id, expect_loading=True)
+                # result, resources = session.click("#"+link_id,
+                # expect_loading=True)
                 session.evaluate(
-                        "WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(\"%s\", \"\", true, \"\", \"\", false, true))" % link,
-                        expect_loading=True)
+                    "WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(\"%s\", \"\", true, \"\", \"\", false, true))" % link,
+                    expect_loading=True)
                 #session.wait_for(page_has_loaded,"Timeout - next page",timeout=main_timeout)
                 logger.debug("New page was loaded!")
             except Exception:
-                logger.error("Error (walk_pages) - close browser", exc_info=True)
+                logger.error(
+                    "Error (walk_pages) - close browser", exc_info=True)
                 logger.debug("error_(" + str(i + 1) + ").png")
-                session.capture_to(join(screens_dir_path, "error_(" + str(i + 1) + ").png"))
+                session.capture_to(
+                    join(screens_dir_path, "error_(" + str(i + 1) + ").png"))
                 return False
     return True
 
@@ -541,7 +577,8 @@ def process_court():
     """
     creates files for processing and saving data, start point for processing
     """
-    d = {"Ads": '10', "Afs": '11', "Ars": '116', "As": '12', "Azs": '9'}
+    d = {"Ads": '10', "Afs": '11', "Ars": '116', "As": '12',
+         "Azs": '9', "Aos": '115', "Ans": '13', "Aps": '14'}
     #d = {"As" : '12'}
     case_types = OrderedDict(sorted(d.items(), key=lambda t: t[0]))
     row_count = 20
@@ -550,34 +587,37 @@ def process_court():
     for case_type in case_types.keys():
         logger.info("-----------------------------------------------------")
         logger.info(case_type)
-        view_data(row_count, case_type, case_types[case_type], date_from=date_from, date_to=date_to, last=last)
+        view_data(row_count, case_type, case_types[
+                  case_type], date_from=date_from, date_to=date_to, last=last)
         number_of_records, resources = session.evaluate(
-                "document.getElementById('_ctl0_ContentPlaceMasterPage__ctl0_ddlRowCount').value")
-        #number_of_records = "30" #hack pro testovani
+            "document.getElementById('_ctl0_ContentPlaceMasterPage__ctl0_ddlRowCount').value")
+        # number_of_records = "30" #hack pro testovani
         if number_of_records is not None and int(number_of_records) != row_count:
             logger.warning(int(number_of_records) != row_count)
             logger.error("Failed to display data")
             if b_screens:
                 logger.debug("error_" + case_type + ".png")
-                session.capture_to(join(screens_dir_path, "error_" + case_type + ".png"))
+                session.capture_to(
+                    join(screens_dir_path, "error_" + case_type + ".png"))
             return False
-        #my_result = session.exists("#_ctl0_ContentPlaceMasterPage__ctl0_pnPaging1_Repeater3__ctl0_Label2")
+        # my_result = session.exists("#_ctl0_ContentPlaceMasterPage__ctl0_pnPaging1_Repeater3__ctl0_Label2")
         #print (my_result)
         if not session.exists("#_ctl0_ContentPlaceMasterPage__ctl0_pnPaging1_Repeater3__ctl0_Label2"):
             logger.info("No records")
             continue
         info_elem, resources = session.evaluate(
-                "document.getElementById('_ctl0_ContentPlaceMasterPage__ctl0_pnPaging1_Repeater3__ctl0_Label2').innerHTML")
+            "document.getElementById('_ctl0_ContentPlaceMasterPage__ctl0_pnPaging1_Repeater3__ctl0_Label2').innerHTML")
 
         if info_elem:
-            #number_of_records = "20" #hack pro testovani
+            # number_of_records = "20" #hack pro testovani
             str_info = info_elem.replace("<b>", "").replace("</b>", "")
-            number_of_records, count_of_pages = how_many(str_info, number_of_records)
+            number_of_records, count_of_pages = how_many(
+                str_info, number_of_records)
         else:
             return False
 
-        #testing
-        #if count_of_pages >=5:
+        # testing
+        # if count_of_pages >=5:
         #    count_of_pages = 5
         result = walk_pages(count_of_pages, case_type)
         saved_pages += count_of_pages
@@ -598,9 +638,9 @@ def main():
     ghost = Ghost()
     global session
     session = ghost.start(
-            download_images=False, show_scrollbars=False,
-            wait_timeout=main_timeout, display=False,
-            plugins_enabled=False)
+        download_images=False, show_scrollbars=False,
+        wait_timeout=main_timeout, display=False,
+        plugins_enabled=False)
     logger.info(u"Start - NSS")
     if view:
         session.display = True
@@ -613,12 +653,13 @@ def main():
     logger.debug("=" * 20)
     logger.info("Download records")
     result = process_court()
-    #print(result)
+    # print(result)
     if result:
         logger.info("DONE - download records")
         logger.debug("Closing browser")
-        logger.info("It was saved {} records on {} pages".format(saved_records, saved_pages))
-        #input(":-)")
+        logger.info("It was saved {} records on {} pages".format(
+            saved_records, saved_pages))
+        # input(":-)")
         logger.debug("=" * 20)
         logger.info("Extract informations")
         extract_information(saved_pages)
@@ -646,6 +687,8 @@ if __name__ == "__main__":
     b_delete = options["delete"]
     last = options["last"]
     output_file = options["filename"]
+    progress = options["progress"]
+    view = options["view"]
 
     if ".csv" not in output_file:
         output_file += ".csv"
@@ -678,7 +721,7 @@ if __name__ == "__main__":
                 logger.info("Moving files")
                 shutil.move(documents_dir_path, result_dir_path)
                 shutil.move(join(out_dir, output_file), result_dir_path)
-                if not b_delete: # debug without cleaning
+                if not b_delete:  # debug without cleaning
                     logger.info("Cleaning working directory")
                     clean_directory(out_dir)
             else:
