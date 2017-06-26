@@ -86,6 +86,7 @@ console:
 		- App\Commands\TagAdvocates
 		- App\Commands\NSAdvocateTagger
 		- App\Commands\AdvocateScoreUpdate
+		- App\Commands\CrawlerManual
 
 orm:
 	model: App\Model\Orm
