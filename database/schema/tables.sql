@@ -322,6 +322,8 @@ CREATE TABLE case_disputation (
   case_id BIGINT NOT NULL REFERENCES "case"(id_case) ON UPDATE CASCADE ON DELETE CASCADE,
   tagging_case_result_id BIGINT NULL REFERENCES tagging_case_result (id_tagging_case_result) ON UPDATE CASCADE ON DELETE CASCADE,
   tagging_advocate_id BIGINT NULL REFERENCES tagging_advocate (id_tagging_advocate) ON UPDATE CASCADE ON DELETE CASCADE,
+  tagging_case_result_disputed BOOLEAN NOT NULL DEFAULT FALSE,
+  tagging_advocate_disputed BOOLEAN NOT NULL DEFAULT FALSE,
   reason TEXT NOT NULL,
   inserted TIMESTAMP NOT NULL DEFAULT NOW(),
   valid_until TIMESTAMP NOT NULL,
@@ -329,7 +331,8 @@ CREATE TABLE case_disputation (
   response TEXT NULL,
   resolved TIMESTAMP NULL,
   resolved_by BIGINT NULL REFERENCES "user"(id_user) ON UPDATE CASCADE ON DELETE RESTRICT,
-  UNIQUE (email, code)
+  UNIQUE (email, code),
+  CHECK (tagging_case_result_disputed OR tagging_advocate_disputed)
 );
 
 COMMENT ON TABLE case_disputation IS 'Table containing all disputed cases, each dispustation is validated via e-mail.';

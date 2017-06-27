@@ -98,7 +98,7 @@ class DisputationService
 	 * @param TaggingCaseResult|null $caseResultTagging
 	 * @return Dispute
 	 */
-	public function dispute(Cause $case, string $fullname, string $from, string $content, ?TaggingAdvocate $advocateTagging, ?TaggingCaseResult $caseResultTagging)
+	public function dispute(Cause $case, string $fullname, string $from, string $content, bool $advocateDisputed, bool $caseResultDisputed, ?TaggingAdvocate $advocateTagging, ?TaggingCaseResult $caseResultTagging)
 	{
 		$code = Random::generate(128);
 		$entity = new Dispute();
@@ -106,6 +106,8 @@ class DisputationService
 		$entity->case = $case;
 		$entity->taggingAdvocate = $advocateTagging;
 		$entity->taggingCaseResult = $caseResultTagging;
+		$entity->taggingAdvocateDisputed = $advocateDisputed;
+		$entity->taggingCaseResultDisputed = $caseResultDisputed;
 		$entity->email = $from;
 		$entity->reason = $content;
 		$entity->validUntil = (new DateTimeImmutable())->modify('+24 hours');

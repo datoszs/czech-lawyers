@@ -80,8 +80,6 @@ class DisputeCasePresenter extends Presenter
 	 *  - Returns HTTP 404 with error <b>no_case</b> when such case doesn't exist
 	 *  - Returns HTTP 400 with error <b>invalid_input</b> when input is invalid
 	 *  - Returns HTTP 401 with error <b>invalid_captcha</b> when captcha is invalid
-	 *  - Returns HTTP 400 with error <b>no_advocate_tagging</b> when disputed advocate but there is no such for given case
-	 *  - Returns HTTP 400 with error <b>no_case_result_tagging</b> when disputed case_result but there is no such for given case
 	 *  - Returns HTTP 409 with error <b>final_both_taggings</b> when disputed advocate tagging and case result tagging are already final
 	 *  - Returns HTTP 409 with error <b>final_advocate_tagging</b> when disputed advocate tagging is already final
 	 *  - Returns HTTP 409 with error <b>final_case_result_tagging</b> when disputed case result tagging is already final
@@ -139,30 +137,18 @@ class DisputeCasePresenter extends Presenter
 		$advocateTagging = $this->taggingService->getLatestAdvocateTaggingFor($case);
 		$caseResultTagging = $this->getLatestCaseResultTagging($case);
 
-		// check if disputed thing really exists
-		if (($disputedTagging === 'both' || $disputedTagging === 'advocate') && !$advocateTagging) {
-			$this->getHttpResponse()->setCode(400);
-			$this->sendJson(['error' => 'no_advocate_tagging']);
-			return;
-		}
-		if (($disputedTagging === 'both' || $disputedTagging === 'case_result') && !$caseResultTagging) {
-			$this->getHttpResponse()->setCode(400);
-			$this->sendJson(['error' => 'no_case_result_tagging']);
-			return;
-		}
-
 		// find if tagging is not already final
-		if (($disputedTagging === 'both') && $advocateTagging->isFinal && $caseResultTagging->isFinal) {
+		if (($disputedTagging === 'both') && $advocateTagging && $caseResultTagging && $advocateTagging->isFinal && $caseResultTagging->isFinal) {
 			$this->getHttpResponse()->setCode(409);
 			$this->sendJson(['error' => 'final_both_taggings']);
 			return;
 		}
-		if (($disputedTagging === 'both' || $disputedTagging === 'advocate') && $advocateTagging->isFinal) {
+		if (($disputedTagging === 'both' || $disputedTagging === 'advocate') && $advocateTagging && $advocateTagging->isFinal) {
 			$this->getHttpResponse()->setCode(409);
 			$this->sendJson(['error' => 'final_advocate_tagging']);
 			return;
 		}
-		if (($disputedTagging === 'both' || $disputedTagging === 'case_result') && $caseResultTagging->isFinal) {
+		if (($disputedTagging === 'both' || $disputedTagging === 'case_result') && $caseResultTagging && $caseResultTagging->isFinal) {
 			$this->getHttpResponse()->setCode(409);
 			$this->sendJson(['error' => 'final_case_result_tagging']);
 			return;
@@ -170,12 +156,12 @@ class DisputeCasePresenter extends Presenter
 
 
 		// check consistency
-		if (($disputedTagging === 'both' || $disputedTagging === 'advocate') && $advocateTagging->inserted > $datetime) {
+		if (($disputedTagging === 'both' || $disputedTagging === 'advocate') && $advocateTagging && $advocateTagging->inserted > $datetime) {
 			$this->getHttpResponse()->setCode(409);
 			$this->sendJson(['error' => 'inconsistent']);
 			return;
 		}
-		if (($disputedTagging === 'both' || $disputedTagging === 'case_result') && $caseResultTagging->inserted > $datetime) {
+		if (($disputedTagging === 'both' || $disputedTagging === 'case_result') && $caseResultTagging && $caseResultTagging->inserted > $datetime) {
 			$this->getHttpResponse()->setCode(409);
 			$this->sendJson(['error' => 'inconsistent']);
 			return;
@@ -188,6 +174,8 @@ class DisputeCasePresenter extends Presenter
 				$fullname,
 				$from,
 				$content,
+				$disputedTagging === 'both' || $disputedTagging === 'advocate',
+				$disputedTagging === 'both' || $disputedTagging === 'case_result',
 				($disputedTagging === 'both' || $disputedTagging === 'advocate') ? $advocateTagging : null,
 				($disputedTagging === 'both' || $disputedTagging === 'case_result') ? $caseResultTagging : null
 			);

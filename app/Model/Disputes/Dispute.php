@@ -16,6 +16,8 @@ use Nextras\Orm\Entity\Entity;
  * @property Cause						$case				{m:1 Cause, oneSided=true}
  * @property TaggingCaseResult|null 	$taggingCaseResult  {m:1 TaggingCaseResult, oneSided=true}
  * @property TaggingAdvocate|null		$taggingAdvocate  {m:1 TaggingAdvocate, oneSided=true}
+ * @property bool						$taggingCaseResultDisputed
+ * @property bool						$taggingAdvocateDisputed
  * @property string						$reason
  * @property DateTime					$inserted			{default now}
  * @property DateTime					$validUntil

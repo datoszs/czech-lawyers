@@ -199,6 +199,17 @@
 											{/if}
 										</div>
 									</div>
+									<p>Rozporováno:
+										<b>
+											{if $dispute->taggingCaseResultDisputed && $dispute->taggingAdvocateDisputed}
+												obojí
+											{elseif $dispute->taggingCaseResultDisputed}
+												výsledek
+											{else}
+												advokát
+											{/if}
+										</b>
+									</p>
 									<blockquote>
 										{$dispute->reason}
 									</blockquote>

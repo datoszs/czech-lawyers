@@ -112,7 +112,7 @@ class CausesMapper extends Mapper
 			$builder->leftJoin('case', 'vw_latest_tagging_advocate', 'vw_latest_tagging_advocate', 'vw_latest_tagging_advocate.case_id = id_case');
 			$builder->andWhere('vw_latest_tagging_advocate.status IS NULL OR (vw_latest_tagging_advocate.status NOT IN (%s) AND NOT vw_latest_tagging_advocate.is_final)', TaggingStatus::STATUS_PROCESSED);
 		} elseif ($advocateFilter === static::FILTER_DISPUTED) {
-			$builder->innerJoin('case', 'case_disputation', 'case_disputation', 'case_disputation.case_id = id_case AND tagging_advocate_id IS NOT NULL AND validated_at IS NOT NULL AND resolved IS NULL');
+			$builder->innerJoin('case', 'case_disputation', 'case_disputation', 'case_disputation.case_id = id_case AND tagging_advocate_disputed AND validated_at IS NOT NULL AND resolved IS NULL');
 		} else {
 			$builder->leftJoin('case', 'vw_latest_tagging_advocate', 'vw_latest_tagging_advocate', 'vw_latest_tagging_advocate.case_id = id_case');
 			$builder->andWhere('vw_latest_tagging_advocate.status IN (%s) OR vw_latest_tagging_advocate.is_final', TaggingStatus::STATUS_PROCESSED);
@@ -121,7 +121,7 @@ class CausesMapper extends Mapper
 			$builder->leftJoin('case', 'vw_latest_tagging_case_result', 'vw_latest_tagging_case_result', 'vw_latest_tagging_case_result.case_id = id_case');
 			$builder->andWhere('vw_latest_tagging_case_result.status IS NULL OR (vw_latest_tagging_case_result.status NOT IN (%s) AND NOT vw_latest_tagging_case_result.is_final)', TaggingStatus::STATUS_PROCESSED);
 		} elseif ($resultFilter === static::FILTER_DISPUTED) {
-			$builder->innerJoin('case', 'case_disputation', 'case_disputation', 'case_disputation.case_id = id_case AND tagging_case_result_id IS NOT NULL AND validated_at IS NOT NULL AND resolved IS NULL');
+			$builder->innerJoin('case', 'case_disputation', 'case_disputation', 'case_disputation.case_id = id_case AND tagging_case_result_disputed AND validated_at IS NOT NULL AND resolved IS NULL');
 		} else {
 			$builder->leftJoin('case', 'vw_latest_tagging_case_result', 'vw_latest_tagging_case_result', 'vw_latest_tagging_case_result.case_id = id_case');
 			$builder->andWhere('vw_latest_tagging_case_result.status IN (%s) OR vw_latest_tagging_case_result.is_final', TaggingStatus::STATUS_PROCESSED);
