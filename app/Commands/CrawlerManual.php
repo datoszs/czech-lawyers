@@ -57,7 +57,7 @@ class CrawlerManual extends Command
 			__DIR__ . '/../../externals/' . $court,
 			$from,
 			$to,
-			escapeshellarg(' /home/cestiadvokati.cz/crawlers-devel/'.$court)
+			escapeshellarg('/home/cestiadvokati.cz/crawlers-devel/'.$court)
 		);
 		exec($command);
 	}

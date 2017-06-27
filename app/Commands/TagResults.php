@@ -233,6 +233,12 @@ class TagResults extends Command
                 }
             }
 
+			if ($document)
+				if ($cause->decisionDate == null && $document->decisionDate) {
+						$cause->decisionDate = $document->decisionDate;
+						$this->causeService->save($cause);
+				}
+
             $result = new TaggingCaseResult();
             $result->caseResult = $caseResult;
             $result->debug = $debug;
@@ -255,7 +261,7 @@ class TagResults extends Command
 
         }
         $this->taggingService->flush();
-        $message = $this->makeStatistic(null, true);
+        $message = $this->makeStatistic(null, true)." (". strtoupper($court) . ")";
         $this->finalize(0,$output,$message);
         return 0;
     }
