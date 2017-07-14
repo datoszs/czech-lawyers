@@ -4,6 +4,3 @@ U advokátů zobrazujeme počet jejich podání, o kterých soudy rozhodly:
 - o **zastavení řízení** - soudy o podání nerozhodovaly vůbec, protože bylo například vzato zpět.
 
 Než ale učiníte jakékoliv závěry o advokátových schopnostech, přečtěte si, [na základě čeho a jak přesně statistiky počítáme](/about).
-
-Pokud advokáta, jehož statistiky byste si chtěli zobrazit, teprve hledáte, využijte možnost [vyhledávání advokátů podle
-zaměření nebo sídla](http://vyhledavac.cak.cz) na stránkách České advokátní komory.
