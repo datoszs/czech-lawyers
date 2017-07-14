@@ -20,7 +20,7 @@ Msg.defaultPropTypes = {
 
 Msg.propTypes = {
     msg: PropTypes.string.isRequired,
-    params: PropTypes.object, //eslint-disable-line react/forbid-prop-types
+    params: PropTypes.object, // eslint-disable-line react/forbid-prop-types
 };
 
 export default Msg;
