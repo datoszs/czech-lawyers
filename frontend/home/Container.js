@@ -17,8 +17,8 @@ const Container = () => (
         <RichText msg="leaderboard.legend" />
         <Row>
             <Col sm={0} lg={2} />
-            <Col sm={6} lg={4}><LeaderBoard msg="leaderboard.top" type="positive" selector={getTop} /></Col>
-            <Col sm={6} lg={4}><LeaderBoard msg="leaderboard.bottom" type="negative" selector={getBottom} /></Col>
+            <Col sm={6} lg={4}><LeaderBoard type="positive" selector={getTop} /></Col>
+            <Col sm={6} lg={4}><LeaderBoard type="negative" selector={getBottom} /></Col>
         </Row>
         <Alert bsStyle="warning"><Msg msg="home.disclaimer" /></Alert>
     </section>

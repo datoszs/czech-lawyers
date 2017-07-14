@@ -86,8 +86,6 @@ export default {
 
     'home.above': 'Zadejte advokáta a zobrazte si statistiky o jeho vystupování před třemi nejdůležitějšími soudy v ČR.',
     'home.below': home,
-    'leaderboard.top': 'Nejúspěšnější advokáti',
-    'leaderboard.bottom': 'Nejméně úspěšní advokáti',
     'leaderboard.legend': 'Spočítali jsme pro Vás, kterých deset advokátů má největší převahu **+meritorních+** konečných rozhodnutí nad **-nemeritorními-** a naopak. Upozorňujeme ovšem, že data, která jsme pro výpočet použili, [nemusí být úplná](/about).',
     'home.disclaimer': 'Účelem tohoto webu není poskytovat právní služby, ani jejich poskytování zprostředkovávat. Web zpracovává data veřejných institucí. Za věcnou správnost těchto dat autoři webu nenesou odpovědnost. Způsob využití zde zveřejňovaných statistik je zcela v rukou uživatelů, autoři webu za něj nenesou odpovědnost',
 
