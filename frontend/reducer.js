@@ -12,6 +12,7 @@ import formstatus from './formstatus';
 import link from './link';
 import home from './home';
 import courtStatistics from './courtstatistics';
+import unavailable from './unavailable';
 
 export default combineReducers([
     translate,
@@ -25,6 +26,7 @@ export default combineReducers([
     link,
     home,
     courtStatistics,
+    unavailable,
 ].reduce((result, module) => Object.assign({[module.NAME]: module.reducer}, result), {
     form: formReducer,
 }));

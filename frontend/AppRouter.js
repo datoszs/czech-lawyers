@@ -16,6 +16,7 @@ import advocate from './advocate';
 import caseDetail from './case';
 import caseSearch from './casesearch';
 import link from './link';
+import unavailable from './unavailable';
 
 const createRoute = (module) => (
     <Route
@@ -28,14 +29,16 @@ const createRoute = (module) => (
 export default () => (
     <Router history={history}>
         <navigation.AppContainer>
-            {createRoute(home)}
-            {createRoute(about)}
-            {createRoute(contact)}
-            {createRoute(advocateSearch)}
-            {createRoute(advocate)}
-            {createRoute(caseSearch)}
-            {createRoute(caseDetail)}
-            {createRoute(link)}
+            <unavailable.Container>
+                {createRoute(home)}
+                {createRoute(about)}
+                {createRoute(contact)}
+                {createRoute(advocateSearch)}
+                {createRoute(advocate)}
+                {createRoute(caseSearch)}
+                {createRoute(caseDetail)}
+                {createRoute(link)}
+            </unavailable.Container>
         </navigation.AppContainer>
     </Router>
 );
