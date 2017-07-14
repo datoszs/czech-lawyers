@@ -41,7 +41,7 @@
     "react-scroll": "1.5.4",
     "react-spinkit": "3.0.0",
     "redux": "3.7.2",
-    "redux-form": "6.8.0",
+    "redux-form": "7.0.0",
     "redux-immutable": "4.0.0",
     "redux-saga": "0.15.4",
     "sprintf-js": "1.1.1",
