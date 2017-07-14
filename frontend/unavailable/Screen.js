@@ -10,7 +10,7 @@ export default () => (
             <Alert bsStyle="warning">
                 <p>
                     <Msg msg="unavailable.warning" />
-                    <Button bsStyle="link" bsSize="large">
+                    <Button bsStyle="link" bsSize="large" onClick={() => window.location.reload()}>
                         <Msg msg="common.refresh" /> <Glyphicon glyph="refresh" />
                     </Button>
                 </p>

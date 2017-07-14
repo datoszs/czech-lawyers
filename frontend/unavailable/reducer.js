@@ -1,3 +1,3 @@
-import {SET_AVAILABLE} from './actions';
+import {SET_UNAVAILABLE} from './actions';
 
-export default (state = true, action) => (action.type === SET_AVAILABLE ? action.available : state);
+export default (state = false, action) => (action.type === SET_UNAVAILABLE ? true : state);

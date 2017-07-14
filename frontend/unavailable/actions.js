@@ -1,11 +1,7 @@
 import {NAME} from './constants';
 
-export const SET_AVAILABLE = `${NAME}/SET_AVAILABLE`;
+export const SET_UNAVAILABLE = `${NAME}/SET_UNAVAILABLE`;
 
-const setAvailable = (available) => () => ({
-    type: SET_AVAILABLE,
-    available,
+export const enter = () => ({
+    type: SET_UNAVAILABLE,
 });
-
-export const enter = setAvailable(false);
-export const exit = setAvailable(true);
