@@ -3,7 +3,7 @@ import ReactMarkdown from 'react-markdown';
 import {connect} from 'react-redux';
 import translate from '../translate';
 import {TextNode} from '../components/markdown';
-import RouterLink from './RouterLink';
+import MarkdownLink from './MarkdownLink';
 
 const mapStateToProps = (state, {msg, params}) => ({
     source: translate.getMessage(state, msg, params),
@@ -11,7 +11,7 @@ const mapStateToProps = (state, {msg, params}) => ({
 
 const mapDispatchToProps = () => ({
     renderers: {
-        Link: RouterLink,
+        Link: MarkdownLink,
         Text: TextNode,
     },
     escapeHtml: true,
