@@ -1,7 +1,7 @@
 import {put, select, fork, call, race, take, takeLatest, all} from 'redux-saga/effects';
 import {advocateAPI, caseAPI} from '../serverAPI';
 import {mapDtoToAdvocateDetail, mapDtoToAdvocateResults, mapDtoToCase} from '../model';
-import {setId, setAdvocate, setResults, SET_COURT_FILTER, SET_GRAPH_FILTER, setCases, setStatistics, setSameNameAdvocates} from './actions';
+import {setId, setAdvocate, setResults, SET_COURT_FILTER, SET_GRAPH_FILTER, setCases, setStatistics} from './actions';
 import {isAdvocateLoaded, isResultsLoaded, getCourtFilter, areCasesLoaded, getYearFilter, getResultFilter} from './selectors';
 import samename from './samename';
 
