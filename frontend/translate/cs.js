@@ -28,6 +28,7 @@ export default {
     'advocate.status': 'Stav',
     'advocate.email': 'E-mail',
     'advocate.cases': 'Případy',
+    'advocate.same.name.warning': 'Tento advokát má jméno i příjmení shodné s alespoň jedním dalším advokátem. Jeho statistiky tedy mohou být nepřesné ([přečtěte si více](/about)). Stejnojmenní advokáti:',
 
     'status.active': 'Aktivní',
     'status.suspended': 'Pozastavený',

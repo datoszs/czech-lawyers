@@ -3,6 +3,7 @@ import {Map, List} from 'immutable';
 import {getCurrentYear} from '../util';
 import {AdvocateDetail, Statistics, Case} from '../model';
 import {SET_ID, SET_ADVOCATE, SET_RESULTS, SET_COURT_FILTER, SET_GRAPH_FILTER, SET_CASES, SET_STATISTICS} from './actions';
+import samename from './samename';
 
 const idReducer = (state = null, action) => (action.type === SET_ID ? action.id : state);
 
@@ -142,6 +143,7 @@ const reducer = combineReducers({
     caseList: caseListReducer,
     cases: caseReducer,
     statistics: statisticsReducer,
+    [samename.NAME]: samename.reducer,
 });
 
 export default (state, action) => {

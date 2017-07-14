@@ -1,7 +1,7 @@
 import {NAME} from './constants';
 import {Statistics} from '../model';
 
-const getModel = (state) => state.get(NAME);
+export const getModel = (state) => state.get(NAME);
 
 /* DETAIL */
 export const getAdvocate = (state) => getModel(state).get('advocate');

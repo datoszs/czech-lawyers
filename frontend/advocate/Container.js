@@ -12,12 +12,14 @@ import CourtFilter from './CourtFilter';
 import TimelineContainer from './Timeline';
 import CaseContainer from './CaseContainer';
 import CourtStatistics from './CourtStatistics';
+import samename from './samename';
 
 export default () => (
     <section>
         <Header />
         <Row>
             <Col sm={6}>
+                <samename.Container />
                 <Detail />
                 <CakLink />
             </Col>
