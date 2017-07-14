@@ -53,8 +53,8 @@ export default ({dev}) => ({
                 loader: dev
                     ? ['style-loader', 'css-loader', 'less-loader']
                     : ExtractTextPlugin.extract({
-                        fallbackLoader: 'style-loader',
-                        loader: ['css-loader', 'less-loader'],
+                        fallback: 'style-loader',
+                        use: ['css-loader', 'less-loader'],
                     }),
             },
             {
