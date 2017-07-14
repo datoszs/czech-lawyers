@@ -23,3 +23,4 @@ storage/logs/*
 *.xml
 *.iml
 test.txt
+npm-debug.log
