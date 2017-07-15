@@ -1,0 +1,17 @@
+@multicolumn-margin: 10px;
+@multicolumn-sidemargin: 2*@multicolumn-margin;
+
+.multicolumn(@number) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    margin-left: -@multicolumn-margin;
+    margin-right: -@multicolumn-margin;
+
+    > * {
+        box-sizing: border-box;
+        width: calc(100% / @number ~"-" @multicolumn-sidemargin);
+        margin-left: @multicolumn-margin;
+        margin-right: @multicolumn-margin;
+    }
+}

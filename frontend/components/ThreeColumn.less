@@ -1,10 +1,14 @@
 @import "../variables";
 @import (reference) "multicolumn";
 
-.two-column() {
-    .multicolumn(2);
+.three-column() {
+    .multicolumn(3);
 
     > * {
+        @media (max-width: @screen-sm-max) {
+            width: calc(50% ~"-" @multicolumn-sidemargin);
+        }
+
         @media (max-width: @screen-xs-max) {
             width: 100%;
         }
