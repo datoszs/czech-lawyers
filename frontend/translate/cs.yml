@@ -61,6 +61,8 @@ case.court: Soud
 case.result: Výsledek
 case.documents: Dokumenty
 case.documents.empty: K tomuto případu nemáme žádné dokumenty.
+case.date.proposition: Datum podání
+case.date.decision: Datum rozhodnutí
 case.dispute.text: |
   Víte, [jak určujeme výsledek i jak jej přiřazujeme konkrétnímu advokátu](/about), ale přesto se vám zdá, že to u tohoto
   případu nesedí? Dejte nám o tom vědět a my automatické zpracování lidskými silami prověříme.
