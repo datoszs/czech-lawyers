@@ -12,6 +12,7 @@ use App\Model\Services\AdvocateService;
 use App\Model\Services\CauseService;
 use App\Model\Services\TaggingService;
 use App\Utils\TemplateFilters;
+use DateTime;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Presenter;
@@ -53,6 +54,8 @@ class AdvocateCasesPresenter extends Presenter
 	 *                 "id_court": 2,
 	 *                 "registry_mark": "42 CDO 4000/2016",
 	 *                 "result": "negative",
+	 *                 "proposition_date": "2016-03-01T01:00:00+01:00",
+	 *                 "decision_date": null
 	 *             }
 	 *         ]
 	 *     }
@@ -169,6 +172,8 @@ class AdvocateCasesPresenter extends Presenter
 				'id_court' => $case->court->id,
 				'registry_mark' => TemplateFilters::formatRegistryMark($case->registrySign),
 				'result' => isset($results[$case->id]) ? $results[$case->id]->caseResult : null,
+				'decision_date' => $case->decisionDate ? $case->decisionDate->format(DateTime::ATOM) : null,
+				'proposition_date' => $case->propositionDate ? $case->propositionDate->format(DateTime::ATOM) : null,
 			];
 		}
 		return $output;

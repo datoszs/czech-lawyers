@@ -60,6 +60,8 @@ class CasePresenter extends Presenter
 	 *         "tagging_advocate_final": true,
 	 *         "tagging_result": "negative",
 	 *         "tagging_result_final": false,
+	 *         "proposition_date": "2016-03-01T01:00:00+01:00",
+	 *         "decision_date": null,
 	 *         "documents": [
 	 *             {
 	 *                 "id_document": 543,
@@ -160,6 +162,8 @@ class CasePresenter extends Presenter
 			'tagging_advocate_final' => $taggingAdvocate ? $taggingAdvocate->isFinal : null,
 			'tagging_result' => ($result && $result->status === TaggingStatus::STATUS_PROCESSED) ? $result->caseResult : null,
 			'tagging_result_final' => $result ? $result->isFinal : null,
+			'decision_date' => $case->decisionDate ? $case->decisionDate->format(DateTime::ATOM) : null,
+			'proposition_date' => $case->propositionDate ? $case->propositionDate->format(DateTime::ATOM) : null,
 			'documents' => array_map(function (Document $document) {
 				return [
 					'id_document' => $document->id,
