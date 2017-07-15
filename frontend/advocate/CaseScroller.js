@@ -5,7 +5,6 @@ import {Element, scroller} from 'react-scroll';
 import {getCases} from './selectors';
 
 class CaseScrollerComponent extends Component {
-
     constructor(props) {
         super(props);
         this.empty = false;
