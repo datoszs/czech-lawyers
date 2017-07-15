@@ -74,11 +74,21 @@ class AdvocatePresenter extends Presenter
 	 *         "advocates_with_same_name": [
 	 *             {
 	 *                 "id_advocate": 125,
-	 *                 "fullname": "Mgr. Petr Omáčka"
+	 *                 "fullname": "Mgr. Petr Omáčka",
+	 *                 "residence": {
+	 *                     "street": "Františkánská 65",
+	 *                     "city": "Brno",
+	 *                     "postal_area": "602 00"
+	 *                 },
 	 *             },
 	 *             {
 	 *                 "id_advocate": 125,
-	 *                 "fullname": "JUDr. Petr Ostrý"
+	 *                 "fullname": "JUDr. Petr Ostrý",
+	 *                 "residence": {
+	 *                     "street": "Opálkova 2a",
+	 *                     "city": "Brno",
+	 *                     "postal_area": "635 00"
+	 *                 },
 	 *             },
 	 *         ]
 	 *         "rankings": {
@@ -185,6 +195,11 @@ class AdvocatePresenter extends Presenter
 			$output[] = [
 				'id_advocate' => $advocate->id,
 				'fullname' => TemplateFilters::formatName($currentInfo->name, $currentInfo->surname, $currentInfo->degreeBefore, $currentInfo->degreeAfter),
+				'residence' => [
+					'street' => $currentInfo->street,
+					'city' => $currentInfo->city,
+					'postal_area' => $currentInfo->postalArea,
+				],
 			];
 		}
 		return $output;
