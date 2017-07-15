@@ -40,7 +40,7 @@ status.removed: Neaktivní # Originally: Vyškrtnutý
 
 stats.positive.legend: meritorních konečných rozhodnutí
 stats.negative.legend: nemeritorních konečných rozhodnutí
-stats.neutral.legend: rozhodnutí o\u{000A0}zastavení řízení
+stats.neutral.legend: rozhodnutí o\xA0zastavení řízení
 
 court.ns: Nejvyšší soud
 court.nss: Nejvyšší správní soud
