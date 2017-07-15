@@ -4,11 +4,16 @@ import {connect} from 'react-redux';
 import {wrapEventStop} from '../util';
 import router from '../router';
 
-const RouterLinkComponent = ({onClick, children}) => <a href="" onClick={wrapEventStop(onClick)}>{children}</a>;
+const RouterLinkComponent = ({onClick, children, className}) => <a href="" className={className} onClick={wrapEventStop(onClick)}>{children}</a>;
 
 RouterLinkComponent.propTypes = {
     onClick: PropTypes.func.isRequired,
     children: PropTypes.node.isRequired,
+    className: PropTypes.string,
+};
+
+RouterLinkComponent.defaultProps = {
+    className: null,
 };
 
 const mapDispatchToProps = (dispatch, {route, params, query, anchor}) => ({
@@ -23,12 +28,14 @@ RouterLink.propTypes = {
     query: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     anchor: PropTypes.string,
     children: PropTypes.node.isRequired,
+    className: PropTypes.string,
 };
 
 RouterLinkComponent.defaultProps = {
     params: undefined,
     query: undefined,
     anchor: undefined,
+    className: undefined,
 };
 
 export default RouterLink;
