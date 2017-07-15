@@ -7,6 +7,7 @@ import history from './history';
 
 import router from './router';
 import navigation from './navigation';
+import unavailable from './unavailable';
 
 import home from './home';
 import about from './about';
@@ -16,7 +17,6 @@ import advocate from './advocate';
 import caseDetail from './case';
 import caseSearch from './casesearch';
 import link from './link';
-import unavailable from './unavailable';
 
 const createRoute = (module) => (
     <Route
