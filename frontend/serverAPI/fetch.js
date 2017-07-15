@@ -38,7 +38,8 @@ const wrapExecute = function* executeWrapper(request) {
 
 export const doGet = function* get(url) {
     const request = superagent.get(url)
-        .accept('json');
+        .accept('json')
+        .set('X-Requested-With', 'XMLHttpRequest');
     return yield* wrapExecute(request);
 };
 
@@ -47,6 +48,7 @@ export const doPost = (url) => function* post(body) {
         .post(url)
         .send(body)
         .type('form')
-        .accept('json');
+        .accept('json')
+        .set('X-Requested-With', 'XMLHttpRequest');
     return yield* wrapExecute(request);
 };
