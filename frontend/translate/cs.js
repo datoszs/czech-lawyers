@@ -14,6 +14,8 @@ export default {
     'copyright': '\u{A9} 2017 DATOS \u{2014} data o spravedlnosti, z. s.',
     'loading.alert': 'Váš požadavek se zpracovává, počkejte, prosím.',
 
+    'common.refresh': 'Obnovit',
+
     'search.button': 'Hledat',
     'search.placeholder': 'Zadejte jméno nebo IČ',
     'back.button': 'Zpět',
@@ -109,4 +111,6 @@ export default {
     'form.name': 'Vaše jméno',
     'form.error.required': 'Toto pole je povinné',
     'form.error.email': 'Toto pole musí obsahovat validní e-mailovou adresu',
+
+    'unavailable.warning': 'Omlouváme se, tato stránka je dočasně nedostupná. Zkuste to, prosím, za chvíli znova.',
 };

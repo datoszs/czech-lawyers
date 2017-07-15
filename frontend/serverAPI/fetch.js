@@ -1,5 +1,9 @@
 import superagent from 'superagent';
 import {CANCEL} from 'redux-saga';
+import {call, put} from 'redux-saga/effects';
+import unavailable from '../unavailable';
+import router from '../router';
+import {UNAVAILABLE} from './status';
 
 export function RequestError(error) {
     this.status = error.status;
@@ -20,17 +24,29 @@ const execute = (request) => {
     return promise;
 };
 
-export const doGet = (url) => {
-    const request = superagent.get(url)
-        .accept('json');
-    return execute(request);
+const wrapExecute = function* executeWrapper(request) {
+    try {
+        return yield call(execute, request);
+    } catch (error) {
+        if (error instanceof RequestError && error.status === UNAVAILABLE) {
+            yield put(unavailable.enter());
+            yield put(router.stop());
+        }
+        throw error;
+    }
 };
 
-export const doPost = (url) => (body) => {
+export const doGet = function* get(url) {
+    const request = superagent.get(url)
+        .accept('json');
+    return yield* wrapExecute(request);
+};
+
+export const doPost = (url) => function* post(body) {
     const request = superagent
         .post(url)
         .send(body)
         .type('form')
         .accept('json');
-    return execute(request);
+    return yield* wrapExecute(request);
 };
