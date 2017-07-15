@@ -25,7 +25,19 @@ const nameReducer = (state = Map(), action) => {
     }
 };
 
+const residenceReducer = (state = Map(), action) => {
+    switch (action.type) {
+        case SET_ID:
+            return Map();
+        case SET_SAME_NAME_ADVOCATES:
+            return Map(action.advocates.map((advocate) => [advocate.id_advocate, advocate.residence.city]));
+        default:
+            return state;
+    }
+};
+
 export default combineReducers({
     ids: idReducer,
     names: nameReducer,
+    residence: residenceReducer,
 });
