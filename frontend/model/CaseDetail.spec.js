@@ -69,6 +69,8 @@ describe('Case Detail model', () => {
                 public_link: 'http://nsoud.cz/Judikatura/judikatura_ns.nsf/WebPrint/06FEB14C62D9D3B9C1257A4E0065FDFD?openDocument',
                 public_local_link: 'https://www.cestiadvokati.cz/public/document/view/108429',
             }],
+            decision_date: '2016-03-01T01:00:00+01:00',
+            proposition_date: '2016-03-04T01:00:00+01:00',
         };
         it('creates valid object', () => {
             const caseDetail = new CaseDetail(mapDtoToCaseDetail(dto));
@@ -118,6 +120,20 @@ describe('Case Detail model', () => {
         it('treats null result tagging finality as false', () => {
             const customCaseDetail = new CaseDetail(mapDtoToCaseDetail(Object.assign({}, dto, {tagging_result_final: null})));
             customCaseDetail.resultFinal.should.be.false();
+        });
+        it('maps decision date', () => {
+            caseDetail.decisionDate.should.equal(1456790400000);
+        });
+        it('maps proposition date', () => {
+            caseDetail.propositionDate.should.equal(1457049600000);
+        });
+        it('should handle empty decision date', () => {
+            const customCaseDetail = new CaseDetail(mapDtoToCaseDetail(Object.assign({}, dto, {decision_date: null})));
+            expect(customCaseDetail.decisionDate).to.be.null();
+        });
+        it('should handle empty proposition date', () => {
+            const customCaseDetail = new CaseDetail(mapDtoToCaseDetail(Object.assign({}, dto, {decision_date: null})));
+            expect(customCaseDetail.decisionDate).to.be.null();
         });
     });
 });

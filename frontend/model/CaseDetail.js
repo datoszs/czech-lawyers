@@ -1,5 +1,6 @@
 import invariant from 'invariant';
 import {Record, List} from 'immutable';
+import moment from 'moment';
 import {checkCourt} from './courts';
 import {checkResult} from './result';
 import {mapDtoToDocument} from './Document';
@@ -14,6 +15,8 @@ class CaseDetail extends Record({
     documents: [],
     advocateFinal: false,
     resultFinal: false,
+    decisionDate: null,
+    propositionDate: null,
 }) {
     constructor(values) {
         invariant(values.id, 'Case id must be specified');
@@ -35,6 +38,8 @@ export const mapDtoToCaseDetail = (dto) => ({
     documents: dto.documents.map(mapDtoToDocument),
     advocateFinal: !!dto.tagging_advocate_final,
     resultFinal: !!dto.tagging_result_final,
+    propositionDate: dto.proposition_date && moment(dto.proposition_date).valueOf(),
+    decisionDate: dto.decision_date && moment(dto.decision_date).valueOf(),
 });
 
 export default CaseDetail;

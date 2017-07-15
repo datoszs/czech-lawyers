@@ -42,6 +42,8 @@ describe('Case model', () => {
             id_court: 2,
             registry_mark: '42 CDO 4000/2016',
             result: 'negative',
+            decision_date: '2016-03-01T01:00:00+01:00',
+            proposition_date: '2016-03-04T01:00:00+01:00',
         };
         it('creates valid object', () => {
             const caseObj = new Case(mapDtoToCase(dto));
@@ -59,6 +61,20 @@ describe('Case model', () => {
         });
         it('maps result', () => {
             caseObj.result.should.equal(dto.result);
+        });
+        it('maps decision date', () => {
+            caseObj.decisionDate.should.equal(1456790400000);
+        });
+        it('maps proposition date', () => {
+            caseObj.propositionDate.should.equal(1457049600000);
+        });
+        it('should handle empty decision date', () => {
+            const customCaseObj = new Case(mapDtoToCase(Object.assign({}, dto, {decision_date: null})));
+            expect(customCaseObj.decisionDate).to.be.null();
+        });
+        it('should handle empty proposition date', () => {
+            const customCaseObj = new Case(mapDtoToCase(Object.assign({}, dto, {decision_date: null})));
+            expect(customCaseObj.decisionDate).to.be.null();
         });
     });
 });
