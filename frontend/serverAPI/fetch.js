@@ -2,6 +2,7 @@ import superagent from 'superagent';
 import {CANCEL} from 'redux-saga';
 import {call, put} from 'redux-saga/effects';
 import unavailable from '../unavailable';
+import router from '../router';
 import {UNAVAILABLE} from './status';
 
 export function RequestError(error) {
@@ -29,6 +30,7 @@ const wrapExecute = function* executeWrapper(request) {
     } catch (error) {
         if (error instanceof RequestError && error.status === UNAVAILABLE) {
             yield put(unavailable.enter());
+            yield put(router.stop());
         }
         throw error;
     }

@@ -1,5 +1,5 @@
 import {NAME} from './constants';
-import {transition, navigate} from './actions';
+import {transition, navigate, stop} from './actions';
 import {isActive} from './selectors';
 import saga from './saga';
 import reducer from './reducer';
@@ -15,6 +15,7 @@ const router = {
     Component,
     transition,
     navigate,
+    stop,
     isActive,
     saga,
     reducer,
