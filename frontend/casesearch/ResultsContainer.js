@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {TwoColumn} from '../components';
+import {ThreeColumn} from '../components';
 import {search} from './modules';
 import CaseDetail from './CaseDetail';
 
@@ -12,4 +12,4 @@ const mergeProps = ({ids}) => ({
     children: ids.map((id) => <CaseDetail key={id} id={id} />),
 });
 
-export default connect(mapStateToProps, undefined, mergeProps)(TwoColumn);
+export default connect(mapStateToProps, undefined, mergeProps)(ThreeColumn);
