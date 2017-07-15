@@ -88,6 +88,10 @@ export default ({dev}) => ({
                 test: /\.md$/,
                 loader: 'raw-loader',
             },
+            {
+                test: /\.yml$/,
+                loader: ['json-loader', 'yaml-loader'],
+            }
         ],
     },
     devServer: {
