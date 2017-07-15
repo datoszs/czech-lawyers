@@ -13,6 +13,7 @@ import TimelineContainer from './Timeline';
 import CaseContainer from './CaseContainer';
 import CourtStatistics from './CourtStatistics';
 import samename from './samename';
+import CaseScroller from './CaseScroller';
 
 export default () => (
     <section>
@@ -32,6 +33,7 @@ export default () => (
                 </Row>
             </Col>
         </Row>
+        <CaseScroller name="case.scroller" />
         <PageSubheader><Msg msg="advocate.cases" /></PageSubheader>
         <CourtFilter />
         <TimelineScroll>
