@@ -1,6 +1,6 @@
+# encoding=utf-8
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
-# coding=utf-8
 
 """
 This program assigns cases to lawyers
@@ -68,16 +68,16 @@ def print_statistic(tagger):
           "Causes: {}, unique advocates: {}\n"
           "Matched: {}, No matched: {}, Without changes: {}\n"
           "Bad: {}, Empty: {}\n"
-          "Processed: {}, Failed: {}, Hited: {}\n"
+          "Processed: {} ({} %), Failed: {}, Hited: {}\n"
           "Size of match_cache: {}, Size of no_match_cache: {}\n"
           "Compare full: {}, Compare normal: {}, Compare reverse: {}\n"
-          "Compare only surname: {}\n".format(
+          "Full match: {}, Compare only surname: {}, Compare by IC: {}\n".format(
             len(tagger.causes), len(tagger.advocates),
             tagger.matched, tagger.no_matched, tagger.without_changes,
             tagger.bad, tagger.empty,
-            tagger.processed, tagger.failed, tagger.hit,
+            tagger.processed, round(tagger.processed/len(tagger.causes), 2)*100, tagger.failed, tagger.hit,
             len(tagger.match_cache), len(tagger.no_match_cache),
-            tagger.cmp_full, tagger.cmp_normal, tagger.cmp_reverse, tagger.cmp_surname)
+            tagger.cmp_full, tagger.cmp_normal, tagger.cmp_reverse, tagger.cmp_full_match, tagger.cmp_surname, tagger.cmp_ic)
     )
 
 
@@ -113,6 +113,7 @@ class QueryDB(object):
                 "SELECT *"
                 "FROM \"case\""
                 "WHERE court_id = %s AND id_case NOT IN (SELECT case_id FROM tagging_advocate WHERE is_final);" % court)
+        # AND year=2010
         return self.cur.fetchall()
 
     def insert_to_db(self, record):
@@ -148,6 +149,45 @@ class QueryDB(object):
                 "LIMIT 1" % int(cause_id))
         return self.cur.fetchone()
 
+    # for tagging special -start
+    def get_last_document(self, cause_id):
+        """
+        fgfgf
+        """
+        self.cur.execute(
+                "SELECT * "
+                "FROM document "
+                "WHERE case_id=%i "
+                "ORDER BY decision_date DESC "
+                "LIMIT 1" % int(cause_id))
+        return self.cur.fetchone()
+
+    def get_extra(self, document_id, court_id):
+        """
+        get
+        """
+        court = "document_law_court" if court_id == 3 else "document_supreme_administrative_court"
+        self.cur.execute(
+                "SELECT * "
+                "FROM  {} "
+                "WHERE document_id={} ".format(court, document_id))
+        return self.cur.fetchone()
+
+    # for tagging special - end
+
+    def get_advocate_by_ic(self, ic):
+        """
+        get advocate record with searching IC
+
+        :param ic: IC from court data
+        :return: founded advocate(s)
+        """
+        self.cur.execute(
+                "SELECT id_advocate "
+                "FROM advocate "
+                "WHERE registration_number='{0!s}' ".format(str(ic)))
+        return self.cur.fetchall()
+
     def insert_if_differs(self, new, old):
         """
         compare old and new result of tagging advocate
@@ -166,11 +206,11 @@ class QueryDB(object):
             # print(old)
             # print(new)
             if diff:
-                self.insert_to_db(new)
+                # self.insert_to_db(new)
                 return True
             return False
         else:
-            self.insert_to_db(new)
+            #self.insert_to_db(new)
             return True
 
 
@@ -187,6 +227,8 @@ class NameCleaner:
         :param string: text for extraction
         :return: extracted name and his length - tuple
         """
+        if string is None:
+            return None, 0
         string = string.replace(".", ". ")
         string = string.replace(',', " ,")
 
@@ -303,13 +345,32 @@ class AdvocateTagger(QueryDB):
         self.cleaner = NameCleaner()
         self.bad, self.empty = 0, 0
         self.matched, self.no_matched, self.without_changes = (0,) * 3
-        self.cmp_full, self.cmp_normal, self.cmp_reverse, self.cmp_surname = (
-                                                                                 0,) * 4
+        self.cmp_full_match, self.cmp_full, self.cmp_normal, self.cmp_reverse, self.cmp_surname, self.cmp_ic = (
+                                                                                              0,) * 6
         self.processed, self.failed, self.hit = (0,) * 3
         self.no_match_cache, self.match_cache = {}, {}
 
-    @staticmethod
-    def get_name(off_data, court_id):
+    def get_name_from_document_info(self, cause_id):
+        """
+
+        :param cause_id:
+        :return:
+        """
+        last_document = self.get_last_document(cause_id)
+        if last_document is None:
+            return None
+        #print(last_document)
+        string = self.get_extra(last_document["id_document"], self.court)
+        if string is None or string["names"] is None:
+            return None
+        print(string["names"], len(string["names"]), len(string["names"]) == 1)
+
+        if len(string["names"]) == 1:
+            return string["names"]["1"]
+        else:
+            return None
+
+    def get_name(self, cause):
         """
         prepare information of name from structure specific for court
 
@@ -317,10 +378,14 @@ class AdvocateTagger(QueryDB):
         :param court_id: id for specific court
         :return: full name of advocate
         """
-        if court_id == 1:
-            return (off_data["names"]).strip()
-        elif court_id == 3:
-            return " ".join([off_data["name"].strip(), off_data["surname"].strip()])
+        if self.court == 1:
+            try:
+                return (cause["official_data"][0]["names"]).strip()
+            except KeyError:
+                return None
+        elif self.court == 3:
+            return " ".join([cause["official_data"][0]["name"].strip(), cause["official_data"][0]["surname"].strip()])  # from court table
+            # return self.get_name_from_document_info(cause["id_case"])  # from text
         else:
             return None
 
@@ -404,61 +469,97 @@ class AdvocateTagger(QueryDB):
         else:
             return (None,) * 5
 
-    def process_case(self, cause, text):
+    def process_case(self, cause, text, ic):
         """
         control process of comparison
 
+        :param ic: identification number of advocate from cause
         :param cause: cause for assignments
         :param text: full variant of text
         :return: bool
         """
+
+        if text is None and ic is None:
+            return False
+
         # check_cache record with the same name in match_cache
-        exist = self.match_cache.get(text)
-        name = self.cleaner.extract_name(text)[0].title()
+        if text is not None:
+            exist = self.match_cache.get(text)
+            name = self.cleaner.extract_name(text)[0].title()
+        else:
+            exist = name = None
+
         debug = advocate_name = None
+        found = False
         if exist is not None:
             new, advocate_name, status, type_of_comparison = exist
             new["case_id"] = cause["id_case"]
+            if "full" in type_of_comparison:
+                self.cmp_full += 1
             if "normal" in type_of_comparison:
                 self.cmp_normal += 1
             elif "reverse" in type_of_comparison:
                 self.cmp_reverse += 1
             elif "surname" in type_of_comparison:
                 self.cmp_surname += 1
+            elif "by IC" in type_of_comparison:
+                self.cmp_ic += 1
             type_of_comparison = "now exist"
             self.hit += 1
-        else:
+            found = True
+        elif ic:
+            advocates = self.get_advocate_by_ic(ic)  # may be more
+            print(cause["id_case"], ic, advocates)
+            # input(":-)")
+            if advocates:
+                advocate_id = advocates[0]["id_advocate"]
+                type_of_comparison = "by IC"
+                status = states["ok"]
+                self.cmp_ic += 1
+                new = self.prepare_tagging(
+                        cause, status, ic, advocate=advocate_id)
+                found = True
+
+        if not found:
+            if text is None:
+                return False
             type_of_comparison, status, variants, advocate_id = None, None, None, None
             matches = {}
             for advocate in self.advocates:
                 variants = self.cleaner.prepare_advocate(advocate["fullname"])
                 # compare full variant name (with degrees) with 'text'
                 if variants.full == text:
-                    self.cmp_full += 1
+                    self.cmp_full_match += 1
                     status = states["ok"]
                     type_of_comparison = "full compare"
                     advocate_id = advocate["advocate_id"]
                     break
                 # normal variant of name
-                if variants.normal.title() in text:
-                    distance = lev.distance(variants.normal.title(), name)
-                    if distance < threshold:
-                        matches.setdefault(distance, []).append(
-                                (variants, advocate["advocate_id"], "contains normal - levenshtein"))
+                #if variants.normal.title() in text:
+                distance = lev.distance(variants.full, name)
+                if distance < threshold:
+                    matches.setdefault(distance, []).append(
+                            (variants, advocate["advocate_id"], "contains full - levenshtein"))
+                # normal variant of name
+                #if variants.normal.title() in text:
+                distance = lev.distance(variants.normal.title(), name)
+                if distance < threshold:
+                    matches.setdefault(distance, []).append(
+                            (variants, advocate["advocate_id"], "contains normal - levenshtein"))
                 # reverse variant of name
-                if variants.reverse.title() in text:
-                    distance = lev.distance(variants.reverse.title(), name)
-                    if distance < threshold:
-                        matches.setdefault(distance, []).append(
-                                (variants, advocate["advocate_id"], "contains reverse - levenshtein"))
+                #if variants.reverse.title() in text:
+                distance = lev.distance(variants.reverse.title(), name)
+                if distance < threshold:
+                    matches.setdefault(distance, []).append(
+                            (variants, advocate["advocate_id"], "contains reverse - levenshtein"))
+
                 # special compare only with surname (for ÚS)
                 if self.court == 3:
-                    if name in variants.normal:
-                        distance = lev.distance(
-                                variants.normal.split()[-1], name)
-                        if distance < threshold:
-                            matches.setdefault(distance, []).append(
-                                    (variants, advocate["advocate_id"], "contains only surname - levenshtein"))
+                    distance = lev.distance(
+                            variants.normal.split()[-1], name)
+                    if distance < threshold:
+                        matches.setdefault(distance, []).append(
+                                (variants, advocate["advocate_id"], "contains only surname - levenshtein"))
 
             if advocate_id:
                 advocate_name = variants.full
@@ -473,7 +574,7 @@ class AdvocateTagger(QueryDB):
             else:
                 return False
         self.match_cache.setdefault(
-                text, (new, advocate_name, status, type_of_comparison))
+            text, (new, advocate_name, status, type_of_comparison))
         if self.insert_if_differs(new, self.get_last_tagging(cause["id_case"])):
             if new["status"] == states["ok"]:
                 self.processed += 1
@@ -494,9 +595,18 @@ class AdvocateTagger(QueryDB):
         for cause in self.causes:
             official_data = cause["official_data"]
             if official_data and len(official_data) == 1:
-                string = self.get_name(official_data[0], self.court)
+                try:
+                    pin = official_data[0]["PIN"]
+                    ic = pin if pin != "NA" and len(pin) == 8 else None
+                    #ic = None
+                except KeyError:
+                    ic = None
+
+                string = self.get_name(cause)
                 string, status = self.cleaner.clear(string)
-                name = self.cleaner.extract_name(string)
+
+                name = self.cleaner.extract_name(string) if string is not None else None
+
                 if status in ["WRONG", "MORE_NAMES", "SKIP"]:
                     self.no_match_cache[string] = 1
                     self.bad += 1
@@ -512,7 +622,7 @@ class AdvocateTagger(QueryDB):
                 except KeyError:
                     pass
 
-                ret = self.process_case(cause, string)
+                ret = self.process_case(cause, string, ic=ic)
                 if ret is True:  # insert
                     self.matched += 1
                 elif ret is None:  # not insert
