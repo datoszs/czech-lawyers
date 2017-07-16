@@ -1,19 +1,3 @@
-CREATE OR REPLACE VIEW vw_latest_tagging_case_result AS
-	SELECT
-		tagging_case_result.*
-	FROM latest_tagging_case_result
-	JOIN tagging_case_result ON latest_tagging_case_result.tagging_case_result_id = tagging_case_result.id_tagging_case_result;
-
-COMMENT ON VIEW vw_latest_tagging_case_result IS 'View showing all latest case result taggings with all details';
-
-CREATE OR REPLACE VIEW vw_latest_tagging_advocate AS
-	SELECT
-		tagging_advocate.*
-	FROM latest_tagging_advocate
-		JOIN tagging_advocate ON latest_tagging_advocate.tagging_advocate_id = tagging_advocate.id_tagging_advocate;
-
-COMMENT ON VIEW vw_latest_tagging_advocate IS 'View showing all latest advocate taggings with all details';
-
 CREATE OR REPLACE VIEW vw_case_for_advocates AS
 	SELECT * FROM "case" WHERE
 		-- NS: Cdo, Cdon, ICdo, NSČR, Odo, Odon
@@ -22,7 +6,7 @@ CREATE OR REPLACE VIEW vw_case_for_advocates AS
 		OR (court_id = 2 AND SUBSTRING(registry_sign FROM '\m(\D+)\M') IN ('tdo') AND year >= 2002)
 		-- NSS: As, Ads, Afs, Ars, Azs, Ans, Aos, Aps
 		OR (court_id = 1 AND SUBSTRING(registry_sign FROM '\m(\D+)\M') IN ('as', 'ads', 'afs', 'ars', 'azs', 'ans', 'aos', 'aps') AND year >= 2006)
-		OR (court_id = 3 AND year >= 2007 AND "case".id_case NOT IN
+		OR (court_id = 3 AND year >= 2007 AND "case".id_case NOT IN 
 			(
 			SELECT case_id
 			FROM document JOIN document_law_court ON document.id_document = document_law_court.document_id
