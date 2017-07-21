@@ -4,11 +4,12 @@ import {connect} from 'react-redux';
 import {List} from 'immutable';
 import {Panel} from 'react-bootstrap';
 import {TwoColumn} from '../components';
-import {Msg, SearchDisclaimer} from '../containers';
+import {Msg} from '../containers';
 import autocomplete from '../autocomplete';
 
 import AdvocateDetail from './AdvocateDetail';
 import CurrentSearch from './CurrentSearchContainer';
+import SearchDisclaimer from './SearchDisclaimerContainer';
 import {search} from './modules';
 
 const Container = ({advocates}) => (
