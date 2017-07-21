@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {Element, scroller} from 'react-scroll';
-import {getCases, getAdvocate} from './selectors';
+import {getCases, getId} from './selectors';
 
 class CaseScrollerComponent extends Component {
     constructor(props) {
@@ -34,12 +34,16 @@ class CaseScrollerComponent extends Component {
 CaseScrollerComponent.propTypes = {
     empty: PropTypes.bool.isRequired,
     name: PropTypes.string.isRequired,
-    advocate: PropTypes.number.isRequired, // eslint-disable-line react/no-unused-prop-types, linter error
+    advocate: PropTypes.string, // eslint-disable-line react/no-unused-prop-types, linter error
+};
+
+CaseScrollerComponent.defaultProps = {
+    advocate: null,
 };
 
 const mapStateToProps = (state) => ({
     empty: getCases(state).size === 0,
-    advocate: getAdvocate(state),
+    advocate: getId(state),
 });
 
 const CaseScroller = connect(mapStateToProps)(CaseScrollerComponent);
