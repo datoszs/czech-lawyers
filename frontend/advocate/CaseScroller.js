@@ -16,8 +16,11 @@ class CaseScrollerComponent extends Component {
             setTimeout(() => {
                 scroller.scrollTo(this.props.name);
             });
+            this.empty = nextProps.empty;
+        } else {
+            this.empty = false;
         }
-        this.empty = nextProps.empty;
+
     }
 
     shouldComponentUpdate(nextProps) {
