@@ -20,7 +20,6 @@ class CaseScrollerComponent extends Component {
         } else {
             this.empty = false;
         }
-
     }
 
     shouldComponentUpdate(nextProps) {
