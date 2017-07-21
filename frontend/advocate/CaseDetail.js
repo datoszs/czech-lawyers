@@ -16,6 +16,7 @@ const mapStateToProps = (state, {id}) => {
         court: caseObj.court ? translate.getMessage(state, courtsMsg[caseObj.court]) : null,
         result: caseObj.result ? translate.getMessage(state, resultMsg[caseObj.result]) : null,
         date: caseObj.decisionDate ? moment(caseObj.decisionDate).format(dateFormat) : null,
+        resultName: caseObj.result,
     };
 };
 

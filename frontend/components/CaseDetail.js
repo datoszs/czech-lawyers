@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Row, Col} from 'react-bootstrap';
+import {Result} from './result';
 import DetailPanel from './DetailPanel';
 
-const CaseDetail = ({registry, court, result, date, handleDetail}) => (
+const CaseDetail = ({registry, court, result, resultName, date, handleDetail}) => (
     <DetailPanel
         title={registry}
         footer={
@@ -14,7 +15,9 @@ const CaseDetail = ({registry, court, result, date, handleDetail}) => (
             </Row>
         }
         onClick={handleDetail}
-    />
+    >
+        {resultName && <span className="case-detail-result"><Result result={resultName} /></span>}
+    </DetailPanel>
 );
 
 CaseDetail.propTypes = {
@@ -23,12 +26,14 @@ CaseDetail.propTypes = {
     result: PropTypes.string,
     date: PropTypes.string,
     handleDetail: PropTypes.func.isRequired,
+    resultName: PropTypes.oneOf(['positive', 'negative', 'neutral']),
 };
 
 CaseDetail.defaultProps = {
     court: null,
     result: null,
     date: null,
+    resultName: null,
 };
 
 export default CaseDetail;
