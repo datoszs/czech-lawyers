@@ -10,6 +10,7 @@ const mapStateToProps = (state, {court}) => ({
     statistics: getStatistics(state, court),
     courtStatistics: courtStatistics.getStatistics(state, court),
     court: translate.getMessage(state, courtsMsg[court]),
+    legend: translate.getMessage(state, 'advocate.statistics.court.legend'),
 });
 
 const CourtStatistics = connect(mapStateToProps)(StatisticsComponent);

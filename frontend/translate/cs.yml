@@ -32,6 +32,8 @@ advocate.cases.disclaimer: |
 advocate.same.name.warning: |
   Tento advokát má jméno i příjmení shodné s alespoň jedním dalším advokátem.
   Jeho statistiky tedy mohou být nepřesné ([přečtěte si více](/about)). Stejnojmenní advokáti:
+advocate.statistics.court.legend: |
+  Sloupečky dole vyjadřují poměr všech meritorních a nemeritorních případů, které soud projednal.
 
 
 status.active: Aktivní

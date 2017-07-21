@@ -1,12 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {Glyphicon, OverlayTrigger, Popover} from 'react-bootstrap';
 import {Statistics} from '../../model';
 import StatisticsColumn from './StatisticsColumn';
 import StatisticsBar from './StatisticsBar';
 
 const statMax = (statistics) => Math.max(statistics.positive, statistics.negative, statistics.neutral);
 
-const CourtStatistics = ({statistics, courtStatistics, court}) => {
+const CourtStatistics = ({statistics, courtStatistics, court, legend}) => {
     const max = statMax(statistics);
     const courtMax = courtStatistics && statMax(courtStatistics);
 
@@ -19,11 +20,14 @@ const CourtStatistics = ({statistics, courtStatistics, court}) => {
 
     return (
         <div className="statistics-court">
-            <h2 className="statistics-court-row">
-                {createColumn('positive')}
-                {createColumn('negative')}
-                {createColumn('neutral')}
-            </h2>
+            <OverlayTrigger placement="left" overlay={<Popover id="court-statistics-legend">{legend}</Popover>}>
+                <h2 className="statistics-court-row">
+                    {createColumn('positive')}
+                    {createColumn('negative')}
+                    {createColumn('neutral')}
+                    <span className="statistics-info"><Glyphicon glyph="question-sign" /></span>
+                </h2>
+            </OverlayTrigger>
             <div className="statistics-court-header">{court}</div>
         </div>
     );
@@ -33,6 +37,7 @@ CourtStatistics.propTypes = {
     statistics: PropTypes.instanceOf(Statistics),
     courtStatistics: PropTypes.instanceOf(Statistics),
     court: PropTypes.string,
+    legend: PropTypes.node.isRequired,
 };
 
 CourtStatistics.defaultProps = {
