@@ -15,3 +15,4 @@ export {default as LoadingAlert} from './LoadingAlert';
 export {default as LeaderBoard} from './LeaderBoard';
 export {default as CurrentSearch} from './CurrentSearch';
 export {default as Center} from './Center';
+export {default as SearchDisclaimer} from './SearchDisclaimer';

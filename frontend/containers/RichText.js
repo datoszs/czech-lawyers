@@ -15,6 +15,7 @@ const mapDispatchToProps = () => ({
         Text: TextNode,
     },
     escapeHtml: true,
+    containerTagName: 'div',
 });
 
 const RichText = connect(mapStateToProps, mapDispatchToProps)(ReactMarkdown);

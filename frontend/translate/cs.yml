@@ -11,6 +11,9 @@ search.button: Hledat
 search.placeholder: Zadejte jméno nebo IČ
 back.button: Zpět
 search.results: "Zobrazeny výsledky pro:"
+search.disclaimer: |
+  U advokáta jsou zobrazeny počty jemu přiřazených meritorních a nemeritorních rozhodnutí
+  a rozhodnutí o&nbsp;zastavení řízení. [Proč? Co to znamená?](/about)
 
 advocates.title: Advokáti
 advocate.search.title: Vyhledávání advokátů

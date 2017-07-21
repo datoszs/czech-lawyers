@@ -1,6 +1,6 @@
 import React from 'react';
 import {Row, Col} from 'react-bootstrap';
-import {Msg, RichText} from '../containers';
+import {Msg, RichText, SearchDisclaimer} from '../containers';
 import {PageSubheader, Center} from '../components';
 import {TimelineScroll} from '../components/timeline';
 import {courts} from '../model';
@@ -25,6 +25,7 @@ export default () => (
                 <CakLink />
             </Col>
             <Col sm={6}>
+                <SearchDisclaimer />
                 <Center><StatisticsContainer /></Center>
                 <Row>
                     <Col sm={4}><CourtStatistics court={courts.NS} /></Col>

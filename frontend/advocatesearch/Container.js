@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import {List} from 'immutable';
 import {Panel} from 'react-bootstrap';
 import {TwoColumn} from '../components';
-import {Msg} from '../containers';
+import {Msg, SearchDisclaimer} from '../containers';
 import autocomplete from '../autocomplete';
 
 import AdvocateDetail from './AdvocateDetail';
@@ -18,6 +18,7 @@ const Container = ({advocates}) => (
             <autocomplete.Container />
         </Panel>
         <CurrentSearch />
+        <SearchDisclaimer />
         <TwoColumn>
             {advocates.map((id) => <AdvocateDetail key={id} id={id} />)}
         </TwoColumn>
