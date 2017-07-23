@@ -4,9 +4,11 @@ declare(strict_types=1);
 namespace App\APIModule\Presenters;
 
 
+use App\Enums\TaggingStatus;
 use App\Model\Cause\Cause;
 use App\Model\Services\CauseService;
 use App\Model\Services\TaggingService;
+use App\Model\Taggings\TaggingCaseResult;
 use App\Utils\TemplateFilters;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Presenter;
@@ -37,9 +39,11 @@ class CaseSearchPresenter extends Presenter
 	 * <json>
 	 *     [
 	 *         {
-	 *             id_case: 234000,
-	 *             id_court: 3,
-	 *             registry_mark: "22 Cdo 2045/2012"
+	 *             "id_case": 234000,
+	 *             "id_court": 3,
+	 *             "registry_mark": "22 Cdo 2045/2012",
+	 *             "tagging_result": "positive",
+	 *             "tagging_result_final": true,
 	 *         },
 	 *     ]
 	 * </json>
@@ -94,19 +98,32 @@ class CaseSearchPresenter extends Presenter
 		}
 		// Load data
 		$cases = $this->caseService->search($query, $start, $count, $strategy);
-		$output = array_map(function (Cause $cause) {
-			return $this->mapCause($cause);
+		$taggings = $this->prepareCasesResults($cases);
+		$output = array_map(function (Cause $cause) use ($taggings) {
+			return $this->mapCause($cause, $taggings[$cause->id] ?? null);
 		}, $cases);
 		// Send output
 		$this->sendJson($output);
 	}
 
-	private function mapCause(Cause $cause)
+	private function prepareCasesResults($data)
+	{
+		$output = [];
+		$temp = $this->taggingService->findCaseResultLatestTaggingByCases($data);
+		foreach ($temp as $row) {
+			$output[$row->case->id] = $row;
+		}
+		return $output;
+	}
+
+	private function mapCause(Cause $cause, ?TaggingCaseResult $result)
 	{
 		return [
 			'id_case' => $cause->id,
 			'id_court' => $cause->court->id,
 			'registry_mark' => TemplateFilters::formatRegistryMark($cause->registrySign),
+			'tagging_result' => ($result && $result->status === TaggingStatus::STATUS_PROCESSED) ? $result->caseResult : null,
+			'tagging_result_final' => $result ? $result->isFinal : null,
 		];
 	}
 }
