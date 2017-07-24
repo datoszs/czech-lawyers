@@ -1,6 +1,8 @@
-import React from 'react';
 import {connect} from 'react-redux';
 import {If} from '../../util';
+import LoadMore from './LoadMore';
+import Loading from './Loading';
+import NoResults from './NoResults';
 
 const mapStateToProps = (state, {module}) => ({
     hasQuery: !!module.getQuery(state),
@@ -10,18 +12,19 @@ const mapStateToProps = (state, {module}) => ({
 });
 
 
-const mergeProps = ({hasQuery, isLoading, canLoadMore, hasResults}) => {
+const mergeProps = ({hasQuery, isLoading, canLoadMore, hasResults}, dispatchProps, {module}) => {
     let component = null;
     if (isLoading) {
-        component = () => <div>Loading...</div>;
+        component = Loading;
     } else if (canLoadMore) {
-        component = () => <div>More to load.</div>;
+        component = LoadMore;
     } else if (!hasResults && hasQuery) {
-        component = () => <div>No results found</div>;
+        component = NoResults;
     }
     return {
         test: component !== null,
         Component: component,
+        search: module,
     };
 };
 

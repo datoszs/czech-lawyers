@@ -4,11 +4,11 @@ import {SearchDisclaimer} from '../containers';
 import {search} from './modules';
 
 const mapStateToProps = (state) => ({
-    hasQuery: !!search.getQuery(state),
+    hasResults: !!search.getQuery(state) && search.getCount(state) > 0,
 });
 
-const mergeProps = ({hasQuery}) => ({
-    test: hasQuery,
+const mergeProps = ({hasResults}) => ({
+    test: hasResults,
     Component: SearchDisclaimer,
 });
 
