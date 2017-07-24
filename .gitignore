@@ -24,3 +24,4 @@ storage/logs/*
 *.iml
 test.txt
 npm-debug.log
+externals/log_*
