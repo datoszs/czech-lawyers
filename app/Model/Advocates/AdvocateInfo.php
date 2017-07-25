@@ -20,6 +20,10 @@ use Nextras\Orm\Entity\Entity;
  * @property string|null		$city
  * @property string|null		$postalArea
  * @property string[]			$specialization
+ * @property string|null		$company
+ * @property string|null		$dataBox
+ * @property string|null		$exOffo
+ * @property string|null		$wayOfPracticingAdvocacy
  * @property DateTime			$validFrom			{default now}
  * @property DateTime|null		$validTo
  * @property DateTime			$inserted			{default now}

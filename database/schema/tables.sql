@@ -186,7 +186,8 @@ COMMENT ON COLUMN document_supreme_administrative_court.decision IS 'Type of dec
 CREATE TYPE advocate_status AS ENUM (
   'active', /* Advocate is active. */
   'suspended', /* Advocates activity is suspended. */
-  'removed' /* Advocate was removed or is inactive. */
+  'removed', /* Advocate was removed or is inactive. */
+  'created' /* We don't know */
 );
 
 CREATE TABLE advocate_info (
@@ -202,7 +203,11 @@ CREATE TABLE advocate_info (
   city TEXT NULL,
   postal_area TEXT NULL,
   specialization TEXT[],
+  company TEXT,
   local_path TEXT,
+  data_box TEXT,
+  ex_offo TEXT,
+  way_of_practicing_advocacy TEXT,
   valid_from TIMESTAMP NOT NULL,
   valid_to TIMESTAMP NULL,
   inserted TIMESTAMP NOT NULL DEFAULT NOW(),
@@ -223,6 +228,10 @@ COMMENT ON COLUMN advocate_info.inserted IS 'Timestamp of creation of this tuple
 COMMENT ON COLUMN advocate_info.valid_from IS 'Since when the tuple is valid.';
 COMMENT ON COLUMN advocate_info.valid_to IS 'Until the tuple is valid, or null when to infinity.';
 COMMENT ON COLUMN advocate_info.job_run_id IS 'ID of job run which added this advocate.';
+COMMENT ON COLUMN advocate_info.data_box IS 'ID of data-box of advocate';
+COMMENT ON COLUMN advocate_info.ex_offo IS 'Information about ex-offo provision';
+COMMENT ON COLUMN advocate_info.way_of_practicing_advocacy IS 'The way of practicing advocacy (samostatný advokát, ve sdružení apod.)';
+COMMENT ON COLUMN advocate_info.company IS 'Company where advocate working'
 
 CREATE TABLE advocate (
   id_advocate BIGSERIAL PRIMARY KEY,

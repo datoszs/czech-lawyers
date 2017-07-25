@@ -79,6 +79,8 @@ class AdvocatesImport extends Command
 			$advocateInfo->postalArea = $row['postal_area'];
 			$advocateInfo->email = Helpers::safeDeterministicExplode(', ', $row['email']);
 			$advocateInfo->specialization = Helpers::safeDeterministicExplode('|', $row['specialization']);
+			$advocateInfo->company = $row['company'];
+			$advocateInfo->dataBox = $row['data_box'];
 			$advocateInfo->insertedBy = $this->user;
 
 			$advocate = new Advocate();
@@ -114,6 +116,11 @@ class AdvocatesImport extends Command
 					$output .= $temp;
 					$consoleOutput->write($temp);
 					$advocateInfo->advocate = $entity;
+					// Update remote_identificator
+					if ($entity->remoteIdentificator != $row['remote_identificator']) {
+						$entity->remoteIdentificator = $row['remote_identificator'];
+						$this->advocateService->persist($entity);
+					}
 					// Invalidate old records
 					$this->advocateService->invalidateOldInfos($entity, $advocateInfo);
 					$this->advocateService->persist($advocateInfo);
@@ -191,7 +198,9 @@ class AdvocatesImport extends Command
 			'postal_area',
 			'local_path',
 			'email',
-			'specialization'
+			'specialization',
+			'company',
+			'data_box'
 		];
 	}
 
@@ -201,10 +210,12 @@ class AdvocatesImport extends Command
 		switch ($stateName) {
 			case 'aktivní':
 				return AdvocateStatus::STATUS_ACTIVE;
-			case 'vyškrtnut':
+			case 'vyškrtnutý':
 				return AdvocateStatus::STATUS_REMOVED;
-			case 'pozastaven':
+			case 'pozastavený':
 				return AdvocateStatus::STATUS_SUSPENDED;
+			case 'vytvořený':
+				return AdvocateStatus::STATUS_CREATED;
 			default:
 				throw new InvalidArgumentException("Invalid advocate state [${$stateName}].");
 		}
@@ -222,6 +233,11 @@ class AdvocatesImport extends Command
 			$current->city != $new->city ||
 			$current->postalArea != $new->postalArea ||
 			$current->email != $new->email ||
-			$current->specialization != $new->specialization;
+			$current->specialization != $new->specialization ||
+			$current->company != $new->company ||
+			$current->dataBox != $new->dataBox ||
+			$current->exOffo != $new->exOffo ||
+			$current->wayOfPracticingAdvocacy != $new->wayOfPracticingAdvocacy
+			;
 	}
 }
