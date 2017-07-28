@@ -3,6 +3,8 @@ import HtmlWebpackPlugin from 'html-webpack-plugin';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import webpack from 'webpack';
 
+const ASSET_OUTPUT_PATH = '../assets/webapp';
+
 /** removes falsy items from array */
 const array = (...target) => target.filter((item) => item);
 
@@ -67,7 +69,7 @@ export default ({dev}) => ({
                 query: {
                     limit: 10000,
                     mimetype: 'image/svg+xml',
-                    outputPath: 'assets/',
+                    outputPath: !dev && ASSET_OUTPUT_PATH,
                 },
             },
             {
