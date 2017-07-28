@@ -67,6 +67,7 @@ export default ({dev}) => ({
                 query: {
                     limit: 10000,
                     mimetype: 'image/svg+xml',
+                    outputPath: 'assets/',
                 },
             },
             {
