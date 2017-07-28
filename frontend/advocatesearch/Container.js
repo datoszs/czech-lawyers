@@ -6,6 +6,7 @@ import {Panel} from 'react-bootstrap';
 import {TwoColumn} from '../components';
 import {Msg} from '../containers';
 import autocomplete from '../autocomplete';
+import {SearchStatus} from '../containers/search';
 
 import AdvocateDetail from './AdvocateDetail';
 import CurrentSearch from './CurrentSearchContainer';
@@ -23,6 +24,7 @@ const Container = ({advocates}) => (
         <TwoColumn>
             {advocates.map((id) => <AdvocateDetail key={id} id={id} />)}
         </TwoColumn>
+        <SearchStatus module={search} />
     </section>
 );
 

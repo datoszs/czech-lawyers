@@ -1,5 +1,5 @@
 import {loadMore, setQuery} from './actions';
-import {getIds, canLoadMore, getResult, isLoading, getQuery} from './selectors';
+import {getIds, canLoadMore, getResult, isLoading, getQuery, getCount} from './selectors';
 import reducer from './reducer';
 import saga from './saga';
 
@@ -13,4 +13,5 @@ export default ({reducerPath, actionPrefix, api, Model, transformation}) => ({
     isLoading: isLoading(reducerPath),
     reducer: reducer(actionPrefix, Model),
     saga: saga(actionPrefix, reducerPath, api, transformation),
+    getCount: getCount(reducerPath),
 });

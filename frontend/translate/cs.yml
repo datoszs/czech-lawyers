@@ -14,6 +14,10 @@ search.results: "Zobrazeny výsledky pro:"
 search.disclaimer: |
   U advokáta jsou zobrazeny počty jemu přiřazených meritorních a nemeritorních rozhodnutí
   a rozhodnutí o&nbsp;zastavení řízení. [Proč? Co to znamená?](/about)
+search.load.more: Zobrazit další
+search.load.more.text: Zobrazeno prvních %(count)d výsledků vyhledávání.
+search.loading: Načítají se výsledky vyhledávání.
+search.no.results: Nebyly nalezeny žádné výsledky
 
 advocates.title: Advokáti
 advocate.search.title: Vyhledávání advokátů
