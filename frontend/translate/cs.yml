@@ -40,7 +40,7 @@ advocate.same.name.warning: |
   Tento advokát má jméno i příjmení shodné s alespoň jedním dalším advokátem.
   Jeho statistiky tedy mohou být nepřesné ([přečtěte si více](/about)). Stejnojmenní advokáti:
 advocate.statistics.court.legend: |
-  Pro srovnání je dole (šedě) podíl jednotlivých typů rozhodnutí ve všech rozhodnutích soudu (bez ohledu na advokáta).
+  Dole pro srovnání podíl jednotlivých typů rozhodnutí ve všech rozhodnutích soudu (bez ohledu na advokáta).
 
 
 status.active: Aktivní
