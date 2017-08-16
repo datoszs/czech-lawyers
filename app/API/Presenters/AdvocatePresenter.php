@@ -53,7 +53,7 @@ class AdvocatePresenter extends Presenter
 	 *             "petr.omacka@example.com"
 	 *         ],
 	 *         "state": "active",
-	 *         "remote_page": "http://vyhledavac.cak.cz/Units/_Search/Details/detailAdvokat.aspx?id=77b3dbfb-f855-4170-9d5b-dc30757a0204",
+	 *         "remote_page": "http://vyhledavac.cak.cz/Contact/Details/77b3dbfb-f855-4170-9d5b-dc30757a0204",
 	 *         "statistics": {
 	 *             "negative": 12,
 	 *             "neutral": 2,
@@ -171,7 +171,7 @@ class AdvocatePresenter extends Presenter
 			],
 			'emails' => $currentInfo->email,
 			'state' => $currentInfo->status,
-			'remote_page' => sprintf('http://vyhledavac.cak.cz/Units/_Search/Details/detailAdvokat.aspx?id=%s', $advocate->remoteIdentificator),
+			'remote_page' => sprintf('http://vyhledavac.cak.cz/Contact/Details/%s', $advocate->remoteIdentificator),
 			'statistics' => [
 				CaseResult::RESULT_NEGATIVE => $statistics[CaseResult::RESULT_NEGATIVE] ?? 0,
 				CaseResult::RESULT_NEUTRAL => $statistics[CaseResult::RESULT_NEUTRAL] ?? 0,
