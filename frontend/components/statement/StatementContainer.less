@@ -3,8 +3,13 @@
 .statement-container () {
     display: flex;
     justify-content: space-between;
+    flex-wrap: wrap;
 
     & > * {
         width: calc(33.3% ~"-" @padding-large-horizontal);
+
+        @media (max-width: @screen-xs-max) {
+            width: 100%;
+        }
     }
 }
