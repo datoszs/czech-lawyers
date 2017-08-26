@@ -17,6 +17,7 @@ import advocate from './advocate';
 import caseDetail from './case';
 import caseSearch from './casesearch';
 import link from './link';
+import statements from './statements';
 
 const createRoute = (module) => (
     <Route
@@ -38,6 +39,7 @@ export default () => (
                 {createRoute(caseSearch)}
                 {createRoute(caseDetail)}
                 {createRoute(link)}
+                {createRoute(statements)}
             </unavailable.Container>
         </navigation.AppContainer>
     </Router>

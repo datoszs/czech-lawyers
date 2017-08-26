@@ -4,6 +4,7 @@ import {Msg, RichText} from '../containers';
 import autocomplete from '../autocomplete';
 import {getTop, getBottom} from './selectors';
 import LeaderBoard from './LeaderBoard';
+import ProblemStatements from './ProblemStatements';
 
 const Container = () => (
     <section>
@@ -13,6 +14,7 @@ const Container = () => (
             <autocomplete.Container />
             <RichText msg="home.cak.search" />
         </Jumbotron>
+        <ProblemStatements />
         <RichText msg="home.below" />
         <hr />
         <RichText msg="leaderboard.legend" />

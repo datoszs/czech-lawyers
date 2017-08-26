@@ -1,0 +1,10 @@
+@import "../../variables";
+
+.statement-container () {
+    display: flex;
+    justify-content: space-between;
+
+    & > * {
+        width: calc(33.3% ~"-" @padding-large-horizontal);
+    }
+}

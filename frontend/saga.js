@@ -12,6 +12,7 @@ import caseSearch from './casesearch';
 import link from './link';
 import home from './home';
 import about from './about';
+import statements from './statements';
 
 export default function* () {
     yield all([autocomplete.saga, courtStatistics.saga].map(fork));
@@ -24,5 +25,6 @@ export default function* () {
         link,
         home,
         about,
+        statements,
     ]);
 }
