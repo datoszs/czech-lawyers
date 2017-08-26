@@ -147,7 +147,7 @@ form.error.email: Toto pole musí obsahovat validní e-mailovou adresu
 
 unavailable.warning: Omlouváme se, tato stránka je dočasně nedostupná. Zkuste to, prosím, za chvíli znova.
 
-statement.cases: "Průměrný advokát se ke třem nejdůležitějším soudům obrací v\xA072\xA0% případů zbytečně"
+statement.cases: "Průměrný advokát se ke třem nejdůležitějším soudům obrací v\xA072\xA0%% případů zbytečně%(ending)s"
 statement.cases.long: |
   V řízení o dovolání u Nejvyššího soudu, o kasační stížnosti u Nejvyššího správního soudu i o ústavní stížnosti u Ústavního soudu
   je zpravidla nutné nechat se zastoupit advokátem. Ani zapojení advokáta ovšem samo o sobě nezaručuje, že tyto soudy daný případ
@@ -165,7 +165,7 @@ statement.cases.long: |
   konkrétnímu advokátu z různých důvodů přiřadit (více viz O projektu). Výpočet proběhl na základě stavu naší databáze k 17. 7. 2017.
 statement.proceedings: |
   V předminulém roce byla zahájena řízení o XXXX dovoláních, kasačních stížnostech a ústavních stížnostech.
-  Jen asi v XX % z těchto řízeních se ale soudy zabývaly obsahem případu
+  Jen asi v XX %% z těchto řízeních se ale soudy zabývaly obsahem případu%(ending)s
 statement.proceedings.long: |
   V řízeních o dovoláních u Nejvyššího soudu, o kasačních stížnostech u Nejvyššího správního soudu i o ústavních stížnostech
   u Ústavního soudu může dojít k tomu, že se soudy odmítnou zabývat obsahem případu (vydají tzv. nemeritorní konečné rozhodnutí).
@@ -184,7 +184,7 @@ statement.proceedings.long: |
   ke konečným rozhodnutím vydaným ve výše vyjmenovaných řízeních. Upozorňujeme ovšem, že zpracováváme výlučně zveřejněná konečná
   rozhodnutí a že k některým z nich se nám nepodařilo typ výsledku přiřadit (více viz O projektu). Výpočet proběhl na základě stavu
   naší databáze k 17. 7. 2017.
-statement.advocates: Pouze 1 ze 7 advokátů podal více věcně projednaných dovolání, kasačních stížností a ústavních stížností, než těch odmítnutých
+statement.advocates: Pouze 1 ze 7 advokátů podal více věcně projednaných dovolání, kasačních stížností a ústavních stížností, než těch odmítnutých%(ending)s
 statement.advocates.long: |
   V řízení o dovolání u Nejvyššího soudu, o kasační stížnosti u Nejvyššího správního soudu i o ústavní stížnosti u Ústavního soudu
   je zpravidla nutné nechat se zastoupit advokátem. Soudy nicméně na advokátovo posouzení vhodnosti případu k jeho věcnému projednání

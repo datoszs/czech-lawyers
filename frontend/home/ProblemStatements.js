@@ -6,11 +6,15 @@ import {StatementContainer, Statement} from '../components/statement';
 import router from '../router';
 import {STATEMENTS, STATEMENTS_ADVOCATES, STATEMENTS_CASES, STATEMENTS_PROCEEDINGS} from '../routes';
 
+const params = {
+    ending: ' ...',
+};
+
 const Container = ({transition}) => (
     <StatementContainer>
-        <Statement onClick={transition(STATEMENTS_CASES)}><Msg msg="statement.cases" /> ...</Statement>
-        <Statement onClick={transition(STATEMENTS_PROCEEDINGS)}><Msg msg="statement.proceedings" /> ...</Statement>
-        <Statement onClick={transition(STATEMENTS_ADVOCATES)}><Msg msg="statement.advocates" /> ...</Statement>
+        <Statement onClick={transition(STATEMENTS_CASES)}><Msg msg="statement.cases" params={params} /></Statement>
+        <Statement onClick={transition(STATEMENTS_PROCEEDINGS)}><Msg msg="statement.proceedings" params={params} /></Statement>
+        <Statement onClick={transition(STATEMENTS_ADVOCATES)}><Msg msg="statement.advocates" params={params} /></Statement>
     </StatementContainer>
 );
 
