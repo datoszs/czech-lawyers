@@ -164,13 +164,13 @@ statement.cases.long: |
   konkrétním advokátům. Upozorňujeme ovšem, že zpracováváme výlučně zveřejněná konečná rozhodnutí a že některá z nich se nám nepodařilo
   konkrétnímu advokátu z různých důvodů přiřadit (více viz O projektu). Výpočet proběhl na základě stavu naší databáze k 17. 7. 2017.
 statement.proceedings: |
-  V předminulém roce byla zahájena řízení o XXXX dovoláních, kasačních stížnostech a ústavních stížnostech.
-  Jen asi v XX %% z těchto řízeních se ale soudy zabývaly obsahem případu%(ending)s
+  V roce 2015 byla zahájena řízení o 13 965 dovoláních, kasačních stížnostech a ústavních stížnostech.
+  Jen asi ve 25 %% z těchto řízení se ale soudy zabývaly obsahem případu%(ending)s
 statement.proceedings.long: |
   V řízeních o dovoláních u Nejvyššího soudu, o kasačních stížnostech u Nejvyššího správního soudu i o ústavních stížnostech
   u Ústavního soudu může dojít k tomu, že se soudy odmítnou zabývat obsahem případu (vydají tzv. nemeritorní konečné rozhodnutí).
   Taková situace nastává zejména tehdy, když je podání (dovolání/stížnost) opožděné nebo vadné, anebo kdy je například učiněno tehdy,
-  kdy to zákon vůbec neumožňuje. Vysoký podíl řízení, ve kterých se tři nejdůležitější soudy nezabývají obsahem případů,
+  kdy to zákon vůbec neumožňuje. Vysoký podíl řízení, ve kterých se tři nejdůležitější soudy nezabývají obsahem případu,
   tedy překvapí. Jedním z důvodů, proč je před těmito soudy zpravidla nutné nechat se zastoupit advokátem, je totiž to,
   aby se tyto významné soudy nemusely zabývat "zbytečnými" podáními a co nejefektivněji tak mohly využít nejen svůj odborný potenciál,
   ale i finance do nich vložené.
@@ -183,7 +183,7 @@ statement.proceedings.long: |
   Poznámka k výpočtu statistik: Statistiky jsme spočetli díky přiřazení jednotlivých typů výsledku řízení (meritorní, nemeritorní, zastaveno)
   ke konečným rozhodnutím vydaným ve výše vyjmenovaných řízeních. Upozorňujeme ovšem, že zpracováváme výlučně zveřejněná konečná
   rozhodnutí a že k některým z nich se nám nepodařilo typ výsledku přiřadit (více viz O projektu). Výpočet proběhl na základě stavu
-  naší databáze k 17. 7. 2017.
+  naší databáze k 27. 8. 2017.
 statement.advocates: Pouze 1 ze 7 advokátů podal více věcně projednaných dovolání, kasačních stížností a ústavních stížností, než těch odmítnutých%(ending)s
 statement.advocates.long: |
   V řízení o dovolání u Nejvyššího soudu, o kasační stížnosti u Nejvyššího správního soudu i o ústavní stížnosti u Ústavního soudu
