@@ -82,4 +82,8 @@ class DocumentService
 		}
 		return null;
 	}
+
+	public function findExtraByOrderNumber($orderNumber) {
+		return $this->orm->documentsSupremeAdministrativeCourt->getBy(['orderNumber' => $orderNumber]);
+	}
 }

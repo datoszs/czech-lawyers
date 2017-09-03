@@ -19,6 +19,7 @@ use DateTime;
 use League\Csv\Reader;
 use Nette\Utils\FileSystem;
 use Nette\Utils\Json;
+use phpDocumentor\Reflection\Types\Null_;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\Input;
 use Symfony\Component\Console\Input\InputArgument;
@@ -148,6 +149,19 @@ class CausaImport extends Command
 	}
 
 	/**
+	 * Update case dates (proposition_date, decision_date) from document's metadata
+	 * only for ÚS and NSS
+	 */
+	private function updateCauseDate($case, $row) {
+		if (!$case->decisionDate && $row['decision_date']) {$case->decisionDate = $row['decision_date'];}
+		if (!$case->propositionDate) {
+			$case->propositionDate = ($this->court->id == 1) ? $row['proposition_date'] : $row['filing_date'];}
+		if (!$case->propositionDate || !$case->decisionDate) {
+			$this->causeService->save($case);
+		}
+	}
+
+	/**
 	 * Expects validate directory with data to import.
 	 * Note: executed in transaction
 	 * @param OutputInterface $consoleOutput
@@ -172,11 +186,15 @@ class CausaImport extends Command
 		foreach ($rows as $row) {
 			// Check if not duplicate
 			$recordId = Normalize::recordId($row['record_id']);
+			$entity = null;
+			$toUpdate = null;
+			$document = null;
+			$extras = null;
 			$entity = $this->documentService->findByRecordId($recordId);
+
 			if ($entity && !$update) {
 				$duplicated++;
 				$output .= sprintf("Warning: record with ID %s already found in database.", $row['record_id']) . "\n";
-				$consoleOutput->writeln(sprintf("Warning: record with ID %s already found in database.", $row['record_id']));
 				continue;
 			}
 
@@ -191,8 +209,9 @@ class CausaImport extends Command
 				// Year in ECLI can be different from date in registry_mark
 				$document->case = $this->causeService->findOrCreate($court, Normalize::registryMark($row['registry_mark']), $this->getYear($row), $this->jobRun);
 				$document->jobRun = $this->jobRun;
-				$extras = null;
+
 			} elseif ($entity && $update) {
+				// if update and exist document find extra data
 				$document = $entity;
 				$toUpdate = $this->documentService->findExtraData($document);
 			}
@@ -202,6 +221,12 @@ class CausaImport extends Command
 				$extras->ecli = $row['ecli'];
 				$extras->decisionType = $row['decision_type'];
 			} elseif ($courtId == Court::TYPE_NSS) {
+				$extras = $this->documentService->findExtraByOrderNumber($row['order_number']);
+				/* exists extra document but wasn't found record with main document */
+				if ($entity == null && $extras != null) {
+					$output .= sprintf("Warning: extra document with order number '%s' already found in database.", $extras->getValue("orderNumber"));
+					continue;
+				}
 				$extras = ($update) ? $toUpdate : new DocumentSupremeAdministrativeCourt();
 				$extras->document = $document;
 				$extras->orderNumber = $row['order_number'];
@@ -211,6 +236,8 @@ class CausaImport extends Command
 				$extras->complaint = ($row['complaint'] != "") ? $row['complaint'] : null;
 				$extras->sides = ($row['sides'] != "") ? Json::decode($row['sides'], true) : null;
 				$extras->prejudicate = ($row['prejudicate'] != "") ? Json::decode($row['prejudicate'], true) : null;
+
+				$this->updateCauseDate($document->case, $row);
 			} elseif ($courtId == Court::TYPE_US) {
 				$extras = ($update) ? $toUpdate : new DocumentLawCourt();
 				$extras->document = $document;
@@ -239,6 +266,9 @@ class CausaImport extends Command
 				$extras->rulingLanguage = ($row['ruling_language'] != '') ? $row['ruling_language'] : null;
 				$extras->note = ($row['note'] != '') ? $row['note'] : null;
 				$extras->names = ($row['names'] != '') ? Json::decode($row['names'], true) : null;
+
+				$this->updateCauseDate($document->case, $row);
+
 
 
 			}
