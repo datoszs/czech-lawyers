@@ -1,0 +1,50 @@
+@import "colors";
+
+// NAVBAR
+@navbar-bg: @color-primary-dark;
+@navbar-fg: tint(@color-primary-light, 50%);
+@navbar-bg-high: @color-primary-darker;
+@navbar-fg-high: @navbar-fg;
+@navbar-fg-dis: desaturate(@navbar-fg, 50%);
+@navbar-fg-toggle: @color-primary-light;
+
+@navbar-border-radius: 0;
+@navbar-default-color: @navbar-fg;
+@navbar-default-bg: @navbar-bg;
+@navbar-default-border: transparent;
+@navbar-default-link-color: @navbar-fg;
+@navbar-default-link-hover-color: @navbar-fg-high;
+@navbar-default-link-hover-bg: @navbar-bg-high;
+@navbar-default-link-active-color: @navbar-fg-high;
+@navbar-default-link-active-bg: @navbar-bg-high;
+@navbar-default-link-disabled-color: @navbar-fg-dis;
+@navbar-default-link-disabled-bg: @navbar-bg;
+@navbar-default-brand-color: @navbar-fg;
+@navbar-default-brand-hover-color: @navbar-fg-high;
+@navbar-default-brand-hover-bg: @navbar-bg-high;
+@navbar-default-toggle-hover-bg: @navbar-bg-high;
+@navbar-default-toggle-icon-bar-bg: @navbar-fg-toggle;
+@navbar-default-toggle-border-color: @navbar-fg-toggle;
+
+// JUMBOTRON
+@jumbotron-color: @color-primary-dark;
+@jumbotron-bg: tint(@color-primary-light, 50%);
+
+// BRAND (buttons, etc.)
+@brand-primary: @color-action;
+@link-hover-color: @color-action-darker;
+@input-border-focus: @color-action-lighter;
+
+@brand-info: @color-secondary;
+@state-info-bg: tint(@color-secondary-light, 50%);
+@state-info-border: @color-secondary-lighter;
+@state-info-text: @color-secondary;
+
+@brand-warning: @color-contrast;
+@state-warning-text: @color-contrast;
+@state-warning-bg: tint(@color-contrast-light, 50%);
+@state-warning-border: @color-contrast-lighter;
+
+// WELLS
+@well-bg: tint(@color-secondary-light, 50%);
+@well-border: @color-secondary-light;

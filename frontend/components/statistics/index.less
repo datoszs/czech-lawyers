@@ -1,4 +1,4 @@
-@import "../../variables";
+@import "../../colors";
 @import (reference) "StatisticsBar";
 @import (reference) "StatisticsColumn";
 @import (reference) "BasicStatistics";
@@ -16,9 +16,9 @@
 
 .court-statistics-bar(@color) {
     @luma: luminance(@color);
-    @red: red(@primary) * @luma / 100;
-    @blue: blue(@primary) * @luma / 100;
-    @green: green(@primary) * @luma / 10;
+    @red: red(@color-primary-dark) * @luma / 100;
+    @blue: blue(@color-primary-dark) * @luma / 100;
+    @green: green(@color-primary-dark) * @luma / 100;
 
     @base: desaturate(rgb(@red, @green, @blue), 50%);
     .statistics-bar(@base);

@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Panel} from 'react-bootstrap';
+import {Well} from 'react-bootstrap';
 
 const SocietyOverview = ({name, street, city, ic}) => (
     <div className="society-overview">
-        <Panel>
+        <Well>
             <dl>
                 <dt>{name}</dt>
                 <dd>{ic}</dd>
@@ -12,7 +12,7 @@ const SocietyOverview = ({name, street, city, ic}) => (
                 <dd>{city}</dd>
                 <dd><a href="mailto:info@cestiadvokati.cz">info@cestiadvokati.cz</a></dd>
             </dl>
-        </Panel>
+        </Well>
     </div>
 );
 
