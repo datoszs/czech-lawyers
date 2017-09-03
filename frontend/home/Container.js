@@ -10,13 +10,12 @@ const Container = () => (
     <section>
         <Jumbotron>
             <h1><Msg msg="app.title" /></h1>
-            <p><Msg msg="home.above" /></p>
+            <RichText msg="home.above" />
             <autocomplete.Container />
+            <br />
             <RichText msg="home.cak.search" />
         </Jumbotron>
         <ProblemStatements />
-        <RichText msg="home.below" />
-        <hr />
         <RichText msg="leaderboard.legend" />
         <Row>
             <Col sm={0} lg={2} />
