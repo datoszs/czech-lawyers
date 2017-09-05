@@ -1,14 +1,7 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: Radim Jílek
- * Year: 2017
- * Time: 16:15
- * License: GNU GPL
- */
-
 namespace App\Commands;
 
+use App\Utils\JobCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -19,6 +12,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class CrawlerManual extends Command
 {
+	use JobCommand;
 
 	const ARGUMENT_COURT = 'court';
 	const ARGUMENT_FROM = 'from';
@@ -47,6 +41,8 @@ class CrawlerManual extends Command
 
 	protected function execute(InputInterface $input, OutputInterface $consoleOutput)
 	{
+		$this->prepare(false);
+
 		$court = $input->getArgument(static::ARGUMENT_COURT);
 		$from = $input->getArgument(static::ARGUMENT_FROM);
 		$to = $input->getArgument(static::ARGUMENT_TO);

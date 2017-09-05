@@ -4,6 +4,9 @@ declare(strict_types=1);
 namespace App\APIModule\Presenters;
 
 
+use App\Auditing\AuditedReason;
+use App\Auditing\AuditedSubject;
+use App\Auditing\ILogger;
 use App\Enums\CaseResult;
 use App\Enums\Court;
 use App\Model\Advocates\Advocate;
@@ -38,6 +41,9 @@ class AdvocateCasesPresenter extends Presenter
 
 	/** @var TaggingService @inject */
 	public $taggingService;
+
+	/** @var ILogger @inject */
+	public $auditing;
 
 	/**
 	 * Get advocate cases fulfilling given filters (or all when no filters given)
@@ -135,6 +141,17 @@ class AdvocateCasesPresenter extends Presenter
 		$results = $this->prepareCasesResults($cases->fetchAll());
 		// Transform to output
 		$output = $this->mapAdvocateCases($advocateEntity, $cases, $results, $court, $year, $result);
+		// Auditing
+		$advocateTaggings = $this->prepareAdvocateTaggings($cases->fetchAll());
+		/** @var Cause $case */
+		$this->auditing->logAccess(AuditedSubject::ADVOCATE_INFO, "Load advocate [{$advocateEntity->getCurrentName()}] with ID [{$advocateEntity->id}].", AuditedReason::REQUESTED_INDIVIDUAL);
+		foreach ($cases as $case) {
+			$caseResultCaseResult = isset($results[$case->id]) ? $results[$case->id]->caseResult : null;
+			$caseResultStatus = isset($results[$case->id]) ? $results[$case->id]->status : null;
+			$caseResultId = isset($results[$case->id]) ? $results[$case->id]->id : null;
+			$advocateTaggingId = isset($advocateTaggings[$case->id]) ? $advocateTaggings[$case->id]->id : null;
+			$this->auditing->logAccess(AuditedSubject::CASE_TAGGING, "Load advocate tagging with ID [{$advocateTaggingId}] of case [{$case->registrySign}] and advocate [{$advocateEntity->getCurrentName()}] with ID [{$advocateEntity->id}] together with result [{$caseResultCaseResult} - {$caseResultStatus}] with ID [{$caseResultId}].", AuditedReason::REQUESTED_BATCH);
+		}
 		// Send output
 		$this->sendJson($output);
 	}
@@ -143,6 +160,16 @@ class AdvocateCasesPresenter extends Presenter
 	{
 		$output = [];
 		$temp = $this->taggingService->findCaseResultLatestTaggingByCases($data);
+		foreach ($temp as $row) {
+			$output[$row->case->id] = $row;
+		}
+		return $output;
+	}
+
+	private function prepareAdvocateTaggings(array $causes): array
+	{
+		$output = [];
+		$temp = $this->taggingService->findLatestAdvocateTaggingByCases($causes);
 		foreach ($temp as $row) {
 			$output[$row->case->id] = $row;
 		}

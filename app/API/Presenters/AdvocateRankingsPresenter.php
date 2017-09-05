@@ -4,6 +4,9 @@ declare(strict_types=1);
 namespace App\APIModule\Presenters;
 
 
+use App\Auditing\AuditedReason;
+use App\Auditing\AuditedSubject;
+use App\Auditing\ILogger;
 use App\Model\Advocates\Advocate;
 use App\Model\Advocates\AdvocateInfo;
 use App\Model\Services\AdvocateService;
@@ -26,6 +29,9 @@ class AdvocateRankingsPresenter extends Presenter
 
 	/** @var AdvocateService @inject */
 	public $advocateService;
+
+	/** @var ILogger @inject */
+	public $auditing;
 
 	/**
 	 * Get advocates which are in given decile in advocate rankings.
@@ -95,6 +101,7 @@ class AdvocateRankingsPresenter extends Presenter
 		$output = [];
 		foreach ($advocates as $advocate) {
 			$output[] = $this->mapAdvocate($advocate);
+			$this->auditing->logAccess(AuditedSubject::ADVOCATE_INFO, "Load advocate [{$advocate->getCurrentName()}] with ID [{$advocate->id}].", AuditedReason::REQUESTED_BATCH);
 		}
 		$this->sendJson($output);
 	}

@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: Radim Jílek
- * Date: 14.03.2017
- * Time: 22:00
- */
-
 namespace App\Commands;
 
 
@@ -52,7 +45,7 @@ class TagAdvocates extends Command
 		$command = $this->getCommand($this->jobRun->id, Court::$types[$court]);
 		$consoleOutput->writeln($command, __DIR__);
 		exec($command, $outputArray, $code);
-	
+
 		$output = implode("\n", $outputArray);
 		$consoleOutput->writeln($output);
 		if ($code == 0) {

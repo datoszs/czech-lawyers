@@ -7,7 +7,7 @@ use App\Model\Services\CauseService;
 use App\Model\Services\CourtService;
 use App\Utils\Helpers;
 use App\Utils\Normalize;
-use app\Utils\JobCommand;
+use App\Utils\JobCommand;
 use DateTimeImmutable;
 use League\Csv\Reader;
 use Symfony\Component\Console\Command\Command;

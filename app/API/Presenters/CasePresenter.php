@@ -4,6 +4,9 @@ declare(strict_types=1);
 namespace App\APIModule\Presenters;
 
 
+use App\Auditing\AuditedReason;
+use App\Auditing\AuditedSubject;
+use App\Auditing\ILogger;
 use App\Enums\AdvocateStatus;
 use App\Enums\CaseResult;
 use App\Enums\TaggingStatus;
@@ -44,6 +47,9 @@ class CasePresenter extends Presenter
 
 	/** @var TaggingService @inject */
 	public $taggingService;
+
+	/** @var ILogger @inject */
+	public $auditing;
 
 	/**
 	 * Get information about case with given ID.
@@ -129,6 +135,14 @@ class CasePresenter extends Presenter
 
 		// Transform to output
 		$output = $this->mapDataToOutput($case, $documents, $results[$id] ?? null, $advocateTagging);
+		// Auditing
+		$advocateTaggingId = $advocateTagging ? $advocateTagging->id : null;
+		$advocateId = $advocateTagging && $advocateTagging->advocate ? $advocateTagging->advocate->id : null;
+		$advocateName = $advocateTagging && $advocateTagging->advocate ? $advocateTagging->advocate->getCurrentName() : null;
+		$caseResultCaseResult = isset($results[$case->id]) ? $results[$case->id]->caseResult : null;
+		$caseResultStatus = isset($results[$case->id]) ? $results[$case->id]->status : null;
+		$caseResultId = isset($results[$case->id]) ? $results[$case->id]->id : null;
+		$this->auditing->logAccess(AuditedSubject::CASE_TAGGING, "Load advocate tagging with ID [{$advocateTaggingId}] of case [{$case->registrySign}] and advocate [{$advocateName}] with ID [{$advocateId}] together with result [{$caseResultCaseResult} - {$caseResultStatus}] with ID [{$caseResultId}].", AuditedReason::REQUESTED_INDIVIDUAL);
 		// Send output
 		$this->sendJson($output);
 	}

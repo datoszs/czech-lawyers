@@ -3,7 +3,7 @@ namespace App\Commands;
 
 
 use App\Model\Services\AdvocateService;
-use app\Utils\JobCommand;
+use App\Utils\JobCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

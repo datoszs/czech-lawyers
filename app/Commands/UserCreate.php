@@ -2,10 +2,14 @@
 namespace App\Commands;
 
 
+use App\Auditing\AuditedReason;
+use App\Auditing\AuditedSubject;
 use App\Enums\UserRole;
 use App\Enums\UserType;
 use App\Model\Services\UserService;
 use App\Model\Users\User;
+use App\Utils\Helpers;
+use App\Utils\JobCommand;
 use App\Utils\Normalize;
 use Nette\Security\Passwords;
 use Symfony\Component\Console\Command\Command;
@@ -15,6 +19,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class UserCreate extends Command
 {
+	use JobCommand;
+
 	/** @var UserService @inject */
 	public $userService;
 
@@ -36,6 +42,8 @@ class UserCreate extends Command
 
 	protected function execute(InputInterface $input, OutputInterface $consoleOutput)
 	{
+		$this->prepare(false);
+
 		$username = Normalize::username($input->getArgument('username'));
 		$role = $input->getArgument('role');
 		$entity = $this->userService->findByUsername($username);
@@ -48,15 +56,19 @@ class UserCreate extends Command
 			$consoleOutput->writeln('Error: Unknown role');
 			exit(2);
 		}
-		printf("%s: ", 'Enter password');
-		$password = preg_replace('/(\\n|\\r\\n)$/', '', fgets(STDIN));
-		printf("%s: ", 'Enter password (again)');
-		$password2 = preg_replace('/(\\n|\\r\\n)$/', '', fgets(STDIN));
-		if (mb_strlen($password) == 0 || $password != $password2) {
+		$fullName = Helpers::inputPrompt('Fullname');
+		if (mb_strlen($fullName) === 0) {
+			$consoleOutput->writeln('Error: Fullname cannot be empty. Cannot continue.');
+			exit(4);
+		}
+		$password = Helpers::passwordPrompt('Enter password');
+		$password2 = Helpers::passwordPrompt('Enter password (again)');
+		if (mb_strlen($password) === 0 || $password !== $password2) {
 			$consoleOutput->writeln('Error: Password mismatch or empty. Cannot continue.');
 			exit(3);
 		}
 		$user = new User();
+		$user->fullname = $fullName;
 		$user->type = UserType::TYPE_PERSON;
 		$user->username = $username;
 		$user->role = $role;
@@ -64,7 +76,9 @@ class UserCreate extends Command
 		$user->isActive = true;
 		$user->isLoginAllowed = true;
 
+		$changes = $user->getModificationsSummary();
 		$this->userService->save($user);
+		$this->auditing->logCreate(AuditedSubject::USER_INFO, "Save new user with ID [{$user->id}]. Changes: {$changes}.", AuditedReason::INTERNAL_MANAGEMENT);
 		$consoleOutput->writeln('User created.');
 	}
 }

@@ -2,6 +2,9 @@
 namespace App\Components\UserForm;
 
 
+use App\Auditing\AuditedReason;
+use App\Auditing\AuditedSubject;
+use App\Auditing\ITransactionLogger;
 use App\Enums\UserRole;
 use App\Enums\UserType;
 use App\Model\Services\UserService;
@@ -25,12 +28,16 @@ class UserForm extends BaseControl
 	/** @var bool */
 	private $deletionMode = false;
 
-	public function __construct($id = null, UserService $userService)
+	/** @var ITransactionLogger */
+	private $auditing;
+
+	public function __construct($id = null, UserService $userService, ITransactionLogger $transactionLogger)
 	{
 		parent::__construct();
 		$this->id = $id;
 
 		$this->userService = $userService;
+		$this->auditing = $transactionLogger;
 	}
 
 	public function setDeletionMode()
@@ -45,6 +52,8 @@ class UserForm extends BaseControl
 		}
 		if ($this->id) {
 			$entity = $this->userService->get($this->id);
+			$this->auditing->logAccess(AuditedSubject::USER_INFO, "Show user with ID [{$entity->id}].", AuditedReason::REQUESTED_INDIVIDUAL);
+
 			/** @var BootstrapForm $form */
 			$form = $this->getComponent('form');
 			$form->setDefaults($entity->toArray());
@@ -61,6 +70,8 @@ class UserForm extends BaseControl
 		$form = new BootstrapForm();
 
 		$form->addGroup('Přilašovací údaje');
+		$form->addText('fullname', 'Celé jméno')
+			->setRequired('Zadejte, prosím, celé jméno uživatele');
 		$form->addText('username', 'Přihlašovací jméno')
 			->setRequired('Zadejte, prosím, přihlašovací jméno nového uživatele.')
 			->addRule(Form::PATTERN, 'Povolené jsou pouze malá písmena, čísla, spojovník, tečku, zavináč a podtržítko o alespoň jednom znaku.', '[a-z0-9_\-\.@]{1,}')
@@ -109,7 +120,7 @@ class UserForm extends BaseControl
 		} else {
 			$form->addSubmit('sent', 'Uložit');
 		}
-		
+
 
 		$form->onSuccess[] = function (Form $form) {
 			$this->processForm($form);
@@ -121,6 +132,7 @@ class UserForm extends BaseControl
 		$values = $form->getValues();
 		if ($this->id) {
 			$user = $this->userService->get($this->id);
+			$this->auditing->logAccess(AuditedSubject::USER_INFO, "Load user with ID [{$user->id}] for change.", AuditedReason::REQUESTED_INDIVIDUAL);
 		} else {
 			$user = new User();
 		}
@@ -132,12 +144,19 @@ class UserForm extends BaseControl
 		if (isset($values->password) && $values->password) {
 			$user->password = Passwords::hash($values->password);
 		}
+		$user->fullname = $values->fullname;
 		$user->isActive = $values->isActive;
 		$user->isLoginAllowed = $values->isLoginAllowed;
 		$user->type = $values->type;
 		$user->role = $values->role;
-		
+
+		$changes = $user->getModificationsSummary();
 		$this->userService->save($user);
+		if ($this->id) {
+			$this->auditing->logChange(AuditedSubject::USER_INFO, "Save user with ID [{$user->id}]. Changes: {$changes}.", AuditedReason::INTERNAL_MANAGEMENT);
+		} else {
+			$this->auditing->logCreate(AuditedSubject::USER_INFO, "Save new user with ID [{$user->id}]. Changes: {$changes}.", AuditedReason::INTERNAL_MANAGEMENT);
+		}
 		if ($this->id) {
 			$this->getPresenter()->flashMessage('Uživatel byl úspěšně upraven.', 'alert-success');
 		} else {
@@ -155,6 +174,7 @@ class UserForm extends BaseControl
 		$form->onSuccess[] = function (Form $form) {
 			if ($form['delete']->isSubmittedBy()) {
 				$this->userService->delete($this->id);
+				$this->auditing->logRemove(AuditedSubject::USER_INFO, "Delete user with ID [{$this->id}].", AuditedReason::INTERNAL_MANAGEMENT);
 				$this->getPresenter()->flashMessage('Uživatel byl úspěšně smazán.', 'alert-success');
 			} else {
 				$this->getPresenter()->flashMessage('Uživatel byl ponechán.', 'alert-info');

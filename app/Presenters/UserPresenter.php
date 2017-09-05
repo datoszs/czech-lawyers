@@ -2,6 +2,8 @@
 
 namespace App\Presenters;
 
+use App\Auditing\AuditedReason;
+use App\Auditing\AuditedSubject;
 use App\Components\ProfileForm\ProfileFormFactory;
 use App\Components\UserForm\UserFormFactory;
 use App\Enums\UserType;
@@ -25,7 +27,10 @@ class UserPresenter extends SecuredPresenter
 	/** @privilege(App\Utils\Resources::USERS, App\Utils\Actions::VIEW) */
 	public function actionDefault()
 	{
-		$this->template->users = $this->userService->findAll();
+		$this->template->users = $users = $this->userService->findAll();
+		foreach ($users as $user) {
+			$this->auditing->logAccess(AuditedSubject::USER_INFO, "Show user with ID [{$user->id}].", AuditedReason::REQUESTED_BATCH);
+		}
 	}
 
 	/** @privilege(App\Utils\Resources::USERS, App\Utils\Actions::CREATE) */
@@ -38,6 +43,7 @@ class UserPresenter extends SecuredPresenter
 	public function actionEdit($id)
 	{
 		$this->template->entity = $entity = $this->userService->get($id);
+		$this->auditing->logAccess(AuditedSubject::USER_INFO, "Show user with ID [{$entity->id}].", AuditedReason::REQUESTED_INDIVIDUAL);
 		if ($entity->type == UserType::TYPE_SYSTEM) {
 			$this->flashMessage('Systémové účty nemohou být upravovány skrze administraci.', 'alert-warning');
 			$this->redirect('default');
@@ -48,6 +54,7 @@ class UserPresenter extends SecuredPresenter
 	public function actionDelete($id)
 	{
 		$this->template->entity = $entity = $this->userService->get($id);
+		$this->auditing->logAccess(AuditedSubject::USER_INFO, "Show user with ID [{$entity->id}].", AuditedReason::REQUESTED_INDIVIDUAL);
 		if ($entity->type == UserType::TYPE_SYSTEM) {
 			$this->flashMessage('Systémové účty nemohou být mazány skrze administraci.', 'alert-warning');
 			$this->redirect('default');
@@ -58,6 +65,7 @@ class UserPresenter extends SecuredPresenter
 	public function handleDisable($id)
 	{
 		$entity = $this->userService->get($id);
+		$this->auditing->logAccess(AuditedSubject::USER_INFO, "Load user with ID [{$entity->id}] for change.", AuditedReason::REQUESTED_INDIVIDUAL);
 		if ($entity->type == UserType::TYPE_SYSTEM) {
 			$this->flashMessage('Systémové účty nemohou být měněny skrze administraci.', 'alert-warning');
 			$this->redirect('default');
@@ -69,6 +77,7 @@ class UserPresenter extends SecuredPresenter
 	public function handleEnable($id)
 	{
 		$entity = $this->userService->get($id);
+		$this->auditing->logAccess(AuditedSubject::USER_INFO, "Load user with ID [{$entity->id}] for change.", AuditedReason::REQUESTED_INDIVIDUAL);
 		if ($entity->type == UserType::TYPE_SYSTEM) {
 			$this->flashMessage('Systémové účty nemohou být měněny skrze administraci.', 'alert-warning');
 			$this->redirect('default');

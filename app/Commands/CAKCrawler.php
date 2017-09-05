@@ -1,12 +1,4 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: Radim Jílek
- * Year: 2016
- * Time: 20:33
- * License: GNU GPL
- */
-
 namespace App\Commands;
 
 use Nette\Utils\DateTime;

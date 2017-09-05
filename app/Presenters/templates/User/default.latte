@@ -10,7 +10,7 @@
             <th>ID</th>
             <th>Typ</th>
             <th>Role</th>
-            <th>Uživatelské jméno</th>
+            <th>Celé a uživatelské jméno</th>
             <th>Aktivní</th>
             <th>Přihlášení a heslo</th>
             <th>Vloženo / změněno</th>
@@ -27,7 +27,7 @@
                     {if $userEntity->type == App\Enums\UserType::TYPE_SYSTEM}Systém{/if}
                 </td>
                 <td>{if $userEntity->type == App\Enums\UserType::TYPE_PERSON}{App\Enums\UserRole::$statuses[$userEntity->role]}{else}&ndash;{/if}</td>
-                <td><b>{$userEntity->username}</b></td>
+                <td><b>{$userEntity->fullname}</b><br><b>{$userEntity->username}</b></td>
                 <td class="{if $userEntity->isActive}text-success{else}text-danger{/if}">
                     {if $userEntity->isActive}Ano{else}Ne{/if}
                 </td>

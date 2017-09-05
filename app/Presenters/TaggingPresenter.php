@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Presenters;
 
+use App\Auditing\AuditedReason;
+use App\Auditing\AuditedSubject;
 use App\Enums\CaseResult;
 use App\Enums\Court;
 use App\Enums\TaggingStatus;
@@ -68,7 +70,7 @@ class TaggingPresenter extends SecuredPresenter
 		$this->template->disputes = $this->disputes = $this->disputationService->findByCase($case);
 		/** @var TaggingCaseResult $caseResult */
 		$this->template->caseResult = $caseResult = $this->prepareCasesResults([$case])[$case->id] ?? null;
-		$this->template->advocateTagging = $this->taggingService->getLatestAdvocateTaggingFor($case);
+		$this->template->advocateTagging = $advocateTagging = $this->taggingService->getLatestAdvocateTaggingFor($case);
 		if ($caseResult) {
 			/** @var Form $form */
 			$form = $this->getComponent('caseResultForm');
@@ -80,6 +82,18 @@ class TaggingPresenter extends SecuredPresenter
 				'debug' => $caseResult->debug
 			]);
 		}
+		$caseResultCaseResult = $caseResult->caseResult ?? null;
+		$caseResultStatus = $caseResult->status ?? null;
+		$caseResultId = $caseResult->id ?? null;
+
+		// Auditing
+		if (!$advocateTagging->advocate) {
+			return;
+		}
+		$advocateName = $advocateTagging->advocate ? $advocateTagging->advocate->getCurrentName() : null;
+		$advocateId = $advocateTagging->advocate ? $advocateTagging->advocate->id : null;
+		$this->auditing->logAccess(AuditedSubject::ADVOCATE_INFO, "Load advocate [{$advocateName}] with ID [{$advocateId}].", AuditedReason::REQUESTED_BATCH);
+		$this->auditing->logAccess(AuditedSubject::CASE_TAGGING, "Load advocate tagging with ID [{$advocateTagging->id}] of case [{$advocateTagging->case->registrySign}] and advocate [{$advocateName}] with ID [{$advocateId}] together with result [{$caseResultCaseResult} - {$caseResultStatus}] with ID [{$caseResultId}].", AuditedReason::REQUESTED_BATCH);
 	}
 
 	/** @privilege(App\Utils\Resources::TAGGING, App\Utils\Actions::VIEW) */
@@ -110,6 +124,22 @@ class TaggingPresenter extends SecuredPresenter
 		$this->template->results = $results;
 		$this->template->advocatesTaggings = $advocatesTaggings;
 		$this->template->disputations = $disputations;
+
+		// Auditing
+		/** @var TaggingAdvocate $advocateTagging */
+		foreach ($advocatesTaggings as $advocateTagging) {
+			if (!$advocateTagging->advocate) {
+				continue;
+			}
+			$caseResult = $results[$advocateTagging->case->id] ?? null;
+			$caseResultCaseResult = $caseResult->caseResult ?? null;
+			$caseResultStatus = $caseResult->status ?? null;
+			$caseResultId = $caseResult->id ?? null;
+			$advocateName = $advocateTagging->advocate ? $advocateTagging->advocate->getCurrentName() : null;
+			$advocateId = $advocateTagging->advocate ? $advocateTagging->advocate->id : null;
+			$this->auditing->logAccess(AuditedSubject::ADVOCATE_INFO, "Load advocate [{$advocateName}] with ID [{$advocateId}].", AuditedReason::REQUESTED_BATCH);
+			$this->auditing->logAccess(AuditedSubject::CASE_TAGGING, "Load advocate tagging with ID [{$advocateTagging->id}] of case [{$advocateTagging->case->registrySign}] and advocate [{$advocateName}] with ID [{$advocateId}] together with result [{$caseResultCaseResult} - {$caseResultStatus}] with ID [{$caseResultId}].", AuditedReason::REQUESTED_BATCH);
+		}
 	}
 
 	private function prepareAdvocates($data)
@@ -171,6 +201,7 @@ class TaggingPresenter extends SecuredPresenter
 
 			if ($this->taggingService->persistCaseResultIfDiffers($tagging)) {
 				$this->taggingService->flush();
+				// TODO
 				$this->flashMessage('Nové tagování výsledku bylo úspěšně uloženo.', 'alert-success');
 			} else {
 				$this->flashMessage('Nové tagování výsledku je stejné jako předchozí, nic nebylo provedeno.', 'alert-warning');
@@ -189,6 +220,12 @@ class TaggingPresenter extends SecuredPresenter
 		/** @var TaggingAdvocate $advocateTagging */
 		$advocateTagging = $this->taggingService->getLatestAdvocateTaggingFor($case);
 
+		// Auditing
+		$advocateName = $advocateTagging->advocate ? $advocateTagging->advocate->getCurrentName() : null;
+		$advocateId = $advocateTagging->advocate ? $advocateTagging->advocate->id : null;
+		$this->auditing->logAccess(AuditedSubject::CASE_TAGGING, "Load advocate tagging with ID [{$advocateTagging->id}] of case [{$advocateTagging->case->registrySign}] and advocate [{$advocateName}] with ID [{$advocateId}].", AuditedReason::REQUESTED_INDIVIDUAL);
+
+		// Form creation
 		$form = new BootstrapForm();
 		$this->addComponent($form, 'advocateForm');
 
@@ -201,7 +238,7 @@ class TaggingPresenter extends SecuredPresenter
 				/** @var AdvocateInfo $currentAdvocateInfo */
 				$currentAdvocateInfo = $advocate->advocateInfo->get()->fetch();
 				if ($currentAdvocateInfo) {
-					$advocates = [$advocate->id => TemplateFilters::formatName($currentAdvocateInfo->name, $currentAdvocateInfo->surname, $currentAdvocateInfo->degreeBefore, $currentAdvocateInfo->degreeAfter, $currentAdvocateInfo->city)];
+					$advocates = [$advocate->id => $advocate->getCurrentName()];
 				}
 			}
 		}
@@ -239,6 +276,11 @@ class TaggingPresenter extends SecuredPresenter
 			if ($this->taggingService->persistAdvocateIfDiffers($tagging)) {
 				$this->taggingService->flush();
 				$this->flashMessage('Nové tagování advokáta bylo úspěšně uloženo.', 'alert-success');
+
+				// Auditing
+				$advocateName = $tagging->advocate ? $tagging->advocate->getCurrentName() : null;
+				$advocateId = $tagging->advocate ? $tagging->advocate->id : null;
+				$this->auditing->logCreate(AuditedSubject::CASE_TAGGING, "Create new advocate tagging with ID [{$tagging->id}] of case [{$tagging->case->registrySign}] to advocate [{$advocateName}] with ID [{$advocateId}]. Note [{$tagging->debug}].", AuditedReason::FIXUP);
 			} else {
 				$this->flashMessage('Nové tagování advokáta je stejné jako předchozí, nic nebylo provedeno.', 'alert-warning');
 			}

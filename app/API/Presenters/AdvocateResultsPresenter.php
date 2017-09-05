@@ -4,6 +4,9 @@ declare(strict_types=1);
 namespace App\APIModule\Presenters;
 
 
+use App\Auditing\AuditedReason;
+use App\Auditing\AuditedSubject;
+use App\Auditing\ILogger;
 use App\Enums\Court;
 use App\Model\Advocates\Advocate;
 use App\Model\Services\AdvocateService;
@@ -29,6 +32,9 @@ class AdvocateResultsPresenter extends Presenter
 
 	/** @var TaggingService @inject */
 	public $taggingService;
+
+	/** @var ILogger @inject */
+	public $auditing;
 
 	/**
 	 * Get information advocate statistics per year from given court (or all when court not specified).
@@ -103,6 +109,8 @@ class AdvocateResultsPresenter extends Presenter
 		$statistics = $this->taggingService->computeAdvocateStatisticsPerYear($advocate, $court);
 		// Transform to output
 		$output = $this->mapAdvocateStatistics($advocateEntity, $court, $statistics);
+		// Auditing
+		$this->auditing->logAccess(AuditedSubject::ADVOCATE_INFO, "Load advocate [{$advocateEntity->getCurrentName()}] with ID [{$advocateEntity->id}].", AuditedReason::REQUESTED_INDIVIDUAL);
 		// Send output
 		$this->sendJson($output);
 	}
