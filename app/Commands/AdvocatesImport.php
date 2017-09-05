@@ -81,6 +81,8 @@ class AdvocatesImport extends Command
 			$advocateInfo->specialization = Helpers::safeDeterministicExplode('|', $row['specialization']);
 			$advocateInfo->company = $row['company'];
 			$advocateInfo->dataBox = $row['data_box'];
+			$advocateInfo->exOffo = $row['ex_offo'];
+			$advocateInfo->wayOfPracticingAdvocacy = $row['way_of_practicing_advocacy'];
 			$advocateInfo->insertedBy = $this->user;
 
 			$advocate = new Advocate();
@@ -200,7 +202,9 @@ class AdvocatesImport extends Command
 			'email',
 			'specialization',
 			'company',
-			'data_box'
+			'data_box',
+			'ex_offo',
+			'way_of_practicing_advocacy'
 		];
 	}
 
