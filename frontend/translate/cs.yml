@@ -155,7 +155,7 @@ statement.cases.long: |
 
   Poznámka k výpočtu statistik: Statistiky jsme spočetli díky přiřazení konečných rozhodnutí vydaných ve výše vyjmenovaných řízeních
   konkrétním advokátům. Upozorňujeme ovšem, že zpracováváme výlučně zveřejněná konečná rozhodnutí a že některá z nich se nám nepodařilo
-  konkrétnímu advokátu z různých důvodů přiřadit (více viz O projektu). Výpočet proběhl na základě stavu naší databáze k 17. 7. 2017.
+  konkrétnímu advokátu z různých důvodů přiřadit (více viz [O projektu](/about)). Výpočet proběhl na základě stavu naší databáze k 17. 7. 2017.
 statement.proceedings: |
   V roce 2015 byla zahájena řízení o 13 965 dovoláních, kasačních stížnostech a ústavních stížnostech.
   Jen asi ve 25 %% z těchto řízení se ale soudy zabývaly obsahem případu%(ending)s
@@ -175,7 +175,7 @@ statement.proceedings.long: |
 
   Poznámka k výpočtu statistik: Statistiky jsme spočetli díky přiřazení jednotlivých typů výsledku řízení (meritorní, nemeritorní, zastaveno)
   ke konečným rozhodnutím vydaným ve výše vyjmenovaných řízeních. Upozorňujeme ovšem, že zpracováváme výlučně zveřejněná konečná
-  rozhodnutí a že k některým z nich se nám nepodařilo typ výsledku přiřadit (více viz O projektu). Výpočet proběhl na základě stavu
+  rozhodnutí a že k některým z nich se nám nepodařilo typ výsledku přiřadit (více viz [O projektu](/about)). Výpočet proběhl na základě stavu
   naší databáze k 27. 8. 2017.
 statement.advocates: Pouze 1 ze 7 advokátů podal více věcně projednaných dovolání, kasačních stížností a ústavních stížností, než těch odmítnutých%(ending)s
 statement.advocates.long: |
@@ -193,5 +193,5 @@ statement.advocates.long: |
 
   Poznámka k výpočtu statistik: Statistiky jsme spočetli díky přiřazení konečných rozhodnutí vydaných ve výše vyjmenovaných
   řízeních konkrétním advokátům. Upozorňujeme ovšem, že zpracováváme výlučně zveřejněná konečná rozhodnutí a že některá
-  z nich se nám nepodařilo konkrétnímu advokátu z různých důvodů přiřadit (více viz O projektu). Výpočet proběhl na základě
+  z nich se nám nepodařilo konkrétnímu advokátu z různých důvodů přiřadit (více viz [O projektu](/about)). Výpočet proběhl na základě
   stavu naší databáze k 17. 7. 2017.
