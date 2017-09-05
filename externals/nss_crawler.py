@@ -164,7 +164,7 @@ def parameters():
     (options, args) = parser.parse_args()
     options = vars(options)
 
-    print(args,options,type(options))
+    print(args, options, type(options))
     return options
 
 #
@@ -297,7 +297,7 @@ def make_record(soup):
         m = p_re_decisions.search(decisions_str)
         line = m.group(1)
         decision_result = [x.replace('\"', '\'').strip()
-                           for x in line.split("<br>")]
+                           for x in re.split("</?br/?>", line)]
         decisions = ""
         if len(decision_result) > 1:
             decisions = "|".join(decision_result[1:])
@@ -331,7 +331,7 @@ def make_record(soup):
                     sides.append(text)
             else:
                 sides.extend([x.strip().replace('"', "'")
-                              for x in re.split(r"</?br>", str(side)) if x != ''])
+                              for x in re.split(r"</?br/?>", str(side)) if x != ''])
 
         complaint = columns[6].getText().strip()
         prejudicate = [x.text.strip() for x in columns[7].findAll("a")]
