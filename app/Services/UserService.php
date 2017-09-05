@@ -78,7 +78,7 @@ class UserService implements IAuthenticator
 	 * @return IIdentity
 	 * @throws AuthenticationException
 	 */
-	function authenticate(array $credentials)
+	public function authenticate(array $credentials)
 	{
 		list($username, $password) = $credentials;
 
@@ -102,5 +102,21 @@ class UserService implements IAuthenticator
 		$arr = $entity->toArray();
 		unset($arr['password']);
 		return new Identity($entity->id, $entity->role, $arr);
+	}
+
+	public function getByUsernameAndPassword(string $username, string $password): ?User
+	{
+		$user = $this->orm->users->getBy([
+			'username' => $username,
+			'isActive' => true,
+			'isLoginAllowed' => true,
+		]);
+		if (!$user) {
+			return null;
+		}
+		if (!Passwords::verify($password, $user->password)) {
+			return null;
+		}
+		return $user;
 	}
 }

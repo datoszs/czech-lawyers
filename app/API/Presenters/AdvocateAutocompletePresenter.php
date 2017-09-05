@@ -4,6 +4,9 @@ declare(strict_types=1);
 namespace App\APIModule\Presenters;
 
 
+use App\Auditing\AuditedReason;
+use App\Auditing\AuditedSubject;
+use App\Auditing\ILogger;
 use App\Model\Advocates\Advocate;
 use App\Model\Advocates\AdvocateInfo;
 use App\Model\Services\AdvocateService;
@@ -25,6 +28,9 @@ class AdvocateAutocompletePresenter extends Presenter
 
 	/** @var AdvocateService @inject */
 	public $advocateService;
+
+	/** @var ILogger @inject */
+	public $auditing;
 
 	/**
 	 * Get up to 30 advocates suggestions according to given search query (search is performed in full name or identification number).
@@ -72,6 +78,12 @@ class AdvocateAutocompletePresenter extends Presenter
 		$output = array_map(function (Advocate $advocate) use ($query) {
 			return $this->mapAdvocate($advocate, $query);
 		}, $advocates);
+		// Auditing
+		/** @var Advocate $advocate */
+		foreach ($advocates as $advocate) {
+			$this->auditing->logAccess(AuditedSubject::ADVOCATE_INFO, "Load advocate [{$advocate->getCurrentName()}] with ID [{$advocate->id}].", AuditedReason::REQUESTED_BATCH);
+		}
+		// Output result
 		$this->sendJson($output);
 	}
 

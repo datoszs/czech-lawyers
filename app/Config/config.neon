@@ -3,6 +3,8 @@
 # https://nette.org/security-warning
 #
 parameters:
+	logging:
+		directory: '%appDir%/../log/auditing'
 	mailing:
 		mails:
 			noreply: no-reply@example.com
@@ -34,6 +36,7 @@ services:
 	- App\Utils\Authorizator
 	- App\Utils\MailService(%mailing%)
 	- App\Utils\CaptchaVerificator(%google.captcha%)
+	- App\Auditing\FileLogger(%logging.directory%)
 	# Services
 	- App\Model\Services\UserService
 	- App\Model\Services\JobService

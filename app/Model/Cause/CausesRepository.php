@@ -12,7 +12,7 @@ use Nextras\Orm\Repository\Repository;
  * @method ICollection|Cause[] search(?string $query, int $start, int $count, string $strategy)
  * @method ICollection|Cause[] findForManualTagging(?int $court, ?string $registryMark, string $advocateFilter, string $resultFilter)
  * @method ICollection|Cause[] findFromAdvocate(int $advocateId, ?int $court, ?int $year, ?string $result)
- * @method IEntity             getRelevantForAdvocatesById($causeId)
+ * @method Cause|null          getRelevantForAdvocatesById($causeId)
  */
 class CausesRepository extends Repository
 {

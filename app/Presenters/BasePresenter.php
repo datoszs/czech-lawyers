@@ -2,10 +2,9 @@
 
 namespace App\Presenters;
 
+use App\Auditing\ILogger;
 use Nette;
-use App\Model;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Security\Permission;
 
 
 /**
@@ -13,6 +12,9 @@ use Nette\Security\Permission;
  */
 abstract class BasePresenter extends Nette\Application\UI\Presenter
 {
+	/** @var ILogger @inject */
+	public $auditing;
+
 	public function requirePrivilege($resource, $action = NULL)
 	{
 		if (!$this->user->isAllowed($resource, $action)) {

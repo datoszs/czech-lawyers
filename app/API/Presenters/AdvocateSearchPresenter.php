@@ -4,6 +4,9 @@ declare(strict_types=1);
 namespace App\APIModule\Presenters;
 
 
+use App\Auditing\AuditedReason;
+use App\Auditing\AuditedSubject;
+use App\Auditing\ILogger;
 use App\Enums\AdvocateStatus;
 use App\Enums\CaseResult;
 use App\Model\Advocates\Advocate;
@@ -32,6 +35,9 @@ class AdvocateSearchPresenter extends Presenter
 
 	/** @var TaggingService @inject */
 	public $taggingService;
+
+	/** @var ILogger @inject */
+	public $auditing;
 
 	/**
 	 * Get relevant advocates with extended information (search is performed in full name or identification number)
@@ -124,6 +130,11 @@ class AdvocateSearchPresenter extends Presenter
 		$output = array_map(function (Advocate $advocate) use ($query, $statistics) {
 			return $this->mapAdvocate($advocate, $query, $statistics[$advocate->id][TaggingService::ALL] ?? []);
 		}, $advocates);
+		// Auditing
+		/** @var Advocate $advocate */
+		foreach ($advocates as $advocate) {
+			$this->auditing->logAccess(AuditedSubject::ADVOCATE_INFO, "Load advocate [{$advocate->getCurrentName()}] with ID [{$advocate->id}].", AuditedReason::REQUESTED_BATCH);
+		}
 		// Send output
 		$this->sendJson($output);
 	}

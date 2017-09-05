@@ -2,6 +2,9 @@
 namespace App\Commands;
 
 
+use App\Auditing\AuditedReason;
+use App\Auditing\AuditedSubject;
+use App\Auditing\ITransactionLogger;
 use App\Enums\AdvocateStatus;
 use App\Model\Advocates\Advocate;
 use App\Model\Advocates\AdvocateInfo;
@@ -9,7 +12,7 @@ use App\Model\Services\AdvocateService;
 use App\Utils\Helpers;
 use App\Utils\Normalize;
 use App\Utils\Validators;
-use app\Utils\JobCommand;
+use App\Utils\JobCommand;
 use League\Csv\Reader;
 use Nette\InvalidArgumentException;
 use Nette\Utils\FileSystem;
@@ -50,12 +53,13 @@ class AdvocatesImport extends Command
 	/**
 	 * Expects valid directory with data to import.
 	 * Note: executed in transaction
+	 * @param ITransactionLogger $transactionLogger
 	 * @param OutputInterface $consoleOutput
 	 * @param string $output output to be stored
 	 * @param string $directory
 	 * @return array where first is number of newly created (imported), second number of updated items and third number of duplicate.
 	 */
-	public function processDirectory(OutputInterface $consoleOutput, &$output, $directory)
+	public function processDirectory(ITransactionLogger $transactionLogger, OutputInterface $consoleOutput, &$output, $directory)
 	{
 		$csv = Reader::createFromPath($directory . '/metadata.csv');
 		$csv->setDelimiter(';');
@@ -105,9 +109,12 @@ class AdvocatesImport extends Command
 					$output .= $temp;
 					$consoleOutput->write($temp);
 					$entity->identificationNumber = $identificationNumber;
+					$changes = $entity->getModificationsSummary();
 					$this->advocateService->persist($entity);
+					$transactionLogger->logChange(AuditedSubject::ADVOCATE_INFO, "Save advocate with ID [{$entity->id}]. Changes: {$changes}.", AuditedReason::REMOTE_UPDATE);
 				}
 			}
+			$this->auditing->logAccess(AuditedSubject::ADVOCATE_INFO, "Load advocate with ID [{$entity->id}].", AuditedReason::REQUESTED_BATCH);
 
 			if ($entity) { // already exists, just update
 				/** @var AdvocateInfo $advocateInfoStored */
@@ -121,11 +128,15 @@ class AdvocatesImport extends Command
 					// Update remote_identificator
 					if ($entity->remoteIdentificator != $row['remote_identificator']) {
 						$entity->remoteIdentificator = $row['remote_identificator'];
+						$changes = $entity->getModificationsSummary();
 						$this->advocateService->persist($entity);
+						$transactionLogger->logChange(AuditedSubject::ADVOCATE_INFO, "Save advocate with ID [{$entity->id}]. Changes: {$changes}.", AuditedReason::REMOTE_UPDATE);
 					}
 					// Invalidate old records
 					$this->advocateService->invalidateOldInfos($entity, $advocateInfo);
+					$changes = $advocateInfo->getModificationsSummary();
 					$this->advocateService->persist($advocateInfo);
+					$transactionLogger->logCreate(AuditedSubject::ADVOCATE_INFO, "Save advocate info with ID [{$advocateInfo->id}]. Changes: {$changes}.", AuditedReason::REMOTE_UPDATE);
 					// Copy new advocate info file into destination folder
 					$destinationPath = $destinationDir . $row['local_path'];
 					copy($directory . '/documents/' . $row['local_path'], $destinationPath); // copy immediately - better to have not referenced files than documents in database without their files.
@@ -140,7 +151,11 @@ class AdvocatesImport extends Command
 
 			// Store to database
 			$advocateInfo->advocate = ($entity) ? $entity : $advocate;
+			$changes = $advocate->getModificationsSummary();
 			$this->advocateService->insert($advocate, $advocateInfo);
+			if ($advocate->isModified()) {
+				$transactionLogger->logCreate(AuditedSubject::ADVOCATE_INFO, "Save advocate with ID [{$advocateInfo->advocate->id}]. Changes: {$changes}.", AuditedReason::REMOTE_UPDATE);
+			}
 			$imported++;
 			// Copy advocate info file into destination folder
 			$destinationPath = $destinationDir . $row['local_path'];
@@ -166,10 +181,13 @@ class AdvocatesImport extends Command
 			$message = 'Error: The given path doesn\'t contain metadata.csv or documents... or contains another files/directories.';
 			$code = static::INVALID_CONTENT;
 		} else {
+			// create transactional logger
+			$transactionLogger = $this->auditing->createTransactionLogger();
 			// import to db
-			list($imported, $updated, $duplicated) = $this->processDirectory($consoleOutput, $output, $directory);
+			list($imported, $updated, $duplicated) = $this->processDirectory($transactionLogger, $consoleOutput, $output, $directory);
 			if ($imported > 0 || $updated > 0) {
 				$this->advocateService->flush();
+				$transactionLogger->commit();
 			}
 			$temp = $message = "Imported {$imported} new advocates, {$updated} updated, {$duplicated} remained the same.\n";
 			$consoleOutput->write($temp);

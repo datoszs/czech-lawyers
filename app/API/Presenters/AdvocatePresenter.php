@@ -4,6 +4,9 @@ declare(strict_types=1);
 namespace App\APIModule\Presenters;
 
 
+use App\Auditing\AuditedReason;
+use App\Auditing\AuditedSubject;
+use App\Auditing\ILogger;
 use App\Enums\AdvocateStatus;
 use App\Enums\CaseResult;
 use App\Model\Advocates\Advocate;
@@ -33,6 +36,9 @@ class AdvocatePresenter extends Presenter
 
 	/** @var TaggingService @inject */
 	public $taggingService;
+
+	/** @var ILogger @inject */
+	public $auditing;
 
 	/**
 	 * Get information about advocate with given ID.
@@ -149,6 +155,12 @@ class AdvocatePresenter extends Presenter
 		$decile = $this->advocateService->getAdvocateDecile($advocate);
 		// Transform to output
 		$output = $this->mapAdvocate($advocate, $statistics[$advocate->id][TaggingService::ALL] ?? [], $statistics[$advocate->id] ?? [], $advocatesOfSameName, $decile);
+		// Auditing
+		$this->auditing->logAccess(AuditedSubject::ADVOCATE_INFO, "Load advocate [{$advocate->getCurrentName()}] with ID [{$advocate->id}].", AuditedReason::REQUESTED_INDIVIDUAL);
+		/** @var Advocate $advocateOfSameName */
+		foreach ($advocatesOfSameName as $advocateOfSameName) {
+			$this->auditing->logAccess(AuditedSubject::ADVOCATE_INFO, "Load advocate [{$advocateOfSameName->getCurrentName()}] with ID [{$advocateOfSameName->id}].", AuditedReason::REQUESTED_BATCH);
+		}
 		// Send output
 		$this->sendJson($output);
 	}

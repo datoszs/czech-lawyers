@@ -1,12 +1,4 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: Radim Jílek
- * Year: 2017
- * Time: 20:33
- * License: GNU GPL
- */
-
 namespace App\Commands;
 
 use App\Enums\CaseResult;
@@ -29,7 +21,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class TagResults extends Command
 {
-    use JobCommand;
+	use JobCommand;
     const ARGUMENT_COURT = 'court';
     const DECISION_RESULT_NEUTRAL = 'zastaveno';
     const DECISION_RESULT_NEGATIVE = 'odmítnuto';

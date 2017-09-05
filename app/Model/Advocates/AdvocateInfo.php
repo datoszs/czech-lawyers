@@ -4,6 +4,7 @@ namespace App\Model\Advocates;
 use App\Model\Jobs\JobRun;
 use App\Model\Users\User;
 use App\Enums\AdvocateStatus;
+use App\Utils\Diffable;
 use DateTime;
 use Nextras\Orm\Entity\Entity;
 
@@ -32,5 +33,5 @@ use Nextras\Orm\Entity\Entity;
  */
 class AdvocateInfo extends Entity
 {
-
+	use Diffable;
 }

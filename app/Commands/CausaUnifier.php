@@ -2,6 +2,7 @@
 namespace App\Commands;
 
 
+use App\Auditing\ITransactionLogger;
 use App\Enums\Court;
 use App\Model\Cause\Cause;
 use App\Model\Court\Court as CourtEntity;
@@ -14,13 +15,18 @@ use App\Model\Taggings\TaggingAdvocate;
 use App\Model\Taggings\TaggingCaseResult;
 use App\Utils\Normalize;
 use App\Utils\Validators;
-use app\Utils\JobCommand;
+use App\Utils\JobCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Warning: this class is outdated, fix before another use!
+ * - Missing auditing when loading changing advocate tagging
+ * - Case of tagging cannot be changed due to is_latest flag (and triggers)
+ */
 class CausaUnifier extends Command
 {
 	use JobCommand;
@@ -72,11 +78,12 @@ class CausaUnifier extends Command
 	 * @param string $output Output to be stored
 	 * @param int $courtId ID of court
 	 * @param bool $dryRun whether the write operations should be performed
+	 * @param ITransactionLogger $transactionLogger
 	 * @return array where first is number of imported and second number of duplicated items.
 	 * @internal param string $directory
 	 * @internal param bool $overwrite whether the files should be overwritten
 	 */
-	public function processCourt(OutputInterface $consoleOutput, &$output, $courtId, $dryRun)
+	public function processCourt(OutputInterface $consoleOutput, &$output, $courtId, $dryRun, ITransactionLogger $transactionLogger)
 	{
 		$court = $this->getCourt($courtId);
 		$merged = 0;
@@ -114,6 +121,7 @@ class CausaUnifier extends Command
 				/** @var TaggingAdvocate $tagging */
 				foreach ($this->taggingService->findAdvocateTaggingsByCase($case) as $tagging) {
 					$tagging->case = $newCase;
+					// TODO: there should be auditing for load and change
 					$this->taggingService->persist($tagging);
 				}
 				// Migrate case result tagging
@@ -150,11 +158,13 @@ class CausaUnifier extends Command
 			$temp = sprintf("Court: %s\n", $courtEntity->name);
 			$output .= $temp;
 			$consoleOutput->write($temp);
+			$transactionLogger = $this->auditing->createTransactionLogger();
 
 			// import to db
-			list($merged, $renamed, $ignored) = $this->processCourt($consoleOutput, $output, Court::$types[$court], $dryRun);
+			list($merged, $renamed, $ignored) = $this->processCourt($consoleOutput, $output, Court::$types[$court], $dryRun, $transactionLogger);
 			if (!$dryRun && ($merged > 1 || $renamed > 0)) {
 				$this->causeService->flush();
+				$transactionLogger->commit();
 			}
 			if ($dryRun) {
 				$message = "Dry run: Renamed {$renamed} cases, merged {$merged} cases and ignored {$ignored}\n";

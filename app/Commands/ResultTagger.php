@@ -5,7 +5,7 @@ use App\Model\Cause\Cause;
 use App\Model\Court\Court;
 use App\Model\Services\CauseService;
 use App\Model\Services\CourtService;
-use app\Utils\JobCommand;
+use App\Utils\JobCommand;
 use App\Utils\TemplateFilters;
 use Nette\NotImplementedException;
 use Symfony\Component\Console\Command\Command;

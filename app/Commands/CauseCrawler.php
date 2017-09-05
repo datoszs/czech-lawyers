@@ -2,7 +2,7 @@
 namespace App\Commands;
 
 use app\Utils\Validators;
-use app\Utils\JobCommand;
+use App\Utils\JobCommand;
 use Nette\NotImplementedException;
 use Nette\Utils\FileSystem;
 use Symfony\Component\Console\Command\Command;

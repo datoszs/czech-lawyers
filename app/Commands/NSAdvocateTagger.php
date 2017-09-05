@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace App\Commands;
 
+use App\Auditing\AuditedReason;
+use App\Auditing\AuditedSubject;
+use App\Auditing\ITransactionLogger;
 use App\Enums\TaggingStatus;
 use App\Exceptions\ExtractionException;
 use App\Exceptions\MultipleMatchesException;
@@ -93,7 +96,7 @@ class NSAdvocateTagger extends AdvocateTagger
 		return Strings::contains($cause->registrySign, ' tdo ');
 	}
 
-	private function tagToAdvocateName(Cause $cause, string $advocateName, string &$output, OutputInterface $consoleOutput, String $originalAdvocateName, Document $document = null) {
+	private function tagToAdvocateName(Cause $cause, string $advocateName, string &$output, OutputInterface $consoleOutput, String $originalAdvocateName, Document $document = null, ITransactionLogger $transactionLogger) {
 		try {
 			list($advocateNameNominativ, $advocateId) = $this->matcher->match($advocateName);
 		} catch (NoMatchException $ex) {
@@ -112,6 +115,7 @@ class NSAdvocateTagger extends AdvocateTagger
 		$advocateTagging = $this->prepareTagging($cause, $advocateName, $document, $this->advocateService->get($advocateId));
 		$result = $this->taggingService->persistAdvocateIfDiffers($advocateTagging);
 		if ($result) {
+			$transactionLogger->logCreate(AuditedSubject::CASE_TAGGING, "Create new advocate tagging with ID [{$advocateTagging->id}] of case [{$advocateTagging->case->registrySign}] to advocate [{$advocateNameNominativ}] with ID [{$advocateId}]. Note [{$advocateTagging->debug}].", AuditedReason::SCHEDULED);
 			$temp = sprintf("Case [%s] file [%s] tagged with [%s -> %s].\n", TemplateFilters::formatRegistryMark($cause->registrySign), $document->localPath ?? null, (($originalAdvocateName !== $advocateName) ? $originalAdvocateName . '->' . $advocateName : $advocateName), $advocateNameNominativ);
 			$output .= $temp;
 			$consoleOutput->write($temp);
@@ -140,7 +144,7 @@ class NSAdvocateTagger extends AdvocateTagger
 		return $caseAdvocates;
 	}
 
-	protected function processCase(Cause $cause, string &$output, OutputInterface $consoleOutput)
+	protected function processCase(Cause $cause, string &$output, OutputInterface $consoleOutput, ITransactionLogger $transactionLogger)
 	{
 		$caseAdvocates = [];
 		if ($cause->officialData) { // First process official data.
@@ -149,7 +153,7 @@ class NSAdvocateTagger extends AdvocateTagger
 		// For TDO with exactly one advocate we can create tagging directly
 		if ($cause->officialData && $this->isTDO($cause)) {
 			if (count($caseAdvocates) === 1) {
-				return $this->tagToAdvocateName($cause, $caseAdvocates[0], $output, $consoleOutput, $caseAdvocates[0]);
+				return $this->tagToAdvocateName($cause, $caseAdvocates[0], $output, $consoleOutput, $caseAdvocates[0], null, $transactionLogger);
 			} else {
 				return $this->taggingService->persistAdvocateIfDiffers($this->prepareTagging($cause, sprintf('TDO with multiple advocates [%s].', implode(', ', $caseAdvocates))));
 			}
@@ -177,7 +181,7 @@ class NSAdvocateTagger extends AdvocateTagger
 			$originalAdvocateName = $advocateName;
 			$advocateName = $this->prematcher->prefixMatch($advocateName, $caseAdvocates);
 
-			return $this->tagToAdvocateName($cause, $advocateName, $output, $consoleOutput, $originalAdvocateName, $document);
+			return $this->tagToAdvocateName($cause, $advocateName, $output, $consoleOutput, $originalAdvocateName, $document, $transactionLogger);
 		}
 		$documentsCount = count($documents);
 		if ($documentsCount === 0) {

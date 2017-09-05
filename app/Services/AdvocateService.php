@@ -85,7 +85,7 @@ class AdvocateService
 	 * @param string $identificationNumber
 	 * @return Advocate|null
 	 */
-	public function findByIdentificationNumber($identificationNumber)
+	public function findByIdentificationNumber($identificationNumber): ?Advocate
 	{
 		return $this->orm->advocates->findBy(['identificationNumber' => $identificationNumber])->fetch();
 	}
@@ -94,7 +94,7 @@ class AdvocateService
 	 * @param string $remoteIdentificator
 	 * @return Advocate|null
 	 */
-	public function findbyRemoteIdentificator($remoteIdentificator)
+	public function findbyRemoteIdentificator($remoteIdentificator): ?Advocate
 	{
 		return $this->orm->advocates->findBy(['remoteIdentificator' => $remoteIdentificator])->fetch();
 	}

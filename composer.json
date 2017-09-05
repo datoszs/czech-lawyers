@@ -16,6 +16,9 @@
 	],
 	"require": {
 		"php": ">=7.1.0",
+		"ext-posix": "*",
+		"ext-xml": "*",
+		"ext-pgsql": "*",
 		"nette/application": "^2.4",
 		"nette/bootstrap": "^2.4.1",
 		"nette/caching": "^2.5",

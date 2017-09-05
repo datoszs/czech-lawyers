@@ -24,7 +24,7 @@ class CauseService
 		return $this->orm->causes->getById($causeId);
 	}
 
-	public function getRelevantForAdvocates($causeId)
+	public function getRelevantForAdvocates($causeId): ?Cause
 	{
 		return $this->orm->causes->getRelevantForAdvocatesById($causeId);
 	}
