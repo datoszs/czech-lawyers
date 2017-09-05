@@ -162,7 +162,7 @@ statement.proceedings: |
 statement.proceedings.long: |
   V řízeních o dovoláních u Nejvyššího soudu, o kasačních stížnostech u Nejvyššího správního soudu i o ústavních stížnostech
   u Ústavního soudu může dojít k tomu, že se soudy odmítnou zabývat obsahem případu (vydají tzv. nemeritorní konečné rozhodnutí).
-  Taková situace nastává zejména tehdy, když je podání (dovolání/stížnost) opožděné nebo vadné, anebo kdy je například učiněno tehdy,
+  Taková situace nastává zejména tehdy, když je podání (dovolání/stížnost) opožděné nebo vadné, anebo když je například učiněno tehdy,
   kdy to zákon vůbec neumožňuje. Vysoký podíl řízení, ve kterých se tři nejdůležitější soudy nezabývají obsahem případu,
   tedy překvapí. Jedním z důvodů, proč je před těmito soudy zpravidla nutné nechat se zastoupit advokátem, je totiž to,
   aby se tyto významné soudy nemusely zabývat "zbytečnými" podáními a co nejefektivněji tak mohly využít nejen svůj odborný potenciál,
@@ -170,8 +170,8 @@ statement.proceedings.long: |
 
   Díky nám máte nyní možnost vědět, kteří advokáti se na zatížení tří nejdůležitějších soudů "zbytečnými" případy nejvíce podílejí.
   Ovšem proč dovolání, kasační stížnost nebo ústavní stížnost podávají, když se jimi soudy nakonec věcně vůbec nezabývají, nevíme.
-  Důvody mohou být totiž různé. Od nepoctivého přístupu k práci a společenské roli advokáta, přes snahu co nejvíce vyhovět
-  přání klientů, až po oprávněnou zmatenost způsobenou nejednotnou rozhodovací praxí tří nejdůležitějších soudů.
+  Důvody mohou být různé. Od nepoctivého přístupu k práci a společenské roli advokáta, přes snahu co nejvíce vyhovět
+  přání klientů, až po oprávněnou zmatenost způsobenou nejednotnou rozhodovací praxí těchto soudů.
 
   Poznámka k výpočtu statistik: Statistiky jsme spočetli díky přiřazení jednotlivých typů výsledku řízení (meritorní, nemeritorní, zastaveno)
   ke konečným rozhodnutím vydaným ve výše vyjmenovaných řízeních. Upozorňujeme ovšem, že zpracováváme výlučně zveřejněná konečná
@@ -180,7 +180,7 @@ statement.proceedings.long: |
 statement.advocates: Pouze 1 ze 7 advokátů podal více věcně projednaných dovolání, kasačních stížností a ústavních stížností, než těch odmítnutých%(ending)s
 statement.advocates.long: |
   V řízení o dovolání u Nejvyššího soudu, o kasační stížnosti u Nejvyššího správního soudu i o ústavní stížnosti u Ústavního soudu
-  je zpravidla nutné nechat se zastoupit advokátem. Soudy nicméně na advokátovo posouzení vhodnosti případu k jeho věcnému projednání
+  je zpravidla nutné nechat se zastoupit advokátem. Soudy nicméně na advokátovo posouzení případu ohledně vhodnosti k jeho věcnému projednání
   nespoléhají a mají možnost odmítnout se obsahem případu zabývat. K takovému kroku přistupují zejména tehdy, když je advokátovo podání
   (dovolání/stížnost) opožděné nebo vadné, anebo kdy ho advokát například učiní tehdy, kdy to zákon vůbec neumožňuje. Je to dobře,
   jelikož advokátů, kterým by mohly soudy důvěřovat, že se na ně neobrací se "zbytečnostmi", je poměrně málo. Konkrétně jen 1 435
