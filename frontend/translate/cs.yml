@@ -78,7 +78,7 @@ case.dispute.text: |
 
   Pro zpochybnění správnosti zpracování případu klikněte na ověřovací link, který vám zašleme na zadaný e-mail.
 case.dispute.submit: Rozporovat
-case.dispute: Rozporovat výsledek
+case.dispute: Rozporovat
 case.dispute.reason: Důvod k rozporování
 case.dispute.reason.result: Špatně přiřazený výsledek
 case.dispute.reason.advocate: Špatně přiřazený advokát
