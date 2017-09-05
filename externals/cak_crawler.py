@@ -17,10 +17,10 @@ import csv
 import logging
 import math
 import os
-import sys
 import re
 import shutil
 import subprocess
+import sys
 from collections import namedtuple
 from datetime import datetime
 from optparse import OptionParser
@@ -296,7 +296,7 @@ def make_record(soup, html_file):
         name_label = soup.find("td", string=re.compile(
                 r"^\s+Jméno\s+$", re.UNICODE))
         # inicialize empty values
-        state = data_box = ""
+        state = data_box = ex_offo = way_of_practicing_advocacy = ""
         specialization = email = ""
         city = street = postal_area = ""
         evidence_number = ic = ""
@@ -354,6 +354,16 @@ def make_record(soup, html_file):
         if data_box_label is not None:
             data_box = data_box_label.find_next().getText().strip()
 
+        ex_offo_label = soup.find("td", string=re.compile(
+                r"^\s+Ustanovení ex-offo\s+$", re.UNICODE))
+        if ex_offo_label is not None:
+            ex_offo = ex_offo_label.find_next().getText().strip()
+
+        way_of_practicing_advocacy_label = soup.find("td", string=re.compile(
+                r"^\s+Způsob výkonu advokacie\s+$", re.UNICODE))
+        if way_of_practicing_advocacy_label is not None:
+            way_of_practicing_advocacy = way_of_practicing_advocacy_label.find_next().getText().strip()
+
         location_label = soup.find(
                 "td", string=re.compile(r"^\s+Adresa\s+$", re.UNICODE))
         if location_label is not None:
@@ -377,22 +387,24 @@ def make_record(soup, html_file):
         if company is not None:
             company = company.find_next().getText().strip()
         item = {
-            "remote_identificator" : id,
-            "identification_number": evidence_number,
-            "registration_number"  : ic,
-            "name"                 : name,
-            "surname"              : surname,
-            "degree_before"        : before,
-            "degree_after"         : after,
-            "state"                : state,
-            "email"                : email,
-            "street"               : street,
-            "city"                 : city,
-            "postal_area"          : postal_area,
-            "specialization"       : specialization,
-            "local_path"           : os.path.basename(html_file),
-            "company"              : company,
-            "data_box"             : data_box
+            "remote_identificator"      : id,
+            "identification_number"     : evidence_number,
+            "registration_number"       : ic,
+            "name"                      : name,
+            "surname"                   : surname,
+            "degree_before"             : before,
+            "degree_after"              : after,
+            "state"                     : state,
+            "email"                     : email,
+            "street"                    : street,
+            "city"                      : city,
+            "postal_area"               : postal_area,
+            "specialization"            : specialization,
+            "local_path"                : os.path.basename(html_file),
+            "company"                   : company,
+            "data_box"                  : data_box,
+            "ex_offo"                   : ex_offo,
+            "way_of_practicing_advocacy": way_of_practicing_advocacy
         }
         logger.debug(item)
         writer_records.writerow(item)
@@ -514,7 +526,7 @@ def extract_information(list_of_links):
     # 'file']
     fieldnames = ["remote_identificator", "identification_number", "registration_number", "name", "surname",
                   "degree_before", "degree_after", "state", "street", "city", "postal_area", "local_path",
-                  "email", "specialization", "company", "data_box"]
+                  "email", "specialization", "company", "data_box", "ex_offo", "way_of_practicing_advocacy"]
 
     global writer_records
 
