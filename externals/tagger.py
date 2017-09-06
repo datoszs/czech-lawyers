@@ -16,11 +16,14 @@ import re
 import sys
 from collections import namedtuple, OrderedDict
 from datetime import datetime
-
+import os
+from os.path import join
 import Levenshtein as lev
 import neon
 import psycopg2
 from psycopg2 import extras
+import logging
+
 
 bad_word = [")", "agentura", "asociace", "advokátní", "koncipient"]
 skip_word = ["sama", "§", "s.r.o.", "a.s.", "o.s.", "v.o.s.", "kancelář"]
@@ -75,10 +78,48 @@ def print_statistic(tagger):
             len(tagger.causes), len(tagger.advocates),
             tagger.matched, tagger.no_matched, tagger.without_changes,
             tagger.bad, tagger.empty,
-            tagger.processed, round(tagger.processed/len(tagger.causes), 2)*100, tagger.failed, tagger.hit,
+            tagger.processed, round(tagger.processed / len(tagger.causes), 2) * 100, tagger.failed, tagger.hit,
             len(tagger.match_cache), len(tagger.no_match_cache),
-            tagger.cmp_full, tagger.cmp_normal, tagger.cmp_reverse, tagger.cmp_full_match, tagger.cmp_surname, tagger.cmp_ic)
+            tagger.cmp_full, tagger.cmp_normal, tagger.cmp_reverse, tagger.cmp_full_match, tagger.cmp_surname,
+            tagger.cmp_ic)
     )
+
+
+def set_logging():
+    """
+    settings of logging
+    """
+    log_dir = join(os.path.dirname(os.path.abspath(__file__)), "log_tagger")
+    #print(__file__)
+    #print(os.path.dirname(__file__))
+    #print(os.path.abspath(__file__))
+    #print(os.path.dirname(os.path.abspath(__file__)))
+    #print(log_dir)
+    global logger
+    logger = logging.getLogger(__file__)
+    logger.setLevel(logging.DEBUG)
+    #hash_id = datetime.now().strftime("%d-%m-%Y")
+    #fh_d = logging.FileHandler(join(log_dir, __file__[0:-3] + "_" + hash_id + "_log_debug.txt"), mode="w",
+    #                           encoding='utf-8')
+    #fh_d.setLevel(logging.DEBUG)
+    fh_i = logging.FileHandler(join(log_dir, os.path.basename(__file__[0:-3]) + "_log.csv"), mode="w",
+                               encoding='utf-8')
+    fh_i.setLevel(logging.INFO)
+    # // create console handler
+    ch = logging.StreamHandler()
+    ch.setLevel(logging.INFO)
+    # // create formatter and add it to the handlers
+    formatter = logging.Formatter(
+            u'%(message)s')
+    ch.setFormatter(formatter)
+    #fh_d.setFormatter(formatter)
+    fh_i.setFormatter(formatter)
+    # // add the handlers to logger
+    #logger.addHandler(ch)
+    #logger.addHandler(fh_d)
+    logger.addHandler(fh_i)
+    logger.info("audited_subject@description@reason")
+    return logger
 
 
 class QueryDB(object):
@@ -206,11 +247,11 @@ class QueryDB(object):
             # print(old)
             # print(new)
             if diff:
-                # self.insert_to_db(new)
+                self.insert_to_db(new)
                 return True
             return False
         else:
-            #self.insert_to_db(new)
+            self.insert_to_db(new)
             return True
 
 
@@ -346,7 +387,7 @@ class AdvocateTagger(QueryDB):
         self.bad, self.empty = 0, 0
         self.matched, self.no_matched, self.without_changes = (0,) * 3
         self.cmp_full_match, self.cmp_full, self.cmp_normal, self.cmp_reverse, self.cmp_surname, self.cmp_ic = (
-                                                                                              0,) * 6
+                                                                                                                   0,) * 6
         self.processed, self.failed, self.hit = (0,) * 3
         self.no_match_cache, self.match_cache = {}, {}
 
@@ -384,7 +425,8 @@ class AdvocateTagger(QueryDB):
             except KeyError:
                 return None
         elif self.court == 3:
-            return " ".join([cause["official_data"][0]["name"].strip(), cause["official_data"][0]["surname"].strip()])  # from court table
+            return " ".join([cause["official_data"][0]["name"].strip(),
+                             cause["official_data"][0]["surname"].strip()])  # from court table
             # return self.get_name_from_document_info(cause["id_case"])  # from text
         else:
             return None
@@ -574,14 +616,21 @@ class AdvocateTagger(QueryDB):
             else:
                 return False
         self.match_cache.setdefault(
-            text, (new, advocate_name, status, type_of_comparison))
+                text, (new, advocate_name, status, type_of_comparison))
         if self.insert_if_differs(new, self.get_last_tagging(cause["id_case"])):
             if new["status"] == states["ok"]:
                 self.processed += 1
+                logger.info("{}@Create new advocate tagging of case [{}] to advocate [{}] with ID [{}]. Note [{}].@{}".format(
+                                    "CASE_TAGGING",
+                                    cause["registry_sign"],
+                                    advocate_name,
+                                    new["advocate_id"],
+                                    new["debug"],
+                                    "SCHEDULED"))
             else:
                 self.failed += 1
-            self.print_info(cause, text, name, advocate_name,
-                            new["advocate_id"], type_of_comparison)
+            #self.print_info(cause, text, name, advocate_name,
+                            #new["advocate_id"], type_of_comparison)
             return True
         else:
             return None
@@ -650,8 +699,10 @@ if __name__ == "__main__":
         sys.exit(-1)
     t0 = datetime.now()
     print(t0.replace(microsecond=0))
+    logger = set_logging()
     tagger = AdvocateTagger(path, court, job_id)
     tagger.run()
+    logger.handlers[0].close()
     print_statistic(tagger)
     t2 = datetime.now()
     # print(t2.replace(microsecond=0))
