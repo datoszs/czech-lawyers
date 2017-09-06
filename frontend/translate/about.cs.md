@@ -69,7 +69,7 @@ automaticky přiřadili, zpochybněte správnost jeho automatického zpracován�
 Tlačítko najdete na stránce konečného rozhodnutí (případu), k níž se dostanete buď vyhledáním spisové značky daného
 rozhodnutí (odkaz na vyhledávání je v horní liště) nebo kliknutím na dané rozhodnutí na stránce advokáta.
 Pokud tlačítko na stránce konečného rozhodnutí (případu) nenajdete, znamená to, že již bylo “ručně” zpracováno.
-Chcete-li zpochybnit správnost “ručního” zpracování, [napiště nám](/contact). 
+Chcete-li zpochybnit správnost “ručního” zpracování, [napište nám](/contact). 
 
 Na závěr dvě upozornění. Zaprvé je třeba upozornit, že **Nejvyšší soud a Ústavní soud** nemeritorní konečná rozhodnutí
 (tedy rozhodnutí nezabývající se obsahem podání) vydávají nejen tehdy, když se na ně advokát obrátí pozdě, například
