@@ -91,6 +91,7 @@ console:
 		- App\Commands\NSAdvocateTagger
 		- App\Commands\AdvocateScoreUpdate
 		- App\Commands\CrawlerManual
+		- App\Commands\SendBatchEmail
 
 orm:
 	model: App\Model\Orm
