@@ -1,0 +1,189 @@
+{extends '../@admin.latte'}
+{var $pageTitle = 'Statistiky'}
+
+{block content}
+	<h1>Statistiky</h1>
+
+	<h2>Počty případů po jednotlivých soudech</h2>
+	<table class="table table-responsive table-striped table-condensed table-hover">
+		<thead>
+		<tr>
+			<th>Soud</th>
+			<th>Počet</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr n:foreach="$caseCount as $row">
+			<td>
+				{if $row->court_id === App\Enums\Court::TYPE_US}Ústavní soud{/if}
+				{if $row->court_id === App\Enums\Court::TYPE_NS}Nejvyšší soud{/if}
+				{if $row->court_id === App\Enums\Court::TYPE_NSS}Nejvyšší správní soud{/if}
+			</td>
+			<td>{$row->count}</td>
+		</tr>
+		</tbody>
+	</table>
+
+	<h2>Počty případů za rok po jednotlivých soudech</h2>
+	<table class="table table-responsive table-striped table-condensed table-hover">
+		<thead>
+			<tr>
+				<th>Soud</th>
+				<th>Rok</th>
+				<th>Počet</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr n:foreach="$caseCountPerYear as $row">
+				<td>
+					{if $row->court_id === App\Enums\Court::TYPE_US}Ústavní soud{/if}
+					{if $row->court_id === App\Enums\Court::TYPE_NS}Nejvyšší soud{/if}
+					{if $row->court_id === App\Enums\Court::TYPE_NSS}Nejvyšší správní soud{/if}
+				</td>
+				<td>{$row->year}</td>
+				<td>{$row->count}</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<hr>
+
+	<h2>Počty případů s oficiálními daty po jednotlivých soudech</h2>
+	<table class="table table-responsive table-striped table-condensed table-hover">
+		<thead>
+		<tr>
+			<th>Soud</th>
+			<th>Počet</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr n:foreach="$officialDataCount as $row">
+			<td>
+				{if $row->court_id === App\Enums\Court::TYPE_US}Ústavní soud{/if}
+				{if $row->court_id === App\Enums\Court::TYPE_NS}Nejvyšší soud{/if}
+				{if $row->court_id === App\Enums\Court::TYPE_NSS}Nejvyšší správní soud{/if}
+			</td>
+			<td>{$row->count}</td>
+		</tr>
+		</tbody>
+	</table>
+
+	<h2>Počty případů s oficiálními daty za rok po jednotlivých soudech</h2>
+	<table class="table table-responsive table-striped table-condensed table-hover">
+		<thead>
+		<tr>
+			<th>Soud</th>
+			<th>Rok</th>
+			<th>Počet</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr n:foreach="$officialDataCountPerYear as $row">
+			<td>
+				{if $row->court_id === App\Enums\Court::TYPE_US}Ústavní soud{/if}
+				{if $row->court_id === App\Enums\Court::TYPE_NS}Nejvyšší soud{/if}
+				{if $row->court_id === App\Enums\Court::TYPE_NSS}Nejvyšší správní soud{/if}
+			</td>
+			<td>{$row->year}</td>
+			<td>{$row->count}</td>
+		</tr>
+		</tbody>
+	</table>
+
+	<hr>
+
+	<h2>Počty posledních tagování advokátů dle stavu tagování</h2>
+	<table class="table table-responsive table-striped table-condensed table-hover">
+		<thead>
+		<tr>
+			<th>Stav</th>
+			<th>Počet</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr n:foreach="$countLatestAdvocateTaggingsByStatus as $row">
+			<td>{$row->status}</td>
+			<td>{$row->count}</td>
+		</tr>
+		</tbody>
+	</table>
+
+	<h2>Počty posledních tagování výsledků dle stavu tagování</h2>
+	<table class="table table-responsive table-striped table-condensed table-hover">
+		<thead>
+		<tr>
+			<th>Stav</th>
+			<th>Počet</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr n:foreach="$countLatestCaseResultTaggingsByStatus as $row">
+			<td>{$row->status}</td>
+			<td>{$row->count}</td>
+		</tr>
+		</tbody>
+	</table>
+
+	<hr>
+
+	<h2>Počet advokátů</h2>
+	<table class="table table-responsive table-striped table-condensed table-hover">
+		<thead>
+		<tr>
+			<th>Počet</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr n:foreach="$countAdvocates as $row">
+			<td>{$row->count}</td>
+		</tr>
+		</tbody>
+	</table>
+
+	<hr>
+
+	<h2>Počty dokumentů po jednotlivých soudech</h2>
+	<table class="table table-responsive table-striped table-condensed table-hover">
+		<thead>
+		<tr>
+			<th>Soud</th>
+			<th>Počet</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr n:foreach="$countDocuments as $row">
+			<td>
+				{if $row->court_id === App\Enums\Court::TYPE_US}Ústavní soud{/if}
+				{if $row->court_id === App\Enums\Court::TYPE_NS}Nejvyšší soud{/if}
+				{if $row->court_id === App\Enums\Court::TYPE_NSS}Nejvyšší správní soud{/if}
+			</td>
+			<td>{$row->count}</td>
+		</tr>
+		</tbody>
+	</table>
+
+	<h2>Počty dokumentů za rok po jednotlivých soudech</h2>
+
+	<table class="table table-responsive table-striped table-condensed table-hover">
+		<thead>
+		<tr>
+			<th>Soud</th>
+			<th>Rok</th>
+			<th>Počet</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr n:foreach="$countDocumentsPerYear as $row">
+			<td>
+				{if $row->court_id === App\Enums\Court::TYPE_US}Ústavní soud{/if}
+				{if $row->court_id === App\Enums\Court::TYPE_NS}Nejvyšší soud{/if}
+				{if $row->court_id === App\Enums\Court::TYPE_NSS}Nejvyšší správní soud{/if}
+			</td>
+			<td>{$row->year}</td>
+			<td>{$row->count}</td>
+		</tr>
+		</tbody>
+	</table>
+
+
+{/block}

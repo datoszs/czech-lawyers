@@ -11,6 +11,7 @@ class Resources
 	const DOCUMENTS = 'documents';
 	const ADVOCATES = 'advocates';
 	const TAGGING = 'tagging';
+	const STATISTICS = 'statistics';
 
 	const LOGS = 'logs';
 	const JOBS = 'jobs';

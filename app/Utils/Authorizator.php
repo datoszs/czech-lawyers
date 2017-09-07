@@ -23,6 +23,7 @@ class Authorizator extends Permission
 		$this->addResource(Resources::USERS);
 		$this->addResource(Resources::LOGS);
 		$this->addResource(Resources::JOBS);
+		$this->addResource(Resources::STATISTICS);
 
 		$this->deny(UserRole::TYPE_GUEST);
 		$this->allow(UserRole::TYPE_GUEST, Resources::SHARED, Actions::LOGIN);
