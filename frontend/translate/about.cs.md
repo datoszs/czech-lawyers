@@ -16,8 +16,8 @@ důvodů) obrátil s vadnými nebo opožděnými podáními nebo například v s
 o nichž rozhodl nemeritorně a o nichž nakonec nerozhodoval vůbec**.
 
 Projekt bez jakékoliv finanční podpory realizuje zapsaný spolek DATOS -- data o spravedlnosti, IČO 05003997. Předsedkyní
-spolku a iniciátorkou projektu je Tereza Papoušková, členy spolku a tvůrci databáze jsou Jan Drábek a Radim Jílek,
-tvůrcem webu je Tomáš Vejpustek. Více viz [Kontakty](/contact).
+spolku a iniciátorkou projektu je Tereza Papoušková, tvůrci databáze jsou Jan Drábek a Radim Jílek,
+tvůrcem webu je Tomáš Vejpustek, konzultantem je Jan Papoušek. Více viz [Kontakty](/contact).
 
 Rozsah zpracovávaných rozhodnutí
 --------------------------------
