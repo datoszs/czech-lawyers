@@ -23,6 +23,7 @@ import neon
 import psycopg2
 from psycopg2 import extras
 import logging
+from pprint import pprint
 
 
 bad_word = [")", "agentura", "asociace", "advokátní", "koncipient"]
@@ -138,11 +139,10 @@ class QueryDB(object):
         :return:
         """
         self.cur.execute(
-                "SELECT concat(degree_before,'/',name,' ',surname) AS fullname, string_agg(DISTINCT advocate_id::text, ' ') AS advocate_id "
+                "SELECT concat(name,' ',surname) AS fullname, string_agg(DISTINCT advocate_id::text, ' ') AS advocate_id "
                 "FROM advocate_info "
-                "GROUP BY degree_before, name, surname "
+                "GROUP BY name, surname "
                 "HAVING array_length(array_agg(DISTINCT advocate_id), 1) = 1"
-                "ORDER BY degree_before DESC"
                 ";")
         return self.cur.fetchall()
 
@@ -152,7 +152,7 @@ class QueryDB(object):
         """
         self.cur.execute(
                 "SELECT *"
-                "FROM \"case\""
+                "FROM \"case\"" # mozna from filter_view
                 "WHERE court_id = %s AND id_case NOT IN (SELECT case_id FROM tagging_advocate WHERE is_final);" % court)
         # AND year=2010
         return self.cur.fetchall()
@@ -184,7 +184,7 @@ class QueryDB(object):
         """
         self.cur.execute(
                 "SELECT * "
-                "FROM tagging_advocate "
+                "FROM tagging_advocate " #mozna from last_tagging_view
                 "WHERE case_id=%i "
                 "ORDER BY inserted DESC "
                 "LIMIT 1" % int(cause_id))
@@ -244,8 +244,8 @@ class QueryDB(object):
                 if str(new[key]) != old_val:
                     diff.append(True)
             # print(diff)
-            # print(old)
-            # print(new)
+            #print(old)
+            #print(new)
             if diff:
                 self.insert_to_db(new)
                 return True
@@ -358,13 +358,14 @@ class NameCleaner:
         :return:
         """
         parts = raw_string.split('/')
-        # print(parts)
+        #print(parts)  # /* DEBUG */
         normalize = list(filter(str.strip, parts))
         variants = Variants(
                 " ".join(normalize),
                 normalize[-1],
                 " ".join(reversed(normalize[-1].split(" ")))
         )
+        #print(variants)  # /* DEBUG */
         return variants
 
 
@@ -482,14 +483,19 @@ class AdvocateTagger(QueryDB):
         :return: one or more the best matches
         """
         records = distance = None
+        # /todo priority? [priority/type][distance] = best matches
+
         for i in range(0, threshold):
             if matches.get(i):
                 records = matches.get(i)
+                #pprint(records) # /* DEBUG */
+                #input("WTF")
+                # print(i) # /* DEBUG */
                 distance = i
                 break
         # advocate_id, advocate_name, debug, status
         # variants, advocate_id
-        if len(records) == 1:
+        if len(records) == 1 and distance == 0:
             best = records[0]
             if "normal" in best[-1]:
                 self.cmp_normal += 1
@@ -505,8 +511,10 @@ class AdvocateTagger(QueryDB):
                 if advocate_id not in result:
                     result.append(advocate_id)
                     names.append(variants.full)
-            debug = "\"%s\" with levenshtein distance = %d" % (
-                "; ".join(names), distance)
+            debug = "\"{}\" {} with levenshtein distance = {}".format(
+                "; ".join(names),
+                "surname" if "surname" in records[0][-1] else "",
+                distance)
             return "NULL", debug, debug, states["no"], "mixed"
         else:
             return (None,) * 5
@@ -517,9 +525,10 @@ class AdvocateTagger(QueryDB):
 
         :param ic: identification number of advocate from cause
         :param cause: cause for assignments
-        :param text: full variant of text
+        :param text: full variant of text from court table
         :return: bool
         """
+
 
         if text is None and ic is None:
             return False
@@ -531,9 +540,12 @@ class AdvocateTagger(QueryDB):
         else:
             exist = name = None
 
+        #print("'%s' '%s'" % (text, name)) # /* DEBUG */
+
         debug = advocate_name = None
         found = False
-        if exist is not None:
+        # /todo priority?
+        if exist and ic is None:
             new, advocate_name, status, type_of_comparison = exist
             new["case_id"] = cause["id_case"]
             if "full" in type_of_comparison:
@@ -551,7 +563,7 @@ class AdvocateTagger(QueryDB):
             found = True
         elif ic:
             advocates = self.get_advocate_by_ic(ic)  # may be more
-            print(cause["id_case"], ic, advocates)
+            # print(text, cause["id_case"], ic, advocates) # /* DEBUG */
             # input(":-)")
             if advocates:
                 advocate_id = advocates[0]["id_advocate"]
@@ -561,21 +573,26 @@ class AdvocateTagger(QueryDB):
                 new = self.prepare_tagging(
                         cause, status, ic, advocate=advocate_id)
                 found = True
-
+            # print(ic, found) # /* DEBUG */
+            #input(":-)")
+        #if "Vaněk" in name:
+        #    print(ic, found)
+        #    input("Vaněk!")
         if not found:
-            if text is None:
+            if text is None or name is None:
                 return False
-            type_of_comparison, status, variants, advocate_id = None, None, None, None
+            type_of_comparison, status, variants, advocate_id = (None,) * 4
             matches = {}
             for advocate in self.advocates:
                 variants = self.cleaner.prepare_advocate(advocate["fullname"])
+                # /todo priority? [priority/type][distance] = best matches
                 # compare full variant name (with degrees) with 'text'
                 if variants.full == text:
                     self.cmp_full_match += 1
                     status = states["ok"]
                     type_of_comparison = "full compare"
                     advocate_id = advocate["advocate_id"]
-                    break
+                    break # /todo is it already?
                 # normal variant of name
                 #if variants.normal.title() in text:
                 distance = lev.distance(variants.full, name)
@@ -584,10 +601,10 @@ class AdvocateTagger(QueryDB):
                             (variants, advocate["advocate_id"], "contains full - levenshtein"))
                 # normal variant of name
                 #if variants.normal.title() in text:
-                distance = lev.distance(variants.normal.title(), name)
-                if distance < threshold:
-                    matches.setdefault(distance, []).append(
-                            (variants, advocate["advocate_id"], "contains normal - levenshtein"))
+                #distance = lev.distance(variants.normal.title(), name)
+                #if distance < threshold:
+                #    matches.setdefault(distance, []).append(
+                #            (variants, advocate["advocate_id"], "contains normal - levenshtein"))
                 # reverse variant of name
                 #if variants.reverse.title() in text:
                 distance = lev.distance(variants.reverse.title(), name)
@@ -602,8 +619,11 @@ class AdvocateTagger(QueryDB):
                     if distance < threshold:
                         matches.setdefault(distance, []).append(
                                 (variants, advocate["advocate_id"], "contains only surname - levenshtein"))
-
+            #if "Vaněk" in name:
+            #    print(ic, found, matches)
+            #    input("Vaněk!2")
             if advocate_id:
+                # found only one match
                 advocate_name = variants.full
                 debug = "was tagged from: %s (%s)" % (text, name)
             elif matches:
@@ -629,8 +649,8 @@ class AdvocateTagger(QueryDB):
                                     "SCHEDULED"))
             else:
                 self.failed += 1
-            #self.print_info(cause, text, name, advocate_name,
-                            #new["advocate_id"], type_of_comparison)
+            self.print_info(cause, text, name, advocate_name,
+                            new["advocate_id"], type_of_comparison)
             return True
         else:
             return None
@@ -643,6 +663,7 @@ class AdvocateTagger(QueryDB):
         bad = []
         for cause in self.causes:
             official_data = cause["official_data"]
+            # only one name for every cause
             if official_data and len(official_data) == 1:
                 try:
                     pin = official_data[0]["PIN"]
@@ -660,6 +681,8 @@ class AdvocateTagger(QueryDB):
                     self.no_match_cache[string] = 1
                     self.bad += 1
                     bad.append((string, status))
+                    continue
+                if name == '' or string == '':
                     continue
                 try:
                     if self.no_match_cache[name]:
