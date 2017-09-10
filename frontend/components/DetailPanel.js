@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import {wrapEventStop} from '../util';
 import PanelBody from './PanelBody';
 
-const DetailPanel = ({children, footer, title, onClick}) => (
+const DetailPanel = ({children, footer, title, onClick, href}) => (
     <a
         className="panel panel-default detail-panel"
         onClick={wrapEventStop(onClick)}
-        href=""
+        href={href}
     >
         <div className="panel-body">
             <PanelBody>
@@ -24,12 +24,14 @@ DetailPanel.propTypes = {
     footer: PropTypes.node,
     title: PropTypes.node.isRequired,
     onClick: PropTypes.func,
+    href: PropTypes.string,
 };
 
 DetailPanel.defaultProps = {
     children: null,
     footer: null,
     onClick: () => {}, // do nothing
+    href: '',
 };
 
 export default DetailPanel;
