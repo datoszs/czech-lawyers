@@ -4,7 +4,7 @@ import {Row, Col} from 'react-bootstrap';
 import {Result} from './result';
 import DetailPanel from './DetailPanel';
 
-const CaseDetail = ({registry, court, result, resultName, date, handleDetail}) => (
+const CaseDetail = ({registry, court, result, resultName, date, handleDetail, href}) => (
     <DetailPanel
         title={registry}
         footer={
@@ -15,6 +15,7 @@ const CaseDetail = ({registry, court, result, resultName, date, handleDetail}) =
             </Row>
         }
         onClick={handleDetail}
+        href={href}
     >
         {resultName && <span className="case-detail-result"><Result result={resultName} /></span>}
     </DetailPanel>
@@ -27,6 +28,7 @@ CaseDetail.propTypes = {
     date: PropTypes.string,
     handleDetail: PropTypes.func.isRequired,
     resultName: PropTypes.oneOf(['positive', 'negative', 'neutral']),
+    href: PropTypes.string.isRequired,
 };
 
 CaseDetail.defaultProps = {

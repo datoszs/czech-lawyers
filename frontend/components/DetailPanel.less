@@ -1,12 +1,26 @@
 .detail-panel() {
     cursor: pointer;
+    color: inherit; // overwrites bootstrap
+    display: block;
 
     .title {
         overflow: hidden;
         text-overflow: ellipsis;
     }
 
-    .title.active {
-        color: @brand-primary;
+    &:hover {
+        border-color: @brand-primary;
+
+        /* overwrites bootstrap */
+        text-decoration: inherit;
+        color: inherit;
+
+        .title {
+            color: @brand-primary;
+        }
+    }
+
+    &:focus {
+        text-decoration: inherit;
     }
 }

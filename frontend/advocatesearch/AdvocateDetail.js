@@ -12,7 +12,7 @@ import {search} from './modules';
 import FooterColumn from './FooterColumn';
 import Legend from './Legend';
 
-const AdvocateDetailComponent = ({advocate, handleDetail, msgStatus, msgIc}) => (
+const AdvocateDetailComponent = ({advocate, handleDetail, msgStatus, msgIc, href}) => (
     <DetailPanel
         footer={
             <Row>
@@ -23,6 +23,7 @@ const AdvocateDetailComponent = ({advocate, handleDetail, msgStatus, msgIc}) => 
         }
         title={advocate.name}
         onClick={handleDetail}
+        href={href}
     >
         <BasicStatistics statistics={advocate.statistics} legend={Legend} />
     </DetailPanel>
@@ -33,6 +34,7 @@ AdvocateDetailComponent.propTypes = {
     handleDetail: PropTypes.func.isRequired,
     msgStatus: PropTypes.string.isRequired,
     msgIc: PropTypes.string.isRequired,
+    href: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = (state, {id}) => {
@@ -41,6 +43,7 @@ const mapStateToProps = (state, {id}) => {
         advocate,
         msgStatus: translate.getMessage(state, statusMsg[advocate.status]),
         msgIc: translate.getMessage(state, 'advocate.ic'),
+        href: router.getHref(state, ADVOCATE_DETAIL, {id}),
     };
 };
 
