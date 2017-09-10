@@ -10,7 +10,7 @@ export const wrapEventStop = (handler) => (event) => {
 };
 
 export const wrapLinkMouseEvent = (onClick) => (event) => {
-    if (event.button === 0 && !event.ctrlKey) {
+    if (event.button === 0 && !event.ctrlKey && !event.altKey && !event.metaKey && !event.shiftKey) {
         event.preventDefault();
         event.stopPropagation();
         onClick(event);
