@@ -1,19 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {wrapLinkMouseEvent} from '../util';
 import PanelBody from './PanelBody';
-
-const wrapMouseEvent = (onClick) => (event) => {
-    if (event.button === 0 && !event.ctrlKey) {
-        event.preventDefault();
-        event.stopPropagation();
-        onClick(event);
-    }
-};
 
 const DetailPanel = ({children, footer, title, onClick, href}) => (
     <a
         className="panel panel-default detail-panel"
-        onClick={wrapMouseEvent(onClick)}
+        onClick={wrapLinkMouseEvent(onClick)}
         href={href}
     >
         <div className="panel-body">

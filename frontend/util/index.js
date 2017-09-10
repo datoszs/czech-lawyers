@@ -9,6 +9,14 @@ export const wrapEventStop = (handler) => (event) => {
     handler(event);
 };
 
+export const wrapLinkMouseEvent = (onClick) => (event) => {
+    if (event.button === 0 && !event.ctrlKey) {
+        event.preventDefault();
+        event.stopPropagation();
+        onClick(event);
+    }
+};
+
 export const getCurrentYear = () => new Date().getFullYear();
 
 export const sequence = (length) => Array.from({length}, (value, index) => index);
