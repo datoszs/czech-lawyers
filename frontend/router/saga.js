@@ -1,8 +1,8 @@
 import ga from 'react-ga';
-import {all, take, cancel, fork, call, takeEvery, select, race} from 'redux-saga/effects';
+import {all, take, cancel, fork, call, takeEvery, select, race, put} from 'redux-saga/effects';
 import history from '../history';
 import {toObject, formatRoute} from '../util';
-import {ROUTE_ENTERED, TRANSITION, NAVIGATE, STOP} from './actions';
+import {ROUTE_ENTERED, TRANSITION, NAVIGATE, STOP, setRouteMap} from './actions';
 import {getQuery, getParams} from './selectors';
 
 const setGaPage = (page) => {
@@ -57,6 +57,7 @@ const navigateSaga = function* navigateSaga(routeMap, {name}) {
 export const routerControlSaga = function* routerControl(modules) {
     const sagaMap = modules.map((module) => [module.NAME, module.saga]).reduce(toObject, {});
     const routeMap = modules.map((module) => [module.NAME, module.ROUTE]).reduce(toObject, {});
+    yield put(setRouteMap(routeMap));
 
     yield takeEvery(TRANSITION, transitionListener, routeMap);
     yield takeEvery(NAVIGATE, navigateSaga, routeMap);
