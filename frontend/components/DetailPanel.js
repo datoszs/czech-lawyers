@@ -1,20 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Panel} from 'react-bootstrap';
+import {wrapEventStop} from '../util';
 import PanelBody from './PanelBody';
 
 const DetailPanel = ({children, footer, title, onClick}) => (
-    <Panel
-        bsStyle="default"
-        className="detail-panel"
-        footer={footer}
-        onClick={onClick}
+    <a
+        className="panel panel-default detail-panel"
+        onClick={wrapEventStop(onClick)}
+        href=""
     >
-        <PanelBody>
-            <h2 className="title">{title}</h2>
-            {children}
-        </PanelBody>
-    </Panel>
+        <div className="panel-body">
+            <PanelBody>
+                <h2 className="title">{title}</h2>
+                {children}
+            </PanelBody>
+        </div>
+        <div className="panel-footer">{footer}</div>
+    </a>
 );
 
 DetailPanel.propTypes = {

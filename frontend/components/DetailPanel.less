@@ -1,5 +1,6 @@
 .detail-panel() {
     cursor: pointer;
+    color: inherit; // overwrites bootstrap
 
     .title {
         overflow: hidden;
@@ -8,6 +9,10 @@
 
     &:hover {
         border-color: @brand-primary;
+
+        /* overwrites bootstrap */
+        text-decoration: inherit;
+        color: inherit;
 
         .title {
             color: @brand-primary;
