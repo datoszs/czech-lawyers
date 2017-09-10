@@ -3,7 +3,7 @@ import {all, take, cancel, fork, call, takeEvery, select, race, put} from 'redux
 import history from '../history';
 import {toObject, formatRoute} from '../util';
 import {ROUTE_ENTERED, TRANSITION, NAVIGATE, STOP, setRouteMap} from './actions';
-import {getQuery, getParams} from './selectors';
+import {getHref, getCurrentHref} from './selectors';
 
 const setGaPage = (page) => {
     ga.set({page});
@@ -30,24 +30,18 @@ const routerSaga = function* routerSaga(sagaMap) {
     }
 };
 
-const transitionListener = (routeMap, {name, params, query, anchor}) => {
-    const route = routeMap[name];
-    if (route) {
-        const path = formatRoute(route, params, query, anchor);
+const transitionListener = function* transition({name, params, query, anchor}) {
+    const path = yield select(getHref, name, params, query, anchor);
+    if (path) {
         history.push(path);
     } else {
         console.error(`Unknown route name: ${name}`);
     }
 };
 
-const navigateSaga = function* navigateSaga(routeMap, {name}) {
-    const route = routeMap[name];
-    if (route) {
-        const [params, query] = yield all([
-            select(getParams, name),
-            select(getQuery, name),
-        ]);
-        const path = formatRoute(route, params, query);
+const navigateSaga = function* navigateSaga({name}) {
+    const path = yield select(getCurrentHref, name);
+    if (path) {
         history.push(path);
     } else {
         console.error(`Unknown route name: ${name}`);
@@ -59,8 +53,8 @@ export const routerControlSaga = function* routerControl(modules) {
     const routeMap = modules.map((module) => [module.NAME, module.ROUTE]).reduce(toObject, {});
     yield put(setRouteMap(routeMap));
 
-    yield takeEvery(TRANSITION, transitionListener, routeMap);
-    yield takeEvery(NAVIGATE, navigateSaga, routeMap);
+    yield takeEvery(TRANSITION, transitionListener);
+    yield takeEvery(NAVIGATE, navigateSaga);
     yield call(routerSaga, sagaMap);
 };
 
