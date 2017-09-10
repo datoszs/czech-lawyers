@@ -6,7 +6,11 @@
         text-overflow: ellipsis;
     }
 
-    .title.active {
-        color: @brand-primary;
+    &:hover {
+        border-color: @brand-primary;
+
+        .title {
+            color: @brand-primary;
+        }
     }
 }

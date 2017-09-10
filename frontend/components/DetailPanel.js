@@ -1,47 +1,21 @@
-import React, {PropTypes, Component} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import {Panel} from 'react-bootstrap';
-import classnames from 'classnames';
 import PanelBody from './PanelBody';
 
-class DetailPanel extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            active: false,
-        };
-        this.handleEnter = this.setActive.bind(this, true);
-        this.handleExit = this.setActive.bind(this, false);
-    }
-
-    setActive(active) {
-        if (active !== this.state.active) {
-            this.setState({active});
-        }
-    }
-
-    render() {
-        const titleClass = classnames({
-            title: true,
-            active: this.state.active,
-        });
-
-        return (
-            <Panel
-                bsStyle={this.state.active ? 'primary' : 'default'}
-                className="detail-panel"
-                footer={this.props.footer}
-                onMouseMove={this.handleEnter}
-                onMouseLeave={this.handleExit}
-                onClick={this.props.onClick}
-            >
-                <PanelBody>
-                    <h2 className={titleClass}>{this.props.title}</h2>
-                    {this.props.children}
-                </PanelBody>
-            </Panel>
-        );
-    }
-}
+const DetailPanel = ({children, footer, title, onClick}) => (
+    <Panel
+        bsStyle="default"
+        className="detail-panel"
+        footer={footer}
+        onClick={onClick}
+    >
+        <PanelBody>
+            <h2 className="title">{title}</h2>
+            {children}
+        </PanelBody>
+    </Panel>
+);
 
 DetailPanel.propTypes = {
     children: PropTypes.node,
