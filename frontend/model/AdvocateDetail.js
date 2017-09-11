@@ -39,6 +39,10 @@ class AdvocateDetail extends Record({
             status: checkStatus(values.status),
         }));
     }
+
+    get active() {
+        return this.status !== status.REMOVED;
+    }
 }
 
 export const mapDtoToAdvocateDetail = (dto) => ({

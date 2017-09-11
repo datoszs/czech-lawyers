@@ -28,6 +28,7 @@ advocate.address: Sídlo
 advocate.status: Stav
 advocate.email: E-mail
 advocate.cases: Případy
+advocate.removed: Tato osoba již advokátní služby neposkytuje.
 
 advocate.detail.title: Detail advokáta
 cak.link: Detail na stránkách České advokátní komory
