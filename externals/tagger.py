@@ -12,19 +12,18 @@ __author__ = "Radim Jílek"
 __copyright__ = "Copyright 2017, DATOS - data o spravedlnosti, z.s."
 __license__ = "GNU GPL"
 
+import logging
+import os
 import re
 import sys
 from collections import namedtuple, OrderedDict
 from datetime import datetime
-import os
 from os.path import join
+
 import Levenshtein as lev
 import neon
 import psycopg2
 from psycopg2 import extras
-import logging
-from pprint import pprint
-
 
 bad_word = [")", "agentura", "asociace", "advokátní", "koncipient"]
 skip_word = ["sama", "§", "s.r.o.", "a.s.", "o.s.", "v.o.s.", "kancelář"]
@@ -75,14 +74,15 @@ def print_statistic(tagger):
           "Processed: {} ({} %), Failed: {}, Hited: {}\n"
           "Size of match_cache: {}, Size of no_match_cache: {}\n"
           "Compare full: {}, Compare normal: {}, Compare reverse: {}\n"
-          "Full match: {}, Compare only surname: {}, Compare by IC: {}\n".format(
+          "Full match: {}, Compare only surname: {}, Compare by IC: {}\n"
+          "Repair records: {}".format(
             len(tagger.causes), len(tagger.advocates),
             tagger.matched, tagger.no_matched, tagger.without_changes,
             tagger.bad, tagger.empty,
             tagger.processed, round(tagger.processed / len(tagger.causes), 2) * 100, tagger.failed, tagger.hit,
             len(tagger.match_cache), len(tagger.no_match_cache),
             tagger.cmp_full, tagger.cmp_normal, tagger.cmp_reverse, tagger.cmp_full_match, tagger.cmp_surname,
-            tagger.cmp_ic)
+            tagger.cmp_ic, tagger.repair_cnt)
     )
 
 
@@ -152,7 +152,7 @@ class QueryDB(object):
         """
         self.cur.execute(
                 "SELECT *"
-                "FROM \"case\"" # mozna from filter_view
+                "FROM \"case\""  # mozna from filter_view
                 "WHERE court_id = %s AND id_case NOT IN (SELECT case_id FROM tagging_advocate WHERE is_final);" % court)
         # AND year=2010
         return self.cur.fetchall()
@@ -184,8 +184,8 @@ class QueryDB(object):
         """
         self.cur.execute(
                 "SELECT * "
-                "FROM tagging_advocate " #mozna from last_tagging_view
-                "WHERE case_id=%i "
+                "FROM tagging_advocate "  #mozna from last_tagging_view
+                "WHERE case_id=%i"
                 "ORDER BY inserted DESC "
                 "LIMIT 1" % int(cause_id))
         return self.cur.fetchone()
@@ -385,7 +385,7 @@ class AdvocateTagger(QueryDB):
         t1 = datetime.now()
         print(t1 - t0)
         self.cleaner = NameCleaner()
-        self.bad, self.empty = 0, 0
+        self.bad, self.empty, self.repair_cnt = (0,) * 3
         self.matched, self.no_matched, self.without_changes = (0,) * 3
         self.cmp_full_match, self.cmp_full, self.cmp_normal, self.cmp_reverse, self.cmp_surname, self.cmp_ic = (
                                                                                                                    0,) * 6
@@ -512,9 +512,9 @@ class AdvocateTagger(QueryDB):
                     result.append(advocate_id)
                     names.append(variants.full)
             debug = "\"{}\" {} with levenshtein distance = {}".format(
-                "; ".join(names),
-                "surname" if "surname" in records[0][-1] else "",
-                distance)
+                    "; ".join(names),
+                    "surname" if "surname" in records[0][-1] else "",
+                    distance)
             return "NULL", debug, debug, states["no"], "mixed"
         else:
             return (None,) * 5
@@ -528,7 +528,6 @@ class AdvocateTagger(QueryDB):
         :param text: full variant of text from court table
         :return: bool
         """
-
 
         if text is None and ic is None:
             return False
@@ -573,11 +572,8 @@ class AdvocateTagger(QueryDB):
                 new = self.prepare_tagging(
                         cause, status, ic, advocate=advocate_id)
                 found = True
-            # print(ic, found) # /* DEBUG */
-            #input(":-)")
-        #if "Vaněk" in name:
-        #    print(ic, found)
-        #    input("Vaněk!")
+                # print(ic, found) # /* DEBUG */
+
         if not found:
             if text is None or name is None:
                 return False
@@ -592,7 +588,7 @@ class AdvocateTagger(QueryDB):
                     status = states["ok"]
                     type_of_comparison = "full compare"
                     advocate_id = advocate["advocate_id"]
-                    break # /todo is it already?
+                    break  # /todo is it already?
                 # normal variant of name
                 #if variants.normal.title() in text:
                 distance = lev.distance(variants.full, name)
@@ -619,9 +615,6 @@ class AdvocateTagger(QueryDB):
                     if distance < threshold:
                         matches.setdefault(distance, []).append(
                                 (variants, advocate["advocate_id"], "contains only surname - levenshtein"))
-            #if "Vaněk" in name:
-            #    print(ic, found, matches)
-            #    input("Vaněk!2")
             if advocate_id:
                 # found only one match
                 advocate_name = variants.full
@@ -640,13 +633,14 @@ class AdvocateTagger(QueryDB):
         if self.insert_if_differs(new, self.get_last_tagging(cause["id_case"])):
             if new["status"] == states["ok"]:
                 self.processed += 1
-                logger.info("{}@Create new advocate tagging of case [{}] to advocate [{}] with ID [{}]. Note [{}].@{}".format(
-                                    "CASE_TAGGING",
-                                    cause["registry_sign"],
-                                    advocate_name,
-                                    new["advocate_id"],
-                                    new["debug"],
-                                    "SCHEDULED"))
+                logger.info(
+                        "{}@Create new advocate tagging of case [{}] to advocate [{}] with ID [{}]. Note [{}].@{}".format(
+                                "CASE_TAGGING",
+                                cause["registry_sign"],
+                                advocate_name,
+                                new["advocate_id"],
+                                new["debug"],
+                                "SCHEDULED"))
             else:
                 self.failed += 1
             self.print_info(cause, text, name, advocate_name,
@@ -655,13 +649,28 @@ class AdvocateTagger(QueryDB):
         else:
             return None
 
+    def repair(self, last_tagging, cause):
+        """
+
+        :param last_tagging:
+        """
+        # print(last_tagging) # /* DEBUG */
+        if last_tagging and last_tagging["advocate_id"]:
+            empty_record = self.prepare_tagging(cause, status="failed", debug="no match")
+            self.repair_cnt += 1
+            self.insert_to_db(empty_record)
+
     def run(self):
         """
         Entry point of this class
 
         """
         bad = []
+        print("Matching...")
         for cause in self.causes:
+            last_tagging = self.get_last_tagging(cause["id_case"])
+            # if has last tagging and not found match, must insert empty record for replace old tagging
+            # print(has_last_tagging)  # /* DEBUG */
             official_data = cause["official_data"]
             # only one name for every cause
             if official_data and len(official_data) == 1:
@@ -681,15 +690,19 @@ class AdvocateTagger(QueryDB):
                     self.no_match_cache[string] = 1
                     self.bad += 1
                     bad.append((string, status))
+                    self.repair(last_tagging, cause)
                     continue
                 if name == '' or string == '':
+                    self.repair(last_tagging, cause)
                     continue
                 try:
                     if self.no_match_cache[name]:
                         self.no_matched += 1
+                        self.repair(last_tagging, cause)
                         continue
                     elif self.no_match_cache[string]:
                         self.no_matched += 1
+                        self.repair(last_tagging, cause)
                         continue
                 except KeyError:
                     pass
@@ -702,8 +715,10 @@ class AdvocateTagger(QueryDB):
                 else:  # not match
                     self.no_matched += 1
                     self.no_match_cache[name] = 1
+                    self.repair(last_tagging, cause)
             else:
                 self.empty += 1
+                self.repair(last_tagging, cause)
         self.conn.commit()
         # print(bad, len(bad))
 
