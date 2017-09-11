@@ -81,6 +81,13 @@ if ($state !== 0) {
 	die("Error: Update of production files could not been finished.\n");
 }
 
+// Create robots.txt according to environment
+if ($environment === 'production') {
+	file_put_contents(__DIR__ . '/www/robots.txt', "User-agent: *\nDisallow:\n");
+} else {
+	file_put_contents(__DIR__ . '/www/robots.txt', "User-agent: *\nDisallow:/\n");
+}
+
 // Run database migrations
 $state = 0;
 if ($environment === 'production') {

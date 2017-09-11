@@ -9,6 +9,7 @@ app/Config/config.local.neon
 node_modules
 www/assets
 www/frontend
+www/robots.txt
 !www/frontend/.keep
 vendor
 storage/documents/ns/*
