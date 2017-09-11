@@ -80,9 +80,9 @@ co ještě za “opodstatněné” považují a co už nikoliv.
 
 Zadruhé upozorňujeme, že **některá konečná rozhodnutí Nejvyššího soudu a Nejvyššího správního soudu byla zrušena Ústavním
 soudem a některá rozhodnutí Ústavního soudu byla zrušena v důsledku rozhodnutí Evropského soudu pro lidská práva**.
-Vzhledem k tomu, že případná nová konečná rozhodnutí, která tato zrušená “nahradila”, byla většinou vydána pod novou
-spisovou značkou, jsou danému advokátu prozatím bohužel přiřazeny oba výsledky, tj. jak výsledek řízení původního,
-tak i výsledek řízení následujícího po zrušení předchozího rozhodnutí.
+Vzhledem k tomu, že Nejvyšší soud a Ústavní soud případná nová konečná rozhodnutí, která tato zrušená “nahradila”, vydaly pod novou
+spisovou značkou, jsou danému advokátu prozatím bohužel přiřazeny oba výsledky u těchto soudů, tj. jak výsledek řízení původního,
+tak i výsledek řízení následujícího po zrušení předchozího rozhodnutí. Na nápravě této situace pracujeme.
 
 Pokud byste o tom, na základě čeho a jak statistiky zobrazované na tomto webu počítáme, chtěli vědět více,
 můžete nahlédnout do [zdrojového kódu](https://github.com/datoszs) celého projektu nebo [nás kontaktovat](/contact).
