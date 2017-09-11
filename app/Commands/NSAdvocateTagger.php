@@ -20,6 +20,7 @@ use App\Model\Services\TaggingService;
 use App\Model\Taggings\TaggingAdvocate;
 use App\Utils\AdvocateMatcher;
 use App\Utils\AdvocatePrefixPrematcher;
+use App\Utils\Normalize;
 use App\Utils\TemplateFilters;
 use Nette\Utils\Strings;
 use Nextras\Dbal\Connection;
@@ -66,9 +67,10 @@ class NSAdvocateTagger extends AdvocateTagger
 	private function prepareAdvocateMatcher()
 	{
 		$advocates = $this->connection
-			->query('SELECT concat_ws(\' \', degree_before, name, surname) AS fullname, string_agg(DISTINCT advocate_id::text, \' \') AS advocate_id FROM advocate_info GROUP BY degree_before, name, surname HAVING array_length(array_agg(DISTINCT advocate_id), 1) = 1')
+			->query('SELECT concat_ws(\' \', name, surname) AS fullname, string_agg(DISTINCT advocate_id::text, \' \') AS advocate_id FROM advocate_info GROUP BY name, surname')
 			->fetchPairs('fullname', 'advocate_id');
-		return new AdvocateMatcher($advocates, 6);
+
+		return new AdvocateMatcher($advocates);
 	}
 
 	private function prepareTagging(Cause $cause, $debug, Document $document = null, Advocate $advocate = null)
@@ -100,13 +102,13 @@ class NSAdvocateTagger extends AdvocateTagger
 		try {
 			list($advocateNameNominativ, $advocateId) = $this->matcher->match($advocateName);
 		} catch (NoMatchException $ex) {
-			$temp = sprintf("Case [%s] file [%s] no match for [%s] withing given distance.\n", TemplateFilters::formatRegistryMark($cause->registrySign), $document->localPath ?? null, $advocateName);
+			$temp = sprintf("Case [%s] file [%s] no match for [%s].\n", TemplateFilters::formatRegistryMark($cause->registrySign), $document->localPath ?? null, $advocateName);
 			$output .= $temp;
 			$consoleOutput->write($temp);
 			// we found advocate, but we could not match it with db, further procession could provide bogus result.
 			return $this->taggingService->persistAdvocateIfDiffers($this->prepareTagging($cause, sprintf('Advocate extracted: %s no match in our database.', $advocateName)));
 		} catch (MultipleMatchesException $ex) {
-			$temp = sprintf("Case [%s] file [%s] multiple matches for [%s] withing given distance: [%s].\n", TemplateFilters::formatRegistryMark($cause->registrySign), $document->localPath ?? null, $advocateName, $ex->getMessage());
+			$temp = sprintf("Case [%s] file [%s] multiple matches for [%s]: [%s].\n", TemplateFilters::formatRegistryMark($cause->registrySign), $document->localPath ?? null, $advocateName, $ex->getMessage());
 			$output .= $temp;
 			$consoleOutput->write($temp);
 			// we found advocate, but we could not match it with db, further procession could provide bogus result.
@@ -128,18 +130,7 @@ class NSAdvocateTagger extends AdvocateTagger
 		$caseAdvocates = array_unique(array_column($cause->officialData, 'fullname'));
 		// Swap names as NS sends data in different order: JUDr. Sokol Tomáš
 		foreach ($caseAdvocates as &$advocate) {
-			$parts = explode(' ', $advocate);
-			if (count($parts) === 2) {
-				$temp = $parts[0];
-				$parts[0] = $parts[1];
-				$parts[1] = $temp;
-			}
-			if (count($parts) === 3) {
-				$temp = $parts[1];
-				$parts[1] = $parts[2];
-				$parts[2] = $temp;
-			}
-			$advocate = implode(' ', $parts);
+			$advocate = Normalize::fixSurnameName($advocate);
 		}
 		return $caseAdvocates;
 	}
@@ -158,6 +149,10 @@ class NSAdvocateTagger extends AdvocateTagger
 				return $this->taggingService->persistAdvocateIfDiffers($this->prepareTagging($cause, sprintf('TDO with multiple advocates [%s].', implode(', ', $caseAdvocates))));
 			}
 		}
+
+		// There could be tagging if exactly one distinct advocate is given in official data...
+		// But it seems that this produces invalid tagging as data from court provides incomplete data (for example when it is authorized person instead of lawyer).
+
 		$documents = $this->documentService->findByCaseId($cause->id);
 		// Iterate through all documents before the extractor succeed, expects descending order!
 		/** @var Document $document */

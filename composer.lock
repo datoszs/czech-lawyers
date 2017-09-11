@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "4fcbbd1d689ec8cfd76a7dc91d47655f",
-    "content-hash": "9fba68d4b88b3099eb0bcede83ae0b2d",
+    "hash": "154b8e30b38966f807c2c9e35ea3e072",
+    "content-hash": "f0ae1c3a77b1dc696ae765ccab209d46",
     "packages": [
         {
             "name": "datoscz/content-transformer",
@@ -341,6 +341,60 @@
                 "html"
             ],
             "time": "2017-06-03 02:28:16"
+        },
+        {
+            "name": "heureka/inflection",
+            "version": "v2.0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/heureka/inflection.git",
+                "reference": "16561fbd2fbc2e0bf348b4720824ffb48be81a69"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/heureka/inflection/zipball/16561fbd2fbc2e0bf348b4720824ffb48be81a69",
+                "reference": "16561fbd2fbc2e0bf348b4720824ffb48be81a69",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/Inflection.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.1"
+            ],
+            "authors": [
+                {
+                    "name": "Mikuláš Dítě",
+                    "email": "mikulas@dite.pro"
+                },
+                {
+                    "name": "Pavel Sedlák",
+                    "email": "pavel.sedlak@centrum.cz"
+                },
+                {
+                    "name": "Heureka",
+                    "email": "podpora@heureka.cz"
+                }
+            ],
+            "description": "Czech inflection library",
+            "keywords": [
+                "czech",
+                "declension",
+                "inflection",
+                "language",
+                "linguistics"
+            ],
+            "time": "2016-01-06 15:24:04"
         },
         {
             "name": "ipub/visual-paginator",

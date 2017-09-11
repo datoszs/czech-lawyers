@@ -42,4 +42,29 @@ class Normalize
 	{
 		return Strings::trim($input);
 	}
+
+	/**
+	 * Fix names like "Mgr.et Mgr. Novák Jan Ph.D., LL.M." and "Mgr.et Mgr. Nováková Štastná Lucie Ph.D., LL.M."
+	 * to <degree before> <name> <surname> <degree after>
+	 * @param string $input
+	 * @return string
+	 */
+	public static function fixSurnameName(string $input): string
+	{
+		$degreeBefore = Degree::extractBefore($input);
+		$degreeAfter = Degree::extractAfter($input);
+		$degreeBeforeLength = $degreeBefore ? mb_strlen($degreeBefore) + 1 : 0;
+		$degreeAfterLength = $degreeAfter ? mb_strlen($degreeAfter) + 1 : 0;
+		$input = mb_substr($input, $degreeBeforeLength, mb_strlen($input) - ($degreeAfterLength + $degreeBeforeLength));
+		$temp = explode(' ', $input);
+		$words = count($temp);
+		if ($words >= 2) {
+			$last = $temp[$words - 1];
+			unset($temp[$words - 1]);
+			array_unshift($temp, $last);
+		}
+		return ($degreeBefore ? ($degreeBefore . ' ') : '') .
+				implode(' ', $temp) .
+				($degreeAfter ? (' ' . $degreeAfter) : '');
+	}
 }

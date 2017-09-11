@@ -43,7 +43,8 @@
 		"datoscz/content-transformer": "~0.5.0",
 		"phpunit/phpunit": "^6.0",
 		"ublaboo/api-router": "^1.2",
-		"ublaboo/api-docu": "^1.2"
+		"ublaboo/api-docu": "^1.2",
+		"heureka/inflection": "^2.0"
 	},
 	"repositories": [
 		{
