@@ -1,6 +1,6 @@
 import {NAME} from './constants';
 import {transition, navigate, stop} from './actions';
-import {isActive} from './selectors';
+import {isActive, getHref} from './selectors';
 import saga from './saga';
 import reducer from './reducer';
 import Component from './Component';
@@ -17,6 +17,7 @@ const router = {
     navigate,
     stop,
     isActive,
+    getHref,
     saga,
     reducer,
 };

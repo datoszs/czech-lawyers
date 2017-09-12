@@ -4,6 +4,7 @@ export const ROUTE_ENTERED = `${NAME}/ROUTE_ENTERED`;
 export const TRANSITION = `${NAME}/TRANSITION`;
 export const NAVIGATE = `${NAME}/NAVIGATE`;
 export const STOP = `${NAME}/STOP`;
+export const SET_ROUTE_MAP = `${NAME}/SET_ROUTE_MAP`;
 
 /** Route has been entered. Uses Route onEnter handler */
 export const routeEntered = (name, params, query) => ({
@@ -28,4 +29,9 @@ export const navigate = (name) => ({
 
 export const stop = () => ({
     type: STOP,
+});
+
+export const setRouteMap = (routeMap) => ({
+    type: SET_ROUTE_MAP,
+    routeMap,
 });

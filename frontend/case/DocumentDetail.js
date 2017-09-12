@@ -1,25 +1,9 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import moment from 'moment';
 import translate from '../translate';
 import {DetailPanel} from '../components';
 import {getDocument} from './selectors';
-
-const DocumentDetailComponent = ({mark, date, handleDetail, dateFormat}) => (
-    <DetailPanel
-        title={mark}
-        onClick={handleDetail}
-        footer={moment(date).format(dateFormat)}
-    />
-);
-
-DocumentDetailComponent.propTypes = {
-    mark: PropTypes.string.isRequired,
-    date: PropTypes.number.isRequired,
-    handleDetail: PropTypes.func.isRequired,
-    dateFormat: PropTypes.string.isRequired,
-};
 
 const mapStateToProps = (state, {id}) => {
     const document = getDocument(state, id);
@@ -36,13 +20,13 @@ const mapDispatchToProps = () => ({
 });
 
 const mergeProps = ({mark, date, href, dateFormat}, {openDetail}) => ({
-    mark,
-    date,
-    dateFormat,
-    handleDetail: openDetail(href),
+    title: mark,
+    footer: moment(date).format(dateFormat),
+    onClick: openDetail(href),
+    href,
 });
 
-const DocumentDetail = connect(mapStateToProps, mapDispatchToProps, mergeProps)(DocumentDetailComponent);
+const DocumentDetail = connect(mapStateToProps, mapDispatchToProps, mergeProps)(DetailPanel);
 
 DocumentDetail.propTypes = {
     id: PropTypes.number.isRequired,
