@@ -1,7 +1,7 @@
 import ga from 'react-ga';
-import {all, take, cancel, fork, call, takeEvery, select, race, put} from 'redux-saga/effects';
+import {take, cancel, fork, call, takeEvery, select, race, put} from 'redux-saga/effects';
 import history from '../history';
-import {toObject, formatRoute} from '../util';
+import {toObject} from '../util';
 import {ROUTE_ENTERED, TRANSITION, NAVIGATE, STOP, setRouteMap} from './actions';
 import {getHref, getCurrentHref} from './selectors';
 
