@@ -98,7 +98,7 @@ gulp.task('scripts-minify', function() {
         .pipe(gulp.dest(destinations.scripts));
 });
 gulp.task('scripts-full', ['scripts']);
-gulp.task('scripts-mini', ['scripts', 'scripts-minify']); // For now backend scripts are not minified
+gulp.task('scripts-mini', ['scripts']); // For now backend scripts are not minified, due to bug in uglify (which destroys output)
 
 // ====== Other actions =======
 gulp.task('watch', function() {
