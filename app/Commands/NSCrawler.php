@@ -29,7 +29,7 @@ class NSCrawler extends CauseCrawler
 			3,
 			(new DateTime('Monday previous week'))->format('Y-m-d'),
 			(new DateTime("Sunday previous week"))->format('Y-m-d'),
-			'CDO,NSČR,ICDO'
+			'CDO,NSČR,ICDO,TDO'
 		);
 	}
 
