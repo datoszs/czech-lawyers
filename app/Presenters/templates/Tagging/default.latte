@@ -16,6 +16,7 @@
 		</label>
 		<label>Stav výsledku:
 			<select name="result" class="form-control">
+				<option value="any" {if $result === 'any'}selected="selected"{/if}>Jakýkoliv</option>
 				<option value="ok" {if $result === 'ok'}selected="selected"{/if}>V pořádku</option>
 				<option value="failed" {if $result === 'failed'}selected="selected"{/if}>Selhalo</option>
 				<option value="disputed" {if $result === 'disputed'}selected="selected"{/if}>Rozporováno</option>
@@ -23,6 +24,7 @@
 		</label>
 		<label>Stav advokáta:
 			<select name="advocate" class="form-control">
+				<option value="any" {if $result === 'any'}selected="selected"{/if}>Jakýkoliv</option>
 				<option value="ok" {if $advocate === 'ok'}selected="selected"{/if}>V pořádku</option>
 				<option value="failed" {if $advocate === 'failed'}selected="selected"{/if}>Selhalo</option>
 				<option value="disputed" {if $advocate === 'disputed'}selected="selected"{/if}>Rozporováno</option>

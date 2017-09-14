@@ -21,12 +21,9 @@ use App\Model\Taggings\TaggingAdvocate;
 use App\Model\Taggings\TaggingCaseResult;
 use App\Utils\BootstrapForm;
 use App\Utils\MailService;
-use App\Utils\Responses\OriginalMimeTypeFileResponse;
-use App\Utils\TemplateFilters;
+use App\Utils\Normalize;
 use IPub\VisualPaginator\Components\Control;
-use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
-use Nette\Application\Responses\FileResponse;
 use Nette\Application\UI\Form;
 use Nette\Mail\SendException;
 use Nette\Utils\Validators;
@@ -87,7 +84,7 @@ class TaggingPresenter extends SecuredPresenter
 		$caseResultId = $caseResult->id ?? null;
 
 		// Auditing
-		if (!$advocateTagging->advocate) {
+		if (!$advocateTagging || !$advocateTagging->advocate) {
 			return;
 		}
 		$advocateName = $advocateTagging->advocate ? $advocateTagging->advocate->getCurrentName() : null;
@@ -101,10 +98,11 @@ class TaggingPresenter extends SecuredPresenter
 	{
 		$court = ($court && array_key_exists($court, Court::$types)) ? Court::$types[$court] : null;
 		$count = 100;
+		$registryMarkNormalized = $registryMark !== null ? Normalize::registryMark($registryMark) : null;
 
 		/** @var Control $visualPaginator */
 		$visualPaginator = $this->getComponent('visualPaginator');
-		$cases = $this->causeService->findForManualTagging($court, $registryMark, $advocate ?? 'ok', $result ?? 'ok');
+		$cases = $this->causeService->findForManualTagging($court, $registryMarkNormalized, $advocate ?? 'any', $result ?? 'any');
 		$totalCount = $cases->countStored();
 		$paginator = $visualPaginator->getPaginator();
 		$paginator->itemsPerPage = $count;
@@ -221,9 +219,11 @@ class TaggingPresenter extends SecuredPresenter
 		$advocateTagging = $this->taggingService->getLatestAdvocateTaggingFor($case);
 
 		// Auditing
-		$advocateName = $advocateTagging->advocate ? $advocateTagging->advocate->getCurrentName() : null;
-		$advocateId = $advocateTagging->advocate ? $advocateTagging->advocate->id : null;
-		$this->auditing->logAccess(AuditedSubject::CASE_TAGGING, "Load advocate tagging with ID [{$advocateTagging->id}] of case [{$advocateTagging->case->registrySign}] and advocate [{$advocateName}] with ID [{$advocateId}].", AuditedReason::REQUESTED_INDIVIDUAL);
+		if ($advocateTagging && $advocateTagging->advocate) {
+			$advocateName = $advocateTagging->advocate ? $advocateTagging->advocate->getCurrentName() : null;
+			$advocateId = $advocateTagging->advocate ? $advocateTagging->advocate->id : null;
+			$this->auditing->logAccess(AuditedSubject::CASE_TAGGING, "Load advocate tagging with ID [{$advocateTagging->id}] of case [{$advocateTagging->case->registrySign}] and advocate [{$advocateName}] with ID [{$advocateId}].", AuditedReason::REQUESTED_INDIVIDUAL);
+		}
 
 		// Form creation
 		$form = new BootstrapForm();
