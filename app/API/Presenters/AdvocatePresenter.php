@@ -113,6 +113,8 @@ class AdvocatePresenter extends Presenter
 	 *  - <b>neutral</b>
 	 *  - <b>positive</b>
 	 *
+	 * Note: when advocate is in state <b>removed</b>, then emails field is null.
+	 *
 	 * Note: statistics take into account only cases which are relevant for advocates portal.
 	 *
 	 * Note: advocates with same name also match historic names on both sides, but shows only up-to-date names.
@@ -181,7 +183,7 @@ class AdvocatePresenter extends Presenter
 				'city' => $currentInfo->city,
 				'postal_area' => $currentInfo->postalArea,
 			],
-			'emails' => $currentInfo->email,
+			'emails' => $currentInfo->status === AdvocateStatus::STATUS_REMOVED ? null : $currentInfo->email,
 			'state' => $currentInfo->status,
 			'remote_page' => sprintf('http://vyhledavac.cak.cz/Contact/Details/%s', $advocate->remoteIdentificator),
 			'statistics' => [
@@ -207,7 +209,7 @@ class AdvocatePresenter extends Presenter
 			$output[] = [
 				'id_advocate' => $advocate->id,
 				'fullname' => TemplateFilters::formatName($currentInfo->name, $currentInfo->surname, $currentInfo->degreeBefore, $currentInfo->degreeAfter),
-				'residence' => [
+				'residence' => $currentInfo->status === AdvocateStatus::STATUS_REMOVED ? null : [
 					'street' => $currentInfo->street,
 					'city' => $currentInfo->city,
 					'postal_area' => $currentInfo->postalArea,
