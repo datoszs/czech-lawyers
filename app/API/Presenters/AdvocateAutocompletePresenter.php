@@ -41,6 +41,7 @@ class AdvocateAutocompletePresenter extends Presenter
 	 *         {
 	 *             "id_advocate": 123,
 	 *             "fullname": "JUDr. Ing. Petr Omáčka, PhD.",
+	 *             "identification_number": "11223344",
 	 *             "matched": {
 	 *                 "type": "ic",
 	 *                 "value": "11223344"
@@ -48,6 +49,8 @@ class AdvocateAutocompletePresenter extends Presenter
 	 *         }
 	 *     ]
 	 * </json>
+	 *
+	 * Note: identification_number can be null
 	 *
 	 * @ApiRoute(
 	 *     "/api/advocate/autocomplete[/<query>]",
@@ -116,6 +119,7 @@ class AdvocateAutocompletePresenter extends Presenter
 		return [
 			'id_advocate' => $advocate->id,
 			'fullname' => $currentFullname,
+			'identification_number' => $advocate->registrationNumber,
 			'matched' => [
 				'type' => $matchedType,
 				'value' => $matchedValue
