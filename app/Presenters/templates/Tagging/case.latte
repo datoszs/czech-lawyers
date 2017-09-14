@@ -139,9 +139,9 @@
 					<table class="table table-bordered">
 						<thead>
 						<tr>
-							<th>ID</th>
-							<th>Předmět rozporování &amp; zdůvodnění</th>
-							<th>Odpověď</th>
+							<th width="10%">ID</th>
+							<th width="45%">Předmět rozporování &amp; zdůvodnění</th>
+							<th width="45%">Odpověď</th>
 						</tr>
 						</thead>
 						<tbody>
@@ -211,7 +211,7 @@
 										</b>
 									</p>
 									<blockquote>
-										{$dispute->reason}
+										{$dispute->reason|breaklines}
 									</blockquote>
 									<small>
 										<span class="glyphicon glyphicon-user"></span> <a href="mailto:{$dispute->email}" title="{$dispute->email}">{$dispute->fullname}</a>,
@@ -220,7 +220,7 @@
 								</td>
 								<td>
 									<blockquote n:if="$dispute->response">
-										{$dispute->response}
+										{$dispute->response|breaklines}
 									</blockquote>
 									{if $dispute->resolvedBy}
 										<small><span class="glyphicon glyphicon-user"></span> {$dispute->resolvedBy->username}, {$dispute->resolved|date:'j. m. Y H:i:s'}</small>

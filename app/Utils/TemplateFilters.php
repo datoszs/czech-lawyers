@@ -1,8 +1,6 @@
 <?php
 namespace App\Utils;
 
-
-
 use Nette\Utils\Strings;
 
 class TemplateFilters
@@ -87,5 +85,10 @@ class TemplateFilters
 
 
 		return implode(' ', $parts);
+	}
+
+	public static function wordwrap(string $input, int $width = 75): string
+	{
+		return wordwrap($input, $width, "\n", true);
 	}
 }
