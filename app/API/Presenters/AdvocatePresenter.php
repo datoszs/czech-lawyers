@@ -115,6 +115,8 @@ class AdvocatePresenter extends Presenter
 	 *
 	 * Note: when advocate is in state <b>removed</b>, then emails field is null.
 	 *
+	 * Note: when advocate (queried or with same name) is in state <b>removed<b>, then fields street and postal_area are null.
+	 *
 	 * Note: statistics take into account only cases which are relevant for advocates portal.
 	 *
 	 * Note: advocates with same name also match historic names on both sides, but shows only up-to-date names.
@@ -179,9 +181,9 @@ class AdvocatePresenter extends Presenter
 			'registration_number' => $advocate->identificationNumber,
 			'fullname' => TemplateFilters::formatName($currentInfo->name, $currentInfo->surname, $currentInfo->degreeBefore, $currentInfo->degreeAfter),
 			'residence' => [
-				'street' => $currentInfo->street,
+				'street' => $currentInfo->status === AdvocateStatus::STATUS_REMOVED ? null : $currentInfo->street,
 				'city' => $currentInfo->city,
-				'postal_area' => $currentInfo->postalArea,
+				'postal_area' => $currentInfo->status === AdvocateStatus::STATUS_REMOVED ? null : $currentInfo->postalArea,
 			],
 			'emails' => $currentInfo->status === AdvocateStatus::STATUS_REMOVED ? null : $currentInfo->email,
 			'state' => $currentInfo->status,
@@ -210,9 +212,9 @@ class AdvocatePresenter extends Presenter
 				'id_advocate' => $advocate->id,
 				'fullname' => TemplateFilters::formatName($currentInfo->name, $currentInfo->surname, $currentInfo->degreeBefore, $currentInfo->degreeAfter),
 				'residence' => $currentInfo->status === AdvocateStatus::STATUS_REMOVED ? null : [
-					'street' => $currentInfo->street,
+					'street' => $currentInfo->status === AdvocateStatus::STATUS_REMOVED ? null : $currentInfo->street,
 					'city' => $currentInfo->city,
-					'postal_area' => $currentInfo->postalArea,
+					'postal_area' => $currentInfo->status === AdvocateStatus::STATUS_REMOVED ? null : $currentInfo->postalArea,
 				],
 			];
 		}

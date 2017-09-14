@@ -7,7 +7,7 @@ const AddressFormatter = ({value}) => (
     <div>
         {value.street}
         {(value.street && (value.city || value.postcode)) && <br />}
-        {value.city}&emsp;<PostcodeFormatter value={value.postcode} />
+        {value.city}&emsp;{value.postcode && <PostcodeFormatter value={value.postcode} />}
     </div>
 );
 

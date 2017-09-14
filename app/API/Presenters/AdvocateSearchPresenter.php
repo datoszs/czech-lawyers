@@ -78,6 +78,8 @@ class AdvocateSearchPresenter extends Presenter
 	 *  - <b>neutral</b>
 	 *  - <b>positive</b>
 	 *
+	 * Note: when advocate (queried or with same name) is in state <b>removed<b>, then fields street and postal_area are null.
+	 *
 	 * Note: statistics take into account only cases which are relevant for advocates portal.
 	 *
 	 * @ApiRoute(
@@ -170,9 +172,9 @@ class AdvocateSearchPresenter extends Presenter
 			'identification_number' => $advocate->registrationNumber,
 			'fullname' => TemplateFilters::formatName($currentInfo->name, $currentInfo->surname, $currentInfo->degreeBefore, $currentInfo->degreeAfter),
 			'residence' => [
-				'street' => $currentInfo->street,
+				'street' => $currentInfo->status === AdvocateStatus::STATUS_REMOVED ? null : $currentInfo->street,
 				'city' => $currentInfo->city,
-				'postal_area' => $currentInfo->postalArea,
+				'postal_area' => $currentInfo->status === AdvocateStatus::STATUS_REMOVED ? null : $currentInfo->postalArea,
 			],
 			'state' => $currentInfo->status,
 			'matched' => [
