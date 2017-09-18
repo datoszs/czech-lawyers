@@ -110,7 +110,7 @@ case.dispute.verify.inconsistent: |
 
 home.above: Zadejte advokáta a zobrazte si statistiky o jeho vystupování před třemi nejdůležitějšími soudy v ČR.
 home.cak.search: Pokud advokáta, jehož statistiky byste si chtěli zobrazit, teprve hledáte, využijte možnost [vyhledávání advokátů podle zaměření nebo sídla](http://vyhledavac.cak.cz) na stránkách České advokátní komory.
-leaderboard.legend: Spočítali jsme pro Vás, kterých deset advokátů má největší převahu **+meritorních+** konečných rozhodnutí nad **-nemeritorními-** a naopak, a to při zohlednění celkového podílu meritorních a nemeritorních konečných rozhodnutí v judikatuře daného soudu ([proč? co to znamená?](/about)). Upozorňujeme ovšem, že data, která jsme pro výpočet použili, [nemusí být úplná](/about).
+leaderboard.legend: Spočítali jsme pro Vás, kterých deset advokátů má největší převahu **+meritorních+** konečných rozhodnutí nad **-nemeritorními-** a naopak, a to při zohlednění celkového podílu meritorních a nemeritorních konečných rozhodnutí v judikatuře daného soudu ([proč? co to znamená?](/about)). Těchto deset advokátů jsme pak seřadili abecedně podle příjmení. Upozorňujeme ovšem, že data, která jsme pro výpočet použili, [nemusí být úplná](/about).
 home.disclaimer: Účelem tohoto webu není poskytovat právní služby, ani jejich poskytování zprostředkovávat. Web zpracovává data veřejných institucí. Za věcnou správnost těchto dat autoři webu nenesou odpovědnost. Způsob využití zde zveřejňovaných statistik je zcela v rukou uživatelů, autoři webu za něj nenesou odpovědnost.
 contact.subtitle: "Za projektem stojí:"
 contact.authors: |
