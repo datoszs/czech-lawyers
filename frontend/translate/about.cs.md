@@ -71,7 +71,7 @@ rozhodnutí (odkaz na vyhledávání je v horní liště) nebo kliknutím na dan
 Pokud tlačítko na stránce konečného rozhodnutí (případu) nenajdete, znamená to, že již bylo “ručně” zpracováno.
 Chcete-li zpochybnit správnost “ručního” zpracování, [napište nám](/contact). 
 
-Na závěr dvě upozornění. Zaprvé je třeba upozornit, že **Nejvyšší soud a Ústavní soud** nemeritorní konečná rozhodnutí
+Na závěr tři upozornění. Zaprvé je třeba upozornit, že **Nejvyšší soud a Ústavní soud** nemeritorní konečná rozhodnutí
 (tedy rozhodnutí nezabývající se obsahem podání) vydávají nejen tehdy, když se na ně advokát obrátí pozdě, například
 nepřiloží potřebné materiály nebo když tak učiní v situaci, kdy to zákon nepřipouští. **Nemeritorní konečná rozhodnutí
 mohou vydat také v případě, že advokátovo podání považují za “zjevně neopodstatněné”.** Pro advokáta může být naneštěstí
@@ -83,6 +83,8 @@ soudem a některá rozhodnutí Ústavního soudu byla zrušena v důsledku rozho
 Vzhledem k tomu, že Nejvyšší soud případná nová konečná rozhodnutí, která tato zrušená “nahradila”, vydal pod novou
 spisovou značkou, jsou danému advokátu prozatím bohužel přiřazeny oba výsledky u tohoto soudu, tj. jak výsledek řízení původního,
 tak i výsledek řízení následujícího po zrušení předchozího rozhodnutí. Na nápravě této situace pracujeme. Zrušená rozhodnutí Nejvyššího správního soudu a Ústavního soudu již žádnému advokátu přiřazena nejsou.
+
+Zatřetí je pak třeba zmínit, že **některá konečná rozhodnutí byla vydána v řízeních, pro něž byl advokát navrhovateli ustanoven soudem či určen Českou advokátní komorou**. Soudy zpravidla advokáta navrhovateli neustanoví, je-li návrh zjevně bezúspěšný, z podobného důvodu pak není advokát povinen ani respektovat určení Komorou. Nadto má advokát, za určitých podmínek, možnost požádat o zrušení ustanovení nebo požádat Komoru o určení jiného advokáta. Nicméně i navzdory právě uvedenému je možné, že v některých případech neměl ustanovený či určený advokát možnost volby a návrh, o němž bylo nakonec rozhodováno nemeritorně, podat (z různých důvodů) musel.
 
 Pokud byste o tom, na základě čeho a jak statistiky zobrazované na tomto webu počítáme, chtěli vědět více,
 můžete nahlédnout do [zdrojového kódu](https://github.com/datoszs) celého projektu nebo [nás kontaktovat](/contact).
