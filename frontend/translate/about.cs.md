@@ -29,7 +29,7 @@ podaných po 1. 1. 2001 a v trestněprávních věcech (rejstřík Tdo) podanýc
 - **Nejvyšší správní soud**:
 Konečná rozhodnutí o kasačních stížnostech (rejstříky As, Ads, Afs, Ans, Aos, Aps, Ars, Azs) podaných po 1. 1. 2006.
 - **Ústavní soud**:
-Konečná rozhodnutí o všech návrzích podaných od počátku činnosti soudu do 31. 12. 2006 (v tomto období nebyla v relevantních databázích rozlišována rozhodnutí o ústavních stížnostech a rozhodnutí vydaná v jiných typech řízení, rozhodnutí o ústavních stížnostech ale vždy tvořila většinu). Z rozhodnutí o návrzích podaných po 1. 1. 2007 již vybíráme jen konečná rozhodnutí o ústavních stížnostech. 
+Konečná rozhodnutí o všech návrzích podaných od počátku činnosti soudu do 31. 12. 2006 [v tomto období nebyla v relevantních databázích rozlišována rozhodnutí o ústavních stížnostech dle čl. 87 odst. 1 písm. d) Ústavy a rozhodnutí vydaná v jiných typech řízení, rozhodnutí o těchto ústavních stížnostech ale vždy tvořila většinu]. Z rozhodnutí o návrzích podaných po 1. 1. 2007 již vybíráme jen konečná rozhodnutí o ústavních stížnostech dle čl. 87 odst. 1 písm. d) Ústavy. 
     
 Způsob zpracování rozhodnutí
 ----------------------------
