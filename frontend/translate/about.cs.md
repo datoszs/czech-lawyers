@@ -80,9 +80,7 @@ co ještě za “opodstatněné” považují a co už nikoliv.
 
 Zadruhé upozorňujeme, že **některá konečná rozhodnutí Nejvyššího soudu a Nejvyššího správního soudu byla zrušena Ústavním
 soudem a některá rozhodnutí Ústavního soudu byla zrušena v důsledku rozhodnutí Evropského soudu pro lidská práva**.
-Vzhledem k tomu, že Nejvyšší soud případná nová konečná rozhodnutí, která tato zrušená “nahradila”, vydal pod novou
-spisovou značkou, jsou danému advokátu prozatím bohužel přiřazeny oba výsledky u tohoto soudu, tj. jak výsledek řízení původního,
-tak i výsledek řízení následujícího po zrušení předchozího rozhodnutí. Na nápravě této situace pracujeme. Zrušená rozhodnutí Nejvyššího správního soudu a Ústavního soudu již žádnému advokátu přiřazena nejsou.
+Zrušená rozhodnutí Ústavního soudu žádnému advokátu přiřazena nejsou. Vzhledem k tomu, že Nejvyšší správní soud případná nová konečná rozhodnutí, která zrušená “nahradila”, vydal pod stejnou spisovou značkou, je danému advokátu přiřazen pouze výsledek řízení následujícího po zrušení předchozího rozhodnutí. Ostatní zrušená konečná rozhodnutí (Nejvyššího soudu a část rozhodnutí Nejvyššího správního soudu) jsou bohužel prozatím advokátům přiřazena. Na nápravě této situace pracujeme.
 
 Zatřetí je pak třeba zmínit, že **některá konečná rozhodnutí byla vydána v řízeních, pro něž byl advokát navrhovateli ustanoven soudem či určen Českou advokátní komorou**. Soudy zpravidla advokáta navrhovateli neustanoví, je-li návrh zjevně bezúspěšný, z podobného důvodu pak není advokát povinen ani respektovat určení Komorou. Nadto má advokát, za určitých podmínek, možnost požádat o zrušení ustanovení nebo požádat Komoru o určení jiného advokáta. Nicméně i navzdory právě uvedenému je možné, že v některých případech neměl ustanovený či určený advokát možnost volby a návrh, o němž bylo nakonec rozhodováno nemeritorně, podat (z různých důvodů) musel.
 
