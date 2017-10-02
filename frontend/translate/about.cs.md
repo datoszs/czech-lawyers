@@ -12,7 +12,7 @@ rozhodnou. Úkolem advokáta není vždy vyhrát, advokát nemůže a nemá brá
 Zpřístupnění informace o úspěšnosti advokáta tedy lze požadovat za nežádoucí. Statistiky jsou počítány pouze
 na základě toho, kolikrát se advokát na soud (ať už vlivem pochybení, na výslovnou žádost klienta či z jiných
 důvodů) obrátil s vadnými nebo opožděnými podáními nebo například v situacích, ve kterých to zákon neumožňuje. Konkrétněji,
-**u advokátů je sledován a zobrazován počet podání (stížností, dovolání), o nichž soud rozhodl co do obsahu (meritorně),
+**u advokátů je sledován a zobrazován počet jejich podání (stížností, dovolání), o nichž soud rozhodl co do obsahu (meritorně),
 o nichž rozhodl nemeritorně a o nichž nakonec nerozhodoval vůbec**.
 
 Projekt bez jakékoliv finanční podpory realizuje zapsaný spolek DATOS -- data o spravedlnosti, IČO 05003997. Předsedkyní
