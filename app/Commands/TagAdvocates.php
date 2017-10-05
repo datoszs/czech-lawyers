@@ -4,6 +4,7 @@ namespace App\Commands;
 
 use App\Enums\Court;
 use App\Utils\JobCommand;
+use Exception;
 use Nette\Utils\FileSystem;
 use League\Csv\Reader;
 use App\Auditing\AuditedReason;
@@ -60,8 +61,12 @@ class TagAdvocates extends Command
 
 			}
 			$transactionLogger->commit();
+			$csv = $rows = $audited_subject = $reason = null; // important before delete CSV file
+
 			// Empty directory after successful procession
-			// FileSystem::delete($path);
+			if (file_exists($path)) {
+				FileSystem::delete($path);
+			}
 		}
 	}
 
