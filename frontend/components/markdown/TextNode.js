@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {createElement} from 'react';
 import PropTypes from 'prop-types';
 import PositiveText from './PositiveText';
 import NegativeText from './NegativeText';
@@ -37,7 +37,7 @@ const transform = (result, literal) => {
     }
 };
 
-const TextNode = ({literal}) => transform([], literal);
+const TextNode = ({literal}) => React.createElement('span', null, transform([], literal));
 
 TextNode.propTypes = {
     literal: PropTypes.string.isRequired,
