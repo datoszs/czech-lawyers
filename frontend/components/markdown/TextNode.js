@@ -37,7 +37,7 @@ const transform = (result, literal) => {
     }
 };
 
-const TextNode = ({literal}) => React.createElement('span', null, transform([], literal));
+const TextNode = ({literal}) => createElement('span', null, transform([], literal));
 
 TextNode.propTypes = {
     literal: PropTypes.string.isRequired,
