@@ -1,4 +1,5 @@
 import {put, select, fork, call, race, take, takeLatest, all} from 'redux-saga/effects';
+import ga from 'react-ga';
 import {advocateAPI, caseAPI} from '../serverAPI';
 import {mapDtoToAdvocateDetail, mapDtoToAdvocateResults, mapDtoToCase} from '../model';
 import {setId, setAdvocate, setResults, SET_COURT_FILTER, SET_GRAPH_FILTER, setCases, setStatistics} from './actions';
@@ -11,6 +12,12 @@ const loadAdvocateSaga = function* loadAdvocate(id) {
         yield put(setAdvocate(mapDtoToAdvocateDetail(advocate)));
         yield put(setStatistics(advocate.court_statistics));
         yield put(samename.setAdvocates(advocate.advocates_with_same_name));
+
+        ga.event({
+            category: 'advocate',
+            action: 'inspect',
+            label: advocate.identification_number,
+        });
     }
 };
 
