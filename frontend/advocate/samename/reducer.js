@@ -30,7 +30,9 @@ const residenceReducer = (state = Map(), action) => {
         case SET_ID:
             return Map();
         case SET_SAME_NAME_ADVOCATES:
-            return Map(action.advocates.map((advocate) => [advocate.id_advocate, advocate.residence.city]));
+            return Map(action.advocates
+                .filter((advocate) => !!advocate.residence)
+                .map((advocate) => [advocate.id_advocate, advocate.residence.city]));
         default:
             return state;
     }
