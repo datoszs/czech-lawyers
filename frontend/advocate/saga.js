@@ -13,11 +13,13 @@ const loadAdvocateSaga = function* loadAdvocate(id) {
         yield put(setStatistics(advocate.court_statistics));
         yield put(samename.setAdvocates(advocate.advocates_with_same_name));
 
-        ga.event({
-            category: 'advocate',
-            action: 'inspect',
-            label: advocate.identification_number,
-        });
+        if (advocate.identification_number) {
+            ga.event({
+                category: 'advocate',
+                action: 'inspect',
+                label: advocate.identification_number,
+            });
+        }
     }
 };
 
