@@ -12,7 +12,7 @@ import {getDetail} from './selectors';
 const DetailComponent = ({advocateId, advocateName, court, result, decisionDate, propositionDate}) => (
     <div>
         <DetailField msg="case.advocate">
-            <RouterLink route={ADVOCATE_DETAIL} params={{id: advocateId}}>{advocateName}</RouterLink>
+            {advocateId && <RouterLink route={ADVOCATE_DETAIL} params={{id: advocateId}}>{advocateName}</RouterLink>}
         </DetailField>
         <DetailField msg="case.court">{court}</DetailField>
         <DetailField msg="case.result">{result}</DetailField>
