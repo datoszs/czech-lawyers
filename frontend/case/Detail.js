@@ -3,17 +3,17 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import moment from 'moment';
 import {courtsMsg, resultMsg} from '../model';
-import {DetailField} from '../containers';
-import {wrapEventStop} from '../util';
+import {DetailField, RouterLink} from '../containers';
 import translate from '../translate';
-import router from '../router';
 import {ADVOCATE_DETAIL} from '../routes';
 import {getDetail} from './selectors';
 
 
-const DetailComponent = ({advocateName, court, result, decisionDate, propositionDate, handleAdvocate}) => (
+const DetailComponent = ({advocateId, advocateName, court, result, decisionDate, propositionDate}) => (
     <div>
-        <DetailField msg="case.advocate"><a href="" onClick={wrapEventStop(handleAdvocate)} >{advocateName}</a></DetailField>
+        <DetailField msg="case.advocate">
+            <RouterLink route={ADVOCATE_DETAIL} params={{id: advocateId}}>{advocateName}</RouterLink>
+        </DetailField>
         <DetailField msg="case.court">{court}</DetailField>
         <DetailField msg="case.result">{result}</DetailField>
         <DetailField msg="case.date.proposition">{propositionDate}</DetailField>
@@ -22,15 +22,16 @@ const DetailComponent = ({advocateName, court, result, decisionDate, proposition
 );
 
 DetailComponent.propTypes = {
+    advocateId: PropTypes.number,
     advocateName: PropTypes.string,
     court: PropTypes.string,
     result: PropTypes.string,
     decisionDate: PropTypes.string,
     propositionDate: PropTypes.string,
-    handleAdvocate: PropTypes.func.isRequired,
 };
 
 DetailComponent.defaultProps = {
+    advocateId: null,
     advocateName: null,
     court: null,
     result: null,
@@ -51,13 +52,4 @@ const mapStateToProps = (state) => {
     });
 };
 
-const mapDispatchToProps = (dispatch) => ({
-    goToAdvocate: (id) => () => dispatch(router.transition(ADVOCATE_DETAIL, {id})),
-});
-
-const mergeProps = ({advocateId, ...stateProps}, {goToAdvocate}) => ({
-    handleAdvocate: goToAdvocate(advocateId),
-    ...stateProps,
-});
-
-export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(DetailComponent);
+export default connect(mapStateToProps)(DetailComponent);

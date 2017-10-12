@@ -8,12 +8,13 @@ const RouterLinkComponent = ({onClick, children, className}) => <a href="" class
 
 RouterLinkComponent.propTypes = {
     onClick: PropTypes.func.isRequired,
-    children: PropTypes.node.isRequired,
+    children: PropTypes.node,
     className: PropTypes.string,
 };
 
 RouterLinkComponent.defaultProps = {
     className: null,
+    children: null,
 };
 
 const mapDispatchToProps = (dispatch, {route, params, query, anchor}) => ({
@@ -27,7 +28,7 @@ RouterLink.propTypes = {
     params: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     query: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     anchor: PropTypes.string,
-    children: PropTypes.node.isRequired,
+    children: PropTypes.node,
     className: PropTypes.string,
 };
 
@@ -36,6 +37,7 @@ RouterLinkComponent.defaultProps = {
     query: undefined,
     anchor: undefined,
     className: undefined,
+    children: undefined,
 };
 
 export default RouterLink;
