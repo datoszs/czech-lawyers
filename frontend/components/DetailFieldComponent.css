@@ -1,4 +1,4 @@
-.detailField {
+.main {
     display: flex;
     align-items: baseline;
 
@@ -6,11 +6,11 @@
     font-size: 1.2em;
 }
 
-.detailFieldLabel {
+.label {
     font-weight: bold;
     margin-right: 5px;
 }
 
-.detailFieldLabel:after {
+.label:after {
     content: ':';
 }

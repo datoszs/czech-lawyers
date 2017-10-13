@@ -18,7 +18,7 @@ const CaseDetail = ({registry, court, result, resultName, date, handleDetail, hr
         onClick={handleDetail}
         href={href}
     >
-        {resultName && <span className={styles.caseDetailResult}><Result result={resultName} /></span>}
+        {resultName && <span className={styles.result}><Result result={resultName} /></span>}
     </DetailPanel>
 );
 

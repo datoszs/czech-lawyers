@@ -1,8 +1,8 @@
-.autocomplete {
+.result {
     position: relative;
 }
 
-.autocompleteList {
+.list {
     position: absolute;
     width: 100%;
     z-index: 1;

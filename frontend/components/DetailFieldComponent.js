@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import styles from './DetailFieldComponent.css'
 
 const DetailFieldComponent = ({label, children}) => (
-    <div className={styles.detailField}>
-        <div className={styles.detailFieldLabel}>{label}</div>
+    <div className={styles.main}>
+        <div className={styles.label}>{label}</div>
         <div>{children}</div>
     </div>
 );

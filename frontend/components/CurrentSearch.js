@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import styles from './CurrentSearch.css';
 
 const CurrentSearch = ({query, legend}) => (
-    <div className={styles.currentSearch}><span className={styles.legend}>{legend}</span> {query}</div>
+    <div className={styles.main}><span className={styles.legend}>{legend}</span> {query}</div>
 );
 
 CurrentSearch.propTypes = {

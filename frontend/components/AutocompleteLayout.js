@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import styles from './AutocompleteLayout.css';
 
 const AutocompleteLayout = ({input, list}) => (
-    <div className={styles.autocomplete}>
+    <div className={styles.main}>
         {input}
-        <div className={styles.autocompleteList}>{list}</div>
+        <div className={styles.list}>{list}</div>
     </div>
 );
 
