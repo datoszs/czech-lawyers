@@ -1,7 +1,9 @@
-.text-positive {
+@import "../../variables";
+
+.positive {
     color: @stats-positive;
 }
 
-.text-negative {
+.negative {
     color: @stats-negative;
 }

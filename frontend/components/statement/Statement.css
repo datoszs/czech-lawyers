@@ -1,0 +1,11 @@
+@import "../../variables";
+
+.main {
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.main:hover {
+     border-color: @panel-primary-border;
+     color: @panel-primary-border;
+ }

@@ -1,0 +1,17 @@
+@import "../../variables.less";
+
+.main {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.main > * {
+    width: calc(33.3% ~"-" @padding-large-horizontal);
+}
+
+@media (max-width: @screen-xs-max) {
+    .main > * {
+        width: 100%;
+    }
+}

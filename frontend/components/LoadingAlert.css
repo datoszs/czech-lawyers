@@ -1,0 +1,10 @@
+@import "../variables";
+
+.main {
+    display: flex;
+}
+
+.spinner {
+    margin-right: 5px;
+    color: @alert-warning-text;
+}

@@ -1,0 +1,28 @@
+@import "../variables";
+
+.main {
+    cursor: pointer;
+    color: inherit; /* overwrites bootstrap */
+    display: block;
+}
+
+.main:hover {
+    border-color: @brand-primary;
+
+    /* overwrites bootstrap */
+    text-decoration: inherit;
+    color: inherit;
+}
+
+.main:focus {
+     text-decoration: inherit;
+ }
+
+.title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.main:hover .title {
+    color: @brand-primary;
+}

@@ -1,17 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 import {wrapLinkMouseEvent} from '../util';
 import PanelBody from './PanelBody';
+import styles from './DetailPanel.css';
 
 const DetailPanel = ({children, footer, title, onClick, href}) => (
     <a
-        className="panel panel-default detail-panel"
+        className={classNames(styles.main, 'panel-default', 'panel')}
         onClick={wrapLinkMouseEvent(onClick)}
         href={href}
     >
         <div className="panel-body">
             <PanelBody>
-                <h2 className="title">{title}</h2>
+                <h2 className={styles.title}>{title}</h2>
                 {children}
             </PanelBody>
         </div>

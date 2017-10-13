@@ -1,0 +1,18 @@
+@import "../variables";
+@import (reference) "multicolumn";
+
+.main {
+    .multicolumn(3);
+}
+
+@media (max-width: @screen-sm-max) {
+    .main > * {
+        width: calc(50% ~"-" @multicolumn-sidemargin);
+    }
+}
+
+@media (max-width: @screen-xs-max) {
+    .main > * {
+        width: 100%;
+    }
+}

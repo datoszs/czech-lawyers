@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {FormControl} from 'react-bootstrap';
+import styles from './index.css';
 
 const InputTextArea = ({input}) => (
     <FormControl
         componentClass="textarea"
-        className="input-text-area"
+        className={styles.textArea}
         value={input.value}
         onChange={input.onChange}
         onBlur={input.onBlur}

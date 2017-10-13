@@ -1,20 +1,8 @@
 @import "../colors";
 @import "timeline/index";
-@import "form/index";
-@import "markdown/index";
 @import "statistics/index";
 @import "statement/index";
-@import (reference) "TwoColumn";
-@import (reference) "DetailPanel";
-@import (reference) "SimpleFormLayout";
-@import (reference) "LoadingAlert";
 @import (reference) "LeaderBoard";
-@import (reference) "ThreeColumn";
 
-.two-column { .two-column(); }
-.three-column { .three-column(); }
-.detail-panel { .detail-panel(); }
-.simple-form { .simple-form(); }
-.loading-alert { .loading-alert(); }
 .leader-board.positive { .leader-board(@stats-positive); }
 .leader-board.negative { .leader-board(@stats-negative); }
