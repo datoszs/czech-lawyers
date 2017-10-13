@@ -1,4 +1,4 @@
 import React from 'react';
-import styles from './index.css';
+import styles from './Required.css';
 
-export default () => <span className={styles.required} />;
+export default () => <span className={styles.main} />;

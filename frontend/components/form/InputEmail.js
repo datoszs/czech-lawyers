@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {FormControl} from 'react-bootstrap';
-import styles from './index.css';
+import styles from './InputEmail.css';
 
 const InputEmail = ({input, placeholder}) => (
     <FormControl
         type="email"
-        className={styles.email}
+        className={styles.main}
         placeholder={placeholder}
         value={input.value}
         onChange={input.onChange}
