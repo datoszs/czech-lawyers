@@ -60,6 +60,20 @@ export default ({dev}) => ({
                     }),
             },
             {
+                test: /\.mcss$/,
+                loader: [
+                    'style-loader',
+                    {
+                        loader: 'css-loader',
+                        query: {
+                            modules: true,
+                            localIdentName: '[local]__[hash:base64:5]',
+                        },
+                    },
+                    'less-loader',
+                ]
+            },
+            {
                 test: /\.eot$/,
                 loader: 'file-loader',
             },
