@@ -95,7 +95,7 @@ Web Čeští advokáti používá službu Google Analytics k tomu, aby shromaž�
 Jedná se především o konkrétní stránky, které jste navštívili, a dále některé údaje týkající se způsobu,
 kterým k webu přistupujete, například Váš operační systém, prohlížeč, jazyk operačního systému a lokaci.
 
-Tyto údaje není možné spojit s Vaší IP adresou ani dalšími informacemi, které o Vás shromažďuje Google a jsou čistě
+Tyto údaje není možné spojit s Vaší IP adresou ani dalšími informacemi, které o Vás shromažďuje Google, a jsou používány čistě
 pro potřeby sledování návštěvnosti webu.
 
 Pokud nechcete, abychom o Vás shromažďovali tyto údaje, můžete použít například [tento oficiální doplněk prohlížeče](https://tools.google.com/dlpage/gaoptout).
