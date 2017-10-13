@@ -1,0 +1,11 @@
+@import "../variables";
+
+.main {
+    width: 350px;
+}
+
+@media (max-width: @screen-xs-max) {
+    .main {
+        width: 100%;
+    }
+}

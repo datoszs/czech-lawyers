@@ -70,12 +70,14 @@ export default ({dev}) => ({
                 test: /\.css$/,
                 include: /frontend/,
                 loader: createStyleLoader(dev, {
-                    loader: 'css-loader',
-                    query: {
-                        modules: true,
-                        localIdentName: '[name]__[local]__[hash:base64:5]',
+                        loader: 'css-loader',
+                        query: {
+                            modules: true,
+                            localIdentName: '[name]__[local]__[hash:base64:5]',
+                        },
                     },
-                }),
+                    'less-loader',
+                ),
             },
             {
                 test: /\.eot$/,
