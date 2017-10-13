@@ -13,7 +13,7 @@
     "build": "webpack --progress --env",
     "lint": "eslint frontend",
     "lint:fix": "npm run lint -- --fix",
-    "test:base": "mocha --compilers js:babel-register frontend/test.js \"frontend/**/*.spec.js\"",
+    "test:base": "mocha --require babel-register frontend/test.js \"frontend/**/*.spec.js\"",
     "test": "npm run test:base -- --reporter spec",
     "test:watch": "npm run test:base -- --reporter min --watch"
   },
@@ -86,6 +86,7 @@
     "mocha": "4.0.1",
     "raw-loader": "0.5.1",
     "react-test-renderer": "16.0.0",
+    "redux-saga-test-plan": "3.2.0",
     "rimraf": "2.6.2",
     "sinon": "4.0.1",
     "sinon-chai": "2.14.0",
