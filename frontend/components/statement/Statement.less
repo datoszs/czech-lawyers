@@ -1,9 +1,16 @@
 .statement() {
     cursor: pointer;
+    color: inherit; // overwrites bootstrap
     font-weight: bold;
 
     &:hover {
         border-color: @panel-primary-border;
         color: @panel-primary-border;
+
+        text-decoration: inherit; // overwrites bootstrap
+    }
+
+    &:focus {
+        text-decoration: inherit;
     }
 }
