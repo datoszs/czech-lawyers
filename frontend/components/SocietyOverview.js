@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Well} from 'react-bootstrap';
+import styles from './SocietyOverview.css';
 
 const SocietyOverview = ({name, street, city, ic}) => (
-    <div className="society-overview">
+    <div className={styles.main}>
         <Well>
             <dl>
                 <dt>{name}</dt>

@@ -1,0 +1,9 @@
+.main {
+    display: flex;
+}
+
+.text {
+    font-weight: bold;
+    max-width: 15ex;
+    text-align: center;
+}

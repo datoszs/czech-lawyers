@@ -1,0 +1,14 @@
+.main {
+    margin-left: 5px;
+    display: flex;
+    align-items: center;
+}
+
+.legend {
+    margin-left: 5px;
+    font-style: italic;
+}
+
+.info {
+    margin-bottom: 10px;
+}

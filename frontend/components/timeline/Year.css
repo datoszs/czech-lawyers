@@ -1,0 +1,26 @@
+.main {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+
+    padding: 10px 0;
+    cursor: pointer;
+
+    height: 10em;
+}
+
+.main:hover {
+    background-color: #EEEEEE;
+}
+
+.main.selected {
+    background: #DDDDDD;
+}
+
+.legend {
+    width: 4ch;
+    height: 1em;
+    box-sizing: content-box;
+    padding: 2px 5px;
+    border-top: 3px solid black;
+}

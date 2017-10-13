@@ -3,29 +3,20 @@
 @import "form/index";
 @import "markdown/index";
 @import "statistics/index";
-@import "result/index";
 @import "statement/index";
 @import (reference) "TwoColumn";
 @import (reference) "SearchForm";
-@import (reference) "PanelBody";
 @import (reference) "DetailPanel";
-@import (reference) "PageSubheader";
-@import (reference) "SocietyOverview";
 @import (reference) "SimpleFormLayout";
 @import (reference) "LoadingAlert";
 @import (reference) "LeaderBoard";
 @import (reference) "ThreeColumn";
-@import (reference) "SearchDisclaimer";
 
 .two-column { .two-column(); }
 .three-column { .three-column(); }
 .search-form { .search-form(); }
-.custom-panel-body { .panel-body(); }
 .detail-panel { .detail-panel(); }
-.page-subheader { .page-subheader(); }
-.society-overview { .society-overview(); }
 .simple-form { .simple-form(); }
 .loading-alert { .loading-alert(); }
 .leader-board.positive { .leader-board(@stats-positive); }
 .leader-board.negative { .leader-board(@stats-negative); }
-.search-disclaimer { .search-disclaimer(); }

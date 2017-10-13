@@ -1,4 +1,4 @@
-.timeline-scroll() {
+.main {
     overflow-y: auto;
     margin: 20px 0;
 }

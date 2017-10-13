@@ -1,9 +1,6 @@
 @import "../../colors";
 @import (reference) "StatisticsBar";
 @import (reference) "StatisticsColumn";
-@import (reference) "BasicStatistics";
-@import (reference) "CourtStatistics";
-@import (reference) "BigStatistics";
 @import (reference) "StatisticsLegend";
 
 .statistics-column-positive { .statistics-column(@stats-positive); }
@@ -28,7 +25,4 @@
 .statistics-bar-negative-court { .court-statistics-bar(@stats-negative); }
 .statistics-bar-neutral-court { .court-statistics-bar(@stats-neutral); }
 
-.statistics-basic { .basic-statistics(); }
-.statistics-court { .court-statistics(); }
-.statistics-big { .big-statistics(); }
 .statistics-legend { .statistics-legend(); }

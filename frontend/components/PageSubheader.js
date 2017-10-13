@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import styles from './PageSubheader.css';
 
 const PageSubheader = ({children}) => (
-    <div className="page-subheader">
+    <div className={styles.main}>
         <h2>{children}</h2>
         <hr />
     </div>

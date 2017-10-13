@@ -1,0 +1,22 @@
+.main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.row {
+    display: flex;
+}
+
+.header {
+    font-weight: bold;
+}
+
+.divider {
+    height: 2px;
+}
+
+.info {
+    font-size: 50%;
+    opacity: 0.5;
+}

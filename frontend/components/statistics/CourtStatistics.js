@@ -4,6 +4,7 @@ import {Glyphicon, OverlayTrigger, Popover} from 'react-bootstrap';
 import {Statistics} from '../../model';
 import StatisticsColumn from './StatisticsColumn';
 import StatisticsBar from './StatisticsBar';
+import styles from './CourtStatistics.css';
 
 const statMax = (statistics) => Math.max(statistics.positive, statistics.negative, statistics.neutral);
 
@@ -13,22 +14,22 @@ const CourtStatistics = ({statistics, courtStatistics, court, legend}) => {
 
     const createColumn = (property) => (
         <StatisticsColumn max={max} number={statistics[property] || 0} type={property}>
-            {courtStatistics && <div className="statistics-divider" />}
+            {courtStatistics && <div className={styles.divider} />}
             {courtStatistics && <StatisticsBar max={courtMax} number={courtStatistics[property]} type={`${property}-court`} />}
         </StatisticsColumn>
     );
 
     return (
-        <div className="statistics-court">
+        <div className={styles.main}>
             <OverlayTrigger placement="left" overlay={<Popover id="court-statistics-legend">{legend}</Popover>}>
-                <h2 className="statistics-court-row">
+                <h2 className={styles.row}>
                     {createColumn('positive')}
                     {createColumn('negative')}
                     {createColumn('neutral')}
-                    <span className="statistics-info"><Glyphicon glyph="question-sign" /></span>
+                    <span className={styles.info}><Glyphicon glyph="question-sign" /></span>
                 </h2>
             </OverlayTrigger>
-            <div className="statistics-court-header">{court}</div>
+            <div className={styles.header}>{court}</div>
         </div>
     );
 };
