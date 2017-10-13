@@ -1,0 +1,16 @@
+.detailField {
+    display: flex;
+    align-items: baseline;
+
+    margin: 10px;
+    font-size: 1.2em;
+}
+
+.detailFieldLabel {
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+.detailFieldLabel:after {
+    content: ':';
+}
