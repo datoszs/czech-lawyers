@@ -8,6 +8,13 @@ const ASSET_OUTPUT_PATH = '../assets/webapp';
 /** removes falsy items from array */
 const array = (...target) => target.filter((item) => item);
 
+const createStyleLoader = (dev, ...loaders) => dev
+    ? ['style-loader'].concat(loaders)
+    : ExtractTextPlugin.extract({
+        fallback: 'style-loader',
+        use: loaders,
+    });
+
 export default ({dev}) => ({
     entry: array(
         dev && 'react-hot-loader/patch',
@@ -51,27 +58,24 @@ export default ({dev}) => ({
                 },
             },
             {
-                test: /\.(less|css)$/,
-                loader: dev
-                    ? ['style-loader', 'css-loader', 'less-loader']
-                    : ExtractTextPlugin.extract({
-                        fallback: 'style-loader',
-                        use: ['css-loader', 'less-loader'],
-                    }),
+                test: /\.less$/,
+                loader: createStyleLoader(dev, 'css-loader', 'less-loader'),
             },
             {
-                test: /\.mcss$/,
-                loader: [
-                    'style-loader',
-                    {
-                        loader: 'css-loader',
-                        query: {
-                            modules: true,
-                            localIdentName: '[local]__[hash:base64:5]',
-                        },
+                test: /\.css$/,
+                include: /node_modules/,
+                loader: createStyleLoader(dev, 'css-loader'),
+            },
+            {
+                test: /\.css$/,
+                include: /frontend/,
+                loader: createStyleLoader(dev, {
+                    loader: 'css-loader',
+                    query: {
+                        modules: true,
+                        localIdentName: '[local]__[hash:base64:5]',
                     },
-                    'less-loader',
-                ]
+                }),
             },
             {
                 test: /\.eot$/,

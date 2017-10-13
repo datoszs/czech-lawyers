@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import styles from './CurrentSearch.css';
 
 const CurrentSearch = ({query, legend}) => (
-    <div className="current-search"><span className="legend">{legend}</span> {query}</div>
+    <div className={styles.currentSearch}><span className={styles.legend}>{legend}</span> {query}</div>
 );
 
 CurrentSearch.propTypes = {
