@@ -8,9 +8,7 @@ const getIdList = (advocates) => List(advocates.sort(compare).map(getId));
 const topReducer = (state = List(), action) => (action.type === SET_LEADERBOARD ? getIdList(action.top) : state);
 const bottomReducer = (state = List(), action) => (action.type === SET_LEADERBOARD ? getIdList(action.bottom) : state);
 
-const getMap = (...arrays) => Map([].concat(
-    ...arrays.map((array) => array.map((advocate) => [advocate.id_advocate, advocate.fullname])),
-));
+const getMap = (...arrays) => Map([].concat(...arrays.map((array) => array.map((advocate) => [advocate.id_advocate, advocate.fullname]))));
 const nameReducer = (state = Map(), action) => (action.type === SET_LEADERBOARD ? getMap(action.top, action.bottom) : state);
 
 export default combineReducers({

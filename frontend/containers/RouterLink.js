@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import {wrapEventStop} from '../util';
 import router from '../router';
 
-const RouterLinkComponent = ({onClick, children, className}) => <a href="" className={className} onClick={wrapEventStop(onClick)}>{children}</a>;
+const RouterLinkComponent = ({onClick, children, className}) => <a href="/" className={className} onClick={wrapEventStop(onClick)}>{children}</a>;
 
 RouterLinkComponent.propTypes = {
     onClick: PropTypes.func.isRequired,
@@ -32,7 +32,7 @@ RouterLink.propTypes = {
     className: PropTypes.string,
 };
 
-RouterLinkComponent.defaultProps = {
+RouterLink.defaultProps = {
     params: undefined,
     query: undefined,
     anchor: undefined,
