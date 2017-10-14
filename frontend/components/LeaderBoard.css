@@ -1,0 +1,14 @@
+@import "../variables";
+
+.main (@color) {
+    border-color: lighten(@color, 25%) !important;
+    width: auto;
+}
+
+.positive {
+    .main(@stats-positive);
+}
+
+.negative {
+    .main(@stats-negative);
+}
