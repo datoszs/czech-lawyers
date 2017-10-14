@@ -548,7 +548,7 @@ pre.apiDocu-json {
 		<div class="apiDocu-url-method"></div>
 
 	</a>
-	<a href="Feedback.23.php" class="apiDocu-url">
+	<a href="Feedback.25.php" class="apiDocu-url">
 		/api/feedback/
 
 		<div class="apiDocu-url-method">POST</div>
@@ -558,8 +558,29 @@ pre.apiDocu-json {
 				<span style="background-color: #9b59b6;" class="apiDocu-url-tag">public</span>
 		</div>
 	</a>
-	<a href="Feedback.24.php" class="apiDocu-url">
+	<a href="Feedback.26.php" class="apiDocu-url">
 		/api/feedback/
+
+		<div class="apiDocu-url-method"></div>
+
+	</a>
+				</div>
+
+				<h2 class="apiDocu-section-title">Export</h2>
+
+				<div class="apiDocu-section">
+	<a href="Export.23.php" class="apiDocu-url">
+		/api/download-export
+
+		<div class="apiDocu-url-method">GET</div>
+
+		<div class="apiDocu-url-tags">
+			
+				<span style="background-color: #9b59b6;" class="apiDocu-url-tag">public</span>
+		</div>
+	</a>
+	<a href="Export.24.php" class="apiDocu-url">
+		/api/download-export/
 
 		<div class="apiDocu-url-method"></div>
 

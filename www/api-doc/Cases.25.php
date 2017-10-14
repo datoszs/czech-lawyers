@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>ApiDocu - /api/advocate/autocomplete</title>
+	<title>ApiDocu - /api/dispute-case/&lt;id&gt;</title>
 	<style>html, body {
 	margin: 0;
 	padding: 0;
@@ -354,11 +354,11 @@ pre.apiDocu-json {
 <div class="apiDocu-container apiDocu-index">
 	<div class="apiDocu-url-list">
 
-				<h2 class="apiDocu-section-title">Advocates</h2>
+				<h2 class="apiDocu-section-title">Cases</h2>
 
 				<div class="apiDocu-section">
-	<a href="Advocates.1.php" class="apiDocu-url">
-		/api/advocate/autocomplete[/<span class="apiDocu-mask-param"&gt;</span>&lt;query&gt;</span>]
+	<a href="Cases.1.php" class="apiDocu-url">
+		/api/case/<span class="apiDocu-mask-param"&gt;</span>&lt;id&gt;</span>
 
 		<div class="apiDocu-url-method">GET</div>
 
@@ -367,12 +367,65 @@ pre.apiDocu-json {
 				<span style="background-color: #9b59b6;" class="apiDocu-url-tag">public</span>
 		</div>
 	</a>
-	<a href="Advocates.2.php" class="apiDocu-url">
-		/api/advocate/autocomplete
+	<a href="Cases.2.php" class="apiDocu-url">
+		/api/case/
 
 		<div class="apiDocu-url-method"></div>
 
 	</a>
+	<a href="Cases.15.php" class="apiDocu-url">
+		/api/dispute-case-verification/
+
+		<div class="apiDocu-url-method">POST</div>
+
+		<div class="apiDocu-url-tags">
+			
+				<span style="background-color: #9b59b6;" class="apiDocu-url-tag">public</span>
+		</div>
+	</a>
+	<a href="Cases.16.php" class="apiDocu-url">
+		/api/dispute-case/
+
+		<div class="apiDocu-url-method"></div>
+
+	</a>
+	<a href="Cases.23.php" class="apiDocu-url">
+		/api/case/search[/<span class="apiDocu-mask-param"&gt;</span>&lt;query&gt;</span>/[<span class="apiDocu-mask-param"&gt;</span>&lt;start&gt;</span>-<span class="apiDocu-mask-param"&gt;</span>&lt;count&gt;</span>]]
+
+		<div class="apiDocu-url-method">GET</div>
+
+		<div class="apiDocu-url-tags">
+			
+				<span style="background-color: #9b59b6;" class="apiDocu-url-tag">public</span>
+		</div>
+	</a>
+	<a href="Cases.24.php" class="apiDocu-url">
+		/api/case/search/
+
+		<div class="apiDocu-url-method"></div>
+
+	</a>
+	<a href="Cases.25.php" class="apiDocu-url">
+		/api/dispute-case/<span class="apiDocu-mask-param"&gt;</span>&lt;id&gt;</span>
+
+		<div class="apiDocu-url-method">POST</div>
+
+		<div class="apiDocu-url-tags">
+			
+				<span style="background-color: #9b59b6;" class="apiDocu-url-tag">public</span>
+		</div>
+	</a>
+	<a href="Cases.26.php" class="apiDocu-url">
+		/api/dispute-case/
+
+		<div class="apiDocu-url-method"></div>
+
+	</a>
+				</div>
+
+				<h2 class="apiDocu-section-title">Advocates</h2>
+
+				<div class="apiDocu-section">
 	<a href="Advocates.3.php" class="apiDocu-url">
 		/api/advocate-cases/<span class="apiDocu-mask-param"&gt;</span>&lt;advocate&gt;</span>
 
@@ -389,7 +442,7 @@ pre.apiDocu-json {
 		<div class="apiDocu-url-method"></div>
 
 	</a>
-	<a href="Advocates.5.php" class="apiDocu-url">
+	<a href="Advocates.7.php" class="apiDocu-url">
 		/api/advocate/<span class="apiDocu-mask-param"&gt;</span>&lt;id&gt;</span>
 
 		<div class="apiDocu-url-method">GET</div>
@@ -399,40 +452,8 @@ pre.apiDocu-json {
 				<span style="background-color: #9b59b6;" class="apiDocu-url-tag">public</span>
 		</div>
 	</a>
-	<a href="Advocates.6.php" class="apiDocu-url">
-		/api/advocate/
-
-		<div class="apiDocu-url-method"></div>
-
-	</a>
-	<a href="Advocates.7.php" class="apiDocu-url">
-		/api/advocate-rankings/<span class="apiDocu-mask-param"&gt;</span>&lt;decile&gt;</span>[/[<span class="apiDocu-mask-param"&gt;</span>&lt;start&gt;</span>-<span class="apiDocu-mask-param"&gt;</span>&lt;count&gt;</span>]]
-
-		<div class="apiDocu-url-method">GET</div>
-
-		<div class="apiDocu-url-tags">
-			
-				<span style="background-color: #9b59b6;" class="apiDocu-url-tag">public</span>
-		</div>
-	</a>
 	<a href="Advocates.8.php" class="apiDocu-url">
-		/api/advocate-rankings/
-
-		<div class="apiDocu-url-method"></div>
-
-	</a>
-	<a href="Advocates.9.php" class="apiDocu-url">
-		/api/advocate-results/<span class="apiDocu-mask-param"&gt;</span>&lt;advocate&gt;</span>[/<span class="apiDocu-mask-param"&gt;</span>&lt;court&gt;</span>]
-
-		<div class="apiDocu-url-method">GET</div>
-
-		<div class="apiDocu-url-tags">
-			
-				<span style="background-color: #9b59b6;" class="apiDocu-url-tag">public</span>
-		</div>
-	</a>
-	<a href="Advocates.10.php" class="apiDocu-url">
-		/api/advocate-results/
+		/api/advocate/
 
 		<div class="apiDocu-url-method"></div>
 
@@ -453,45 +474,61 @@ pre.apiDocu-json {
 		<div class="apiDocu-url-method"></div>
 
 	</a>
+	<a href="Advocates.13.php" class="apiDocu-url">
+		/api/advocate-rankings/<span class="apiDocu-mask-param"&gt;</span>&lt;decile&gt;</span>[/[<span class="apiDocu-mask-param"&gt;</span>&lt;start&gt;</span>-<span class="apiDocu-mask-param"&gt;</span>&lt;count&gt;</span>]]
+
+		<div class="apiDocu-url-method">GET</div>
+
+		<div class="apiDocu-url-tags">
+			
+				<span style="background-color: #9b59b6;" class="apiDocu-url-tag">public</span>
+		</div>
+	</a>
+	<a href="Advocates.14.php" class="apiDocu-url">
+		/api/advocate-rankings/
+
+		<div class="apiDocu-url-method"></div>
+
+	</a>
+	<a href="Advocates.17.php" class="apiDocu-url">
+		/api/advocate/autocomplete[/<span class="apiDocu-mask-param"&gt;</span>&lt;query&gt;</span>]
+
+		<div class="apiDocu-url-method">GET</div>
+
+		<div class="apiDocu-url-tags">
+			
+				<span style="background-color: #9b59b6;" class="apiDocu-url-tag">public</span>
+		</div>
+	</a>
+	<a href="Advocates.18.php" class="apiDocu-url">
+		/api/advocate/autocomplete
+
+		<div class="apiDocu-url-method"></div>
+
+	</a>
+	<a href="Advocates.19.php" class="apiDocu-url">
+		/api/advocate-results/<span class="apiDocu-mask-param"&gt;</span>&lt;advocate&gt;</span>[/<span class="apiDocu-mask-param"&gt;</span>&lt;court&gt;</span>]
+
+		<div class="apiDocu-url-method">GET</div>
+
+		<div class="apiDocu-url-tags">
+			
+				<span style="background-color: #9b59b6;" class="apiDocu-url-tag">public</span>
+		</div>
+	</a>
+	<a href="Advocates.20.php" class="apiDocu-url">
+		/api/advocate-results/
+
+		<div class="apiDocu-url-method"></div>
+
+	</a>
 				</div>
 
-				<h2 class="apiDocu-section-title">Cases</h2>
+				<h2 class="apiDocu-section-title">Feedback</h2>
 
 				<div class="apiDocu-section">
-	<a href="Cases.13.php" class="apiDocu-url">
-		/api/case/<span class="apiDocu-mask-param"&gt;</span>&lt;id&gt;</span>
-
-		<div class="apiDocu-url-method">GET</div>
-
-		<div class="apiDocu-url-tags">
-			
-				<span style="background-color: #9b59b6;" class="apiDocu-url-tag">public</span>
-		</div>
-	</a>
-	<a href="Cases.14.php" class="apiDocu-url">
-		/api/case/
-
-		<div class="apiDocu-url-method"></div>
-
-	</a>
-	<a href="Cases.15.php" class="apiDocu-url">
-		/api/case/search[/<span class="apiDocu-mask-param"&gt;</span>&lt;query&gt;</span>/[<span class="apiDocu-mask-param"&gt;</span>&lt;start&gt;</span>-<span class="apiDocu-mask-param"&gt;</span>&lt;count&gt;</span>]]
-
-		<div class="apiDocu-url-method">GET</div>
-
-		<div class="apiDocu-url-tags">
-			
-				<span style="background-color: #9b59b6;" class="apiDocu-url-tag">public</span>
-		</div>
-	</a>
-	<a href="Cases.16.php" class="apiDocu-url">
-		/api/case/search/
-
-		<div class="apiDocu-url-method"></div>
-
-	</a>
-	<a href="Cases.19.php" class="apiDocu-url">
-		/api/dispute-case/<span class="apiDocu-mask-param"&gt;</span>&lt;id&gt;</span>
+	<a href="Feedback.5.php" class="apiDocu-url">
+		/api/feedback/
 
 		<div class="apiDocu-url-method">POST</div>
 
@@ -500,24 +537,14 @@ pre.apiDocu-json {
 				<span style="background-color: #9b59b6;" class="apiDocu-url-tag">public</span>
 		</div>
 	</a>
-	<a href="Cases.20.php" class="apiDocu-url">
-		/api/dispute-case/
+	<a href="Feedback.6.php" class="apiDocu-url">
+		/api/feedback/
 
 		<div class="apiDocu-url-method"></div>
 
 	</a>
-	<a href="Cases.21.php" class="apiDocu-url">
-		/api/dispute-case-verification/
-
-		<div class="apiDocu-url-method">POST</div>
-
-		<div class="apiDocu-url-tags">
-			
-				<span style="background-color: #9b59b6;" class="apiDocu-url-tag">public</span>
-		</div>
-	</a>
-	<a href="Cases.22.php" class="apiDocu-url">
-		/api/dispute-case/
+	<a href="Feedback.10.php" class="apiDocu-url">
+		/api/court-statistics/
 
 		<div class="apiDocu-url-method"></div>
 
@@ -527,7 +554,7 @@ pre.apiDocu-json {
 				<h2 class="apiDocu-section-title">Courts</h2>
 
 				<div class="apiDocu-section">
-	<a href="Courts.17.php" class="apiDocu-url">
+	<a href="Courts.9.php" class="apiDocu-url">
 		/api/court-statistics
 
 		<div class="apiDocu-url-method">GET</div>
@@ -539,37 +566,10 @@ pre.apiDocu-json {
 	</a>
 				</div>
 
-				<h2 class="apiDocu-section-title">Feedback</h2>
-
-				<div class="apiDocu-section">
-	<a href="Feedback.18.php" class="apiDocu-url">
-		/api/court-statistics/
-
-		<div class="apiDocu-url-method"></div>
-
-	</a>
-	<a href="Feedback.25.php" class="apiDocu-url">
-		/api/feedback/
-
-		<div class="apiDocu-url-method">POST</div>
-
-		<div class="apiDocu-url-tags">
-			
-				<span style="background-color: #9b59b6;" class="apiDocu-url-tag">public</span>
-		</div>
-	</a>
-	<a href="Feedback.26.php" class="apiDocu-url">
-		/api/feedback/
-
-		<div class="apiDocu-url-method"></div>
-
-	</a>
-				</div>
-
 				<h2 class="apiDocu-section-title">Export</h2>
 
 				<div class="apiDocu-section">
-	<a href="Export.23.php" class="apiDocu-url">
+	<a href="Export.21.php" class="apiDocu-url">
 		/api/download-export
 
 		<div class="apiDocu-url-method">GET</div>
@@ -579,7 +579,7 @@ pre.apiDocu-json {
 				<span style="background-color: #9b59b6;" class="apiDocu-url-tag">public</span>
 		</div>
 	</a>
-	<a href="Export.24.php" class="apiDocu-url">
+	<a href="Export.22.php" class="apiDocu-url">
 		/api/download-export/
 
 		<div class="apiDocu-url-method"></div>
@@ -593,21 +593,49 @@ pre.apiDocu-json {
 
 	<div class="apiDocu-container">
 		<div class="apiDocu-url">
-			/api/advocate/autocomplete
+			/api/dispute-case/<span class="apiDocu-mask-param"&gt;</span>&lt;id&gt;</span>
 
-			<div class="apiDocu-url-method"></div>
+			<div class="apiDocu-url-method">POST</div>
 
+			<div class="apiDocu-url-tags">
+				
+					<span style="background-color: #9b59b6;" class="apiDocu-url-tag">public</span>
+			</div>
 		</div>
 
 			<h2>Description</h2>
 
-			<div class="apiDocu-description apiDocu-description-main">API for retrieving advocates suggestions (for autocomplete).</div>
+			<div class="apiDocu-description apiDocu-description-main">Dispute given case (case result, advocate or both).<br />Apart from case ID following parameters are expected (and mandatory) in POST params:<br /> - full_name - an non-empty string with sender full name<br /> - from - non-empty valid e-mail address of sender<br /> - content - non-empty text explaining why the tagging(s) should be re-considered<br /> - disputed_tagging - what is disputed<br /> - captcha_token - an non-empty captcha token which will be used to validate it<br /> - datetime - datetime of moment when the disputation happens, see warning below. In DATE_ATOM format<br />Field disputed_tagging can contain:<br /> - <b>case_result</b><br /> - <b>advocate</b><br /> - <b>both</b><br />Warning: datetime should be the moment of loading taggins (or slightly in the past) as there are no IDs what is disputed.<br />This time is used to detect when tagging changed while user was filling up the form. In such case fail is inevitable.<br />Outcome:<br /><br><pre class="apiDocu-json">    {<br />        <span class="apiDocu-string">"result"</span>: <span class="apiDocu-string">"success"</span><br />    }<br /></pre><br />Successes & errors:<br /> - Returns HTTP 200 with result <b>success</b> when everything was OK and dispustation was created.<br /> - Returns HTTP 404 with error <b>no_case</b> when such case doesn't exist<br /> - Returns HTTP 400 with error <b>invalid_input</b> when input is invalid<br /> - Returns HTTP 401 with error <b>invalid_captcha</b> when captcha is invalid<br /> - Returns HTTP 409 with error <b>final_both_taggings</b> when disputed advocate tagging and case result tagging are already final<br /> - Returns HTTP 409 with error <b>final_advocate_tagging</b> when disputed advocate tagging is already final<br /> - Returns HTTP 409 with error <b>final_case_result_tagging</b> when disputed case result tagging is already final<br /> - Returns HTTP 409 with error <b>inconsistent</b> when there are taggings newer than given datetime.<br /> - Returns HTTP 500 with error <b>fail</b> when storing fails</div>
 
 
 		<h2>Methods</h2>
 
-		<p class="apiDocu-description"></p>
+		<p class="apiDocu-description">POST</p>
 
+		<div class="apiDocu-parameters">
+			<h2>Mask parameters</h2>
+
+			<table>
+					<tr>
+						<th>
+							<span class="apiDocu-mask-param">&lt;id&gt;</span>
+							<div class="apiDocu-mask-param-description">
+								<ul>
+									<li>
+										<strong>requirement</strong>: -?\d+
+									</li>
+									<li>
+										<strong>type</strong>: integer
+									</li>
+									<li>
+										<strong>description</strong>: Case ID.
+									</li>
+								</ul>
+							</div>
+						</th>
+					</tr>
+			</table>
+		</div>
 
 
 	</div>
