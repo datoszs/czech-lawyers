@@ -1,0 +1,30 @@
+@import "../../variables";
+
+.main(@color) {
+    margin: 0 5px;
+    border-style: solid solid none solid;
+    border-width: 1px;
+
+    background-color: fade(@color, 75%);
+    border-color: @color;
+
+    &:hover {
+        background-color: fade(@color, 85%);
+    }
+
+    &.selected {
+        background-color: @color;
+    }
+}
+
+.positive {
+    .main(@stats-positive);
+}
+
+.negative {
+    .main(@stats-negative);
+}
+
+.neutral {
+    .main(@stats-neutral);
+}
