@@ -58,17 +58,14 @@ export default ({dev}) => ({
                 },
             },
             {
-                test: /\.less$/,
+                test: /\.(less|css)$/,
+                include: /node_modules/,
                 loader: createStyleLoader(dev, 'css-loader', 'less-loader'),
             },
             {
-                test: /\.css$/,
-                include: /node_modules/,
-                loader: createStyleLoader(dev, 'css-loader'),
-            },
-            {
-                test: /\.css$/,
+                test: /\.less$/,
                 include: /frontend/,
+                exclude: /include.less/,
                 loader: createStyleLoader(dev, {
                         loader: 'css-loader',
                         query: {
@@ -78,6 +75,10 @@ export default ({dev}) => ({
                     },
                     'less-loader',
                 ),
+            },
+            {
+                test: /include.less/,
+                loader: createStyleLoader(dev, 'css-loader', 'less-loader'),
             },
             {
                 test: /\.eot$/,

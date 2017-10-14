@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import StatisticsBar from './StatisticsBar';
-import styles from './StatisticsColumn.css';
+import styles from './StatisticsColumn.less';
 
 const textStyle = {
     positive: styles.textPositive,

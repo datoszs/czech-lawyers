@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Statistics} from '../../model';
 import StatisticsColumn from './StatisticsColumn';
-import styles from './BigStatistics.css';
+import styles from './BigStatistics.less';
 
 const BigStatistics = ({statistics, msgPositive, msgNegative, msgNeutral}) => {
     const max = Math.max(statistics.positive, statistics.negative, statistics.neutral);

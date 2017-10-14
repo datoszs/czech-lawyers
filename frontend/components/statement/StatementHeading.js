@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Well} from 'react-bootstrap';
-import styles from './StatementHeading.css';
+import styles from './StatementHeading.less';
 
 const StatementHeading = ({children}) => (
     <Well className={styles.main}>

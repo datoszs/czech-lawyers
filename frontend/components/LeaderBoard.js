@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Panel, ListGroup} from 'react-bootstrap';
-import styles from './LeaderBoard.css';
+import styles from './LeaderBoard.less';
 
 const styleMap = {
     positive: styles.positive,

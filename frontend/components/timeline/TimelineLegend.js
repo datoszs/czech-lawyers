@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Popover} from 'react-bootstrap';
-import styles from './TimelineLegend.css';
+import styles from './TimelineLegend.less';
 
 const TimelineLegend = ({year, positive, negative, neutral, msgPositive, msgNegative, msgNeutral}) => (
     <Popover id="timeline-legend" title={<strong>{year}</strong>}>

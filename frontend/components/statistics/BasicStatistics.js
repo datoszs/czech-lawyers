@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {Glyphicon, OverlayTrigger} from 'react-bootstrap';
 import {Statistics} from '../../model';
 import StatisticsColumn from './StatisticsColumn';
-import styles from './BasicStatistics.css';
+import styles from './BasicStatistics.less';
 
 const BasicStatistics = ({statistics, legend}) => {
     const LegendComponent = legend;

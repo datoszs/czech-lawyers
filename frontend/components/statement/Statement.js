@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Well} from 'react-bootstrap';
-import styles from './Statement.css';
+import styles from './Statement.less';
 
 const Statement = ({children, onClick}) => (
     <Well onClick={onClick} className={styles.main}>

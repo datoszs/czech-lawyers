@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styles from './AutocompleteLayout.css';
+import styles from './AutocompleteLayout.less';
 
 const AutocompleteLayout = ({input, list}) => (
     <div className={styles.main}>

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Button} from 'react-bootstrap';
-import styles from './SimpleFormLayout.css';
+import styles from './SimpleFormLayout.less';
 
 const SimpleFormLayout = ({bsStyle, submit, children}) => (
     <div className={styles.main}>

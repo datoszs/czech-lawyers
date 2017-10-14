@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {wrapEventStop} from '../util';
-import styles from './SearchForm.css';
+import styles from './SearchForm.less';
 
 const SearchForm = ({onSubmit, children}) => (
     <form className={styles.main} onSubmit={wrapEventStop(onSubmit)}>

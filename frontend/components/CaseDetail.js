@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {Row, Col} from 'react-bootstrap';
 import {Result} from './result';
 import DetailPanel from './DetailPanel';
-import styles from './CaseDetail.css';
+import styles from './CaseDetail.less';
 
 const CaseDetail = ({registry, court, result, resultName, date, handleDetail, href}) => (
     <DetailPanel

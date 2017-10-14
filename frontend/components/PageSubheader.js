@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styles from './PageSubheader.css';
+import styles from './PageSubheader.less';
 
 const PageSubheader = ({children}) => (
     <div className={styles.main}>

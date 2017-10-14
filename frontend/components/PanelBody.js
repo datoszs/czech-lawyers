@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styles from './PanelBody.css';
+import styles from './PanelBody.less';
 
 const PanelBody = ({children}) => (
     <div className={styles.main}>

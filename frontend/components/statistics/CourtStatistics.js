@@ -4,7 +4,7 @@ import {Glyphicon, OverlayTrigger, Popover} from 'react-bootstrap';
 import {Statistics} from '../../model';
 import StatisticsColumn from './StatisticsColumn';
 import StatisticsBar from './StatisticsBar';
-import styles from './CourtStatistics.css';
+import styles from './CourtStatistics.less';
 
 const barStyle = {
     positive: styles.barPositive,

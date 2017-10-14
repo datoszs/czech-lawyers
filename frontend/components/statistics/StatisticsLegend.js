@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Popover} from 'react-bootstrap';
-import styles from './StatisticsLegend.css';
+import styles from './StatisticsLegend.less';
 
 const StatisticsLegend = ({positive, negative, neutral, placement, positionLeft, positionTop}) => (
     <Popover id="statistics-legend" placement={placement} positionLeft={positionLeft} positionTop={positionTop}>

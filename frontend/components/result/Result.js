@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styles from './Result.css';
+import styles from './Result.less';
 
 import positive from './positive.svg';
 import negative from './negative.svg';

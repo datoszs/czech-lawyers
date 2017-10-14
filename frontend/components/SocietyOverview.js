@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Well} from 'react-bootstrap';
-import styles from './SocietyOverview.css';
+import styles from './SocietyOverview.less';
 
 const SocietyOverview = ({name, street, city, ic}) => (
     <div className={styles.main}>

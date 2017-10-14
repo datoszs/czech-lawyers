@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Glyphicon} from 'react-bootstrap';
-import styles from './SearchDisclaimer.css';
+import styles from './SearchDisclaimer.less';
 
 const SearchDisclaimer = ({children}) => (
     <div className={styles.main}>

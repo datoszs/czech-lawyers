@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import {wrapLinkMouseEvent} from '../util';
 import PanelBody from './PanelBody';
-import styles from './DetailPanel.css';
+import styles from './DetailPanel.less';
 
 const DetailPanel = ({children, footer, title, onClick, href}) => (
     <a

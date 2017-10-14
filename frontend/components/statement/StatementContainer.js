@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styles from './StatementContainer.css';
+import styles from './StatementContainer.less';
 
 const StatementContainer = ({children}) => (
     <div className={styles.main}>

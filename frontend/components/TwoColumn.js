@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styles from './TwoColumn.css';
+import styles from './TwoColumn.less';
 
 const TwoColumn = ({children}) => <div className={styles.main}>{children}</div>;
 

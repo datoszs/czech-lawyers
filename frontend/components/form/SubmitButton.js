@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Button} from 'react-bootstrap';
 import Spinner from 'react-spinkit';
-import styles from './SubmitButton.css';
+import styles from './SubmitButton.less';
 
 const SubmitButton = ({bsStyle, children, disabled, submitting}) => (
     <Button

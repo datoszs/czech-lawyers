@@ -7,7 +7,7 @@ import {Msg} from '../containers';
 import router from '../router';
 import {CONTACT, CONTACT_FORM_ANCHOR} from '../routes';
 import Button from './SidebarButton';
-import styles from './Sidebar.css';
+import styles from './Sidebar.less';
 
 class Sidebar extends Component {
     constructor(props) {
