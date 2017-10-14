@@ -6,6 +6,12 @@ import StatisticsColumn from './StatisticsColumn';
 import StatisticsBar from './StatisticsBar';
 import styles from './CourtStatistics.css';
 
+const barStyle = {
+    positive: styles.barPositive,
+    negative: styles.barNegative,
+    neutral: styles.barNeutral,
+};
+
 const statMax = (statistics) => Math.max(statistics.positive, statistics.negative, statistics.neutral);
 
 const CourtStatistics = ({statistics, courtStatistics, court, legend}) => {
@@ -15,7 +21,7 @@ const CourtStatistics = ({statistics, courtStatistics, court, legend}) => {
     const createColumn = (property) => (
         <StatisticsColumn max={max} number={statistics[property] || 0} type={property}>
             {courtStatistics && <div className={styles.divider} />}
-            {courtStatistics && <StatisticsBar max={courtMax} number={courtStatistics[property]} type={`${property}-court`} />}
+            {courtStatistics && <StatisticsBar max={courtMax} number={courtStatistics[property]} className={barStyle[property]} />}
         </StatisticsColumn>
     );
 

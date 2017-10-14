@@ -1,0 +1,24 @@
+@import "../../variables";
+
+.li(@color) {
+    margin-left: 0;
+    font-weight: bold;
+    color: @color;
+}
+
+.list {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.positive {
+    .li(@stats-positive);
+}
+
+.negative {
+    .li(@stats-negative);
+}
+
+.neutral {
+    .li(@stats-neutral);
+}

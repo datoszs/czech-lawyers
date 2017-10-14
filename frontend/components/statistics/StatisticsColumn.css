@@ -1,0 +1,54 @@
+@import "../../variables";
+@import "bar";
+
+.main {
+    margin: 1px;
+}
+
+.top {
+    height: 1.5em;
+
+    display: flex;
+    flex-direction: column-reverse;
+    position: relative;
+    z-index: 1;
+}
+
+.bar {
+    position: absolute;
+    z-index: -1;
+    bottom: 0;
+
+    width: 100%;
+}
+
+.text(@color) {
+    color: @color;
+    padding: 0 2px;
+    text-align: center;
+    min-width: 2.5ex;
+}
+
+.textPositive {
+    .text(@stats-positive);
+}
+
+.textNegative {
+    .text(@stats-negative);
+}
+
+.textNeutral {
+    .text(@stats-neutral);
+}
+
+.barPositive {
+    .statistics-bar(@stats-positive);
+}
+
+.barNegative {
+    .statistics-bar(@stats-negative);
+}
+
+.barNeutral {
+    .statistics-bar(@stats-neutral);
+}

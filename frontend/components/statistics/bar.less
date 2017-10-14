@@ -1,0 +1,15 @@
+.statistics-bar(@color) {
+    border: solid 1px lighten(@color, 25%);
+    background-color: lighten(@color, 50%);
+    border-radius: 2px;
+}
+
+.court-statistics-bar(@color) {
+    @luma: luminance(@color);
+    @red: red(@color-primary-dark) * @luma / 100;
+    @blue: blue(@color-primary-dark) * @luma / 100;
+    @green: green(@color-primary-dark) * @luma / 100;
+
+    @base: desaturate(rgb(@red, @green, @blue), 50%);
+    .statistics-bar(@base);
+}

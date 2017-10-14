@@ -1,13 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Popover} from 'react-bootstrap';
+import styles from './StatisticsLegend.css';
 
 const StatisticsLegend = ({positive, negative, neutral, placement, positionLeft, positionTop}) => (
     <Popover id="statistics-legend" placement={placement} positionLeft={positionLeft} positionTop={positionTop}>
-        <ul className="statistics-legend">
-            <li className="positive">{positive}</li>
-            <li className="negative">{negative}</li>
-            <li className="neutral">{neutral}</li>
+        <ul className={styles.list}>
+            <li className={styles.positive}>{positive}</li>
+            <li className={styles.negative}>{negative}</li>
+            <li className={styles.neutral}>{neutral}</li>
         </ul>
     </Popover>
 );
