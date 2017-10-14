@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>ApiDocu - /api/advocate/autocomplete</title>
+	<title>ApiDocu - /api/download-export</title>
 	<style>html, body {
 	margin: 0;
 	padding: 0;
@@ -593,20 +593,24 @@ pre.apiDocu-json {
 
 	<div class="apiDocu-container">
 		<div class="apiDocu-url">
-			/api/advocate/autocomplete
+			/api/download-export
 
-			<div class="apiDocu-url-method"></div>
+			<div class="apiDocu-url-method">GET</div>
 
+			<div class="apiDocu-url-tags">
+				
+					<span style="background-color: #9b59b6;" class="apiDocu-url-tag">public</span>
+			</div>
 		</div>
 
 			<h2>Description</h2>
 
-			<div class="apiDocu-description apiDocu-description-main">API for retrieving advocates suggestions (for autocomplete).</div>
+			<div class="apiDocu-description apiDocu-description-main">Get link to current version of exported data<br /><br><pre class="apiDocu-json">    {<br />        <span class="apiDocu-string">"link"</span>: <span class="apiDocu-string">"https:<span class="apiDocu-comment">//www.example.com/data/sY345i"</span></span><br>    }<br /></pre></div>
 
 
 		<h2>Methods</h2>
 
-		<p class="apiDocu-description"></p>
+		<p class="apiDocu-description">GET</p>
 
 
 
