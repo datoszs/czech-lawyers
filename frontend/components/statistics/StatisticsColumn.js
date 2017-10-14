@@ -13,7 +13,7 @@ const barStyle = {
     positive: styles.barPositive,
     negative: styles.barNegative,
     neutral: styles.barNeutral,
-}
+};
 
 const StatisticsColumn = ({number, max, scale, type, children}) => (
     <div className={styles.main}>
