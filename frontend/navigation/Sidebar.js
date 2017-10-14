@@ -2,10 +2,12 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {ButtonGroup, Glyphicon} from 'react-bootstrap';
+import classNames from 'classnames';
 import {Msg} from '../containers';
 import router from '../router';
 import {CONTACT, CONTACT_FORM_ANCHOR} from '../routes';
 import Button from './SidebarButton';
+import styles from './Sidebar.css';
 
 class Sidebar extends Component {
     constructor(props) {
@@ -33,11 +35,11 @@ class Sidebar extends Component {
     render() {
         if (this.state.displayed) {
             return (
-                <ButtonGroup id="sidebar" onMouseEnter={this.showClose} onMouseLeave={this.hideClose} className="hidden-xs">
-                    <Button onClick={this.props.goToContact}><Msg msg="contact.appeal" /></Button>
+                <ButtonGroup onMouseEnter={this.showClose} onMouseLeave={this.hideClose} className={classNames(styles.main, 'hidden-xs')}>
+                    <Button onClick={this.props.goToContact} className={styles.button}><Msg msg="contact.appeal" /></Button>
                     {
                         this.state.closeDisplayed &&
-                        <Button className="close-btn" onClick={this.hide}><Glyphicon glyph="remove-sign" /></Button>
+                        <Button onClick={this.hide} className={classNames(styles.button, styles.close)}><Glyphicon glyph="remove-sign" /></Button>
                     }
                 </ButtonGroup>
             );
