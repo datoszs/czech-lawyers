@@ -1,10 +1,15 @@
+import {Map} from 'immutable';
 import {NAME} from './constants';
 import {formatRoute} from '../util';
 
 const getModel = (state) => state.get(NAME);
 const getRouteInfo = (property) => (state, name) => {
     const result = getModel(state).getIn([property, name]);
-    return result && result.toJS();
+    if (Map.isMap(result) && result !== Map()) {
+        return result.toJS();
+    } else {
+        return undefined;
+    }
 };
 
 const getParams = getRouteInfo('params');
