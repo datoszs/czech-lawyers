@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {ButtonGroup, Glyphicon} from 'react-bootstrap';
+import {wrapLinkMouseEvent} from '../util';
 import {Msg} from '../containers';
 import router from '../router';
 import {CONTACT, CONTACT_FORM_ANCHOR} from '../routes';
@@ -34,7 +35,7 @@ class Sidebar extends Component {
         if (this.state.displayed) {
             return (
                 <ButtonGroup id="sidebar" onMouseEnter={this.showClose} onMouseLeave={this.hideClose} className="hidden-xs">
-                    <Button onClick={this.props.goToContact}><Msg msg="contact.appeal" /></Button>
+                    <Button href={this.props.contactHref} onClick={this.props.goToContact}><Msg msg="contact.appeal" /></Button>
                     {
                         this.state.closeDisplayed &&
                         <Button className="close-btn" onClick={this.hide}><Glyphicon glyph="remove-sign" /></Button>
@@ -49,10 +50,15 @@ class Sidebar extends Component {
 
 Sidebar.propTypes = {
     goToContact: PropTypes.func.isRequired,
+    contactHref: PropTypes.string.isRequired,
 };
 
-const mapDispatchToProps = (dispatch) => ({
-    goToContact: () => dispatch(router.transition(CONTACT, undefined, undefined, CONTACT_FORM_ANCHOR)),
+const mapStateToProps = (state) => ({
+    contactHref: router.getHref(state, CONTACT, undefined, undefined, CONTACT_FORM_ANCHOR),
 });
 
-export default connect(undefined, mapDispatchToProps)(Sidebar);
+const mapDispatchToProps = (dispatch) => ({
+    goToContact: wrapLinkMouseEvent(() => dispatch(router.transition(CONTACT, undefined, undefined, CONTACT_FORM_ANCHOR))),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Sidebar);

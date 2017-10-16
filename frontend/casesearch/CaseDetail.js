@@ -17,6 +17,7 @@ const mapStateToProps = (state, {id}) => {
         result: caseObj.result ? translate.getMessage(state, resultMsg[caseObj.result]) : null,
         date: caseObj.decisionDate ? moment(caseObj.decisionDate).format(dateFormat) : null,
         resultName: caseObj.result,
+        href: router.getHref(state, CASE_DETAIL, {id}),
     };
 };
 

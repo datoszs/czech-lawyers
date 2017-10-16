@@ -1,16 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Well} from 'react-bootstrap';
+import {wrapLinkMouseEvent} from '../../util';
 
-const Statement = ({children, onClick}) => (
-    <Well onClick={onClick} className="problem-statement">
+const Statement = ({children, onClick, href}) => (
+    <a
+        href={href}
+        onClick={wrapLinkMouseEvent(onClick)}
+        className="problem-statement well"
+    >
         {children}
-    </Well>
+    </a>
 );
 
 Statement.propTypes = {
     children: PropTypes.node.isRequired,
     onClick: PropTypes.func.isRequired,
+    href: PropTypes.string.isRequired,
 };
 
 export default Statement;
