@@ -36,7 +36,7 @@ RouterLink.propTypes = {
     className: PropTypes.string,
 };
 
-RouterLinkComponent.defaultProps = {
+RouterLink.defaultProps = {
     params: undefined,
     query: undefined,
     anchor: undefined,

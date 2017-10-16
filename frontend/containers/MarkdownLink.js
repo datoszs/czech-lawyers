@@ -5,7 +5,7 @@ import {Link} from 'react-router-dom';
 const MarkdownLink = ({href, children}) => (
     href.match(/^https?:\/\//)
         ? <a href={href}>{children}</a>
-        : <Link to={href}>{children}</Link>
+        : <Link to={href} href={href}>{children}</Link>
 );
 
 MarkdownLink.propTypes = {

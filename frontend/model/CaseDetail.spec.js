@@ -44,12 +44,14 @@ describe('Case Detail model', () => {
     });
     it('treats null advocate tagging finality as false');
     it('maps documents into their ids', () => {
-        const template = createTemplate({documents: [{
-            id: 94001,
-            mark: 'ECLI:CZ:NS:2010:20.CDO.2696.2010.1',
-            date: 1490347289000,
-            link: 'http://nsoud.cz/Judikatura/judikatura_ns.nsf/WebPrint/06FEB14C62D9D3B9C1257A4E0065FDFD?openDocument',
-        }]});
+        const template = createTemplate({
+            documents: [{
+                id: 94001,
+                mark: 'ECLI:CZ:NS:2010:20.CDO.2696.2010.1',
+                date: 1490347289000,
+                link: 'http://nsoud.cz/Judikatura/judikatura_ns.nsf/WebPrint/06FEB14C62D9D3B9C1257A4E0065FDFD?openDocument',
+            }],
+        });
         const caseDetail = new CaseDetail(template);
         caseDetail.documents.should.deep.equal(List.of(94001));
     });

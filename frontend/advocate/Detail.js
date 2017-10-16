@@ -15,9 +15,12 @@ const DetailComponent = ({advocate}) => (
         <DetailField msg="advocate.address">
             {advocate && <AddressFormatter value={advocate.address} />}
         </DetailField>
-        {advocate && advocate.active && <DetailField msg="advocate.email">
-            {advocate && advocate.emails.map((email) => <div key={email}>{email}</div>)}
-        </DetailField>}
+        {
+            advocate && advocate.active &&
+            <DetailField msg="advocate.email">
+                {advocate && advocate.emails.map((email) => <div key={email}>{email}</div>)}
+            </DetailField>
+        }
         {advocate && !advocate.active && <Alert bsStyle="warning"><Msg msg="advocate.removed" /></Alert>}
     </div>
 );
