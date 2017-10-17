@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {Row, Col} from 'react-bootstrap';
 import {Result} from './result';
 import DetailPanel from './DetailPanel';
+import styles from './CaseDetail.less';
 
 const CaseDetail = ({registry, court, result, resultName, date, handleDetail, href}) => (
     <DetailPanel
@@ -17,7 +18,7 @@ const CaseDetail = ({registry, court, result, resultName, date, handleDetail, hr
         onClick={handleDetail}
         href={href}
     >
-        {resultName && <span className="case-detail-result"><Result result={resultName} /></span>}
+        {resultName && <span className={styles.result}><Result result={resultName} /></span>}
     </DetailPanel>
 );
 

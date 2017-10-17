@@ -2,7 +2,6 @@ import React from 'react';
 import {Provider} from 'react-redux';
 
 import './include.less';
-import './index.less';
 
 import AppRouter from './AppRouter';
 

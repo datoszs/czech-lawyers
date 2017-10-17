@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {sequence, getCurrentYear} from '../../util';
+import styles from './Timeline.less';
 
 const Timeline = ({YearComponent, startYear}) => (
-    <div className="timeline">
+    <div className={styles.main}>
         {
             sequence((getCurrentYear() - startYear) + 1)
                 .map((year) => year + startYear)

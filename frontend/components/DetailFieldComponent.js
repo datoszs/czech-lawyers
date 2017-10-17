@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import styles from './DetailFieldComponent.less';
 
 const DetailFieldComponent = ({label, children}) => (
-    <div className="detail-field">
-        <div className="detail-field-label">{label}</div>
-        <div className="detail-field-value">{children}</div>
+    <div className={styles.main}>
+        <div className={styles.label}>{label}</div>
+        <div>{children}</div>
     </div>
 );
 

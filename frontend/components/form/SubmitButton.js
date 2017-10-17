@@ -2,16 +2,17 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Button} from 'react-bootstrap';
 import Spinner from 'react-spinkit';
+import styles from './SubmitButton.less';
 
 const SubmitButton = ({bsStyle, children, disabled, submitting}) => (
     <Button
         disabled={disabled || submitting}
         bsStyle={bsStyle}
         type="submit"
-        className="submit-button"
+        className={styles.main}
     >
         {children}
-        {submitting && <Spinner name="circle" className="submit-spinner" fadeIn="none" />}
+        {submitting && <Spinner name="circle" className={styles.spinner} fadeIn="none" />}
     </Button>
 );
 

@@ -1,26 +1,28 @@
-.detail-panel() {
+@import "../variables";
+
+.main {
     cursor: pointer;
-    color: inherit; // overwrites bootstrap
+    color: inherit; /* overwrites bootstrap */
     display: block;
+}
 
-    .title {
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
+.main:hover {
+    border-color: @brand-primary;
 
-    &:hover {
-        border-color: @brand-primary;
+    /* overwrites bootstrap */
+    text-decoration: inherit;
+    color: inherit;
+}
 
-        /* overwrites bootstrap */
-        text-decoration: inherit;
-        color: inherit;
+.main:focus {
+     text-decoration: inherit;
+ }
 
-        .title {
-            color: @brand-primary;
-        }
-    }
+.title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 
-    &:focus {
-        text-decoration: inherit;
-    }
+.main:hover .title {
+    color: @brand-primary;
 }

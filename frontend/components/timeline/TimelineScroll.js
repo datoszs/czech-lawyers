@@ -1,8 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
+import styles from './TimelineScroll.less';
 
 const TimelineScroll = ({children}) => (
-    <div className="timeline-scroll hidden-xs">
+    <div className={classNames(styles.main, 'hidden-xs')}>
         {children}
     </div>
 );

@@ -1,7 +1,10 @@
-.timeline-legend() {
+@import "../../variables";
+
+.main {
     dt {
         display: inline-block;
         margin-right: 3px;
+
         &:after {
             content: ':'
         }
@@ -10,16 +13,16 @@
     dd {
         display: inline-block;
     }
+}
 
-    .positive {
-        color: @stats-positive;
-    }
+.positive {
+    color: @stats-positive;
+}
 
-    .negative {
-        color: @stats-negative;
-    }
+.negative {
+    color: @stats-negative;
+}
 
-    .neutral {
-        color: @stats-neutral;
-    }
+.neutral {
+    color: @stats-neutral;
 }

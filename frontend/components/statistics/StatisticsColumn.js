@@ -1,16 +1,29 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import StatisticsBar from './StatisticsBar';
+import styles from './StatisticsColumn.less';
+
+const textStyle = {
+    positive: styles.textPositive,
+    negative: styles.textNegative,
+    neutral: styles.textNeutral,
+};
+
+const barStyle = {
+    positive: styles.barPositive,
+    negative: styles.barNegative,
+    neutral: styles.barNeutral,
+};
 
 const StatisticsColumn = ({number, max, scale, type, children}) => (
-    <div className={`statistics-column-${type}`}>
+    <div className={styles.main}>
         <div
-            className="statistics-column-top"
+            className={styles.top}
             style={{fontSize: `${scale}em`}}
         >
-            <div className="statistics-column-text">{number}</div>
-            <div className="statistics-column-bar">
-                <StatisticsBar number={number} max={max} type={type} />
+            <div className={textStyle[type]}>{number}</div>
+            <div className={styles.bar}>
+                <StatisticsBar number={number} max={max} className={barStyle[type]} />
             </div>
         </div>
         {children}

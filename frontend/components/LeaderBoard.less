@@ -1,10 +1,14 @@
-.leader-board (@color) {
-    .panel-heading {
-        color: @color;
-        font-weight: bold;
-        background-color: lighten(@color, 60%);
-    }
+@import "../variables";
 
-    border-color: lighten(@color, 25%);
+.main (@color) {
+    border-color: lighten(@color, 25%) !important;
     width: auto;
+}
+
+.positive {
+    .main(@stats-positive);
+}
+
+.negative {
+    .main(@stats-negative);
 }

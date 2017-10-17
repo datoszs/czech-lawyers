@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 
 const getHeight = (number, max) => (max !== 0 ? (number / max) * 1.5 : 0);
 
-const StatisticsBar = ({number, max, type}) => (
+const StatisticsBar = ({number, max, className}) => (
     <div
-        className={`statistics-bar-${type}`}
+        className={className}
         style={{height: `${getHeight(number, max)}em`}}
     />
 );
@@ -13,7 +13,7 @@ const StatisticsBar = ({number, max, type}) => (
 StatisticsBar.propTypes = {
     number: PropTypes.number,
     max: PropTypes.number.isRequired,
-    type: PropTypes.string.isRequired,
+    className: PropTypes.string.isRequired,
 };
 
 StatisticsBar.defaultProps = {

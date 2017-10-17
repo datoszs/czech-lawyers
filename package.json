@@ -13,7 +13,7 @@
     "build": "webpack --progress --env",
     "lint": "eslint frontend",
     "lint:fix": "npm run lint -- --fix",
-    "test:base": "mocha --require babel-register frontend/test.js \"frontend/**/*.spec.js\"",
+    "test:base": "mocha --require babel-register --require ignore-styles frontend/test.js \"frontend/**/*.spec.js\"",
     "test": "npm run test:base -- --reporter spec",
     "test:watch": "npm run test:base -- --reporter min --watch"
   },
@@ -79,6 +79,7 @@
     "gulp-less": "^3.0.5",
     "gulp-uglify": "^3.0.0",
     "html-webpack-plugin": "2.30.1",
+    "ignore-styles": "5.0.1",
     "json-loader": "0.5.7",
     "less": "2.7.2",
     "less-loader": "4.0.5",

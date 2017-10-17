@@ -1,11 +1,12 @@
+@import "../variables";
 @import (reference) "multicolumn";
 
-.two-column() {
+.main {
     .multicolumn(2);
+}
 
-    > * {
-        @media (max-width: @screen-xs-max) {
-            width: 100%;
-        }
+@media (max-width: @screen-xs-max) {
+    .main > * {
+        width: 100%;
     }
 }

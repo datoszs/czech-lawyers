@@ -1,20 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Popover} from 'react-bootstrap';
+import styles from './TimelineLegend.less';
 
 const TimelineLegend = ({year, positive, negative, neutral, msgPositive, msgNegative, msgNeutral}) => (
     <Popover id="timeline-legend" title={<strong>{year}</strong>}>
-        <dl>
+        <dl className={styles.main}>
             <div>
-                {positive && <dt className="positive">{msgPositive}</dt>}
+                {positive && <dt className={styles.positive}>{msgPositive}</dt>}
                 {positive && <dd> {positive}</dd>}
             </div>
             <div>
-                {negative && <dt className="negative">{msgNegative}</dt>}
+                {negative && <dt className={styles.negative}>{msgNegative}</dt>}
                 {negative && <dd>{negative}</dd>}
             </div>
             <div>
-                {neutral && <dt className="neutral">{msgNeutral}</dt>}
+                {neutral && <dt className={styles.neutral}>{msgNeutral}</dt>}
                 {neutral && <dd>{neutral}</dd>}
             </div>
         </dl>

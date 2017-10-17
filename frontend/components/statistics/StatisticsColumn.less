@@ -1,28 +1,54 @@
-.statistics-column (@color) {
+@import "../../variables";
+@import "bar";
+
+.main {
     margin: 1px;
+}
 
+.top {
+    height: 1.5em;
 
-    .statistics-column-top {
-        height: 1.5em;
+    display: flex;
+    flex-direction: column-reverse;
+    position: relative;
+    z-index: 1;
+}
 
-        display: flex;
-        flex-direction: column-reverse;
-        position: relative;
-        z-index: 1;
+.bar {
+    position: absolute;
+    z-index: -1;
+    bottom: 0;
 
-        .statistics-column-text {
-            color: @color;
-            padding: 0 2px;
-            text-align: center;
-            min-width: 2.5ex;
-        }
+    width: 100%;
+}
 
-        .statistics-column-bar {
-            position: absolute;
-            z-index: -1;
-            bottom: 0;
+.text(@color) {
+    color: @color;
+    padding: 0 2px;
+    text-align: center;
+    min-width: 2.5ex;
+}
 
-            width: 100%;
-        }
-    }
+.textPositive {
+    .text(@stats-positive);
+}
+
+.textNegative {
+    .text(@stats-negative);
+}
+
+.textNeutral {
+    .text(@stats-neutral);
+}
+
+.barPositive {
+    .statistics-bar(@stats-positive);
+}
+
+.barNegative {
+    .statistics-bar(@stats-negative);
+}
+
+.barNeutral {
+    .statistics-bar(@stats-neutral);
 }

@@ -8,6 +8,13 @@ const ASSET_OUTPUT_PATH = '../assets/webapp';
 /** removes falsy items from array */
 const array = (...target) => target.filter((item) => item);
 
+const createStyleLoader = (dev, ...loaders) => dev
+    ? ['style-loader'].concat(loaders)
+    : ExtractTextPlugin.extract({
+        fallback: 'style-loader',
+        use: loaders,
+    });
+
 export default ({dev}) => ({
     entry: array(
         dev && 'react-hot-loader/patch',
@@ -52,12 +59,26 @@ export default ({dev}) => ({
             },
             {
                 test: /\.(less|css)$/,
-                loader: dev
-                    ? ['style-loader', 'css-loader', 'less-loader']
-                    : ExtractTextPlugin.extract({
-                        fallback: 'style-loader',
-                        use: ['css-loader', 'less-loader'],
-                    }),
+                include: /node_modules/,
+                loader: createStyleLoader(dev, 'css-loader', 'less-loader'),
+            },
+            {
+                test: /\.less$/,
+                include: /frontend/,
+                exclude: /include.less/,
+                loader: createStyleLoader(dev, {
+                        loader: 'css-loader',
+                        query: {
+                            modules: true,
+                            localIdentName: '[name]__[local]__[hash:base64:5]',
+                        },
+                    },
+                    'less-loader',
+                ),
+            },
+            {
+                test: /include.less/,
+                loader: createStyleLoader(dev, 'css-loader', 'less-loader'),
             },
             {
                 test: /\.eot$/,

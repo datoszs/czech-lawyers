@@ -1,19 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
+import styles from './Year.less';
 
 const Year = ({year, positive, negative, neutral, BarComponent, onClick, selected}) => (
     <div
         className={classnames({
-            'timeline-year': true,
-            selected,
+            [styles.main]: true,
+            [styles.selected]: selected,
         })}
         onClick={onClick}
     >
         {positive && <BarComponent className="positive" year={year} size={positive} />}
         {negative && <BarComponent className="negative" year={year} size={negative} />}
         {neutral && <BarComponent className="neutral" year={year} size={neutral} />}
-        <div className="legend">{year}</div>
+        <div className={styles.legend}>{year}</div>
     </div>
 );
 
