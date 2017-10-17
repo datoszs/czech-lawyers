@@ -34,7 +34,7 @@
     "react-ga": "2.3.5",
     "react-google-recaptcha": "0.9.7",
     "react-helmet": "5.2.0",
-    "react-hot-loader": "3.0.0",
+    "react-hot-loader": "3.1.1",
     "react-markdown": "2.5.0",
     "react-redux": "5.0.6",
     "react-router-dom": "4.2.2",
@@ -43,7 +43,7 @@
     "redux": "3.7.2",
     "redux-form": "7.0.4",
     "redux-immutable": "4.0.0",
-    "redux-saga": "0.15.6",
+    "redux-saga": "0.16.0",
     "sprintf-js": "1.1.1",
     "superagent": "3.6.3",
     "validator": "9.0.0"
@@ -63,9 +63,9 @@
     "css-loader": "0.28.7",
     "dirty-chai": "2.0.1",
     "enzyme": "3.1.0",
-    "enzyme-adapter-react-16": "1.0.1",
-    "eslint": "4.8.0",
-    "eslint-config-airbnb": "16.0.0",
+    "enzyme-adapter-react-16": "1.0.2",
+    "eslint": "4.9.0",
+    "eslint-config-airbnb": "16.1.0",
     "eslint-plugin-import": "2.7.0",
     "eslint-plugin-jsx-a11y": "6.0.2",
     "eslint-plugin-react": "7.4.0",
@@ -93,8 +93,8 @@
     "sinon-chai": "2.14.0",
     "style-loader": "0.19.0",
     "url-loader": "0.6.2",
-    "webpack": "3.7.1",
-    "webpack-dev-server": "2.9.1",
+    "webpack": "3.8.1",
+    "webpack-dev-server": "2.9.2",
     "yaml-loader": "0.5.0"
   }
 }
