@@ -1,9 +1,9 @@
 import React from 'react';
-import {Jumbotron, Row, Col, Alert} from 'react-bootstrap';
+import {Jumbotron, Row, Alert} from 'react-bootstrap';
 import {Msg, RichText} from '../containers';
 import autocomplete from '../autocomplete';
-import {getTop, getBottom} from './selectors';
-import LeaderBoard from './LeaderBoard';
+import {courts} from '../model';
+import LeaderBoardColumn from './LeaderBoardColumn';
 import ProblemStatements from './ProblemStatements';
 
 const Container = () => (
@@ -18,9 +18,9 @@ const Container = () => (
         <ProblemStatements />
         <RichText msg="leaderboard.legend" />
         <Row>
-            <Col sm={0} lg={2} />
-            <Col sm={6} lg={4}><LeaderBoard type="positive" selector={getTop} /></Col>
-            <Col sm={6} lg={4}><LeaderBoard type="negative" selector={getBottom} /></Col>
+            <LeaderBoardColumn court={courts.NS} />
+            <LeaderBoardColumn court={courts.NSS} />
+            <LeaderBoardColumn court={courts.US} />
         </Row>
         <Alert bsStyle="warning"><Msg msg="home.disclaimer" /></Alert>
     </section>
