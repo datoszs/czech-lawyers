@@ -7,7 +7,7 @@ import LeaderBoard from './LeaderBoard';
 import {getTop, getBottom} from './selectors';
 
 const LeaderBoardColumn = ({court}) => (
-    <Col lg={4}>
+    <Col sm={4}>
         <Panel header={<p><Msg msg={courtsMsg[court]} /></p>} />
         <LeaderBoard court={court} selector={getTop} type="positive" />
         <LeaderBoard court={court} selector={getBottom} type="negative" />
