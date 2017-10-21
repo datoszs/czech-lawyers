@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>ApiDocu - /api/advocate/</title>
+	<title>ApiDocu - /api/case/&lt;id&gt;</title>
 	<style>html, body {
 	margin: 0;
 	padding: 0;
@@ -593,21 +593,49 @@ pre.apiDocu-json {
 
 	<div class="apiDocu-container">
 		<div class="apiDocu-url">
-			/api/advocate/
+			/api/case/<span class="apiDocu-mask-param"&gt;</span>&lt;id&gt;</span>
 
-			<div class="apiDocu-url-method"></div>
+			<div class="apiDocu-url-method">GET</div>
 
+			<div class="apiDocu-url-tags">
+				
+					<span style="background-color: #9b59b6;" class="apiDocu-url-tag">public</span>
+			</div>
 		</div>
 
 			<h2>Description</h2>
 
-			<div class="apiDocu-description apiDocu-description-main">API for obtaining information about advocate</div>
+			<div class="apiDocu-description apiDocu-description-main">Get information about case with given ID.<br /><br><pre class="apiDocu-json">    {<br />        <span class="apiDocu-string">"id_case"</span>: 12,<br />        <span class="apiDocu-string">"id_court"</span>: 2,<br />        <span class="apiDocu-string">"registry_mark"</span>: <span class="apiDocu-string">"42 CDO 4000/2016"</span>,<br />        <span class="apiDocu-string">"tagging_advocate"</span>: {<br />            <span class="apiDocu-string">"id_advocate"</span>: 123,<br />            <span class="apiDocu-string">"fullname"</span>: <span class="apiDocu-string">"JUDr. Ing. Petr Omáčka, PhD."</span><br />        },<br />        <span class="apiDocu-string">"tagging_advocate_final"</span>: true,<br />        <span class="apiDocu-string">"tagging_result"</span>: <span class="apiDocu-string">"negative"</span>,<br />        <span class="apiDocu-string">"tagging_result_final"</span>: false,<br />        <span class="apiDocu-string">"proposition_date"</span>: <span class="apiDocu-string">"2016-03-01T01:00:00+01:00"</span>,<br />        <span class="apiDocu-string">"decision_date"</span>: null,<br />        <span class="apiDocu-string">"documents"</span>: [<br />            {<br />                <span class="apiDocu-string">"id_document"</span>: 543,<br />                <span class="apiDocu-string">"mark"</span>: <span class="apiDocu-string">"ECLI:CZ:NS:2016:42.CDO.4000.2016.1"</span>,<br />                <span class="apiDocu-string">"decision_date"</span>: <span class="apiDocu-string">"2012-04-23T18:25:43.511Z"</span>,<br />                <span class="apiDocu-string">"public_link"</span>: <span class="apiDocu-string">"http:<span class="apiDocu-comment">//example.com/doc/12AS13LAA0"</span></span><br>                <span class="apiDocu-string">"public_local_link"</span>: <span class="apiDocu-string">"http:<span class="apiDocu-comment">//example.com/doc/12AS13LAA0"</span></span><br>            }<br />        ]<br />    }<br /></pre><br />Potential tagging advocate:<br /> - <b>array</b> when tagging present and valid<br /> - <b>null</b> when null, or tagging is invalid<br />Potential tagging result (@see CaseResult):<br /> - <b>negative</b><br /> - <b>neutral</b><br /> - <b>positive</b><br /> - <b>null</b> - when tagging is invalid<br />Potential tagging final result:<br /> - <b>null</b> when tagging doesn't exist<br /> - <b>true</b> when tagging is final<br /> - <b>false</b> when tagging is not final<br />Note: provides only cases which are relevant for advocates portal.<br />Errors:<br /> - Returns HTTP 404 with error <b>no_case</b> when such case doesn't exist</div>
 
 
 		<h2>Methods</h2>
 
-		<p class="apiDocu-description"></p>
+		<p class="apiDocu-description">GET</p>
 
+		<div class="apiDocu-parameters">
+			<h2>Mask parameters</h2>
+
+			<table>
+					<tr>
+						<th>
+							<span class="apiDocu-mask-param">&lt;id&gt;</span>
+							<div class="apiDocu-mask-param-description">
+								<ul>
+									<li>
+										<strong>requirement</strong>: -?\d+
+									</li>
+									<li>
+										<strong>type</strong>: integer
+									</li>
+									<li>
+										<strong>description</strong>: Case ID.
+									</li>
+								</ul>
+							</div>
+						</th>
+					</tr>
+			</table>
+		</div>
 
 
 	</div>

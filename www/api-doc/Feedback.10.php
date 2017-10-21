@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>ApiDocu - /api/advocate/</title>
+	<title>ApiDocu - /api/court-statistics/</title>
 	<style>html, body {
 	margin: 0;
 	padding: 0;
@@ -593,7 +593,7 @@ pre.apiDocu-json {
 
 	<div class="apiDocu-container">
 		<div class="apiDocu-url">
-			/api/advocate/
+			/api/court-statistics/
 
 			<div class="apiDocu-url-method"></div>
 
@@ -601,7 +601,7 @@ pre.apiDocu-json {
 
 			<h2>Description</h2>
 
-			<div class="apiDocu-description apiDocu-description-main">API for obtaining information about advocate</div>
+			<div class="apiDocu-description apiDocu-description-main">API for obtaining information about courts</div>
 
 
 		<h2>Methods</h2>

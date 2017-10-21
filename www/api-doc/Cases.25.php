@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>ApiDocu - /api/advocate/</title>
+	<title>ApiDocu - /api/dispute-case/&lt;id&gt;</title>
 	<style>html, body {
 	margin: 0;
 	padding: 0;
@@ -593,21 +593,49 @@ pre.apiDocu-json {
 
 	<div class="apiDocu-container">
 		<div class="apiDocu-url">
-			/api/advocate/
+			/api/dispute-case/<span class="apiDocu-mask-param"&gt;</span>&lt;id&gt;</span>
 
-			<div class="apiDocu-url-method"></div>
+			<div class="apiDocu-url-method">POST</div>
 
+			<div class="apiDocu-url-tags">
+				
+					<span style="background-color: #9b59b6;" class="apiDocu-url-tag">public</span>
+			</div>
 		</div>
 
 			<h2>Description</h2>
 
-			<div class="apiDocu-description apiDocu-description-main">API for obtaining information about advocate</div>
+			<div class="apiDocu-description apiDocu-description-main">Dispute given case (case result, advocate or both).<br />Apart from case ID following parameters are expected (and mandatory) in POST params:<br /> - full_name - an non-empty string with sender full name<br /> - from - non-empty valid e-mail address of sender<br /> - content - non-empty text explaining why the tagging(s) should be re-considered<br /> - disputed_tagging - what is disputed<br /> - captcha_token - an non-empty captcha token which will be used to validate it<br /> - datetime - datetime of moment when the disputation happens, see warning below. In DATE_ATOM format<br />Field disputed_tagging can contain:<br /> - <b>case_result</b><br /> - <b>advocate</b><br /> - <b>both</b><br />Warning: datetime should be the moment of loading taggins (or slightly in the past) as there are no IDs what is disputed.<br />This time is used to detect when tagging changed while user was filling up the form. In such case fail is inevitable.<br />Outcome:<br /><br><pre class="apiDocu-json">    {<br />        <span class="apiDocu-string">"result"</span>: <span class="apiDocu-string">"success"</span><br />    }<br /></pre><br />Successes & errors:<br /> - Returns HTTP 200 with result <b>success</b> when everything was OK and dispustation was created.<br /> - Returns HTTP 404 with error <b>no_case</b> when such case doesn't exist<br /> - Returns HTTP 400 with error <b>invalid_input</b> when input is invalid<br /> - Returns HTTP 401 with error <b>invalid_captcha</b> when captcha is invalid<br /> - Returns HTTP 409 with error <b>final_both_taggings</b> when disputed advocate tagging and case result tagging are already final<br /> - Returns HTTP 409 with error <b>final_advocate_tagging</b> when disputed advocate tagging is already final<br /> - Returns HTTP 409 with error <b>final_case_result_tagging</b> when disputed case result tagging is already final<br /> - Returns HTTP 409 with error <b>inconsistent</b> when there are taggings newer than given datetime.<br /> - Returns HTTP 500 with error <b>fail</b> when storing fails</div>
 
 
 		<h2>Methods</h2>
 
-		<p class="apiDocu-description"></p>
+		<p class="apiDocu-description">POST</p>
 
+		<div class="apiDocu-parameters">
+			<h2>Mask parameters</h2>
+
+			<table>
+					<tr>
+						<th>
+							<span class="apiDocu-mask-param">&lt;id&gt;</span>
+							<div class="apiDocu-mask-param-description">
+								<ul>
+									<li>
+										<strong>requirement</strong>: -?\d+
+									</li>
+									<li>
+										<strong>type</strong>: integer
+									</li>
+									<li>
+										<strong>description</strong>: Case ID.
+									</li>
+								</ul>
+							</div>
+						</th>
+					</tr>
+			</table>
+		</div>
 
 
 	</div>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>ApiDocu - /api/advocate/</title>
+	<title>ApiDocu - /api/advocate-rankings/&lt;decile&gt;[/[&lt;start&gt;-&lt;count&gt;]]</title>
 	<style>html, body {
 	margin: 0;
 	padding: 0;
@@ -593,21 +593,88 @@ pre.apiDocu-json {
 
 	<div class="apiDocu-container">
 		<div class="apiDocu-url">
-			/api/advocate/
+			/api/advocate-rankings/<span class="apiDocu-mask-param"&gt;</span>&lt;decile&gt;</span>[/[<span class="apiDocu-mask-param"&gt;</span>&lt;start&gt;</span>-<span class="apiDocu-mask-param"&gt;</span>&lt;count&gt;</span>]]
 
-			<div class="apiDocu-url-method"></div>
+			<div class="apiDocu-url-method">GET</div>
 
+			<div class="apiDocu-url-tags">
+				
+					<span style="background-color: #9b59b6;" class="apiDocu-url-tag">public</span>
+			</div>
 		</div>
 
 			<h2>Description</h2>
 
-			<div class="apiDocu-description apiDocu-description-main">API for obtaining information about advocate</div>
+			<div class="apiDocu-description apiDocu-description-main">Get advocates which are in given decile in advocate rankings.<br /><br><pre class="apiDocu-json">    {<br />        [<br />            <span class="apiDocu-string">"id_advocate"</span>: 123,<br />            <span class="apiDocu-string">"fullname"</span>: <span class="apiDocu-string">"JUDr. Ing. Petr Omáčka, PhD."</span>,<br />            <span class="apiDocu-string">"sorting_name"</span>: <span class="apiDocu-string">"Omáčka, Petr"</span>,<br />        ],<br />        [<br />            <span class="apiDocu-string">"id_advocate"</span>: 1118,<br />            <span class="apiDocu-string">"fullname"</span>: <span class="apiDocu-string">"JUDr. Stanislav Morče"</span>,<br />            <span class="apiDocu-string">"sorting_name"</span>: <span class="apiDocu-string">"Morče, Stanislav"</span>,<br />        ]<br />    }<br /></pre><br />There is one optional GET parameter:<br /> - <b>reverse</n> - presence indicates reverse sorting (usable for last people from given decile)<br />Errors:<br /> - Returns HTTP 400 with error <b>invalid_decile</b> when decile is invalid or out of range</div>
 
 
 		<h2>Methods</h2>
 
-		<p class="apiDocu-description"></p>
+		<p class="apiDocu-description">GET</p>
 
+		<div class="apiDocu-parameters">
+			<h2>Mask parameters</h2>
+
+			<table>
+					<tr>
+						<th>
+							<span class="apiDocu-mask-param">&lt;decile&gt;</span>
+							<div class="apiDocu-mask-param-description">
+								<ul>
+									<li>
+										<strong>requirement</strong>: -?\d+
+									</li>
+									<li>
+										<strong>type</strong>: integer
+									</li>
+									<li>
+										<strong>description</strong>: Decile
+									</li>
+								</ul>
+							</div>
+						</th>
+					</tr>
+					<tr>
+						<th>
+							<span class="apiDocu-mask-param">&lt;start&gt;</span>
+							<div class="apiDocu-mask-param-description">
+								<ul>
+									<li>
+										<strong>requirement</strong>: \d+
+									</li>
+									<li>
+										<strong>type</strong>: integer
+									</li>
+									<li>
+										<strong>description</strong>: Specifies where to start.
+									</li>
+									<li>
+										<strong>default</strong>: 0
+									</li>
+								</ul>
+							</div>
+						</th>
+					</tr>
+					<tr>
+						<th>
+							<span class="apiDocu-mask-param">&lt;count&gt;</span>
+							<div class="apiDocu-mask-param-description">
+								<ul>
+									<li>
+										<strong>requirement</strong>: -?\d+
+									</li>
+									<li>
+										<strong>type</strong>: integer
+									</li>
+									<li>
+										<strong>description</strong>: Specifies how many results to return. Maximum is 100.
+									</li>
+								</ul>
+							</div>
+						</th>
+					</tr>
+			</table>
+		</div>
 
 
 	</div>

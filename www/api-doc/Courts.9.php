@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>ApiDocu - /api/advocate/</title>
+	<title>ApiDocu - /api/court-statistics</title>
 	<style>html, body {
 	margin: 0;
 	padding: 0;
@@ -593,20 +593,24 @@ pre.apiDocu-json {
 
 	<div class="apiDocu-container">
 		<div class="apiDocu-url">
-			/api/advocate/
+			/api/court-statistics
 
-			<div class="apiDocu-url-method"></div>
+			<div class="apiDocu-url-method">GET</div>
 
+			<div class="apiDocu-url-tags">
+				
+					<span style="background-color: #9b59b6;" class="apiDocu-url-tag">public</span>
+			</div>
 		</div>
 
 			<h2>Description</h2>
 
-			<div class="apiDocu-description apiDocu-description-main">API for obtaining information about advocate</div>
+			<div class="apiDocu-description apiDocu-description-main">Get statistics of all courts.<br /><br><pre class="apiDocu-json">    {<br />        <span class="apiDocu-string">"court_statistics"</span>: {<br />            <span class="apiDocu-string">"1"</span>: {<br />                <span class="apiDocu-string">"negative"</span>: 11,<br />                <span class="apiDocu-string">"neutral"</span>: 1,<br />                <span class="apiDocu-string">"positive"</span>: 57,<br />            },<br />            <span class="apiDocu-string">"2"</span>: {<br />                <span class="apiDocu-string">"negative"</span>: 1,<br />                <span class="apiDocu-string">"neutral"</span>: 1,<br />                <span class="apiDocu-string">"positive"</span>: 2,<br />            },<br />            <span class="apiDocu-string">"3"</span>: {<br />                <span class="apiDocu-string">"negative"</span>: 12,<br />                <span class="apiDocu-string">"neutral"</span>: 13,<br />                <span class="apiDocu-string">"positive"</span>: 21,<br />            }<br />        }<br />    }<br /></pre><br />Available statistics results (@see CaseResult):<br /> - <b>negative</b><br /> - <b>neutral</b><br /> - <b>positive</b><br />Note: statistics take into account only cases which are relevant for advocates portal, which are tagged with result AND with advocate</div>
 
 
 		<h2>Methods</h2>
 
-		<p class="apiDocu-description"></p>
+		<p class="apiDocu-description">GET</p>
 
 
 

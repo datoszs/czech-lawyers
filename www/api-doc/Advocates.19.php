@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>ApiDocu - /api/advocate/</title>
+	<title>ApiDocu - /api/advocate-results/&lt;advocate&gt;[/&lt;court&gt;]</title>
 	<style>html, body {
 	margin: 0;
 	padding: 0;
@@ -593,21 +593,67 @@ pre.apiDocu-json {
 
 	<div class="apiDocu-container">
 		<div class="apiDocu-url">
-			/api/advocate/
+			/api/advocate-results/<span class="apiDocu-mask-param"&gt;</span>&lt;advocate&gt;</span>[/<span class="apiDocu-mask-param"&gt;</span>&lt;court&gt;</span>]
 
-			<div class="apiDocu-url-method"></div>
+			<div class="apiDocu-url-method">GET</div>
 
+			<div class="apiDocu-url-tags">
+				
+					<span style="background-color: #9b59b6;" class="apiDocu-url-tag">public</span>
+			</div>
 		</div>
 
 			<h2>Description</h2>
 
-			<div class="apiDocu-description apiDocu-description-main">API for obtaining information about advocate</div>
+			<div class="apiDocu-description apiDocu-description-main">Get information advocate statistics per year from given court (or all when court not specified).<br /><br><pre class="apiDocu-json">    {<br />        <span class="apiDocu-string">"id_advocate"</span>: 123,<br />        <span class="apiDocu-string">"id_court"</span>: 2,<br />        <span class="apiDocu-string">"years"</span> : {<br />            <span class="apiDocu-string">"2014"</span>: {<br />                <span class="apiDocu-string">"negative"</span>: 12,<br />                <span class="apiDocu-string">"neutral"</span>: 2,<br />                <span class="apiDocu-string">"positive"</span>: 59,<br />            },<br />            <span class="apiDocu-string">"2016"</span>: {<br />                <span class="apiDocu-string">"negative"</span>: 10,<br />                <span class="apiDocu-string">"neutral"</span>: 0,<br />                <span class="apiDocu-string">"positive"</span>: 5,<br />            },<br />        }<br />    }<br /></pre><br />For statistics for all courts the <b>id_court</b> field is null.<br />Each year has its key, however if there are no data for year then the year is ommited.<br />Note: statistics take into account only cases which are relevant for advocates portal.<br />Errors:<br /> - Returns HTTP 404 with error <b>no_advocate</b> when such advocate doesn't exist<br /> - Returns HTTP 404 with error <b>no_court</b> when given court is invalid</div>
 
 
 		<h2>Methods</h2>
 
-		<p class="apiDocu-description"></p>
+		<p class="apiDocu-description">GET</p>
 
+		<div class="apiDocu-parameters">
+			<h2>Mask parameters</h2>
+
+			<table>
+					<tr>
+						<th>
+							<span class="apiDocu-mask-param">&lt;advocate&gt;</span>
+							<div class="apiDocu-mask-param-description">
+								<ul>
+									<li>
+										<strong>requirement</strong>: -?\d+
+									</li>
+									<li>
+										<strong>type</strong>: integer
+									</li>
+									<li>
+										<strong>description</strong>: Advocate ID.
+									</li>
+								</ul>
+							</div>
+						</th>
+					</tr>
+					<tr>
+						<th>
+							<span class="apiDocu-mask-param">&lt;court&gt;</span>
+							<div class="apiDocu-mask-param-description">
+								<ul>
+									<li>
+										<strong>requirement</strong>: -?\d+
+									</li>
+									<li>
+										<strong>type</strong>: integer
+									</li>
+									<li>
+										<strong>description</strong>: Court ID.
+									</li>
+								</ul>
+							</div>
+						</th>
+					</tr>
+			</table>
+		</div>
 
 
 	</div>
