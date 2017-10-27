@@ -7,6 +7,7 @@ copyright: "\xA9 2017 DATOS \u2014 data o spravedlnosti, z. s."
 loading.alert: Váš požadavek se zpracovává, počkejte, prosím.
 
 common.refresh: Obnovit
+common.ok: OK
 
 search.button: Hledat
 search.placeholder: Zadejte jméno nebo IČ
@@ -199,3 +200,8 @@ statement.advocates.long: |
   řízeních konkrétním advokátům. Upozorňujeme ovšem, že zpracováváme výlučně zveřejněná konečná rozhodnutí a že některá
   z nich se nám nepodařilo konkrétnímu advokátu z různých důvodů přiřadit (více viz [O projektu](/about)). Výpočet proběhl na základě
   stavu naší databáze k 17. 7. 2017.
+redirect.title: Přejmenování stránek
+redirect.text: |
+  Na základě vzájemné dohody s Českou advokátní komorou byl obsah webu **cestiadvokati.cz** přesunut (z důvodu tvrzeně zavádějící
+  povahy názvu původní domény) na novou doménu **ospravedlnosti.cz**, a to, prozatím, bez dalších změn. Web zpřístupňující statistiky
+  o vystupování českých advokátů před soudy nicméně v budoucnu hodláme neustále graficky i obsahově vylepšovat.

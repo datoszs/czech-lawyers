@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import Navigation from './Navigation';
 import Sidebar from './Sidebar';
 import Footer from './Footer';
+import Redirect from './Redirect';
 
 const AppContainer = ({children}) => (
     <div>
@@ -12,6 +13,7 @@ const AppContainer = ({children}) => (
             {children}
         </div>
         <Sidebar />
+        <Redirect />
         <Footer />
     </div>
 );
