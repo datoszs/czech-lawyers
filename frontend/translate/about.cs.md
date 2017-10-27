@@ -3,7 +3,7 @@ Dlouhodobým cílem projektu je zpřístupnit informace o činnosti českých ad
 na jejichž základě se lze rozhodnout, kterého advokáta si zvolit. Krátkodobým, v současnosti realizovaným cílem projektu
 je **zpřístupnění informací o činnosti advokátů** v soudních řízeních, pro která si advokáta ze zákona zvolit musíte
 &mdash; **v řízeních o dovolání před Nejvyšším soudem, o kasačních stížnostech před Nejvyšším správním soudem a o ústavních
-stížnostech před Ústavním soudem**. Web cestiadvokati.cz zpřístupňuje statistiky o vystupování advokátů v těchto řízeních
+stížnostech před Ústavním soudem**. Web *O spravedlnosti: O advokátech* zpřístupňuje statistiky o vystupování advokátů v těchto řízeních
 založené na konečných rozhodnutích vydaných v těchto řízeních. Cílem webu je tyto statistiky založené na zpřehlednění
 již nyní veřejně dostupných informacích nabídnout, nikoliv prosazovat jejich používání k hodnocení advokátů. Umožnění
 komentování činnosti advokáta (ať už advokáty samotnými nebo jinými osobami) neplánujeme.
@@ -16,7 +16,7 @@ důvodů) obrátil s vadnými nebo opožděnými podáními nebo například v s
 **u advokátů je sledován a zobrazován počet jejich podání (stížností, dovolání), o nichž soud rozhodl co do obsahu (meritorně),
 o nichž rozhodl nemeritorně a o nichž nakonec nerozhodoval vůbec**.
 
-Projekt bez jakékoliv finanční podpory realizuje zapsaný spolek DATOS -- data o spravedlnosti, IČO 05003997. Předsedkyní
+Projekt bez jakékoliv finanční podpory realizuje zapsaný spolek DATOS &ndash; data o spravedlnosti, IČO 05003997. Předsedkyní
 spolku a iniciátorkou projektu je Tereza Papoušková, tvůrci databáze jsou Jan Drábek a Radim Jílek,
 tvůrcem webu je Tomáš Vejpustek, konzultantem je Jan Papoušek. Více viz [Kontakty](/contact).
 
@@ -91,7 +91,7 @@ můžete nahlédnout do [zdrojového kódu](https://github.com/datoszs) celého 
 Ochrana osobních údajů
 ----------------------
 
-Web Čeští advokáti používá službu Google Analytics k tomu, aby shromažďoval údaje o Vašem použití tohoto webu.
+Web *O spravedlnosti: O advokátech* používá službu Google Analytics k tomu, aby shromažďoval údaje o Vašem použití tohoto webu.
 Jedná se především o konkrétní stránky, které jste navštívili, a dále některé údaje týkající se způsobu,
 kterým k webu přistupujete, například Váš operační systém, prohlížeč, jazyk operačního systému a lokaci.
 
