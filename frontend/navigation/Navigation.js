@@ -9,7 +9,7 @@ import {HOME, ABOUT, CONTACT, ADVOCATE_SEARCH, CASE_SEARCH} from '../routes';
 const Navigation = () => (
     <Navbar>
         <Navbar.Header>
-            <Navbar.Brand><RouterLink route={HOME}><Msg msg="app.title" /></RouterLink></Navbar.Brand>
+            <Navbar.Brand><RouterLink route={HOME}><Msg msg="nav.title" /></RouterLink></Navbar.Brand>
             <Navbar.Toggle />
         </Navbar.Header>
         <Navbar.Collapse>

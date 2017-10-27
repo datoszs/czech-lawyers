@@ -1,4 +1,5 @@
-app.title: Čeští advokáti.cz
+nav.title: "OS: O advokátech"
+app.title: O advokátech
 about.title: O projektu
 contact.title: Kontakt
 contact.appeal: Napište nám
@@ -108,6 +109,7 @@ case.dispute.verify.inconsistent: |
   Někdo byl rychlejší než Vy a případ dříve, než byl rozporován, změnil. Podívejte se, prosím,
   na stránku případu a ověřte přiřazeného advokáta a/nebo výsledek.
 
+home.intro: Web **O spravedlnosti** Vám přináší data
 home.above: Zadejte advokáta a zobrazte si statistiky o jeho vystupování před třemi vrcholnými soudy v ČR.
 home.cak.search: Pokud advokáta, jehož statistiky byste si chtěli zobrazit, teprve hledáte, využijte možnost [vyhledávání advokátů podle zaměření nebo sídla](http://vyhledavac.cak.cz) na stránkách České advokátní komory.
 leaderboard.legend: Spočítali jsme pro Vás, kterých deset advokátů má největší převahu **+meritorních+** konečných rozhodnutí nad **-nemeritorními-** a naopak, a to při zohlednění celkového podílu meritorních a nemeritorních konečných rozhodnutí v judikatuře daného soudu ([proč? co to znamená?](/about)). Těchto deset advokátů jsme pak seřadili abecedně podle příjmení. Upozorňujeme ovšem, že data, která jsme pro výpočet použili, [nemusí být úplná](/about).
