@@ -29,7 +29,7 @@
     "query-string": "5.0.0",
     "react": "16.0.0",
     "react-async-script": "0.9.1",
-    "react-bootstrap": "0.31.3",
+    "react-bootstrap": "0.31.5",
     "react-dom": "16.0.0",
     "react-ga": "2.3.5",
     "react-google-recaptcha": "0.9.7",

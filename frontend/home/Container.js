@@ -1,6 +1,7 @@
 import React from 'react';
 import {Jumbotron, Row, Col, Alert} from 'react-bootstrap';
 import {Msg, RichText} from '../containers';
+import {ApplicationTitle} from '../components';
 import autocomplete from '../autocomplete';
 import {getTop, getBottom} from './selectors';
 import LeaderBoard from './LeaderBoard';
@@ -9,7 +10,8 @@ import ProblemStatements from './ProblemStatements';
 const Container = () => (
     <section>
         <Jumbotron>
-            <h1><Msg msg="app.title" /></h1>
+            <RichText msg="home.intro" />
+            <ApplicationTitle><Msg msg="app.title" /></ApplicationTitle>
             <RichText msg="home.above" />
             <autocomplete.Container />
             <br />
