@@ -99,3 +99,13 @@ Tyto údaje není možné spojit s Vaší IP adresou ani dalšími informacemi, 
 pro potřeby sledování návštěvnosti webu.
 
 Pokud nechcete, abychom o Vás shromažďovali tyto údaje, můžete použít například [tento oficiální doplněk prohlížeče](https://tools.google.com/dlpage/gaoptout).
+
+Otevřená data
+-------------
+
+Výběr dat ze systému *O advokátech* je též dostupný ke stažení ve strojově čitelném formátu pro další možná zpracování.
+
+Získaná data zachycují nejaktuálnější data v moment jejich exportu, který probíhá jednou denně. Stáhnout tento výběr výběr můžete [zde](/api/download-export).
+
+V případě dotazů ohledně rozsahu a formátu dat se na nás můžete obrátit prostřednictvím kontaktního formuláře či kontaktních údajů níže.
+
