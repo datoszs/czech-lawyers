@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>ApiDocu - /api/advocate-rankings/&lt;decile&gt;[/[&lt;start&gt;-&lt;count&gt;]]</title>
+	<title>ApiDocu - /api/advocate/&lt;id&gt;</title>
 	<style>html, body {
 	margin: 0;
 	padding: 0;
@@ -354,11 +354,11 @@ pre.apiDocu-json {
 <div class="apiDocu-container apiDocu-index">
 	<div class="apiDocu-url-list">
 
-				<h2 class="apiDocu-section-title">Advocates</h2>
+				<h2 class="apiDocu-section-title">Cases</h2>
 
 				<div class="apiDocu-section">
-	<a href="Advocates.1.php" class="apiDocu-url">
-		/api/advocate/autocomplete[/<span class="apiDocu-mask-param"&gt;</span>&lt;query&gt;</span>]
+	<a href="Cases.1.php" class="apiDocu-url">
+		/api/case/<span class="apiDocu-mask-param"&gt;</span>&lt;id&gt;</span>
 
 		<div class="apiDocu-url-method">GET</div>
 
@@ -367,12 +367,65 @@ pre.apiDocu-json {
 				<span style="background-color: #9b59b6;" class="apiDocu-url-tag">public</span>
 		</div>
 	</a>
-	<a href="Advocates.2.php" class="apiDocu-url">
-		/api/advocate/autocomplete
+	<a href="Cases.2.php" class="apiDocu-url">
+		/api/case/
 
 		<div class="apiDocu-url-method"></div>
 
 	</a>
+	<a href="Cases.15.php" class="apiDocu-url">
+		/api/dispute-case-verification/
+
+		<div class="apiDocu-url-method">POST</div>
+
+		<div class="apiDocu-url-tags">
+			
+				<span style="background-color: #9b59b6;" class="apiDocu-url-tag">public</span>
+		</div>
+	</a>
+	<a href="Cases.16.php" class="apiDocu-url">
+		/api/dispute-case/
+
+		<div class="apiDocu-url-method"></div>
+
+	</a>
+	<a href="Cases.23.php" class="apiDocu-url">
+		/api/case/search[/<span class="apiDocu-mask-param"&gt;</span>&lt;query&gt;</span>/[<span class="apiDocu-mask-param"&gt;</span>&lt;start&gt;</span>-<span class="apiDocu-mask-param"&gt;</span>&lt;count&gt;</span>]]
+
+		<div class="apiDocu-url-method">GET</div>
+
+		<div class="apiDocu-url-tags">
+			
+				<span style="background-color: #9b59b6;" class="apiDocu-url-tag">public</span>
+		</div>
+	</a>
+	<a href="Cases.24.php" class="apiDocu-url">
+		/api/case/search/
+
+		<div class="apiDocu-url-method"></div>
+
+	</a>
+	<a href="Cases.25.php" class="apiDocu-url">
+		/api/dispute-case/<span class="apiDocu-mask-param"&gt;</span>&lt;id&gt;</span>
+
+		<div class="apiDocu-url-method">POST</div>
+
+		<div class="apiDocu-url-tags">
+			
+				<span style="background-color: #9b59b6;" class="apiDocu-url-tag">public</span>
+		</div>
+	</a>
+	<a href="Cases.26.php" class="apiDocu-url">
+		/api/dispute-case/
+
+		<div class="apiDocu-url-method"></div>
+
+	</a>
+				</div>
+
+				<h2 class="apiDocu-section-title">Advocates</h2>
+
+				<div class="apiDocu-section">
 	<a href="Advocates.3.php" class="apiDocu-url">
 		/api/advocate-cases/<span class="apiDocu-mask-param"&gt;</span>&lt;advocate&gt;</span>
 
@@ -389,7 +442,7 @@ pre.apiDocu-json {
 		<div class="apiDocu-url-method"></div>
 
 	</a>
-	<a href="Advocates.5.php" class="apiDocu-url">
+	<a href="Advocates.7.php" class="apiDocu-url">
 		/api/advocate/<span class="apiDocu-mask-param"&gt;</span>&lt;id&gt;</span>
 
 		<div class="apiDocu-url-method">GET</div>
@@ -399,40 +452,8 @@ pre.apiDocu-json {
 				<span style="background-color: #9b59b6;" class="apiDocu-url-tag">public</span>
 		</div>
 	</a>
-	<a href="Advocates.6.php" class="apiDocu-url">
-		/api/advocate/
-
-		<div class="apiDocu-url-method"></div>
-
-	</a>
-	<a href="Advocates.7.php" class="apiDocu-url">
-		/api/advocate-rankings/<span class="apiDocu-mask-param"&gt;</span>&lt;decile&gt;</span>[/[<span class="apiDocu-mask-param"&gt;</span>&lt;start&gt;</span>-<span class="apiDocu-mask-param"&gt;</span>&lt;count&gt;</span>]]
-
-		<div class="apiDocu-url-method">GET</div>
-
-		<div class="apiDocu-url-tags">
-			
-				<span style="background-color: #9b59b6;" class="apiDocu-url-tag">public</span>
-		</div>
-	</a>
 	<a href="Advocates.8.php" class="apiDocu-url">
-		/api/advocate-rankings/
-
-		<div class="apiDocu-url-method"></div>
-
-	</a>
-	<a href="Advocates.9.php" class="apiDocu-url">
-		/api/advocate-results/<span class="apiDocu-mask-param"&gt;</span>&lt;advocate&gt;</span>[/<span class="apiDocu-mask-param"&gt;</span>&lt;court&gt;</span>]
-
-		<div class="apiDocu-url-method">GET</div>
-
-		<div class="apiDocu-url-tags">
-			
-				<span style="background-color: #9b59b6;" class="apiDocu-url-tag">public</span>
-		</div>
-	</a>
-	<a href="Advocates.10.php" class="apiDocu-url">
-		/api/advocate-results/
+		/api/advocate/
 
 		<div class="apiDocu-url-method"></div>
 
@@ -453,45 +474,61 @@ pre.apiDocu-json {
 		<div class="apiDocu-url-method"></div>
 
 	</a>
+	<a href="Advocates.13.php" class="apiDocu-url">
+		/api/advocate-rankings/<span class="apiDocu-mask-param"&gt;</span>&lt;decile&gt;</span>[/[<span class="apiDocu-mask-param"&gt;</span>&lt;start&gt;</span>-<span class="apiDocu-mask-param"&gt;</span>&lt;count&gt;</span>]]
+
+		<div class="apiDocu-url-method">GET</div>
+
+		<div class="apiDocu-url-tags">
+			
+				<span style="background-color: #9b59b6;" class="apiDocu-url-tag">public</span>
+		</div>
+	</a>
+	<a href="Advocates.14.php" class="apiDocu-url">
+		/api/advocate-rankings/
+
+		<div class="apiDocu-url-method"></div>
+
+	</a>
+	<a href="Advocates.17.php" class="apiDocu-url">
+		/api/advocate/autocomplete[/<span class="apiDocu-mask-param"&gt;</span>&lt;query&gt;</span>]
+
+		<div class="apiDocu-url-method">GET</div>
+
+		<div class="apiDocu-url-tags">
+			
+				<span style="background-color: #9b59b6;" class="apiDocu-url-tag">public</span>
+		</div>
+	</a>
+	<a href="Advocates.18.php" class="apiDocu-url">
+		/api/advocate/autocomplete
+
+		<div class="apiDocu-url-method"></div>
+
+	</a>
+	<a href="Advocates.19.php" class="apiDocu-url">
+		/api/advocate-results/<span class="apiDocu-mask-param"&gt;</span>&lt;advocate&gt;</span>[/<span class="apiDocu-mask-param"&gt;</span>&lt;court&gt;</span>]
+
+		<div class="apiDocu-url-method">GET</div>
+
+		<div class="apiDocu-url-tags">
+			
+				<span style="background-color: #9b59b6;" class="apiDocu-url-tag">public</span>
+		</div>
+	</a>
+	<a href="Advocates.20.php" class="apiDocu-url">
+		/api/advocate-results/
+
+		<div class="apiDocu-url-method"></div>
+
+	</a>
 				</div>
 
-				<h2 class="apiDocu-section-title">Cases</h2>
+				<h2 class="apiDocu-section-title">Feedback</h2>
 
 				<div class="apiDocu-section">
-	<a href="Cases.13.php" class="apiDocu-url">
-		/api/case/<span class="apiDocu-mask-param"&gt;</span>&lt;id&gt;</span>
-
-		<div class="apiDocu-url-method">GET</div>
-
-		<div class="apiDocu-url-tags">
-			
-				<span style="background-color: #9b59b6;" class="apiDocu-url-tag">public</span>
-		</div>
-	</a>
-	<a href="Cases.14.php" class="apiDocu-url">
-		/api/case/
-
-		<div class="apiDocu-url-method"></div>
-
-	</a>
-	<a href="Cases.15.php" class="apiDocu-url">
-		/api/case/search[/<span class="apiDocu-mask-param"&gt;</span>&lt;query&gt;</span>/[<span class="apiDocu-mask-param"&gt;</span>&lt;start&gt;</span>-<span class="apiDocu-mask-param"&gt;</span>&lt;count&gt;</span>]]
-
-		<div class="apiDocu-url-method">GET</div>
-
-		<div class="apiDocu-url-tags">
-			
-				<span style="background-color: #9b59b6;" class="apiDocu-url-tag">public</span>
-		</div>
-	</a>
-	<a href="Cases.16.php" class="apiDocu-url">
-		/api/case/search/
-
-		<div class="apiDocu-url-method"></div>
-
-	</a>
-	<a href="Cases.19.php" class="apiDocu-url">
-		/api/dispute-case/<span class="apiDocu-mask-param"&gt;</span>&lt;id&gt;</span>
+	<a href="Feedback.5.php" class="apiDocu-url">
+		/api/feedback/
 
 		<div class="apiDocu-url-method">POST</div>
 
@@ -500,24 +537,14 @@ pre.apiDocu-json {
 				<span style="background-color: #9b59b6;" class="apiDocu-url-tag">public</span>
 		</div>
 	</a>
-	<a href="Cases.20.php" class="apiDocu-url">
-		/api/dispute-case/
+	<a href="Feedback.6.php" class="apiDocu-url">
+		/api/feedback/
 
 		<div class="apiDocu-url-method"></div>
 
 	</a>
-	<a href="Cases.21.php" class="apiDocu-url">
-		/api/dispute-case-verification/
-
-		<div class="apiDocu-url-method">POST</div>
-
-		<div class="apiDocu-url-tags">
-			
-				<span style="background-color: #9b59b6;" class="apiDocu-url-tag">public</span>
-		</div>
-	</a>
-	<a href="Cases.22.php" class="apiDocu-url">
-		/api/dispute-case/
+	<a href="Feedback.10.php" class="apiDocu-url">
+		/api/court-statistics/
 
 		<div class="apiDocu-url-method"></div>
 
@@ -527,7 +554,7 @@ pre.apiDocu-json {
 				<h2 class="apiDocu-section-title">Courts</h2>
 
 				<div class="apiDocu-section">
-	<a href="Courts.17.php" class="apiDocu-url">
+	<a href="Courts.9.php" class="apiDocu-url">
 		/api/court-statistics
 
 		<div class="apiDocu-url-method">GET</div>
@@ -539,27 +566,21 @@ pre.apiDocu-json {
 	</a>
 				</div>
 
-				<h2 class="apiDocu-section-title">Feedback</h2>
+				<h2 class="apiDocu-section-title">Export</h2>
 
 				<div class="apiDocu-section">
-	<a href="Feedback.18.php" class="apiDocu-url">
-		/api/court-statistics/
+	<a href="Export.21.php" class="apiDocu-url">
+		/api/download-export
 
-		<div class="apiDocu-url-method"></div>
-
-	</a>
-	<a href="Feedback.23.php" class="apiDocu-url">
-		/api/feedback/
-
-		<div class="apiDocu-url-method">POST</div>
+		<div class="apiDocu-url-method">GET</div>
 
 		<div class="apiDocu-url-tags">
 			
 				<span style="background-color: #9b59b6;" class="apiDocu-url-tag">public</span>
 		</div>
 	</a>
-	<a href="Feedback.24.php" class="apiDocu-url">
-		/api/feedback/
+	<a href="Export.22.php" class="apiDocu-url">
+		/api/download-export/
 
 		<div class="apiDocu-url-method"></div>
 
@@ -572,7 +593,7 @@ pre.apiDocu-json {
 
 	<div class="apiDocu-container">
 		<div class="apiDocu-url">
-			/api/advocate-rankings/<span class="apiDocu-mask-param"&gt;</span>&lt;decile&gt;</span>[/[<span class="apiDocu-mask-param"&gt;</span>&lt;start&gt;</span>-<span class="apiDocu-mask-param"&gt;</span>&lt;count&gt;</span>]]
+			/api/advocate/<span class="apiDocu-mask-param"&gt;</span>&lt;id&gt;</span>
 
 			<div class="apiDocu-url-method">GET</div>
 
@@ -584,7 +605,7 @@ pre.apiDocu-json {
 
 			<h2>Description</h2>
 
-			<div class="apiDocu-description apiDocu-description-main">Get advocates which are in given decile in advocate rankings.<br /><br><pre class="apiDocu-json">    {<br />        [<br />            <span class="apiDocu-string">"id_advocate"</span>: 123,<br />            <span class="apiDocu-string">"fullname"</span>: <span class="apiDocu-string">"JUDr. Ing. Petr Omáčka, PhD."</span>,<br />            <span class="apiDocu-string">"sorting_name"</span>: <span class="apiDocu-string">"Omáčka, Petr"</span>,<br />        ],<br />        [<br />            <span class="apiDocu-string">"id_advocate"</span>: 1118,<br />            <span class="apiDocu-string">"fullname"</span>: <span class="apiDocu-string">"JUDr. Stanislav Morče"</span>,<br />            <span class="apiDocu-string">"sorting_name"</span>: <span class="apiDocu-string">"Morče, Stanislav"</span>,<br />        ]<br />    }<br /></pre><br />There is one optional GET parameter:<br /> - <b>reverse</n> - presence indicates reverse sorting (usable for last people from given decile)<br />Errors:<br /> - Returns HTTP 400 with error <b>invalid_decile</b> when decile is invalid or out of range</div>
+			<div class="apiDocu-description apiDocu-description-main">Get information about advocate with given ID.<br /><br><pre class="apiDocu-json">    {<br />        <span class="apiDocu-string">"id_advocate"</span>: 123,<br />        <span class="apiDocu-string">"remote_identificator"</span>: <span class="apiDocu-string">"77b3dbfb-f855-4170-9d5b-dc30757a0204"</span>,<br />        <span class="apiDocu-string">"identification_number"</span>: <span class="apiDocu-string">"11223344"</span>,<br />        <span class="apiDocu-string">"registration_number"</span>: <span class="apiDocu-string">"00001"</span>,<br />        <span class="apiDocu-string">"fullname"</span>: <span class="apiDocu-string">"JUDr. Ing. Petr Omáčka, PhD."</span>,<br />        <span class="apiDocu-string">"residence"</span>: {<br />            <span class="apiDocu-string">"street"</span>: <span class="apiDocu-string">"Pod mostem"</span>,<br />            <span class="apiDocu-string">"city"</span>: <span class="apiDocu-string">"Brno"</span>,<br />            <span class="apiDocu-string">"postal_area"</span>: <span class="apiDocu-string">"602 00"</span><br />        },<br />        <span class="apiDocu-string">"emails"</span>: [<br />            <span class="apiDocu-string">"petr.omacka@example.com"</span><br />        ],<br />        <span class="apiDocu-string">"state"</span>: <span class="apiDocu-string">"active"</span>,<br />        <span class="apiDocu-string">"remote_page"</span>: <span class="apiDocu-string">"http:<span class="apiDocu-comment">//vyhledavac.cak.cz/Contact/Details/77b3dbfb-f855-4170-9d5b-dc30757a0204"</span>,</span><br>        <span class="apiDocu-string">"statistics"</span>: {<br />            <span class="apiDocu-string">"negative"</span>: 12,<br />            <span class="apiDocu-string">"neutral"</span>: 2,<br />            <span class="apiDocu-string">"positive"</span>: 59,<br />        },<br />        <span class="apiDocu-string">"court_statistics"</span>: {<br />            <span class="apiDocu-string">"1"</span>: {<br />                <span class="apiDocu-string">"negative"</span>: 11,<br />                <span class="apiDocu-string">"neutral"</span>: 1,<br />                <span class="apiDocu-string">"positive"</span>: 57,<br />            },<br />            <span class="apiDocu-string">"2"</span>: {<br />                <span class="apiDocu-string">"negative"</span>: 1,<br />                <span class="apiDocu-string">"neutral"</span>: 1,<br />                <span class="apiDocu-string">"positive"</span>: 2,<br />            }<br />        }<br />        <span class="apiDocu-string">"advocates_with_same_name"</span>: [<br />            {<br />                <span class="apiDocu-string">"id_advocate"</span>: 125,<br />                <span class="apiDocu-string">"fullname"</span>: <span class="apiDocu-string">"Mgr. Petr Omáčka"</span>,<br />                <span class="apiDocu-string">"residence"</span>: {<br />                    <span class="apiDocu-string">"street"</span>: <span class="apiDocu-string">"Františkánská 65"</span>,<br />                    <span class="apiDocu-string">"city"</span>: <span class="apiDocu-string">"Brno"</span>,<br />                    <span class="apiDocu-string">"postal_area"</span>: <span class="apiDocu-string">"602 00"</span><br />                },<br />            },<br />            {<br />                <span class="apiDocu-string">"id_advocate"</span>: 125,<br />                <span class="apiDocu-string">"fullname"</span>: <span class="apiDocu-string">"JUDr. Petr Ostrý"</span>,<br />                <span class="apiDocu-string">"residence"</span>: {<br />                    <span class="apiDocu-string">"street"</span>: <span class="apiDocu-string">"Opálkova 2a"</span>,<br />                    <span class="apiDocu-string">"city"</span>: <span class="apiDocu-string">"Brno"</span>,<br />                    <span class="apiDocu-string">"postal_area"</span>: <span class="apiDocu-string">"635 00"</span><br />                },<br />            },<br />        ]<br />        <span class="apiDocu-string">"rankings"</span>: {<br />            <span class="apiDocu-string">"decile"</span>: 2<br />        }<br />    }<br /></pre><br />Available advocate states (see @see AdvocateStatus):<br /> - <b>active</b><br /> - <b>suspended</b><br /> - <b>removed</b><br />Available statistics results (@see CaseResult):<br /> - <b>negative</b><br /> - <b>neutral</b><br /> - <b>positive</b><br />Note: when advocate is in state <b>removed</b>, then emails field is null.<br />Note: when advocate (queried or with same name) is in state <b>removed<b>, then fields street and postal_area are null.<br />Note: statistics take into account only cases which are relevant for advocates portal.<br />Note: advocates with same name also match historic names on both sides, but shows only up-to-date names.<br />In example Petr Ostrý was previously named Petr Omáčka or the queried advocate was names Petr Ostrý.<br />Match is performed on names only (without degrees).<br />Errors:<br /> - Returns HTTP 404 with error <b>no_advocate</b> when such advocate doesn't exist</div>
 
 
 		<h2>Methods</h2>
@@ -597,7 +618,7 @@ pre.apiDocu-json {
 			<table>
 					<tr>
 						<th>
-							<span class="apiDocu-mask-param">&lt;decile&gt;</span>
+							<span class="apiDocu-mask-param">&lt;id&gt;</span>
 							<div class="apiDocu-mask-param-description">
 								<ul>
 									<li>
@@ -607,46 +628,7 @@ pre.apiDocu-json {
 										<strong>type</strong>: integer
 									</li>
 									<li>
-										<strong>description</strong>: Decile
-									</li>
-								</ul>
-							</div>
-						</th>
-					</tr>
-					<tr>
-						<th>
-							<span class="apiDocu-mask-param">&lt;start&gt;</span>
-							<div class="apiDocu-mask-param-description">
-								<ul>
-									<li>
-										<strong>requirement</strong>: \d+
-									</li>
-									<li>
-										<strong>type</strong>: integer
-									</li>
-									<li>
-										<strong>description</strong>: Specifies where to start.
-									</li>
-									<li>
-										<strong>default</strong>: 0
-									</li>
-								</ul>
-							</div>
-						</th>
-					</tr>
-					<tr>
-						<th>
-							<span class="apiDocu-mask-param">&lt;count&gt;</span>
-							<div class="apiDocu-mask-param-description">
-								<ul>
-									<li>
-										<strong>requirement</strong>: -?\d+
-									</li>
-									<li>
-										<strong>type</strong>: integer
-									</li>
-									<li>
-										<strong>description</strong>: Specifies how many results to return. Maximum is 100.
+										<strong>description</strong>: Advocate ID.
 									</li>
 								</ul>
 							</div>
