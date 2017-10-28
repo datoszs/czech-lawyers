@@ -570,7 +570,7 @@ pre.apiDocu-json {
 
 				<div class="apiDocu-section">
 	<a href="Export.21.php" class="apiDocu-url">
-		/api/download-export[/<span class="apiDocu-mask-param"&gt;</span>&lt;token&gt;</span>]
+		/api/download-export
 
 		<div class="apiDocu-url-method">GET</div>
 
@@ -601,7 +601,7 @@ pre.apiDocu-json {
 
 			<h2>Description</h2>
 
-			<div class="apiDocu-description apiDocu-description-main">API for obtaining download of current exported data.</div>
+			<div class="apiDocu-description apiDocu-description-main">API for downloading current exported data.</div>
 
 
 		<h2>Methods</h2>

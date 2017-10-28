@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>ApiDocu - /api/download-export[/&lt;token&gt;]</title>
+	<title>ApiDocu - /api/download-export</title>
 	<style>html, body {
 	margin: 0;
 	padding: 0;
@@ -570,7 +570,7 @@ pre.apiDocu-json {
 
 				<div class="apiDocu-section">
 	<a href="Export.21.php" class="apiDocu-url">
-		/api/download-export[/<span class="apiDocu-mask-param"&gt;</span>&lt;token&gt;</span>]
+		/api/download-export
 
 		<div class="apiDocu-url-method">GET</div>
 
@@ -593,7 +593,7 @@ pre.apiDocu-json {
 
 	<div class="apiDocu-container">
 		<div class="apiDocu-url">
-			/api/download-export[/<span class="apiDocu-mask-param"&gt;</span>&lt;token&gt;</span>]
+			/api/download-export
 
 			<div class="apiDocu-url-method">GET</div>
 
@@ -605,40 +605,13 @@ pre.apiDocu-json {
 
 			<h2>Description</h2>
 
-			<div class="apiDocu-description apiDocu-description-main">Provides access to current version of exported data.<br />Behaviour is determined by presence of token:<br /> - Missing token: generate one-time, session dependent, link for download (containing token).<br /> - Present token: attempt to download if temporary token exists and is valid.<br />Token validity is 1 minutes and can be used only once.<br />When token is missing, following output is returned:<br /><br><pre class="apiDocu-json">    {<br />        <span class="apiDocu-string">"link"</span>: <span class="apiDocu-string">"https:<span class="apiDocu-comment">//www.example.com/api/download-export/sY345i"</span></span><br>    }<br /></pre><br />When token is present, either binary content xor 404 is returned.<br />Successes & errors:<br /> - Returns HTTP 200 with binary content xor with link key when token was prepared.<br /> - Returns HTTP 404 when export invalid or file is missing</div>
+			<div class="apiDocu-description apiDocu-description-main">Provides current version of exported data.<br />This resource returns either HTTP code 200 and binary data, or 404 and no data.<br />Successes & errors:<br /> - Returns HTTP 200 with binary content<br /> - Returns HTTP 404 when export invalid or file is missing</div>
 
 
 		<h2>Methods</h2>
 
 		<p class="apiDocu-description">GET</p>
 
-		<div class="apiDocu-parameters">
-			<h2>Mask parameters</h2>
-
-			<table>
-					<tr>
-						<th>
-							<span class="apiDocu-mask-param">&lt;token&gt;</span>
-							<div class="apiDocu-mask-param-description">
-								<ul>
-									<li>
-										<strong>requirement</strong>: .*
-									</li>
-									<li>
-										<strong>type</strong>: string
-									</li>
-									<li>
-										<strong>description</strong>: Download request token.
-									</li>
-									<li>
-										<strong>default</strong>: 
-									</li>
-								</ul>
-							</div>
-						</th>
-					</tr>
-			</table>
-		</div>
 
 
 	</div>
