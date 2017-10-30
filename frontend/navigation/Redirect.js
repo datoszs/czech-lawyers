@@ -1,12 +1,13 @@
 import React, {Component} from 'react';
 import {Modal, Button} from 'react-bootstrap';
+import {parse} from 'query-string';
 import {Msg, RichText} from '../containers';
 
 export default class Redirect extends Component {
     constructor() {
         super();
         this.state = {
-            displayed: !!document.referrer.match(/www\.cestiadvokati\.cz/),
+            displayed: !!parse(document.location.search).old,
         };
         this.hide = this.hide.bind(this);
     }
