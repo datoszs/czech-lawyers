@@ -216,5 +216,5 @@ export.legend: |
 export.main.title: Databáze O avokátech
 export.main.text: |
   * Strukturovaná data o advokátech.
-  * Strukturovaná data o případech výsledného rozhodnutí soudu a přiřazení konkrétnímu advokátovi.
-  * Data o dokumentech obsahujících rodzhodnutí.
+  * Strukturovaná data o konečných rozhodnutích soudů a jejich přiřazení konkrétnímu advokátovi.
+  * Data o dokumentech (obsahujících nejen konečná rozhodnutí).
