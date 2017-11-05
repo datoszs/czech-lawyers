@@ -12,9 +12,11 @@ use App\Enums\CaseResult;
 use App\Enums\TaggingStatus;
 use App\Model\Advocates\Advocate;
 use App\Model\Advocates\AdvocateInfo;
+use App\Model\Annulments\Annulment;
 use App\Model\Cause\Cause;
 use App\Model\Documents\Document;
 use App\Model\Services\AdvocateService;
+use App\Model\Services\AnnulmentService;
 use App\Model\Services\CauseService;
 use App\Model\Services\DocumentService;
 use App\Model\Services\TaggingService;
@@ -48,6 +50,9 @@ class CasePresenter extends Presenter
 	/** @var TaggingService @inject */
 	public $taggingService;
 
+	/** @var AnnulmentService @inject */
+	public $annulmentService;
+
 	/** @var ILogger @inject */
 	public $auditing;
 
@@ -76,7 +81,9 @@ class CasePresenter extends Presenter
 	 *                 "public_link": "http://example.com/doc/12AS13LAA0"
 	 *                 "public_local_link": "http://example.com/doc/12AS13LAA0"
 	 *             }
-	 *         ]
+	 *         ],
+	 * 		   "tagging_result_annuled": true?,
+	 * 		   "tagging_result_annuling_id_case": 2,
 	 *     }
 	 * </json>
 	 *
@@ -132,9 +139,12 @@ class CasePresenter extends Presenter
 		$results = $this->prepareCasesResults([$case]);
 		$advocateTagging = $this->taggingService->getLatestAdvocateTaggingFor($case);
 
+		/* @var Annulment $annulment */
+		$annulments = $this->annulmentService->findByCaseId($case->id);
+		//todo
 
 		// Transform to output
-		$output = $this->mapDataToOutput($case, $documents, $results[$id] ?? null, $advocateTagging);
+		$output = $this->mapDataToOutput($case, $documents, $results[$id] ?? null, $advocateTagging, $annulments);
 		// Auditing
 		$advocateTaggingId = $advocateTagging ? $advocateTagging->id : null;
 		$advocateId = $advocateTagging && $advocateTagging->advocate ? $advocateTagging->advocate->id : null;
@@ -157,7 +167,7 @@ class CasePresenter extends Presenter
 		return $output;
 	}
 
-	private function mapDataToOutput(Cause $case, array $documents, ?TaggingCaseResult $result, ?TaggingAdvocate $taggingAdvocate)
+	private function mapDataToOutput(Cause $case, array $documents, ?TaggingCaseResult $result, ?TaggingAdvocate $taggingAdvocate, ?Annulment $annulment)
 	{
 		/** @var AdvocateInfo $currentInfo */
 		$advocate = null;
@@ -186,7 +196,10 @@ class CasePresenter extends Presenter
 					'public_link' => $document->webPath,
 					'public_local_link' => $this->link('//:Document:view', $document->id),
 				];
-			}, $documents)
+			}, $documents),
+			'tagging_result_annuled' => $annulment ? true : false, //todo
+			'debug_annulment_id' => $annulment->annuling_case ? $annulment->annuling_case->id : null,
+			'debug_annuled_id' => $annulment->annuled_case ? $annulment->annuled_case->id : null,
 		];
 	}
 }

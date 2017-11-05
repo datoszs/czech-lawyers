@@ -1,6 +1,7 @@
 <?php
 namespace App\Model;
 
+use App\Model\Annulments\AnnulmentRepository;
 use App\Model\Cause\CausesRepository;
 use App\Model\Court\CourtsRepository;
 use App\Model\Disputes\DisputeRepository;
@@ -24,6 +25,7 @@ use Nextras\Orm\Model\Model;
  * @property-read CourtsRepository $courts
  * @property-read CausesRepository $causes
  * @property-read DisputeRepository $disputes
+ * @property-read AnnulmentRepository $annulments
  * @property-read DocumentsRepository $documents
  * @property-read DocumentsSupremeCourtRepository $documentsSupremeCourt
  * @property-read DocumentsSupremeAdministrativeCourtRepository $documentsSupremeAdministrativeCourt

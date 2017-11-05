@@ -61,7 +61,9 @@ class AdvocateCasesPresenter extends Presenter
 	 *                 "registry_mark": "42 CDO 4000/2016",
 	 *                 "result": "negative",
 	 *                 "proposition_date": "2016-03-01T01:00:00+01:00",
-	 *                 "decision_date": null
+	 *                 "decision_date": null,
+	 * 				   "annuled": true,
+	 * 				   "annuling_id_case": null,
 	 *             }
 	 *         ]
 	 *     }
@@ -139,6 +141,7 @@ class AdvocateCasesPresenter extends Presenter
 		}
 		$cases = $this->causeService->findFromAdvocate($advocate, $court, $year, $result);
 		$results = $this->prepareCasesResults($cases->fetchAll());
+		$annulments = null; //todo
 		// Transform to output
 		$output = $this->mapAdvocateCases($advocateEntity, $cases, $results, $court, $year, $result);
 		// Auditing
@@ -201,6 +204,8 @@ class AdvocateCasesPresenter extends Presenter
 				'result' => isset($results[$case->id]) ? $results[$case->id]->caseResult : null,
 				'decision_date' => $case->decisionDate ? $case->decisionDate->format(DateTime::ATOM) : null,
 				'proposition_date' => $case->propositionDate ? $case->propositionDate->format(DateTime::ATOM) : null,
+				'annuled' => $annulment ? true : false, //todo
+				'annuling_id_case' => $annulment ? $annulment->case->id : null,
 			];
 		}
 		return $output;

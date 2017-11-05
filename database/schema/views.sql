@@ -36,3 +36,9 @@ CREATE OR REPLACE VIEW vw_case_for_advocates AS
     OR (court_id = 3 AND year < 2007);
 
 COMMENT ON VIEW vw_case_for_advocates IS 'View that contains all cases which are relevant for czech advocates project (as they are in some way completed).';
+
+--TODO
+CREATE OR REPLACE VIEW vw_computed_case_annulment AS
+	SELECT * FROM "case_annulment";
+
+COMMENT ON VIEW vw_computed_case_annulment IS 'View that contains all annuled cases'
