@@ -102,15 +102,16 @@ class AdvocateService
 	/**
 	 * Returns advocates from given decile
 	 *
+	 * @param int $courtId
 	 * @param int $decile
 	 * @param int $start
 	 * @param int $count
 	 * @param bool $reverse
 	 * @return Advocate[]|ICollection
 	 */
-	public function findFromDecile(int $decile, int $start, int $count, bool $reverse)
+	public function findFromDecile(int $courtId, int $decile, int $start, int $count, bool $reverse)
 	{
-		return $this->orm->advocates->findFromDecile($decile, $start, $count, $reverse);
+		return $this->orm->advocates->findFromDecile($courtId, $decile, $start, $count, $reverse);
 	}
 
 	/**

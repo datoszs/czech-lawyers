@@ -1,5 +1,4 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace App\APIModule\Presenters;
 
@@ -7,6 +6,7 @@ namespace App\APIModule\Presenters;
 use App\Auditing\AuditedReason;
 use App\Auditing\AuditedSubject;
 use App\Auditing\ILogger;
+use App\Enums\Court;
 use App\Model\Advocates\Advocate;
 use App\Model\Advocates\AdvocateInfo;
 use App\Model\Services\AdvocateService;
@@ -14,6 +14,7 @@ use App\Utils\TemplateFilters;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Presenter;
+use Nette\Utils\Validators;
 use Ublaboo\ApiRouter\ApiRoute;
 
 /**
@@ -34,28 +35,34 @@ class AdvocateRankingsPresenter extends Presenter
 	public $auditing;
 
 	/**
-	 * Get advocates which are in given decile in advocate rankings.
+	 * Get advocates of given decile in advocate rankings for all courts (or given one when present).
 	 *
 	 * <json>
 	 *     {
-	 *         [
-	 *             "id_advocate": 123,
-	 *             "fullname": "JUDr. Ing. Petr Omáčka, PhD.",
-	 *             "sorting_name": "Omáčka, Petr",
+	 *         "1": [
+	 *                  {
+	 *                       "id_advocate": 123,
+	 *                       "fullname": "JUDr. Ing. Petr Omáčka, PhD.",
+	 *                       "sorting_name": "Omáčka, Petr",
+	 *                  }
 	 *         ],
-	 *         [
-	 *             "id_advocate": 1118,
-	 *             "fullname": "JUDr. Stanislav Morče",
-	 *             "sorting_name": "Morče, Stanislav",
+	 *         "2": [
+	 *                  {
+	 *                      "id_advocate": 1118,
+	 *                      "fullname": "JUDr. Stanislav Morče",
+	 *                      "sorting_name": "Morče, Stanislav",
+	 *                  }
 	 *         ]
 	 *     }
 	 * </json>
 	 *
-	 * There is one optional GET parameter:
+	 * There are two optional GET parameters:
+	 *  - <b>id_court</b> (e.g. 2) - when present, only advocates from this court are returned
 	 *  - <b>reverse</n> - presence indicates reverse sorting (usable for last people from given decile)
 	 *
 	 * Errors:
 	 *  - Returns HTTP 400 with error <b>invalid_decile</b> when decile is invalid or out of range
+	 *  - Returns HTTP 400 with error <b>invalid_court</b> when given court is invalid
 	 *
 	 * @ApiRoute(
 	 *     "/api/advocate-rankings/<decile>[/[<start>-<count>]]",
@@ -93,15 +100,30 @@ class AdvocateRankingsPresenter extends Presenter
 			$this->sendJson(['error' => 'invalid_decile', 'message' => "Invalid decile [{$decile}]."]);
 			return;
 		}
+		$courtId = $this->getRequest()->getparameter('id_court') ?? null;
 		$reverse = (bool) $this->getRequest()->getParameter('reverse');
 		$count = max(min($count, 100), 1); // enforce maximum
 		$start = max ($start, 0); // enforce minimal start
 
-		$advocates = $this->advocateService->findFromDecile($decile, $start, $count, $reverse);
+		if ($courtId) {
+			if (!Validators::isNumericInt($courtId) || !in_array((int) $courtId, Court::$types, true)) {
+				$this->getHttpResponse()->setCode(400);
+				$this->sendJson(['error' => 'invalid_court', 'message' => "No such court [{$courtId}]"]);
+				return;
+			}
+			$courtId = (int) $courtId;
+		}
+
 		$output = [];
-		foreach ($advocates as $advocate) {
-			$output[] = $this->mapAdvocate($advocate);
-			$this->auditing->logAccess(AuditedSubject::ADVOCATE_INFO, "Load advocate [{$advocate->getCurrentName()}] with ID [{$advocate->id}].", AuditedReason::REQUESTED_BATCH);
+		foreach ($courtId ? [$courtId] : Court::$types as $courtId) {
+			$advocates = $this->advocateService->findFromDecile($courtId, $decile, $start, $count, $reverse);
+			if (!isset($output[$courtId])) {
+				$output[$courtId] = [];
+			}
+			foreach ($advocates as $advocate) {
+				$output[$courtId][] = $this->mapAdvocate($advocate);
+				$this->auditing->logAccess(AuditedSubject::ADVOCATE_INFO, "Load advocate [{$advocate->getCurrentName()}] with ID [{$advocate->id}].", AuditedReason::REQUESTED_BATCH);
+			}
 		}
 		$this->sendJson($output);
 	}
