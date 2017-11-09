@@ -205,3 +205,16 @@ redirect.text: |
   Na základě vzájemné dohody s Českou advokátní komorou byl obsah webu **cestiadvokati.cz** přesunut (z důvodu tvrzeně zavádějící
   povahy názvu původní domény) na novou doménu **ospravedlnosti.cz**, a to, prozatím, bez dalších změn. Web zpřístupňující statistiky
   o vystupování českých advokátů před soudy nicméně v budoucnu hodláme neustále graficky i obsahově vylepšovat.
+export.nav: Data
+export.title: Otevřená data
+export.legend: |
+  Výběr dat ze systému *O advokátech* je též dostupný ke stažení ve strojově čitelném formátu pro další možná zpracování.
+
+  Získaná data zachycují nejaktuálnější data v moment jejich exportu, který probíhá jednou denně.
+
+  V případě dotazů ohledně rozsahu a formátu dat se na nás můžete obrátit prostřednictvím [kontaktního formuláře](/contact#form).
+export.main.title: Databáze O avokátech
+export.main.text: |
+  * Strukturovaná data o advokátech.
+  * Strukturovaná data o konečných rozhodnutích soudů a jejich přiřazení konkrétnímu advokátovi.
+  * Data o dokumentech (obsahujících nejen konečná rozhodnutí).

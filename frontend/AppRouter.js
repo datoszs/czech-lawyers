@@ -18,6 +18,7 @@ import caseDetail from './case';
 import caseSearch from './casesearch';
 import link from './link';
 import statements from './statements';
+import dataExport from './export';
 
 const createRoute = (module) => (
     <Route
@@ -40,6 +41,7 @@ export default () => (
                 {createRoute(caseDetail)}
                 {createRoute(link)}
                 {createRoute(statements)}
+                {createRoute(dataExport)}
             </unavailable.Container>
         </navigation.AppContainer>
     </Router>
