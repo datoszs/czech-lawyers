@@ -208,12 +208,12 @@ redirect.text: |
 export.nav: Data
 export.title: Otevřená data
 export.legend: |
-  Výběr dat ze systému *O advokátech* je též dostupný ke stažení ve strojově čitelném formátu pro další možná zpracování.
+  Výběr dat ze systému *O advokátech* je dostupný ke stažení ve strojově čitelném formátu pro další možná zpracování.
 
   Získaná data zachycují nejaktuálnější data v moment jejich exportu, který probíhá jednou denně.
 
   V případě dotazů ohledně rozsahu a formátu dat se na nás můžete obrátit prostřednictvím [kontaktního formuláře](/contact#form).
-export.main.title: Databáze O avokátech
+export.main.title: Databáze O advokátech
 export.main.text: |
   * Strukturovaná data o advokátech.
   * Strukturovaná data o konečných rozhodnutích soudů a jejich přiřazení konkrétnímu advokátovi.
