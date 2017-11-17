@@ -49,7 +49,7 @@ class CaseSearchPresenter extends Presenter
 	 *             "registry_mark": "22 Cdo 2045/2012",
 	 *             "tagging_result": "positive",
 	 *             "tagging_result_final": true,
-	 * 			   "tagging_result_annuled": true?,
+	 * 			   "tagging_result_annuled": true,
 	 * 			   "tagging_result_annuling_id_case": 2,
 	 *         },
 	 *     ]
@@ -106,10 +106,10 @@ class CaseSearchPresenter extends Presenter
 		// Load data
 		$cases = $this->caseService->search($query, $start, $count, $strategy);
 		$taggings = $this->prepareCasesResults($cases);
-		$annulments = $this->annulmentService->findByCaseId($caseId); //todo
-		$output = array_map(function (Cause $cause) use ($taggings) {
-			return $this->mapCause($cause, $taggings[$cause->id] ?? null);
-		}, $cases, $annulments);
+		$annulments = $this->prepareCasesAnnulments($cases); //todo
+		$output = array_map(function (Cause $cause) use ($taggings, $annulments) {
+			return $this->mapCause($cause, $taggings[$cause->id] ?? null, $annulments[$cause->id] ?? null);
+		}, $cases);
 		// Send output
 		$this->sendJson($output);
 	}
@@ -124,6 +124,16 @@ class CaseSearchPresenter extends Presenter
 		return $output;
 	}
 
+	private function prepareCasesAnnulments($data)
+	{
+		$output = [];
+		$temp = $this->annulmentService->findCaseAnnulmentByCases($data);
+		foreach ($temp as $row) {
+			$output[$row->annuledCase->id] = $row;
+		}
+		return $output;
+	}
+
 	private function mapCause(Cause $cause, ?TaggingCaseResult $result, ?Annulment $annulment)
 	{
 		return [
@@ -132,8 +142,8 @@ class CaseSearchPresenter extends Presenter
 			'registry_mark' => TemplateFilters::formatRegistryMark($cause->registrySign),
 			'tagging_result' => ($result && $result->status === TaggingStatus::STATUS_PROCESSED) ? $result->caseResult : null,
 			'tagging_result_final' => $result ? $result->isFinal : null,
-			'tagging_result_annuled' => $annulment ? true : false, //todo
-			'tagging_result_annuling_id_case' => $annulment->annuling_case ? $annulment->annuling_case->id : null,
+			'tagging_result_annuled' => $annulment ? true : false,
+			'tagging_result_annuling_id_case' => $annulment ? ($annulment->annulingCase ? $annulment->annulingCase->id : null) : null
 		];
 	}
 }

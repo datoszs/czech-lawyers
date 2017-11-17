@@ -11,7 +11,6 @@ use App\Model\Services\CourtService;
 use App\Utils\Helpers;
 use App\Utils\Normalize;
 use App\Utils\JobCommand;
-use DateTimeImmutable;
 use League\Csv\Reader;
 use Nette\Neon\Exception;
 use Symfony\Component\Console\Command\Command;
@@ -63,7 +62,7 @@ class AnnuledCaseImport extends Command
 			)->addArgument(
 				static::ARGUMENT_FILE,
 				InputArgument::REQUIRED,
-				'CSV file with official data to be imported.'
+				'CSV file with data to be imported.'
 			)->addOption(
 				static::OPTION_DELIMITER,
 				static::OPTION_DELIMITER_SHORTCUT,
@@ -74,7 +73,7 @@ class AnnuledCaseImport extends Command
 				static::OPTION_KEYS,
 				static::OPTION_KEYS_SHORTCUT,
 				InputOption::VALUE_REQUIRED,
-				'Stored names of all columns delimited by |. Must match count of columns in the CSV file. Names should be the same as already used in given court previously stored official data.'
+				'Stored names of all columns delimited by |. Must match count of columns in the CSV file. Names must be the same as already used in given court previously stored annulment data [annuling_case].'
 			)->addOption(
 				static::OPTION_SKIP,
 				static::OPTION_SKIP_SHORTCUT,
@@ -89,7 +88,7 @@ class AnnuledCaseImport extends Command
 	}
 
 	protected function convertRegistryMark(string $registryMark) {
-		$temp = explode('/', $registryMark);
+		$temp = explode('/', trim($registryMark));
 		if (count($temp) !== 2) {
 			throw new InvalidArgumentException("Invalid registry mark [$registryMark], cannot convert.");
 		}
@@ -161,25 +160,32 @@ class AnnuledCaseImport extends Command
 			/* @var Cause $annulingCase */
 
 			$annulingCaseRegistryMark = $caseData[0]['annuling_case'];
+			//$consoleOutput->writeln($registryMark);
+			//print_r($caseData);
 
 			if ($court == Court::TYPE_US) {
 				$registryMark = $this->convertRegistryMark($registryMark); // make short year from long (4 digits)
+				$consoleOutput->writeln($registryMark);
 			}
 
 			$annuledCase = $this->causeService->find($registryMark); // checking existence of case
-			$annulingCase = $this->causeService->find(Normalize::registryMark($this->convertRegistryMark($annulingCaseRegistryMark))); // checking existence of annuling case
+			$annulingCase = null;
 
-			$badCase = null;
-			if ($annuledCase == null) {
-				$consoleOutput->writeln(sprintf('Case (annuled) with registry mark [%s] not exists.',$registryMark));
-				$bad++;
-			}
-			if ($annulingCase == null) {
-				$consoleOutput->writeln(sprintf('Case (annuling) with registry mark [%s] not exists.',$annulingCaseRegistryMark));
-				$bad++;
-			}
-			if ($annulingCase == null || $annuledCase == null) {
-				continue;
+			if ($annulingCaseRegistryMark != null) {
+				$annulingCase = $this->causeService->find(Normalize::registryMark($this->convertRegistryMark($annulingCaseRegistryMark))); // checking existence of annuling case
+
+				$badCase = null;
+				if ($annuledCase == null) {
+					$consoleOutput->writeln(sprintf('Case (annuled) with registry mark [%s] not exists.', $registryMark));
+					$bad++;
+				}
+				if ($annulingCase == null) {
+					$consoleOutput->writeln(sprintf('Case (annuling) with registry mark [%s] not exists.', $annulingCaseRegistryMark));
+					$bad++;
+				}
+				if ($annulingCase == null || $annuledCase == null) {
+					continue;
+				}
 			}
 
 			$entity = $this->annulmentService->findPair($annuledCase, $annulingCase);
@@ -200,8 +206,8 @@ class AnnuledCaseImport extends Command
 			}
 		}
 		/* @var Annulment $entity */
-		$entity = $this->annulmentService->findByCaseId(131);
-		$consoleOutput->writeln($entity->annuled_case);
+		//$entity = $this->annulmentService->findByCaseId($annuledCase);
+		//$consoleOutput->writeln($entity->annuled_case);
 		return [$new, $bad];
 	}
 

@@ -45,26 +45,37 @@ class AnnulmentService
 		return $this->orm->annulments->getById($id);
 	}
 
-	public function findPair(Cause $annuledCase, Cause $annulingCase)
+	public function findPair(Cause $annuledCase, ?Cause $annulingCase)
 	{
 		$entity = $this->orm->annulments->getBy([
-			'annuled_case' => $annuledCase,
-			'annuling_case' => $annulingCase]
+			'annuledCase' => $annuledCase,
+			'annulingCase' => $annulingCase]
 		);
 
 		return $entity;
 	}
 
 	public function findByCaseId($caseId) {
-		$entity = $this->orm->annulments->getBy(['annuled_case' => $caseId]);
+		$entity = $this->orm->annulments->getBy(['annuledCase' => $caseId]);
 		return $entity;
 	}
 
-	public function createAnnulment(Cause $annuledCase, Cause $annulingCase, JobRun $jobRun = null) {
+	public function findCaseAnnulmentByCases(array $cases)
+	{
+		$casesIds = array_map(function (Cause $case) {
+			return $case->id;
+		}, $cases);
+		if (count($casesIds) == 0) {
+			return [];
+		}
+		return $this->orm->annulments->findAnnulmentsByCases($casesIds)->fetchAll();
+	}
+
+	public function createAnnulment(Cause $annuledCase, $annulingCase, JobRun $jobRun = null) {
 
 		$entity = new Annulment();
-		$entity->annuled_case = $annuledCase;
-		$entity->annuling_case = $annulingCase;
+		$entity->annuledCase = $annuledCase;
+		$entity->annulingCase = $annulingCase;
 		$entity->jobRun = $jobRun;
 		$this->orm->persist($entity);
 

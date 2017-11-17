@@ -5,7 +5,9 @@ CREATE TABLE case_annulment (
 	inserted TIMESTAMP NOT NULL DEFAULT NOW(),
 	modified TIMESTAMP NULL,
 	job_run_id BIGINT NULL REFERENCES job_run(id_job_run) ON UPDATE CASCADE ON DELETE RESTRICT,
-	UNIQUE (annuled_case, annuling_case)
+	UNIQUE (annuled_case, annuling_case),
+	UNIQUE (annuled_case),
+	UNIQUE (annuling_case)
 );
 
 COMMENT ON TABLE case_annulment IS 'Table containing all annuled cases linking to cases that annuled them.';
@@ -20,3 +22,5 @@ ALTER TABLE case_annulment ADD FOREIGN KEY (annuling_case) REFERENCES "case"(id_
 
 CREATE OR REPLACE VIEW vw_computed_case_annulment AS
 	SELECT * FROM "case_annulment";
+
+

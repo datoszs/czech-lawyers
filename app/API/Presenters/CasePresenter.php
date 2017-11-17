@@ -82,7 +82,7 @@ class CasePresenter extends Presenter
 	 *                 "public_local_link": "http://example.com/doc/12AS13LAA0"
 	 *             }
 	 *         ],
-	 * 		   "tagging_result_annuled": true?,
+	 * 		   "tagging_result_annuled": true,
 	 * 		   "tagging_result_annuling_id_case": 2,
 	 *     }
 	 * </json>
@@ -197,9 +197,8 @@ class CasePresenter extends Presenter
 					'public_local_link' => $this->link('//:Document:view', $document->id),
 				];
 			}, $documents),
-			'tagging_result_annuled' => $annulment ? true : false, //todo
-			'debug_annulment_id' => $annulment->annuling_case ? $annulment->annuling_case->id : null,
-			'debug_annuled_id' => $annulment->annuled_case ? $annulment->annuled_case->id : null,
+			'tagging_result_annuled' => $annulment ? true : false,
+			'tagging_result_annuling_id_case' => $annulment ? ($annulment->annulingCase ? $annulment->annulingCase->id : null) : null
 		];
 	}
 }
