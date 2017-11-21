@@ -11,7 +11,7 @@ const SocietyOverview = ({name, street, city, ic}) => (
                 <dd>{ic}</dd>
                 <dd>{street}</dd>
                 <dd>{city}</dd>
-                <dd><a href="mailto:info@cestiadvokati.cz">info@cestiadvokati.cz</a></dd>
+                <dd><a href="mailto:info@ospravedlnosti.cz">info@ospravedlnosti.cz</a></dd>
             </dl>
         </Well>
     </div>
