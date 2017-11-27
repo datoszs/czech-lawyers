@@ -5,7 +5,7 @@
  - PHP >= 7.1
  - PostgreSQL >= 9.5
  - Node Package Manager (aka `npm`)
- - Comopser
+ - Composer
  - Web server and hosting site configured to allow Nette applications
 
 ## On Ubuntu
