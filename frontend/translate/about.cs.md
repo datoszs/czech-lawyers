@@ -35,9 +35,9 @@ Konečná rozhodnutí o všech návrzích podaných od počátku činnosti soudu
 Způsob zpracování rozhodnutí
 ----------------------------
 U zpracovávaných konečných rozhodnutí zjišťujeme, zda jde o:
-- **meritorní konečné rozhodnutí** (to znamená, že se jeho podáním soud alespoň zčásti co do obsahu zabýval);
-- **nemeritorní konečné rozhodnutí** (to znamená, že se jeho podáním soud co do obsahu vůbec nezabýval);
-- **rozhodnutí o zastavení řízení** (to znamená, že podání bylo pravděpodobně vzato zpět).
+- **meritorní konečné rozhodnutí** (to znamená, že se podáním soud alespoň zčásti co do obsahu zabýval);
+- **nemeritorní konečné rozhodnutí** (to znamená, že se podáním soud co do obsahu vůbec nezabýval);
+- **rozhodnutí o zastavení řízení** (to znamená, že podání bylo pravděpodobně vzato zpět či například nedošlo k zaplacení soudního poplatku).
 
 Ke každému konečnému rozhodnutí (unikátní spisové značce) se pak jednou za čtvrt roku snažíme na základě informací poskytnutých
 soudy přiřadit konkrétního advokáta, na jehož podání toto rozhodnutí reaguje.
