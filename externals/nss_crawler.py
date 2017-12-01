@@ -313,7 +313,8 @@ def make_record(soup):
             link = urljoin(base_url, link)
             count_records_with_document += 1
         else:
-            continue  # case without document
+            link = None
+            #continue  # case without document
 
         # registry mark isn't case number
         mark = case_number.split("-")[0].strip()
@@ -347,6 +348,8 @@ def make_record(soup):
         if link is not None:
             case_year = link.split('/')[-2]
             filename = os.path.basename(link)
+        else:
+            case_year = None
         logger.debug(
             "Contents: {}\nSides: {}; Complaint: {}; Year: {}; Prejudicate: {}\n{}".format(columns[5].contents,
                                                                                            sides,
