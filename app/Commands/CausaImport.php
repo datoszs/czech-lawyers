@@ -138,6 +138,7 @@ class CausaImport extends Command
 		if ($code !== self::RETURN_CODE_SUCCESS) {
 			$consoleOutput->writeln($message);
 		}
+		return $code;
 	}
 
 	private function getCourt($courtId)

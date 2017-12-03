@@ -55,7 +55,10 @@ class CrawlerManual extends Command
 			$to,
 			escapeshellarg('/home/cestiadvokati.cz/crawlers-devel/'.$court)
 		);
-		exec($command);
+		$returnCode = 0;
+		$content = null;
+		exec($command, $content, $returnCode);
+		return (int) $returnCode;
 	}
 
 }

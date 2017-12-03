@@ -27,14 +27,16 @@ class AdvocateScoreUpdate extends Command
 	protected function execute(InputInterface $input, OutputInterface $consoleOutput)
 	{
 		$this->prepare();
-		$code = 0;
+		$returnCode = static::RETURN_CODE_SUCCESS;
 		$message = null;
 		if ($this->advocateService->updateScores()) {
 			$message = 'Advocate scores were update successfully.';
 		} else {
 			$message = 'Advocate scores update has failed.';
+			$returnCode = static::RETURN_CODE_ERROR;
 		}
 		$consoleOutput->writeln($message);
-		$this->finalize($code, $message, $message);
+		$this->finalize($returnCode, $message, $message);
+		return $returnCode;
 	}
 }

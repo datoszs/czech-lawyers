@@ -27,6 +27,7 @@ abstract class AdvocateTagger extends Command
 	public $courtService;
 
 	const RETURN_CODE_SUCCESS = 0;
+	const RETURN_CODE_FAILURE = 1;
 
 	/** @var Court */
 	protected $court;
@@ -50,7 +51,7 @@ abstract class AdvocateTagger extends Command
 		$this->prepare();
 		$this->beforeExecute();
 
-		$code = 0;
+		$code = static::RETURN_CODE_SUCCESS;
 		$message = '';
 		$output = '';
 
@@ -73,6 +74,7 @@ abstract class AdvocateTagger extends Command
 		} else {
 			$message = sprintf("Nothing from [%s] was tagged.\n", $this->court->name);
 			$consoleOutput->write($message);
+			$code = static::RETURN_CODE_FAILURE;
 		}
 
 		$this->finalize($code, $output, $message);

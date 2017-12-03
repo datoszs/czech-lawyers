@@ -100,5 +100,6 @@ class SendBatchEmail extends Command
 		$consoleOutput->writeln('------------------------');
 		$consoleOutput->writeln('SENT: ' . $sent);
 		$consoleOutput->writeln('FAILED: ' . $failed);
+		return 0;
 	}
 }
