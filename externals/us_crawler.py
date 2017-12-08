@@ -482,9 +482,9 @@ def make_record(soup, id):
             item[key] = itemize_list(item[key])
 
         # extract names from text
-        text = soup.select_one("#uc_vytah_cellContent > span")
+        # text = soup.select_one("#uc_vytah_cellContent > span")
         logger.debug("\n{} -> {}".format(item["web_path"], item["local_path"]))
-        item['names'] = extract_name(text)
+        item['names'] = None #extract_name(text)
     logger.debug(item)
     writer_records.writerow(item)  # write item to CSV
 

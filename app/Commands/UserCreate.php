@@ -80,5 +80,6 @@ class UserCreate extends Command
 		$this->userService->save($user);
 		$this->auditing->logCreate(AuditedSubject::USER_INFO, "Save new user with ID [{$user->id}]. Changes: {$changes}.", AuditedReason::INTERNAL_MANAGEMENT);
 		$consoleOutput->writeln('User created.');
+		return 0;
 	}
 }

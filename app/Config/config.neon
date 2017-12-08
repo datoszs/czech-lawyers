@@ -13,6 +13,8 @@ parameters:
 	google:
 		captcha:
 			secret:
+	exports:
+		directory: '%appDir%/../storage/exports/'
 
 
 php:
@@ -29,6 +31,11 @@ session:
 	expiration: 14 days
 	savePath: "%tempDir%/sessions"
 
+
+decorator:
+	App\APIModule\Presenters\DownloadExportPresenter:
+		setup:
+			- $exportsDirectory(%exports.directory%)
 
 services:
 	# Utils

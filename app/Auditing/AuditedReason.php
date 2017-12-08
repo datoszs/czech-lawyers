@@ -10,6 +10,7 @@ class AuditedReason
 {
 	use StaticClass;
 
+	public const REQUESTED_EXPORT = 'Requested data export (prepared dump)';
 	public const REQUESTED_INDIVIDUAL = 'Requested in one record (direct access)';
 	public const REQUESTED_BATCH = 'Requested in batch (search/browse/list)';
 	public const SCHEDULED = 'Scheduled';

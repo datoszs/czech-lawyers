@@ -246,5 +246,6 @@ class OfficialDataImport extends Command
 		if ($code !== self::RETURN_CODE_SUCCESS) {
 			$consoleOutput->writeln($message);
 		}
+		return $code;
 	}
 }

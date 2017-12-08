@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import BasicFieldComponent from './BasicFieldComponent';
 import ChildrenDisplay from './ChildrenDisplay';
 import selectFieldContextType from './selectFieldContextType';
 
@@ -15,7 +14,7 @@ class SelectField extends Component {
     }
 
     render() {
-        return React.createElement(BasicFieldComponent()(ChildrenDisplay), this.props, this.props.children);
+        return React.createElement(ChildrenDisplay, this.props, this.props.children);
     }
 }
 

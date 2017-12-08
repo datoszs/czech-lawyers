@@ -5,7 +5,7 @@
  - PHP >= 7.1
  - PostgreSQL >= 9.5
  - Node Package Manager (aka `npm`)
- - Comopser
+ - Composer
  - Web server and hosting site configured to allow Nette applications
 
 ## On Ubuntu
@@ -145,4 +145,5 @@ Notes:
 
 - Beware of accessing out of array or access to optional entities (such as taggings etc...)
 - There is trait `Diffable` usable on Entities for obtaining diff of changes.
-- Internal loading of data or usage withing aggregation is ignored as it would make whole thing unusable. Logged is
+- Internal loading of data or usage withing aggregation is ignored as it would make whole thing unusable.
+- When downloading exports only one record should be stored due to technical limitations (increase in log size).

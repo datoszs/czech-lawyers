@@ -49,5 +49,8 @@
         }],
 
         "react/jsx-key": "warn"
+    },
+    "globals": {
+        "System": false
     }
 }

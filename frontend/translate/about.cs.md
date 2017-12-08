@@ -3,7 +3,7 @@ Dlouhodobým cílem projektu je zpřístupnit informace o činnosti českých ad
 na jejichž základě se lze rozhodnout, kterého advokáta si zvolit. Krátkodobým, v současnosti realizovaným cílem projektu
 je **zpřístupnění informací o činnosti advokátů** v soudních řízeních, pro která si advokáta ze zákona zvolit musíte
 &mdash; **v řízeních o dovolání před Nejvyšším soudem, o kasačních stížnostech před Nejvyšším správním soudem a o ústavních
-stížnostech před Ústavním soudem**. Web cestiadvokati.cz zpřístupňuje statistiky o vystupování advokátů v těchto řízeních
+stížnostech před Ústavním soudem**. Web *O spravedlnosti: O advokátech* zpřístupňuje statistiky o vystupování advokátů v těchto řízeních
 založené na konečných rozhodnutích vydaných v těchto řízeních. Cílem webu je tyto statistiky založené na zpřehlednění
 již nyní veřejně dostupných informacích nabídnout, nikoliv prosazovat jejich používání k hodnocení advokátů. Umožnění
 komentování činnosti advokáta (ať už advokáty samotnými nebo jinými osobami) neplánujeme.
@@ -16,8 +16,8 @@ důvodů) obrátil s vadnými nebo opožděnými podáními nebo například v s
 **u advokátů je sledován a zobrazován počet jejich podání (stížností, dovolání), o nichž soud rozhodl co do obsahu (meritorně),
 o nichž rozhodl nemeritorně a o nichž nakonec nerozhodoval vůbec**.
 
-Projekt bez jakékoliv finanční podpory realizuje zapsaný spolek DATOS -- data o spravedlnosti, IČO 05003997. Předsedkyní
-spolku a iniciátorkou projektu je Tereza Papoušková, tvůrci databáze jsou Jan Drábek a Radim Jílek,
+Projekt bez jakékoliv finanční podpory realizuje zapsaný spolek DATOS &ndash; data o spravedlnosti, IČO 05003997. Předsedkyní
+spolku a iniciátorkou projektu je Tereza Papoušková, tvůrci databáze jsou Jan Drábek, Radim Jílek a Štefan Kosztolányi,
 tvůrcem webu je Tomáš Vejpustek, konzultantem je Jan Papoušek. Více viz [Kontakty](/contact).
 
 Rozsah zpracovávaných rozhodnutí
@@ -35,9 +35,9 @@ Konečná rozhodnutí o všech návrzích podaných od počátku činnosti soudu
 Způsob zpracování rozhodnutí
 ----------------------------
 U zpracovávaných konečných rozhodnutí zjišťujeme, zda jde o:
-- **meritorní konečné rozhodnutí** (to znamená, že se jeho podáním soud alespoň zčásti co do obsahu zabýval);
-- **nemeritorní konečné rozhodnutí** (to znamená, že se jeho podáním soud co do obsahu vůbec nezabýval);
-- **rozhodnutí o zastavení řízení** (to znamená, že podání bylo pravděpodobně vzato zpět).
+- **meritorní konečné rozhodnutí** (to znamená, že se podáním soud alespoň zčásti co do obsahu zabýval);
+- **nemeritorní konečné rozhodnutí** (to znamená, že se podáním soud co do obsahu vůbec nezabýval);
+- **rozhodnutí o zastavení řízení** (to znamená, že podání bylo pravděpodobně vzato zpět či například nedošlo k zaplacení soudního poplatku).
 
 Ke každému konečnému rozhodnutí (unikátní spisové značce) se pak jednou za čtvrt roku snažíme na základě informací poskytnutých
 soudy přiřadit konkrétního advokáta, na jehož podání toto rozhodnutí reaguje.
@@ -91,7 +91,7 @@ můžete nahlédnout do [zdrojového kódu](https://github.com/datoszs) celého 
 Ochrana osobních údajů
 ----------------------
 
-Web Čeští advokáti používá službu Google Analytics k tomu, aby shromažďoval údaje o Vašem použití tohoto webu.
+Web *O spravedlnosti: O advokátech* používá službu Google Analytics k tomu, aby shromažďoval údaje o Vašem použití tohoto webu.
 Jedná se především o konkrétní stránky, které jste navštívili, a dále některé údaje týkající se způsobu,
 kterým k webu přistupujete, například Váš operační systém, prohlížeč, jazyk operačního systému a lokaci.
 
@@ -99,3 +99,11 @@ Tyto údaje není možné spojit s Vaší IP adresou ani dalšími informacemi, 
 pro potřeby sledování návštěvnosti webu.
 
 Pokud nechcete, abychom o Vás shromažďovali tyto údaje, můžete použít například [tento oficiální doplněk prohlížeče](https://tools.google.com/dlpage/gaoptout).
+
+Otevřená data
+-------------
+
+Výběr dat ze systému *O advokátech* je též dostupný ke stažení ve strojově čitelném formátu pro další možná zpracování.
+
+Získaná data zachycují nejaktuálnější data v moment jejich exportu, který probíhá jednou denně. Stáhnout tento výběr výběr můžete [zde](/data).
+

@@ -7,6 +7,7 @@ export const CASE_SEARCH = 'case-search';
 export const CONTACT = 'contact';
 export const LINK = 'link';
 export const STATEMENTS = 'statements';
+export const EXPORT = 'export';
 
 export const CONTACT_FORM_ANCHOR = 'form';
 

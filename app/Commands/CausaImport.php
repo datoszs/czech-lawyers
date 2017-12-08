@@ -138,6 +138,7 @@ class CausaImport extends Command
 		if ($code !== self::RETURN_CODE_SUCCESS) {
 			$consoleOutput->writeln($message);
 		}
+		return $code;
 	}
 
 	private function getCourt($courtId)
@@ -330,7 +331,7 @@ class CausaImport extends Command
 	{
 		// Explicit year
 		if (isset($row['case_year'])) {
-			return $row['case_year'];
+			return (int) $row['case_year'];
 		}
 		// Guess from registry mark
 		return Helpers::determineYear($row['registry_mark']);

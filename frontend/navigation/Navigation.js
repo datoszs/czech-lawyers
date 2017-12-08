@@ -4,12 +4,12 @@ import RouteNavItem from './RouteNavItem';
 
 import {Msg, RouterLink} from '../containers';
 
-import {HOME, ABOUT, CONTACT, ADVOCATE_SEARCH, CASE_SEARCH} from '../routes';
+import {HOME, ABOUT, CONTACT, ADVOCATE_SEARCH, CASE_SEARCH, EXPORT} from '../routes';
 
 const Navigation = () => (
     <Navbar>
         <Navbar.Header>
-            <Navbar.Brand><RouterLink route={HOME}><Msg msg="app.title" /></RouterLink></Navbar.Brand>
+            <Navbar.Brand><RouterLink route={HOME}><Msg msg="nav.title" /></RouterLink></Navbar.Brand>
             <Navbar.Toggle />
         </Navbar.Header>
         <Navbar.Collapse>
@@ -19,6 +19,7 @@ const Navigation = () => (
             </Nav>
             <Nav pullRight>
                 <RouteNavItem module={ABOUT}><Msg msg="about.title" /></RouteNavItem>
+                <RouteNavItem module={EXPORT}><Msg msg="export.nav" /></RouteNavItem>
                 <RouteNavItem module={CONTACT}><Msg msg="contact.title" /></RouteNavItem>
             </Nav>
         </Navbar.Collapse>
