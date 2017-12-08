@@ -5,11 +5,13 @@ import styles from './Result.less';
 import positive from './positive.svg';
 import negative from './negative.svg';
 import neutral from './neutral.svg';
+import annulled from './annulled.svg';
 
 const resultMap = {
     positive,
     negative,
     neutral,
+    annulled,
 };
 
 const Result = ({result}) => <img className={styles.image} src={resultMap[result]} alt="result" />;

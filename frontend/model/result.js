@@ -2,6 +2,7 @@ const result = {
     POSITIVE: 'positive',
     NEGATIVE: 'negative',
     NEUTRAL: 'neutral',
+    ANNULLED: 'annulled',
 };
 
 export const classNameResult = {
@@ -16,6 +17,7 @@ export const resultMsg = {
     [result.POSITIVE]: 'result.positive',
     [result.NEGATIVE]: 'result.negative',
     [result.NEUTRAL]: 'result.neutral',
+    [result.ANNULLED]: 'result.annulled',
 };
 
 export default result;
