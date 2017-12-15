@@ -73,6 +73,7 @@ case.court: Soud
 case.result: Výsledek
 case.documents: Dokumenty
 case.documents.empty: K tomuto případu nemáme žádné dokumenty.
+case.document.missing: Text rozhodnutí nemáme k dispozici
 case.date.proposition: Datum podání
 case.date.decision: Datum rozhodnutí
 case.dispute.text: |
