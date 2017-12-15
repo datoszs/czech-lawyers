@@ -1,3 +1,4 @@
+import {expect} from 'chai';
 import Document, {mapDtoToDocument} from './Document';
 
 describe('DTO to Document mapping', () => {
@@ -24,5 +25,9 @@ describe('DTO to Document mapping', () => {
     });
     it('maps link', () => {
         document.link.should.equal(dto.public_local_link);
+    });
+    it('returns empty link when public link is empty string', () => {
+        const alternativeDocument = new Document(mapDtoToDocument({...dto, public_link: ''}));
+        expect(alternativeDocument.link).to.be.null();
     });
 });
