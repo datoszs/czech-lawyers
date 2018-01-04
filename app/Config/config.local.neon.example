@@ -17,8 +17,3 @@ services:
 	nette.mailer:
 		class: Nette\Mail\IMailer
 		factory: Nextras\MailPanel\FileMailer(%tempDir%/mail-panel-mails)
-
-# Use this part only when non-public access is needed
-httpAuth:
-	username: advocates
-	password: password

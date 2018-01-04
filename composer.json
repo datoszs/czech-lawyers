@@ -45,8 +45,7 @@
 		"ublaboo/api-router": "^1.2",
 		"ublaboo/api-docu": "^1.2",
 		"heureka/inflection": "^2.0",
-		"roave/security-advisories": "dev-master",
-		"damejidlo/http-auth": "^1.0"
+		"roave/security-advisories": "dev-master"
 	},
 	"repositories": [
 		{
