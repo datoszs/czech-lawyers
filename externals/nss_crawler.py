@@ -28,10 +28,11 @@ from datetime import datetime
 from optparse import OptionParser
 from os.path import join
 from urllib.parse import urljoin
-from tqdm import tqdm
+
 import pandas as pd
 from bs4 import BeautifulSoup
 from ghost import Ghost
+from tqdm import tqdm
 
 base_url = "http://nssoud.cz/"
 url = "http://nssoud.cz/main0Col.aspx?cls=JudikaturaBasicSearch&pageSource=0"
@@ -164,7 +165,6 @@ def parameters():
     (options, args) = parser.parse_args()
     options = vars(options)
 
-    print(args, options, type(options))
     return options
 
 #
@@ -344,12 +344,10 @@ def make_record(soup):
             # convert date from format dd.mm.YYYY to YYYY-mm-dd
             date = datetime.strptime(date, '%d.%m.%Y').strftime('%Y-%m-%d')
 
-        filename = ""
-        if link is not None:
-            case_year = link.split('/')[-2]
-            filename = os.path.basename(link)
-        else:
-            case_year = None
+        case_year = mark.split('/')[-1]
+
+        filename = "" if link is None else os.path.basename(link)
+
         logger.debug(
             "Contents: {}\nSides: {}; Complaint: {}; Year: {}; Prejudicate: {}\n{}".format(columns[5].contents,
                                                                                            sides,
