@@ -416,7 +416,7 @@ class AdvocateTagger(QueryDB):
         string = self.get_extra(last_document["id_document"], self.court)
         if string is None or string["names"] is None:
             return None
-        print(string["names"], len(string["names"]), len(string["names"]) == 1)
+        #print(string["names"], len(string["names"]), len(string["names"]) == 1)
 
         if len(string["names"]) == 1:
             return string["names"]["1"]
@@ -643,7 +643,7 @@ class AdvocateTagger(QueryDB):
                     #print(string, status)
                 except (AttributeError, ValueError) as ex:
                     self.add_to_statistics("bad")
-                    print("Exception: {}".format(ex))
+                    print("Exception: {}".format(ex).encode())
                     continue
 
                 name, length = self.cleaner.extract_name(string) if string is not None else (None, None)
@@ -685,7 +685,6 @@ class AdvocateTagger(QueryDB):
 
 
 if __name__ == "__main__":
-    from pprint import pprint
     if len(sys.argv) == 4:
         # print(sys.argv)
         job_id = sys.argv[1]
