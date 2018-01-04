@@ -75,6 +75,7 @@ extensions:
 	console: Kdyby\Console\DI\ConsoleExtension
 	migrations: Nextras\Migrations\Bridges\NetteDI\MigrationsExtension
 	visualPaginator: IPub\VisualPaginator\DI\VisualPaginatorExtension
+	httpAuth: Damejidlo\Security\DI\HttpAuthExtension(%consoleMode%) # you need to pass the %consoleMode% parameter (You don't want to require username and password in console)
 
 migrations:
 	dir: %appDir%/../database/migrations
