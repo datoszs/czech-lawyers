@@ -22,11 +22,12 @@ import re
 import shutil
 import subprocess
 import sys
-from tqdm import tqdm
 from datetime import datetime
 from optparse import OptionParser
 from os.path import join
 from urllib.parse import urljoin
+
+from tqdm import tqdm
 
 try:
     from bs4 import BeautifulSoup, SoupStrainer
@@ -145,7 +146,7 @@ def parameters():
                       help="Path to output directory")
     parser.add_option("-f", "--date-from", action="store", type="string", dest="date_from", default='1. 1. 2007',
                       help="Start date of range (d. m. yyyy)")
-    parser.add_option("-l", "--last-days", action="store", type="int", dest="last", default=None,
+    parser.add_option("-l", "--last-days", action="store", type="string", dest="last", default=None,
                       help="Increments for the last N days (N in <1,60>)")
     parser.add_option("-t", "--date-to", action="store", type="string", dest="date_to", default=None,
                       help="End date of range (d. m. yyyy)")
