@@ -73,6 +73,7 @@ class CasePresenter extends Presenter
 	 *                 "id_document": 543,
 	 *                 "mark": "ECLI:CZ:NS:2016:42.CDO.4000.2016.1",
 	 *                 "decision_date": "2012-04-23T18:25:43.511Z",
+	 *                 "is_available": true,
 	 *                 "public_link": "http://example.com/doc/12AS13LAA0"
 	 *                 "public_local_link": "http://example.com/doc/12AS13LAA0"
 	 *             }
@@ -95,7 +96,10 @@ class CasePresenter extends Presenter
 	 *  - <b>true</b> when tagging is final
 	 *  - <b>false</b> when tagging is not final
 	 *
+	 *
 	 * Note: provides only cases which are relevant for advocates portal.
+	 *
+	 * Note: columns <b>public_link</b> and <b>public_local_link</b> are only available when <b>is_available</b> is true
 	 *
 	 * Errors:
 	 *  - Returns HTTP 404 with error <b>no_case</b> when such case doesn't exist
@@ -179,13 +183,17 @@ class CasePresenter extends Presenter
 			'decision_date' => $case->decisionDate ? $case->decisionDate->format(DateTime::ATOM) : null,
 			'proposition_date' => $case->propositionDate ? $case->propositionDate->format(DateTime::ATOM) : null,
 			'documents' => array_map(function (Document $document) {
-				return [
+				$temp = [
 					'id_document' => $document->id,
 					'mark' => $document->recordId,
 					'decision_date' => $document->decisionDate->format(DateTime::ATOM),
-					'public_link' => $document->webPath,
-					'public_local_link' => $this->link('//:Document:view', $document->id),
+					'is_available' => $document->isAvailable()
 				];
+				if ($temp['is_available']) {
+					$temp['public_link'] = $document->webPath;
+					$temp['public_local_link'] = $this->link('//:Document:view', $document->id);
+				}
+				return $temp;
 			}, $documents)
 		];
 	}

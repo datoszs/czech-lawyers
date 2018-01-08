@@ -21,4 +21,8 @@ use Nextras\Orm\Entity\Entity;
 class Document extends Entity
 {
 
+	public function isAvailable()
+	{
+		return isset($this->localPath, $this->webPath) && $this->localPath && $this->webPath;
+	}
 }
