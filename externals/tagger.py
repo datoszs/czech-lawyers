@@ -27,6 +27,7 @@ from psycopg2 import extras
 bad_word = [")", "agentura", "asociace", "advokátní", "koncipient"]
 skip_word = ["sama", "§", "s.r.o.", "a.s.", "o.s.", "v.o.s.", "kancelář"]
 states = dict(ok="processed", no="failed")
+comparison_types = dict(ic="by IC", exist="now exist", normal="normal compare", reverse="reverse compare")
 Variants = namedtuple('Variants', ["full", "normal", "reverse"])
 config_local_neon_path = '/../Config/config.local.neon'
 threshold = 5
@@ -71,16 +72,19 @@ def print_statistic(tagger):
           "Causes: {}, unique advocates: {}\n"
           "Matched: {}, No matched: {}, Without changes: {}\n"
           "Bad: {}, Empty: {}\n"
-          "Processed: {} ({} %), Failed: {}, Hited: {}\n"
+          "Processed: {} ({} %), Failed: {}\n"
           "Size of match_cache: {}, Size of no_match_cache: {}\n"
+          "Hit possitive: {}, Hit negative: {}\n"
           "Compare full: {}, Compare normal: {}, Compare reverse: {}\n"
           "Compare by IC: {}\n"
           "Repair records: {}".format(
             len(tagger.causes), len(tagger.advocates),
             tagger.counters["matched"], tagger.counters["no_matched"], tagger.counters["no_change"],
             tagger.counters["bad"], tagger.counters["empty"],
-            tagger.counters["ok"], round(tagger.counters["ok"] / len(tagger.causes), 2) * 100, tagger.counters["failed"], tagger.counters["hit"],
+            tagger.counters["ok"], round(tagger.counters["ok"] / len(tagger.causes), 2) * 100,
+            tagger.counters["failed"],
             len(tagger.match_cache), len(tagger.no_match_cache),
+            tagger.counters["hit_ok"], tagger.counters["hit_no"],
             tagger.counters["full"], tagger.counters["normal"], tagger.counters["reverse"],
             tagger.counters["ic"], tagger.counters["repair"])
     )
@@ -121,6 +125,24 @@ def set_logging():
     logger.addHandler(fh_i)
     logger.info("audited_subject@description@reason")
     return logger
+
+
+def write_to_log(registry_sign, advocate_name, advocate_id, debug):
+    """
+
+    :param registry_sign:
+    :param advocate_name:
+    :param advocate_id:
+    :param debug:
+    """
+    logger.info(
+            "{}@Create new advocate tagging of case [{}] to advocate [{}] with ID [{}]. Note [{}].@{}".format(
+                    "CASE_TAGGING",
+                    registry_sign,
+                    advocate_name,
+                    advocate_id,
+                    debug,
+                    "SCHEDULED"))
 
 
 class QueryDB(object):
@@ -349,7 +371,7 @@ class NameCleaner:
             return self.advance(text), "EXTRACT"
 
         # remove all after last '-' or ','
-        match = re.compile(r'^([^,-]+).*$', re.UNICODE).search(text)
+        match = re.compile(r'^([^-]+).*$', re.UNICODE).search(text)
         #print(match)
         clean_text = None
         if match:
@@ -380,6 +402,29 @@ class NameCleaner:
         #print(variants)  # /* DEBUG */
         return variants
 
+    def prepare_name_for_searching(self, tagger, text):
+        """
+        :param tagger:
+        :param text:
+        :return:
+        """
+
+        try:
+            clear_text, status = self.clear(text)
+        except (AttributeError, ValueError) as ex:
+            tagger.add_to_statistics("bad")
+            print(u"Exception: {}".format(ex).encode())
+            return None
+
+        try:
+            name, length = self.extract_name(clear_text)
+        except (ValueError, AttributeError) as ex:
+            tagger.add_to_statistics("bad")
+            print(u"Exception: {}".format(ex).encode())
+            return None
+
+        return name
+
 
 class AdvocateTagger(QueryDB):
     """
@@ -399,8 +444,8 @@ class AdvocateTagger(QueryDB):
         print(t1 - t0)
         self.cleaner = NameCleaner()
         keys = ["bad", "empty", "repair", "matched", "no_matched", "no_change", "m_full", "full", "normal", "reverse",
-                "ic", "ok", "failed", "hit"]
-        self.counters = dict(zip(keys, [0]*len(keys)))
+                "ic", "ok", "failed", "hit_ok", "hit_no"]
+        self.counters = dict(zip(keys, [0] * len(keys)))
         self.no_match_cache, self.match_cache = {}, {}
 
     def get_name_from_document_info(self, cause_id):
@@ -442,16 +487,56 @@ class AdvocateTagger(QueryDB):
         else:
             return None
 
+    @staticmethod
+    def get_pin(official_data):
+        """
+        get PIN from database structure of official_data
+        :param official_data:
+        :return:
+        """
+        try:
+            return official_data[0]["PIN"]
+        except (KeyError, AttributeError):
+            return None
+
+    def look_into_cache(self, key, label="match"):
+        """
+
+        :param label:
+        :return:
+        :param key:
+        :return:
+        """
+        cache = self.match_cache if label == "match" else self.no_match_cache
+        try:
+            return cache[key]
+        except KeyError:
+            return None, None
+
+    def add_to_cache(self, key, advocate_id, debug, label="match"):
+        """
+
+        :param key:
+        :param advocate_id:
+        :param full_name:
+        :param label:
+        """
+        cache = self.match_cache if label == "match" else self.no_match_cache
+        if key not in cache.keys():
+            cache[key] = (advocate_id, debug)
+
     def add_to_statistics(self, name_of_counter):
         """
         Add data to global statistics
+        :param name_of_counter:
         :param type_of_comparison:
         """
         if name_of_counter not in self.counters.keys():
             raise ValueError("Counter s názvem '%s' neexistuje." % name_of_counter)
         self.counters[name_of_counter] += 1
+
     @staticmethod
-    def print_info(case, text, name, advocate_name, advocate_id, type_of_comparison):
+    def print_info(case, text, name, advocate_id, type_of_comparison):
         """
         print info with information about assign
 
@@ -462,10 +547,8 @@ class AdvocateTagger(QueryDB):
         :param advocate_id: id of this advocate
         :param type_of_comparison: which method was used for comparison
         """
-        print(
-                "{} - '{}' -> {}".format(case["registry_sign"], text, name).encode())  # /* DEBUG */
-        print("\t {}, {}, >> \"{}\". <<".format(
-                advocate_name, advocate_id, type_of_comparison).encode())  # /* DEBUG */
+        print(u"{} - '{}' -> {}\n\t {}, >> \"{}\". <<".format(case["registry_sign"], text, name, advocate_id,
+                                                             type_of_comparison).encode())  # /* DEBUG */
 
     def prepare_tagging(self, cause, status, debug, advocate="NULL", role=2):
         """
@@ -491,6 +574,58 @@ class AdvocateTagger(QueryDB):
         ])
         return record
 
+    def find_advocate_by_ic(self, ic):
+        """
+
+        :param ic:
+        :return:
+        """
+        advocate_id, full_name = self.look_into_cache(ic)
+        if advocate_id:
+            self.add_to_statistics("hit_ok")
+            return advocate_id, states["ok"], "{} ({})".format(full_name, str(ic))
+        advocate = self.get_advocate_by_ic(ic)
+        if advocate:
+            advocate_id = advocate[0]["id_advocate"]
+            self.add_to_statistics("ic")
+            return advocate_id, states["ok"], str(ic)
+        else:
+            return (None,) * 3
+
+    def find_advocate_by_name(self, name):
+        """
+
+        :return:
+        :param name:
+        """
+        status, variants, type_of_comparison = (None,) * 3
+        advocate_id, full_name = self.look_into_cache(name)
+
+        if advocate_id:
+            self.add_to_statistics("hit_ok")
+            return advocate_id, states["ok"], "{} ({})".format(name, comparison_types["exist"]), comparison_types[
+                "exist"]
+        for advocate in self.advocates:
+            variants = self.cleaner.prepare_advocate(advocate["fullname"])
+            advocate_id, status = (None,) * 2
+            # compare full variant name with extracted name
+            if variants.full == name:
+                status = states["ok"]
+                type_of_comparison = comparison_types["normal"]
+                advocate_id = advocate["advocate_id"]
+                self.add_to_statistics("normal")
+                break
+            # reverse variant of name
+            if variants.reverse == name:
+                status = states["ok"]
+                type_of_comparison = comparison_types["reverse"]
+                advocate_id = advocate["advocate_id"]
+                self.add_to_statistics("reverse")
+                break
+        if not any([advocate_id, status]):
+            raise ValueError("No match found", name)
+        return advocate_id, status, "{} ({})".format(variants.full, type_of_comparison), type_of_comparison
+
     def process_case(self, cause, text, ic):
         """
         control process of comparison
@@ -501,186 +636,92 @@ class AdvocateTagger(QueryDB):
         :return: bool
         """
 
-        if text is None and ic is None:
-            return False
+        if not any([ic, text]):
+            raise ValueError("Input data are empty - '{}', '{}'".format(text, ic), cause["registry_sign"])
 
-        # check_cache record with the same name in match_cache
-        if text is not None:
-            exist = self.match_cache.get(text)
-        else:
-            exist = None
-
-        name = self.cleaner.extract_name(text)[0].title()
-
-        debug = advocate_name = None
         found = False
-        # /todo priority?
-        if exist and ic is None:
-            new, advocate_name, status, type_of_comparison = exist
-            new["case_id"] = cause["id_case"]
-            type_of_comparison = "now exist"
-            self.add_to_statistics("hit")
-            found = True
-        elif ic:
-            advocates = self.get_advocate_by_ic(ic)  # may be more
-            # print(text, cause["id_case"], ic, advocates) # /* DEBUG */
-            # input(":-)")
-            if advocates:
-                advocate_id = advocates[0]["id_advocate"]
-                type_of_comparison = "by IC"
-                status = states["ok"]
-                self.add_to_statistics("ic")
-                new = self.prepare_tagging(
-                        cause, status, ic, advocate=advocate_id)
-                found = True
-                # print(ic, found) # /* DEBUG */
+        status, debug, advocate_id, name, type_of_comparison = (None,) * 5
+        last_tagging = self.get_last_tagging(cause["id_case"])
+        # hledej podle IC - koukni do cache a nebo najdi
+        if ic and len(ic) == 8:
+            advocate_id, status, debug = self.find_advocate_by_ic(ic)
+            type_of_comparison = comparison_types["ic"]
+            found = all([advocate_id, status, debug])
 
         if not found:
-            if text is None or name is None:
-                return False
-            type_of_comparison, status, variants, advocate_id = (None,) * 4
-            matches = {}
-            for advocate in self.advocates:
-                variants = self.cleaner.prepare_advocate(advocate["fullname"])
-                # /todo priority? [priority/type][distance] = best matches
-                # compare full variant name with 'text' - is text the same?
-                if variants.full == text:
-                    status = states["ok"]
-                    type_of_comparison = "full compare"
-                    advocate_id = advocate["advocate_id"]
-                    self.add_to_statistics("full")
-                    break  # /todo is it already?
-                # compare full variant name with extracted name
-                if variants.full == name:
-                    status = states["ok"]
-                    type_of_comparison = "normal compare"
-                    advocate_id = advocate["advocate_id"]
-                    self.add_to_statistics("normal")
-                    break
-                # reverse variant of name
-                if variants.reverse == name:
-                    status = states["ok"]
-                    type_of_comparison = "reverse compare"
-                    advocate_id = advocate["advocate_id"]
-                    self.add_to_statistics("reverse")
-                    break
+            # zpracuj jmeno
+            name = self.cleaner.prepare_name_for_searching(self, text)
+            if name is None:
+                raise ValueError("Name is empty - {}".format(text), cause["registry_sign"])
 
-            if advocate_id:
-                # found only one match
-                advocate_name = variants.full
-                debug = "was tagged from: %s (%s)" % (text, name)
-            elif matches:
-                pass
-                #advocate_id, advocate_name, debug, status, type_of_comparison = self.choice_best_match(
-                #        matches, text, name)
+            # koukni do cache a nebo hledej mezi advokátama
+            if any(self.look_into_cache(name, label="nomatch")):
+                self.add_to_statistics("hit_no")
+                raise ValueError("Hit on no_match_cache", "{} in case {}".format(name, cause["registry_sign"]))
+            # exception is catched on level up
+            advocate_id, status, debug, type_of_comparison = self.find_advocate_by_name(name)
+        # priprav tagovani
+        tagging_record = self.prepare_tagging(cause, status, debug, advocate=advocate_id)
+        # uloz shodu do cache
+        self.add_to_cache(ic if found else name, advocate_id, debug)
+        # uloz tagovani do DB
 
-            if advocate_id is not None:
-                new = self.prepare_tagging(
-                        cause, status, debug, advocate=advocate_id)
-            else:
-                return False
-        if "ic" not in type_of_comparison.lower():
-            self.match_cache.setdefault(
-                text, (new, advocate_name, status, type_of_comparison))
-        if self.insert_if_differs(new, self.get_last_tagging(cause["id_case"])):
-            if new["status"] == states["ok"]:
+        if self.insert_if_differs(tagging_record, last_tagging):
+            if tagging_record["status"] == states["ok"]:
                 self.add_to_statistics("ok")
-                logger.info(
-                        "{}@Create new advocate tagging of case [{}] to advocate [{}] with ID [{}]. Note [{}].@{}".format(
-                                "CASE_TAGGING",
-                                cause["registry_sign"],
-                                advocate_name,
-                                new["advocate_id"],
-                                new["debug"],
-                                "SCHEDULED"))
+                write_to_log(cause["registry_sign"], name, advocate_id, debug)
             else:
                 self.add_to_statistics("failed")
-            self.print_info(cause, text, name, advocate_name,
-                            new["advocate_id"], type_of_comparison)
+            #self.print_info(cause, text, ic if found else name, advocate_id, type_of_comparison)
             return True
         else:
-            return None
+            return False
 
     def repair(self, last_tagging, cause):
         """
-
         :param last_tagging:
         """
-        # print(last_tagging) # /* DEBUG */
-        if last_tagging and last_tagging["advocate_id"]:
-            empty_record = self.prepare_tagging(cause, status="failed", debug="no match")
+        empty_record = self.prepare_tagging(cause, status=states["no"], debug="no match")
+        if self.insert_if_differs(empty_record, last_tagging):
             self.add_to_statistics("repair")
-            self.insert_to_db(empty_record)
 
     def run(self):
         """
         Entry point of this class
-
         """
-        bad = []
         print("Matching...")
         for cause in self.causes:
-            last_tagging = self.get_last_tagging(cause["id_case"])
             # if has last tagging and not found match, must insert empty record for replace old tagging
             official_data = cause["official_data"]
+            text, pin, message, arg = (None,) * 4
             # only one name for every cause
             if official_data:
                 if len(official_data) != 1:
                     self.add_to_statistics("bad")
-                    self.repair(last_tagging, cause)
+                    self.repair(self.get_last_tagging(cause["id_case"]), cause)
                     continue
+                # ziskej IC a text
+                pin = self.get_pin(official_data)
+                text = self.get_name(cause)
+
+                # zavolej hledani - predej IC, text a pripad
                 try:
-                    pin = official_data[0]["PIN"]
-                    ic = pin if pin != "NA" and len(pin) == 8 else None
-                    #ic = None
-                except KeyError:
-                    ic = None
-
-                string = self.get_name(cause)
-
-                try:
-                    string, status = self.cleaner.clear(string)
-                    #print(string, status)
-                except (AttributeError, ValueError) as ex:
-                    self.add_to_statistics("bad")
-                    print("Exception: {}".format(ex).encode())
+                    ret = self.process_case(cause, text, pin)
+                except ValueError as ex:
+                    message, arg = ex.args
+                    print(u"Exception: {} for '{}'".format(message, arg).encode())
+                    self.add_to_cache(arg, None, "no_match", label="nomatch")
+                    self.add_to_statistics("no_matched")
+                    self.repair(self.get_last_tagging(cause["id_case"]), cause)
                     continue
 
-                name, length = self.cleaner.extract_name(string) if string is not None else (None, None)
-                if status in ["WRONG", "MORE_NAMES", "SKIP"]:
-                    self.no_match_cache[string] = 1
-                    self.add_to_statistics("bad")
-                    bad.append((string, status))
-                    self.repair(last_tagging, cause)
-                    continue
-                if name == '' or string == '':
-                    self.add_to_statistics("bad")
-                    self.repair(last_tagging, cause)
-                    continue
-                try:
-                    if self.no_match_cache[name]:
-                        self.add_to_statistics("no_matched")
-                        self.repair(last_tagging, cause)
-                        continue
-                    elif self.no_match_cache[string]:
-                        self.add_to_statistics("no_matched")
-                        self.repair(last_tagging, cause)
-                        continue
-                except KeyError:
-                    pass
-
-                ret = self.process_case(cause, string, ic=ic)
                 if ret is True:  # insert
                     self.add_to_statistics("matched")
-                elif ret is None:  # not insert
+                else:  # not insert
                     self.add_to_statistics("no_change")
-                else:  # not match
-                    self.add_to_statistics("no_matched")
-                    self.no_match_cache[name] = 1
-                    self.repair(last_tagging, cause)
             else:
                 self.add_to_statistics("empty")
-                self.repair(last_tagging, cause)
+                self.repair(self.get_last_tagging(cause["id_case"]), cause)
         self.conn.commit()
 
 
