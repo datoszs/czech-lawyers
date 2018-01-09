@@ -28,3 +28,4 @@ storage/exports/*
 test.txt
 npm-debug.log
 externals/log_*
+externals/*.txt
