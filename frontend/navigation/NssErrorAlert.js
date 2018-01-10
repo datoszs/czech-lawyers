@@ -6,7 +6,6 @@ import styles from './NssErrorAlert.less';
 const KEY = 'nss.error.collapsed';
 
 export default class NssErrorAlert extends Component {
-
     constructor() {
         super();
         this.state = {
