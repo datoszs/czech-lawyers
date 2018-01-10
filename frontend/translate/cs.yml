@@ -220,3 +220,7 @@ export.main.text: |
   * Strukturovaná data o advokátech.
   * Strukturovaná data o konečných rozhodnutích soudů a jejich přiřazení konkrétnímu advokátovi.
   * Data o dokumentech (obsahujících nejen konečná rozhodnutí).
+nss.error: |
+  Dne 8. 1. jsme zjistili, že při zpracování dat poskytnutých Nejvyšším správním soudem došlo k chybě. Prozatím si nejsme jistí,
+  jak velké množství případů ovlivnila, proto jsme se rozhodli až do chvíle, kdy se nám chybu podaří zcela vyřešit, skrýt všechna přiřazení
+  případů Nejvyššího správního soudu jednotlivým advokátům. Za nekompletnost dat po dobu odstraňování chyby se upřímně omlouváme.

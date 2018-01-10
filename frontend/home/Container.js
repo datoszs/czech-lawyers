@@ -21,7 +21,6 @@ const Container = () => (
         <RichText msg="leaderboard.legend" />
         <Row>
             <LeaderBoardColumn court={courts.NS} />
-            <LeaderBoardColumn court={courts.NSS} />
             <LeaderBoardColumn court={courts.US} />
         </Row>
         <Alert bsStyle="warning"><Msg msg="home.disclaimer" /></Alert>
