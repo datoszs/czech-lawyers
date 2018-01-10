@@ -120,6 +120,10 @@ class AdvocateRankingsPresenter extends Presenter
 			if (!isset($output[$courtId])) {
 				$output[$courtId] = [];
 			}
+			// Temporary disable NSS
+			if ($courtId === Court::TYPE_NSS) {
+				$advocates = [];
+			}
 			foreach ($advocates as $advocate) {
 				$output[$courtId][] = $this->mapAdvocate($advocate);
 				$this->auditing->logAccess(AuditedSubject::ADVOCATE_INFO, "Load advocate [{$advocate->getCurrentName()}] with ID [{$advocate->id}].", AuditedReason::REQUESTED_BATCH);
