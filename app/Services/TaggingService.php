@@ -73,6 +73,15 @@ class TaggingService
 			->fetchAll();
 	}
 
+	public function findCaseResultTaggingsByCase(Cause $cause)
+	{
+		return $this
+			->orm
+			->taggingCaseResults
+			->findBy(['case' => $cause])
+			->fetchAll();
+	}
+
 
 	public function findCaseResultLatestTaggingByCases(array $cases)
 	{
