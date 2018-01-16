@@ -12,9 +12,11 @@ use App\Enums\CaseResult;
 use App\Enums\TaggingStatus;
 use App\Model\Advocates\Advocate;
 use App\Model\Advocates\AdvocateInfo;
+use App\Model\Annulments\Annulment;
 use App\Model\Cause\Cause;
 use App\Model\Documents\Document;
 use App\Model\Services\AdvocateService;
+use App\Model\Services\AnnulmentService;
 use App\Model\Services\CauseService;
 use App\Model\Services\DocumentService;
 use App\Model\Services\TaggingService;
@@ -26,6 +28,7 @@ use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Presenter;
 use Nette\Utils\Strings;
+use Nextras\Orm\Collection\ICollection;
 use Ublaboo\ApiRouter\ApiRoute;
 
 /**
@@ -47,6 +50,9 @@ class CasePresenter extends Presenter
 
 	/** @var TaggingService @inject */
 	public $taggingService;
+
+	/** @var AnnulmentService @inject */
+	public $annulmentService;
 
 	/** @var ILogger @inject */
 	public $auditing;
@@ -77,7 +83,10 @@ class CasePresenter extends Presenter
 	 *                 "public_link": "http://example.com/doc/12AS13LAA0"
 	 *                 "public_local_link": "http://example.com/doc/12AS13LAA0"
 	 *             }
-	 *         ]
+	 *         ],
+	 *         "tagging_result_annuled": true,
+	 *         "tagging_result_annuled_by_id_cases": [2, null],
+	 *         "tagging_result_annuling_id_cases": [],
 	 *     }
 	 * </json>
 	 *
@@ -96,6 +105,10 @@ class CasePresenter extends Presenter
 	 *  - <b>true</b> when tagging is final
 	 *  - <b>false</b> when tagging is not final
 	 *
+	 * Annuling of cases:
+	 *  - When this case is annuled then <b>tagging_result_annuled</b> is true, otherwise false.
+	 *  - When this case is annuled then <b>tagging_result_annuled_by_id_cases</b> contains array with ids of cases which annuled this case (or nulls when we don't have this information)
+	 *  - When this case is annuling any case then <b>tagging_result_annuling_id_cases</b> contains ids of annuled cases
 	 *
 	 * Note: provides only cases which are relevant for advocates portal.
 	 *
@@ -136,9 +149,12 @@ class CasePresenter extends Presenter
 		$results = $this->prepareCasesResults([$case]);
 		$advocateTagging = $this->taggingService->getLatestAdvocateTaggingFor($case);
 
+		/* @var Annulment $annulment */
+		$annulments = $this->annulmentService->findComputedAnnulmentOfCases([$case]);
+		$annuling = $this->annulmentService->findComputedAnnulingOfCases([$case]);
 
 		// Transform to output
-		$output = $this->mapDataToOutput($case, $documents, $results[$id] ?? null, $advocateTagging);
+		$output = $this->mapDataToOutput($case, $documents, $results[$id] ?? null, $advocateTagging, $annulments, $annuling);
 		// Auditing
 		$advocateTaggingId = $advocateTagging ? $advocateTagging->id : null;
 		$advocateId = $advocateTagging && $advocateTagging->advocate ? $advocateTagging->advocate->id : null;
@@ -161,7 +177,7 @@ class CasePresenter extends Presenter
 		return $output;
 	}
 
-	private function mapDataToOutput(Cause $case, array $documents, ?TaggingCaseResult $result, ?TaggingAdvocate $taggingAdvocate)
+	private function mapDataToOutput(Cause $case, array $documents, ?TaggingCaseResult $result, ?TaggingAdvocate $taggingAdvocate, array $annulments, array $annuling)
 	{
 		/** @var AdvocateInfo $currentInfo */
 		$advocate = null;
@@ -194,7 +210,10 @@ class CasePresenter extends Presenter
 					$temp['public_local_link'] = $this->link('//:Document:view', $document->id);
 				}
 				return $temp;
-			}, $documents)
+			}, $documents),
+			'tagging_result_annuled' => isset($annulments[$case->id]) && count($annulments[$case->id]) > 0 ? true : false,
+			'tagging_result_annuled_by_id_cases' => $annulments[$case->id] ?? [],
+			'tagging_result_annuling_id_cases' => $annuling[$case->id] ?? []
 		];
 	}
 }

@@ -12,6 +12,7 @@ use App\Enums\Court;
 use App\Model\Advocates\Advocate;
 use App\Model\Cause\Cause;
 use App\Model\Services\AdvocateService;
+use App\Model\Services\AnnulmentService;
 use App\Model\Services\CauseService;
 use App\Model\Services\TaggingService;
 use App\Utils\TemplateFilters;
@@ -45,6 +46,9 @@ class AdvocateCasesPresenter extends Presenter
 	/** @var ILogger @inject */
 	public $auditing;
 
+	/** @var AnnulmentService @inject */
+	public $annulmentService;
+
 	/**
 	 * Get advocate cases fulfilling given filters (or all when no filters given)
 	 *
@@ -61,7 +65,9 @@ class AdvocateCasesPresenter extends Presenter
 	 *                 "registry_mark": "42 CDO 4000/2016",
 	 *                 "tagging_result": "negative",
 	 *                 "proposition_date": "2016-03-01T01:00:00+01:00",
-	 *                 "decision_date": null
+	 *                 "decision_date": null,
+	 *                 "annuled": true,
+	 *                 "annuled_by_id_cases": [2, null],
 	 *             }
 	 *         ]
 	 *     }
@@ -77,6 +83,10 @@ class AdvocateCasesPresenter extends Presenter
 	 *  - <b>neutral</b>
 	 *  - <b>positive</b>
 	 *  - <b><i>null</i></b> when no result available
+	 *
+	 * Annuling of cases:
+	 *  - When this case is annuled then <b>annuled</b> is true, otherwise false.
+	 *  - When this case is annuled then <b>annuled_by_id_cases</b> contains array with ids of cases which annuled this case (or nulls when we don't have this information)
 	 *
 	 * When additional filter is provided its value is returned in response (in the root).
 	 *
@@ -139,8 +149,9 @@ class AdvocateCasesPresenter extends Presenter
 		}
 		$cases = $this->causeService->findFromAdvocate($advocate, $court, $year, $result);
 		$results = $this->prepareCasesResults($cases->fetchAll());
+		$annulments = $this->annulmentService->findComputedAnnulmentOfCases($cases->fetchAll());
 		// Transform to output
-		$output = $this->mapAdvocateCases($advocateEntity, $cases, $results, $court, $year, $result);
+		$output = $this->mapAdvocateCases($advocateEntity, $cases, $results, $court, $year, $result, $annulments);
 		// Auditing
 		$advocateTaggings = $this->prepareAdvocateTaggings($cases->fetchAll());
 		/** @var Cause $case */
@@ -176,7 +187,7 @@ class AdvocateCasesPresenter extends Presenter
 		return $output;
 	}
 
-	private function mapAdvocateCases(Advocate $advocate, ICollection $cases, array $results, ?int $court, ?int $year, ?string $result)
+	private function mapAdvocateCases(Advocate $advocate, ICollection $cases, array $results, ?int $court, ?int $year, ?string $result, array $annulments)
 	{
 		$output = [
 			'id_advocate' => $advocate->id,
@@ -201,6 +212,8 @@ class AdvocateCasesPresenter extends Presenter
 				'tagging_result' => isset($results[$case->id]) ? $results[$case->id]->caseResult : null,
 				'decision_date' => $case->decisionDate ? $case->decisionDate->format(DateTime::ATOM) : null,
 				'proposition_date' => $case->propositionDate ? $case->propositionDate->format(DateTime::ATOM) : null,
+				'annuled' => isset($annulments[$case->id]) && count($annulments[$case->id]) > 0 ? true : false,
+				'annuled_by_id_cases' => $annulments[$case->id] ?? [],
 			];
 		}
 		return $output;
