@@ -25,6 +25,8 @@ class Normalize
 		}
 		// replace one or more spaces with one
 		$registryMark = preg_replace('!\s+!', ' ', $registryMark);
+		// replace nsčr with nscr
+		$registryMark = preg_replace('! nsčr !', ' nscr ', $registryMark);
 		return $registryMark;
 	}
 
