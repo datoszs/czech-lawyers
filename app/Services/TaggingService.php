@@ -37,6 +37,11 @@ class TaggingService
 		$this->orm->persist($entity);
 	}
 
+	public function remove(IEntity $entity)
+	{
+		$this->orm->remove($entity);
+	}
+
 	public function flush()
 	{
 		$this->orm->flush();
