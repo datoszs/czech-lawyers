@@ -39,3 +39,8 @@ CREATE OR REPLACE VIEW vw_case_for_advocates AS
 		);
 
 COMMENT ON VIEW vw_case_for_advocates IS 'View that contains all cases which are relevant for czech advocates project (as they are in some way completed).';
+
+CREATE OR REPLACE VIEW vw_computed_case_annulment AS
+	SELECT annuled_case, annuling_case FROM "case_annulment"; -- TODO provide proper algorithm when hierarchy will be higher
+
+COMMENT ON VIEW vw_computed_case_annulment IS 'View that contains all annuled cases'

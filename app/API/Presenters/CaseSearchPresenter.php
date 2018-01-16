@@ -5,7 +5,9 @@ namespace App\APIModule\Presenters;
 
 
 use App\Enums\TaggingStatus;
+use App\Model\Annulments\Annulment;
 use App\Model\Cause\Cause;
+use App\Model\Services\AnnulmentService;
 use App\Model\Services\CauseService;
 use App\Model\Services\TaggingService;
 use App\Model\Taggings\TaggingCaseResult;
@@ -32,6 +34,9 @@ class CaseSearchPresenter extends Presenter
 	/** @var TaggingService @inject */
 	public $taggingService;
 
+	/** @var AnnulmentService @inject */
+	public $annulmentService;
+
 	/**
 	 * Get relevant case
 	 * Returns list of matched cases.
@@ -44,12 +49,18 @@ class CaseSearchPresenter extends Presenter
 	 *             "registry_mark": "22 Cdo 2045/2012",
 	 *             "tagging_result": "positive",
 	 *             "tagging_result_final": true,
+	 *             "tagging_result_annuled": true,
+	 *             "tagging_result_annuled_by_id_cases": [2, null],
 	 *         },
 	 *     ]
 	 * </json>
 	 *
 	 * There is one optional GET parameter:
 	 *  - strategy - determines the matching strategy (from <b>start</b>, to <b>end</b> or anywhere in the <b>middle</b>).
+	 *
+	 * Annuling of cases:
+	 *  - When this case is annuled then <b>tagging_result_annuled</b> is true, otherwise false.
+	 *  - When this case is annuled then <b>tagging_result_annuled_by_id_cases</b> contains array with ids of cases which annuled this case (or nulls when we don't have this information)
 	 *
 	 * Note: provides only cases which are relevant for advocates portal.
 	 *
@@ -99,9 +110,10 @@ class CaseSearchPresenter extends Presenter
 		// Load data
 		$cases = $this->caseService->search($query, $start, $count, $strategy);
 		$taggings = $this->prepareCasesResults($cases);
-		$output = array_map(function (Cause $cause) use ($taggings) {
-			return $this->mapCause($cause, $taggings[$cause->id] ?? null);
-		}, $cases);
+		$annulments = $this->annulmentService->findComputedAnnulmentOfCases($cases);
+		$output = array_map(function (Cause $cause) use ($annulments, $taggings) {
+			return $this->mapCause($cause, $taggings[$cause->id] ?? null, $annulments);
+		}, $cases, $annulments);
 		// Send output
 		$this->sendJson($output);
 	}
@@ -116,7 +128,7 @@ class CaseSearchPresenter extends Presenter
 		return $output;
 	}
 
-	private function mapCause(Cause $cause, ?TaggingCaseResult $result)
+	private function mapCause(Cause $cause, ?TaggingCaseResult $result, array $annulments)
 	{
 		return [
 			'id_case' => $cause->id,
@@ -124,6 +136,8 @@ class CaseSearchPresenter extends Presenter
 			'registry_mark' => TemplateFilters::formatRegistryMark($cause->registrySign),
 			'tagging_result' => ($result && $result->status === TaggingStatus::STATUS_PROCESSED) ? $result->caseResult : null,
 			'tagging_result_final' => $result ? $result->isFinal : null,
+			'tagging_result_annuled' => count($annulments) > 0 ? true : false,
+			'tagging_result_annuled_by_id_cases' => $annulments[$cause->id] ?? [],
 		];
 	}
 }
