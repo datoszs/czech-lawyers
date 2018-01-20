@@ -1,5 +1,6 @@
 import {connect} from 'react-redux';
-import {PageTitle} from '..';
+import PropTypes from 'prop-types';
+import {PageTitle as PageTitleComponent} from '..';
 import translate from '../../translate';
 
 const mapStateToProps = (state, {msg, module}) => {
@@ -16,4 +17,13 @@ const mapStateToProps = (state, {msg, module}) => {
     }
 };
 
-export default connect(mapStateToProps)(PageTitle);
+const PageTitle = connect(mapStateToProps)(PageTitleComponent);
+
+PageTitle.propTypes = {
+    msg: PropTypes.string.isRequired,
+    module: PropTypes.shape({
+        getQuery: PropTypes.func.isRequired,
+    }).isRequired,
+};
+
+export default PageTitle;

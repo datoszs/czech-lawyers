@@ -1,5 +1,6 @@
 import {connect} from 'react-redux';
-import {PageTitle} from '../components';
+import PropTypes from 'prop-types';
+import {PageTitle as PageTitleComponent} from '../components';
 import translate from '../translate';
 
 const mapStateToProps = (state, {msg, children, ...params}) => {
@@ -7,4 +8,16 @@ const mapStateToProps = (state, {msg, children, ...params}) => {
     return {children: translate.getMessage(state, 'title.base', {page})};
 };
 
-export default connect(mapStateToProps)(PageTitle);
+const PageTitle = connect(mapStateToProps)(PageTitleComponent);
+
+PageTitle.propTypes = {
+    msg: PropTypes.string,
+    children: PropTypes.string,
+};
+
+PageTitle.defaultProps = {
+    msg: null,
+    children: '',
+};
+
+export default PageTitle;
