@@ -6,7 +6,7 @@ import {Msg} from '..';
 
 const LoadMoreComponent = ({count, loadMore}) => (
     <Alert bsStyle="success">
-        <Msg msg="search.load.more.text" params={{count}} />
+        <Msg msg="search.load.more.text" count={count} />
         &nbsp;
         <Button onClick={loadMore}><Msg msg="search.load.more" /></Button>
     </Alert>

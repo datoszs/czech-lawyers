@@ -10,8 +10,8 @@ const params = {
 
 export default () => (
     <StatementContainer>
-        <ProblemStatement anchor={STATEMENTS_CASES}><Msg msg="statement.cases" params={params} /></ProblemStatement>
-        <ProblemStatement anchor={STATEMENTS_PROCEEDINGS}><Msg msg="statement.proceedings" params={params} /></ProblemStatement>
-        <ProblemStatement anchor={STATEMENTS_ADVOCATES}><Msg msg="statement.advocates" params={params} /></ProblemStatement>
+        <ProblemStatement anchor={STATEMENTS_CASES}><Msg msg="statement.cases" {...params} /></ProblemStatement>
+        <ProblemStatement anchor={STATEMENTS_PROCEEDINGS}><Msg msg="statement.proceedings" {...params} /></ProblemStatement>
+        <ProblemStatement anchor={STATEMENTS_ADVOCATES}><Msg msg="statement.advocates" {...params} /></ProblemStatement>
     </StatementContainer>
 );

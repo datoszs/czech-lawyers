@@ -12,7 +12,7 @@ const getModel = (state) => state.get(NAME);
 export const getMessage = (state, key, params) => {
     const message = getModel(state).get(key);
     if (message) {
-        if (!params) {
+        if (!params || Object.keys(params).length === 0) {
             return message;
         } else {
             return sprintf(message, params);

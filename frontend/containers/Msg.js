@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {Text} from '../components';
 import translate from '../translate';
 
-const mapStateToProps = (state, {msg, params}) => ({
+const mapStateToProps = (state, {msg, ...params}) => ({
     text: translate.getMessage(state, msg, params),
 });
 
@@ -14,13 +14,8 @@ const mapStateToProps = (state, {msg, params}) => ({
  */
 const Msg = connect(mapStateToProps)(Text);
 
-Msg.defaultPropTypes = {
-    params: null,
-};
-
 Msg.propTypes = {
     msg: PropTypes.string.isRequired,
-    params: PropTypes.object, // eslint-disable-line react/forbid-prop-types
 };
 
 export default Msg;
