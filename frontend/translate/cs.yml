@@ -5,6 +5,8 @@ contact.title: Kontakt
 contact.appeal: Napište nám
 copyright: "\xA9 2017 DATOS \u2014 data o spravedlnosti, z. s."
 loading.alert: Váš požadavek se zpracovává, počkejte, prosím.
+title.simple: "O spravedlnosti: O advokátech"
+title.base: "O spravedlnosti: O advokátech - %(page)s"
 
 common.refresh: Obnovit
 common.ok: OK

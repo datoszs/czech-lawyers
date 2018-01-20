@@ -6,9 +6,11 @@ import autocomplete from '../autocomplete';
 import {courts} from '../model';
 import LeaderBoardColumn from './LeaderBoardColumn';
 import ProblemStatements from './ProblemStatements';
+import Title from './Title';
 
 const Container = () => (
     <section>
+        <Title />
         <Jumbotron>
             <RichText msg="home.intro" />
             <ApplicationTitle><Msg msg="app.title" /></ApplicationTitle>
