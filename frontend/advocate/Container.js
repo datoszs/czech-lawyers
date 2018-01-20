@@ -5,6 +5,7 @@ import {PageSubheader, Center} from '../components';
 import {TimelineScroll} from '../components/timeline';
 import {courts} from '../model';
 import Header from './Header';
+import Title from './Title';
 import Detail from './Detail';
 import CakLink from './CakLink';
 import StatisticsContainer from './Statistics';
@@ -17,6 +18,7 @@ import CaseScroller from './CaseScroller';
 
 export default () => (
     <section>
+        <Title />
         <Header />
         <Row>
             <Col sm={6}>

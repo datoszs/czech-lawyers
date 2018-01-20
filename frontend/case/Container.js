@@ -3,12 +3,14 @@ import {Row, Col} from 'react-bootstrap';
 import formstatus from '../formstatus';
 import {FORM} from './constants';
 import Header from './Header';
+import Title from './Title';
 import Detail from './Detail';
 import Documents from './DocumentContainer';
 import DisputeButton from './DisputeButton';
 
 const Container = () => (
     <section>
+        <Title />
         <Header />
         <Row>
             <Col sm={6}>
