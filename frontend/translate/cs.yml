@@ -11,6 +11,7 @@ title.base: "O spravedlnosti: O advokátech - %(page)s"
 common.refresh: Obnovit
 common.ok: OK
 
+search.title: "%(title)s - %(query)s"
 search.button: Hledat
 search.placeholder: Zadejte jméno nebo IČ
 back.button: Zpět
