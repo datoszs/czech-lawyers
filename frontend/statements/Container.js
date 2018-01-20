@@ -10,13 +10,13 @@ const params = {
 export default () => (
     <section>
         <Anchor anchor={STATEMENTS_CASES} />
-        <StatementHeading><RichText msg="statement.cases" params={params} /></StatementHeading>
+        <StatementHeading><RichText msg="statement.cases" {...params} /></StatementHeading>
         <RichText msg="statement.cases.long" />
         <Anchor anchor={STATEMENTS_PROCEEDINGS} />
-        <StatementHeading><Msg msg="statement.proceedings" params={params} /></StatementHeading>
+        <StatementHeading><Msg msg="statement.proceedings" {...params} /></StatementHeading>
         <RichText msg="statement.proceedings.long" />
         <Anchor anchor={STATEMENTS_ADVOCATES} />
-        <StatementHeading><Msg msg="statement.advocates" params={params} /></StatementHeading>
+        <StatementHeading><Msg msg="statement.advocates" {...params} /></StatementHeading>
         <RichText msg="statement.advocates.long" />
     </section>
 );
