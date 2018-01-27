@@ -44,6 +44,7 @@ describe('Case model', () => {
             result: 'negative',
             decision_date: '2016-03-01T01:00:00+01:00',
             proposition_date: '2016-03-04T01:00:00+01:00',
+            tagging_result_annuled: false,
         };
         it('creates valid object', () => {
             const caseObj = new Case(mapDtoToCase(dto));
@@ -61,6 +62,10 @@ describe('Case model', () => {
         });
         it('maps result', () => {
             caseObj.result.should.equal(dto.result);
+        });
+        it('treats result as "annulled" when the case is annulled', () => {
+            const customCaseObj = new Case(mapDtoToCase(Object.assign({}, dto, {tagging_result_annuled: true})));
+            customCaseObj.result.should.equal(result.ANNULLED);
         });
         it('maps decision date', () => {
             caseObj.decisionDate.should.equal(1456790400000);

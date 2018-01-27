@@ -1,7 +1,7 @@
 import invariant from 'invariant';
 import moment from 'moment';
 import {Record} from 'immutable';
-import {checkResult} from './result';
+import result, {checkResult} from './result';
 import {checkCourt} from './courts';
 
 class Case extends Record({
@@ -25,7 +25,7 @@ export const mapDtoToCase = (dto) => ({
     id: dto.id_case,
     court: dto.id_court,
     registry: dto.registry_mark,
-    result: dto.result,
+    result: dto.tagging_result_annuled ? result.ANNULLED : dto.result,
     decisionDate: dto.decision_date && moment(dto.decision_date).valueOf(),
     propositionDate: dto.proposition_date && moment(dto.proposition_date).valueOf(),
 });

@@ -73,6 +73,7 @@ describe('Case Detail model', () => {
             }],
             decision_date: '2016-03-01T01:00:00+01:00',
             proposition_date: '2016-03-04T01:00:00+01:00',
+            tagging_result_annuled: false,
         };
         it('creates valid object', () => {
             const caseDetail = new CaseDetail(mapDtoToCaseDetail(dto));
@@ -96,6 +97,10 @@ describe('Case Detail model', () => {
         });
         it('maps result', () => {
             caseDetail.result.should.equal(dto.tagging_result);
+        });
+        it('treats result as "annulled" when case is annulled', () => {
+            const customCaseDetail = new CaseDetail(mapDtoToCaseDetail(Object.assign({}, dto, {tagging_result_annuled: true})));
+            customCaseDetail.result.should.equal(result.ANNULLED);
         });
         it('maps advocate tagging finality', () => {
             caseDetail.advocateFinal.should.equal(dto.tagging_advocate_final);

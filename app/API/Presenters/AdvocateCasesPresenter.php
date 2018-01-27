@@ -12,6 +12,7 @@ use App\Enums\Court;
 use App\Model\Advocates\Advocate;
 use App\Model\Cause\Cause;
 use App\Model\Services\AdvocateService;
+use App\Model\Services\AnnulmentService;
 use App\Model\Services\CauseService;
 use App\Model\Services\TaggingService;
 use App\Utils\TemplateFilters;
@@ -42,6 +43,9 @@ class AdvocateCasesPresenter extends Presenter
 	/** @var TaggingService @inject */
 	public $taggingService;
 
+	/** @var AnnulmentService @inject */
+	public $annulmentService;
+
 	/** @var ILogger @inject */
 	public $auditing;
 
@@ -61,7 +65,9 @@ class AdvocateCasesPresenter extends Presenter
 	 *                 "registry_mark": "42 CDO 4000/2016",
 	 *                 "result": "negative",
 	 *                 "proposition_date": "2016-03-01T01:00:00+01:00",
-	 *                 "decision_date": null
+	 *                 "decision_date": null,
+	 * 				   "annuled": true,
+	 * 				   "annuling_id_case": 2,
 	 *             }
 	 *         ]
 	 *     }
@@ -139,8 +145,9 @@ class AdvocateCasesPresenter extends Presenter
 		}
 		$cases = $this->causeService->findFromAdvocate($advocate, $court, $year, $result);
 		$results = $this->prepareCasesResults($cases->fetchAll());
+		$annulments = $this->prepareCasesAnnulments($cases->fetchAll()); //todo
 		// Transform to output
-		$output = $this->mapAdvocateCases($advocateEntity, $cases, $results, $court, $year, $result);
+		$output = $this->mapAdvocateCases($advocateEntity, $cases, $results, $annulments, $court, $year, $result);
 		// Auditing
 		$advocateTaggings = $this->prepareAdvocateTaggings($cases->fetchAll());
 		/** @var Cause $case */
@@ -166,6 +173,16 @@ class AdvocateCasesPresenter extends Presenter
 		return $output;
 	}
 
+	private function prepareCasesAnnulments($data)
+	{
+		$output = [];
+		$temp = $this->annulmentService->findCaseAnnulmentByCases($data);
+		foreach ($temp as $row) {
+			$output[$row->annuledCase->id] = $row;
+		}
+		return $output;
+	}
+
 	private function prepareAdvocateTaggings(array $causes): array
 	{
 		$output = [];
@@ -176,7 +193,7 @@ class AdvocateCasesPresenter extends Presenter
 		return $output;
 	}
 
-	private function mapAdvocateCases(Advocate $advocate, ICollection $cases, array $results, ?int $court, ?int $year, ?string $result)
+	private function mapAdvocateCases(Advocate $advocate, ICollection $cases, array $results, array $annulments, ?int $court, ?int $year, ?string $result)
 	{
 		$output = [
 			'id_advocate' => $advocate->id,
@@ -201,6 +218,8 @@ class AdvocateCasesPresenter extends Presenter
 				'result' => isset($results[$case->id]) ? $results[$case->id]->caseResult : null,
 				'decision_date' => $case->decisionDate ? $case->decisionDate->format(DateTime::ATOM) : null,
 				'proposition_date' => $case->propositionDate ? $case->propositionDate->format(DateTime::ATOM) : null,
+				'annuled' => isset($annulments[$case->id]) ? true : false, //todo
+				'annuling_id_case' => isset($annulments[$case->id]) ? ($annulments[$case->id]->annulingCase ? $annulments[$case->id]->annulingCase->id : null) : null
 			];
 		}
 		return $output;
