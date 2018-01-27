@@ -1,9 +1,10 @@
 import React from 'react';
 import {PageHeader, Row, Col, Panel, Button} from 'react-bootstrap';
-import {Msg, RichText} from '../containers';
+import {Msg, PageTitle, RichText} from '../containers';
 
 export default () => (
     <section>
+        <PageTitle msg="export.title" />
         <PageHeader><Msg msg="export.title" /></PageHeader>
         <Row>
             <Col sm={6}>
