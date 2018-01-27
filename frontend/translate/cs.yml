@@ -5,13 +5,13 @@ contact.title: Kontakt
 contact.appeal: Napište nám
 copyright: "\xA9 2017 DATOS \u2014 data o spravedlnosti, z. s."
 loading.alert: Váš požadavek se zpracovává, počkejte, prosím.
-title.simple: "O spravedlnosti: O advokátech"
-title.base: "O spravedlnosti: O advokátech - %(page)s"
+title.simple: "O spravedlnosti: O advokátech - statistiky o vystupování advokátů před nejvyššími soudy ČR"
+title.base: "%(page)s | O spravedlnosti: O advokátech"
 
 common.refresh: Obnovit
 common.ok: OK
 
-search.title: "%(title)s - %(query)s"
+search.title: "%(query)s - %(title)s"
 search.button: Hledat
 search.placeholder: Zadejte jméno nebo IČ
 back.button: Zpět
