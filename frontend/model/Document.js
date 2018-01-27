@@ -18,7 +18,7 @@ export const mapDtoToDocument = (dto) => ({
     id: dto.id_document,
     mark: dto.mark,
     date: moment(dto.decision_date).valueOf(),
-    link: dto.public_link ? dto.public_local_link : null,
+    link: dto.public_local_link,
 });
 
 export default Document;
