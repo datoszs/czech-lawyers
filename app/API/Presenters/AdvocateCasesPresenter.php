@@ -53,13 +53,13 @@ class AdvocateCasesPresenter extends Presenter
 	 *         "id_advocate": 123,
 	 *         "id_court": 2,
 	 *         "year": 2016
-	 *         "result":
+	 *         "result": "negative"
 	 *         "cases" : [
 	 *             {
 	 *                 "id_case": 25,
 	 *                 "id_court": 2,
 	 *                 "registry_mark": "42 CDO 4000/2016",
-	 *                 "result": "negative",
+	 *                 "tagging_result": "negative",
 	 *                 "proposition_date": "2016-03-01T01:00:00+01:00",
 	 *                 "decision_date": null
 	 *             }
@@ -78,7 +78,7 @@ class AdvocateCasesPresenter extends Presenter
 	 *  - <b>positive</b>
 	 *  - <b><i>null</i></b> when no result available
 	 *
-	 * When additional filter is provided its value is returned in response.
+	 * When additional filter is provided its value is returned in response (in the root).
 	 *
 	 * Note: provides only cases which are relevant for advocates portal.
 	 *
@@ -198,7 +198,7 @@ class AdvocateCasesPresenter extends Presenter
 				'id_case' => $case->id,
 				'id_court' => $case->court->id,
 				'registry_mark' => TemplateFilters::formatRegistryMark($case->registrySign),
-				'result' => isset($results[$case->id]) ? $results[$case->id]->caseResult : null,
+				'tagging_result' => isset($results[$case->id]) ? $results[$case->id]->caseResult : null,
 				'decision_date' => $case->decisionDate ? $case->decisionDate->format(DateTime::ATOM) : null,
 				'proposition_date' => $case->propositionDate ? $case->propositionDate->format(DateTime::ATOM) : null,
 			];
