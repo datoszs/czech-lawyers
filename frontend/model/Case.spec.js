@@ -41,7 +41,7 @@ describe('Case model', () => {
             id_case: 25,
             id_court: 2,
             registry_mark: '42 CDO 4000/2016',
-            result: 'negative',
+            tagging_result: 'negative',
             decision_date: '2016-03-01T01:00:00+01:00',
             proposition_date: '2016-03-04T01:00:00+01:00',
         };
@@ -60,7 +60,7 @@ describe('Case model', () => {
             caseObj.registry.should.equal(dto.registry_mark);
         });
         it('maps result', () => {
-            caseObj.result.should.equal(dto.result);
+            caseObj.result.should.equal(dto.tagging_result);
         });
         it('maps decision date', () => {
             caseObj.decisionDate.should.equal(1456790400000);
