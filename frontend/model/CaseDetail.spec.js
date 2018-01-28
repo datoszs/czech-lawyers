@@ -50,6 +50,7 @@ describe('Case Detail model', () => {
                 mark: 'ECLI:CZ:NS:2010:20.CDO.2696.2010.1',
                 date: 1490347289000,
                 link: 'http://nsoud.cz/Judikatura/judikatura_ns.nsf/WebPrint/06FEB14C62D9D3B9C1257A4E0065FDFD?openDocument',
+                is_available: true,
             }],
         });
         const caseDetail = new CaseDetail(template);
@@ -70,6 +71,7 @@ describe('Case Detail model', () => {
                 decision_date: '2010-08-17T02:00:00+02:00',
                 public_link: 'http://nsoud.cz/Judikatura/judikatura_ns.nsf/WebPrint/06FEB14C62D9D3B9C1257A4E0065FDFD?openDocument',
                 public_local_link: 'https://www.cestiadvokati.cz/public/document/view/108429',
+                is_available: true,
             }],
             decision_date: '2016-03-01T01:00:00+01:00',
             proposition_date: '2016-03-04T01:00:00+01:00',
@@ -136,6 +138,28 @@ describe('Case Detail model', () => {
         it('should handle empty proposition date', () => {
             const customCaseDetail = new CaseDetail(mapDtoToCaseDetail(Object.assign({}, dto, {decision_date: null})));
             expect(customCaseDetail.decisionDate).to.be.null();
+        });
+        it('drops all unavailable documents', () => {
+            const documents = [
+                {
+                    id_document: 94001,
+                    mark: 'ECLI:CZ:NS:2010:20.CDO.2696.2010.1',
+                    decision_date: '2010-08-17T02:00:00+02:00',
+                    public_link: 'http://nsoud.cz/Judikatura/judikatura_ns.nsf/WebPrint/06FEB14C62D9D3B9C1257A4E0065FDFD?openDocument',
+                    public_local_link: 'https://www.cestiadvokati.cz/public/document/view/108429',
+                    is_available: true,
+                },
+                {
+                    id_document: 94002,
+                    mark: 'ECLI:CZ:NS:2010:20.CDO.2696.2010.1',
+                    decision_date: '2010-08-17T02:00:00+02:00',
+                    public_link: 'http://nsoud.cz/Judikatura/judikatura_ns.nsf/WebPrint/06FEB14C62D9D3B9C1257A4E0065FDFD?openDocument',
+                    public_local_link: 'https://www.cestiadvokati.cz/public/document/view/108429',
+                    is_available: false,
+                },
+            ];
+            const customCaseDetail = new CaseDetail(mapDtoToCaseDetail(Object.assign({}, dto, {documents})));
+            customCaseDetail.documents.should.deep.equal(List.of(94001));
         });
     });
 });

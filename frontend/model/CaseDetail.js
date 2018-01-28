@@ -35,7 +35,7 @@ export const mapDtoToCaseDetail = (dto) => ({
     advocateId: dto.tagging_advocate && dto.tagging_advocate.id_advocate,
     advocateName: dto.tagging_advocate && dto.tagging_advocate.fullname,
     result: dto.tagging_result,
-    documents: dto.documents.map(mapDtoToDocument),
+    documents: dto.documents.filter((document) => document.is_available).map(mapDtoToDocument),
     advocateFinal: !!dto.tagging_advocate_final,
     resultFinal: !!dto.tagging_result_final,
     propositionDate: dto.proposition_date && moment(dto.proposition_date).valueOf(),
