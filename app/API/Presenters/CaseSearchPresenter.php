@@ -136,7 +136,7 @@ class CaseSearchPresenter extends Presenter
 			'registry_mark' => TemplateFilters::formatRegistryMark($cause->registrySign),
 			'tagging_result' => ($result && $result->status === TaggingStatus::STATUS_PROCESSED) ? $result->caseResult : null,
 			'tagging_result_final' => $result ? $result->isFinal : null,
-			'tagging_result_annuled' => count($annulments) > 0 ? true : false,
+			'tagging_result_annuled' => isset($annulments[$cause->id]) && count($annulments[$cause->id]) > 0 ? true : false,
 			'tagging_result_annuled_by_id_cases' => $annulments[$cause->id] ?? [],
 		];
 	}

@@ -212,7 +212,7 @@ class AdvocateCasesPresenter extends Presenter
 				'result' => isset($results[$case->id]) ? $results[$case->id]->caseResult : null,
 				'decision_date' => $case->decisionDate ? $case->decisionDate->format(DateTime::ATOM) : null,
 				'proposition_date' => $case->propositionDate ? $case->propositionDate->format(DateTime::ATOM) : null,
-				'annuled' => count($annulments) > 0 ? true : false,
+				'annuled' => isset($annulments[$case->id]) && count($annulments[$case->id]) > 0 ? true : false,
 				'annuled_by_id_cases' => $annulments[$case->id] ?? [],
 			];
 		}

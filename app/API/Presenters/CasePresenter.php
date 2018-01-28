@@ -204,7 +204,7 @@ class CasePresenter extends Presenter
 					'public_local_link' => $this->link('//:Document:view', $document->id),
 				];
 			}, $documents),
-			'tagging_result_annuled' => count($annulments) > 0 ? true : false,
+			'tagging_result_annuled' => isset($annulments[$case->id]) && count($annulments[$case->id]) > 0 ? true : false,
 			'tagging_result_annuled_by_id_cases' => $annulments[$case->id] ?? [],
 			'tagging_result_annuling_id_cases' => $annuling[$case->id] ?? []
 		];
