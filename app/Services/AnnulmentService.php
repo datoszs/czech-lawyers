@@ -39,7 +39,7 @@ class AnnulmentService
 		return $this->orm->annulments->getById($id);
 	}
 
-	public function getPair(Cause $annuledCase, Cause $annulingCase): ?Annulment
+	public function getPair(Cause $annuledCase, $annulingCase): ?Annulment
 	{
 		$entity = $this->orm->annulments->getBy([
 			'annuledCase' => $annuledCase,
@@ -94,7 +94,7 @@ class AnnulmentService
 		return $output;
 	}
 
-	public function createAnnulment(Cause $annuledCase, Cause $annulingCase, JobRun $jobRun = null): Annulment
+	public function createAnnulment(Cause $annuledCase, $annulingCase, JobRun $jobRun = null): Annulment
 	{
 		$entity = new Annulment();
 		$entity->annuledCase = $annuledCase;
