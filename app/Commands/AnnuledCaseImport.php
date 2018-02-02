@@ -113,16 +113,15 @@ class AnnuledCaseImport extends Command
 		$csv->setDelimiter($delimiter);
 		$firstRow = $csv->fetchOne();
 		if (!$firstRow || count($firstRow) < 2) {
-			throw new InvalidArgumentException(sprintf('Empty file or bad delimiter.'));
+			throw new InvalidArgumentException(sprintf('Empty file, bad delimiter or invalid content.'));
 		}
 		$csv->setOffset(1); // skip column names
-		$rows = $csv->fetchAll();
+		$rows = $csv->fetchAssoc($firstRow);
 		$new = 0;
 		$bad = 0;
 		foreach ($rows as $row) {
-			$item = array_combine($firstRow, $row);
-			$annuledRegistryMark = Normalize::registryMark($item[$firstRow[0]]);
-			$annulingRegistryMark = Normalize::registryMark($item[$firstRow[1]]);
+			$annuledRegistryMark = Normalize::registryMark($row[$firstRow[0]]);
+			$annulingRegistryMark = Normalize::registryMark($row[$firstRow[1]]);
 
 			/* @var Cause $annuledCase */
 			/* @var Cause $annulingCase */
@@ -144,13 +143,14 @@ class AnnuledCaseImport extends Command
 			if ($entity != null) {
 				//$consoleOutput->writeln("Existuje: " . $annuledCase->registrySign . "; " . $annulingCase->registrySign);
 				continue;
+			}  else {
+				$new++;
 			}
 
 			// Store result
 			if ($dryRun) {
-				$consoleOutput->writeln(sprintf("%s\n%s\n\n", $annuledRegistryMark, print_r($item)));
+				$consoleOutput->writeln($annuledRegistryMark . "\n" . print_r($row, true));
 			} else {
-				$new++;
 				$this->annulmentService->createAnnulment($annuledCase, $annulingCase, $this->jobRun);
 			}
 		}
@@ -188,5 +188,6 @@ class AnnuledCaseImport extends Command
 		if ($code !== self::RETURN_CODE_SUCCESS) {
 			$consoleOutput->writeln($message);
 		}
+		return $code;
 	}
 }
