@@ -54,6 +54,7 @@ services:
 	- App\Model\Services\TaggingService
 	- App\Model\Services\DisputationService
 	- App\Model\Services\StatisticsService
+	- App\Model\Services\AnnulmentService
 	# Factories
 	- App\Components\LoginForm\LoginFormFactory
 	- App\Components\UserForm\UserFormFactory
@@ -99,6 +100,8 @@ console:
 		- App\Commands\AdvocateScoreUpdate
 		- App\Commands\CrawlerManual
 		- App\Commands\SendBatchEmail
+		- App\Commands\AnnuledCaseImport
+
 
 orm:
 	model: App\Model\Orm

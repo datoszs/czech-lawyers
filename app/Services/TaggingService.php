@@ -140,7 +140,8 @@ class TaggingService
 		JOIN vw_case_for_advocates ON "case".id_case = "vw_case_for_advocates".id_case 
 		JOIN vw_latest_tagging_case_result AS last_taggings ON "case".id_case = last_taggings.case_id AND last_taggings.status = %s
 		JOIN vw_latest_tagging_advocate AS last_taggings_advocate ON "case".id_case = last_taggings_advocate.case_id AND last_taggings_advocate.status = %s
-		WHERE advocate_id IN %?i[]
+		LEFT JOIN vw_computed_case_annulment AS case_anulled ON case_anulled.annuled_case = "case".id_case
+		WHERE advocate_id IN %?i[] AND case_anulled.annuled_case IS NULL
 		GROUP BY "case".court_id, advocate_id, case_result
 		',
 			TaggingStatus::STATUS_PROCESSED,
@@ -174,7 +175,8 @@ class TaggingService
 		JOIN vw_case_for_advocates ON "case".id_case = "vw_case_for_advocates".id_case 
 		JOIN vw_latest_tagging_case_result AS last_taggings ON "case".id_case = last_taggings.case_id AND last_taggings.status = %s
 		JOIN vw_latest_tagging_advocate AS last_taggings_advocate ON "case".id_case = last_taggings_advocate.case_id AND last_taggings_advocate.status = %s
-		WHERE TRUE
+		LEFT JOIN vw_computed_case_annulment AS case_anulled ON case_anulled.annuled_case = "case".id_case
+		WHERE case_anulled.annuled_case IS NULL
 		GROUP BY "case".court_id, case_result
 		',
 			TaggingStatus::STATUS_PROCESSED,
@@ -204,7 +206,8 @@ class TaggingService
 		JOIN vw_case_for_advocates ON "case".id_case = "vw_case_for_advocates".id_case
 		JOIN vw_latest_tagging_case_result AS last_taggings ON "case".id_case = last_taggings.case_id AND last_taggings.status = %s 
 		JOIN vw_latest_tagging_advocate AS last_taggings_advocate ON "case".id_case = last_taggings_advocate.case_id AND last_taggings_advocate.status = %s
-		WHERE advocate_id = %i AND (%?i IS NULL OR "case".court_id = %?i)
+		LEFT JOIN vw_computed_case_annulment AS case_anulled ON case_anulled.annuled_case = "case".id_case
+		WHERE advocate_id = %i AND (%?i IS NULL OR "case".court_id = %?i) AND case_anulled.annuled_case IS NULL
 		GROUP BY "case".year, case_result
 		',
 			TaggingStatus::STATUS_PROCESSED,

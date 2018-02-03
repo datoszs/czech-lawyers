@@ -65,6 +65,7 @@ court.all: Všechny soudy
 result.positive: Meritorní
 result.negative: Nemeritorní
 result.neutral: Zastavení řízení
+result.annulled: Zrušeno
 
 cases.title: Případy
 case.search.title: Vyhledávání případů

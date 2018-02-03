@@ -28,7 +28,7 @@ CaseDetail.propTypes = {
     result: PropTypes.string,
     date: PropTypes.string,
     handleDetail: PropTypes.func.isRequired,
-    resultName: PropTypes.oneOf(['positive', 'negative', 'neutral']),
+    resultName: PropTypes.oneOf(['positive', 'negative', 'neutral', 'annulled']),
     href: PropTypes.string.isRequired,
 };
 
