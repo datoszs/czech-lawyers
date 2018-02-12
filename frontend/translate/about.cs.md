@@ -37,7 +37,9 @@ Způsob zpracování rozhodnutí
 U zpracovávaných konečných rozhodnutí zjišťujeme, zda jde o:
 - **meritorní konečné rozhodnutí** (to znamená, že se podáním soud alespoň zčásti co do obsahu zabýval);
 - **nemeritorní konečné rozhodnutí** (to znamená, že se podáním soud co do obsahu vůbec nezabýval);
-- **rozhodnutí o zastavení řízení** (to znamená, že podání bylo pravděpodobně vzato zpět či například nedošlo k zaplacení soudního poplatku).
+- **rozhodnutí o zastavení řízení** (to znamená, že podání bylo pravděpodobně vzato zpět či například nedošlo k zaplacení soudního poplatku);
+- **zrušené konečné rozhodnutí** (některá konečná rozhodnutí Nejvyššího soudu a Nejvyššího správního soudu byla zrušena Ústavním
+soudem a některá rozhodnutí Ústavního soudu byla zrušena v důsledku rozhodnutí Evropského soudu pro lidská práva, tato rozhodnutí se ve statistikách advokátů neprojevují).
 
 Ke každému konečnému rozhodnutí (unikátní spisové značce) se pak jednou za čtvrt roku snažíme na základě informací poskytnutých
 soudy přiřadit konkrétního advokáta, na jehož podání toto rozhodnutí reaguje.
@@ -72,18 +74,14 @@ rozhodnutí (odkaz na vyhledávání je v horní liště) nebo kliknutím na dan
 Pokud tlačítko na stránce konečného rozhodnutí (případu) nenajdete, znamená to, že již bylo “ručně” zpracováno.
 Chcete-li zpochybnit správnost “ručního” zpracování, [napište nám](/contact). 
 
-Na závěr tři upozornění. Zaprvé je třeba upozornit, že **Nejvyšší soud a Ústavní soud** nemeritorní konečná rozhodnutí
+Na závěr dvě upozornění. Zaprvé je třeba upozornit, že **Nejvyšší soud a Ústavní soud** nemeritorní konečná rozhodnutí
 (tedy rozhodnutí nezabývající se obsahem podání) vydávají nejen tehdy, když se na ně advokát obrátí pozdě, například
 nepřiloží potřebné materiály nebo když tak učiní v situaci, kdy to zákon nepřipouští. **Nemeritorní konečná rozhodnutí
 mohou vydat také v případě, že advokátovo podání považují za “zjevně neopodstatněné”.** Pro advokáta může být naneštěstí
 (vzhledem k ne zcela konzistentní rozhodovací praxi těchto soudů) obtížné z jejich předchozích rozhodnutí vysledovat,
 co ještě za “opodstatněné” považují a co už nikoliv.
 
-Zadruhé upozorňujeme, že **některá konečná rozhodnutí Nejvyššího soudu a Nejvyššího správního soudu byla zrušena Ústavním
-soudem a některá rozhodnutí Ústavního soudu byla zrušena v důsledku rozhodnutí Evropského soudu pro lidská práva**.
-Zrušená rozhodnutí Ústavního soudu žádnému advokátu přiřazena nejsou. Vzhledem k tomu, že Nejvyšší správní soud případná nová konečná rozhodnutí, která zrušená “nahradila”, vydal pod stejnou spisovou značkou, je danému advokátu přiřazen pouze výsledek řízení následujícího po zrušení předchozího rozhodnutí. Ostatní zrušená konečná rozhodnutí (Nejvyššího soudu a část rozhodnutí Nejvyššího správního soudu) jsou bohužel prozatím advokátům přiřazena. Na nápravě této situace pracujeme.
-
-Zatřetí je pak třeba zmínit, že **některá konečná rozhodnutí byla vydána v řízeních, pro něž byl advokát navrhovateli ustanoven soudem či určen Českou advokátní komorou**. Soudy zpravidla advokáta navrhovateli neustanoví, je-li návrh zjevně bezúspěšný, z podobného důvodu pak není advokát povinen ani respektovat určení Komorou. Nadto má advokát, za určitých podmínek, možnost požádat o zrušení ustanovení nebo požádat Komoru o určení jiného advokáta. Nicméně i navzdory právě uvedenému je možné, že v některých případech neměl ustanovený či určený advokát možnost volby a návrh, o němž bylo nakonec rozhodováno nemeritorně, podat (z různých důvodů) musel.
+Zadruhé upozorňujeme, že **některá konečná rozhodnutí byla vydána v řízeních, pro něž byl advokát navrhovateli ustanoven soudem či určen Českou advokátní komorou**. Soudy zpravidla advokáta navrhovateli neustanoví, je-li návrh zjevně bezúspěšný, z podobného důvodu pak není advokát povinen ani respektovat určení Komorou. Nadto má advokát za určitých podmínek možnost požádat o zrušení ustanovení nebo požádat Komoru o určení jiného advokáta. Nicméně i navzdory právě uvedenému je možné, že v některých případech neměl ustanovený či určený advokát možnost volby a návrh, o němž bylo nakonec rozhodováno nemeritorně, podat (z různých důvodů) musel.
 
 Pokud byste o tom, na základě čeho a jak statistiky zobrazované na tomto webu počítáme, chtěli vědět více,
 můžete nahlédnout do [zdrojového kódu](https://github.com/datoszs) celého projektu nebo [nás kontaktovat](/contact).
