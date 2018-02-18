@@ -3,20 +3,17 @@
 namespace App\Commands;
 
 
-use App\Model\Annulments\Annulment;
 use App\Model\Cause\Cause;
 use App\Model\Services\AnnulmentService;
 use App\Model\Services\CauseService;
 
-use App\Utils\Helpers;
 use App\Utils\Normalize;
 use App\Utils\JobCommand;
-use DateTimeImmutable;
 use League\Csv\Reader;
-use Nette\Neon\Exception;
 use Nette\Utils\Strings;
 use Nextras\Dbal\Connection;
 use Symfony\Component\Console\Command\Command;
+
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -120,13 +117,20 @@ class AnnuledCaseImport extends Command
 		$new = 0;
 		$bad = 0;
 		foreach ($rows as $row) {
+
 			$annuledRegistryMark = Normalize::registryMark($row[$firstRow[0]]);
 			$annulingRegistryMark = Normalize::registryMark($row[$firstRow[1]]);
 
+
 			/* @var Cause $annuledCase */
 			/* @var Cause $annulingCase */
-			$annuledCase = $this->findWithConversion($annuledRegistryMark);
-			$annulingCase = $this->findWithConversion($annulingRegistryMark);
+			try {
+				$annuledCase = $this->findWithConversion($annuledRegistryMark);
+				$annulingCase = $this->findWithConversion($annulingRegistryMark);
+			} catch (InvalidArgumentException $e) {
+				$consoleOutput->writeln(sprintf($e->getMessage()));
+				continue;
+			}
 			if ($annuledCase == null) {
 				$consoleOutput->writeln(sprintf('Case (annuled) with registry mark [%s] not exists.', $annuledRegistryMark));
 				$bad++;
@@ -143,7 +147,7 @@ class AnnuledCaseImport extends Command
 			if ($entity != null) {
 				//$consoleOutput->writeln("Existuje: " . $annuledCase->registrySign . "; " . $annulingCase->registrySign);
 				continue;
-			}  else {
+			} else {
 				$new++;
 			}
 
