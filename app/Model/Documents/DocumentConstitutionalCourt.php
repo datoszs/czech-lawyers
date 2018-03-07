@@ -34,7 +34,7 @@ use Nextras\Orm\Entity\Entity;
  * @property string|null		$note
  * @property array|null			$names
  */
-class DocumentLawCourt extends Entity
+class DocumentConstitutionalCourt extends Entity
 {
 
 }

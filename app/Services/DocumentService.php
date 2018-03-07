@@ -78,7 +78,7 @@ class DocumentService
 		} elseif ($document->court->id == CourtEnum::TYPE_NS) {
 			return $this->orm->documentsSupremeCourt->getByDocumentId($document->id)->fetch();
 		} elseif ($document->court->id == CourtEnum::TYPE_US) {
-			return $this->orm->documentsLawCourt->getByDocumentId($document->id)->fetch();
+			return $this->orm->documentsConstitutionalCourt->getByDocumentId($document->id)->fetch();
 		}
 		return null;
 	}

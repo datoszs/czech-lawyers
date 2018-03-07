@@ -4,7 +4,7 @@ namespace App\Model\Documents;
 use Mikulas\OrmExt\MappingFactory;
 use Nextras\Orm\Mapper\Mapper;
 
-class DocumentsLawCourtMapper extends Mapper
+class DocumentsConstitutionalCourtMapper extends Mapper
 {
 	protected function createStorageReflection()
 	{

@@ -3,7 +3,7 @@ namespace App\Model\Documents;
 
 use Nextras\Orm\Repository\Repository;
 
-class DocumentsLawCourtRepository extends Repository
+class DocumentsConstitutionalCourtRepository extends Repository
 {
 
 	/**
@@ -12,7 +12,7 @@ class DocumentsLawCourtRepository extends Repository
 	 */
 	public static function getEntityClassNames()
 	{
-		return [DocumentLawCourt::class];
+		return [DocumentConstitutionalCourt::class];
 	}
 
 	public function getByDocumentId(int $documentId)

@@ -7,7 +7,7 @@ use App\Model\Court\CourtsRepository;
 use App\Model\Disputes\DisputeRepository;
 use App\Model\Advocates\AdvocateInfosRepository;
 use App\Model\Advocates\AdvocatesRepository;
-use App\Model\Documents\DocumentsLawCourtRepository;
+use App\Model\Documents\DocumentsConstitutionalCourtRepository;
 use App\Model\Documents\DocumentsRepository;
 use App\Model\Documents\DocumentsSupremeAdministrativeCourtRepository;
 use App\Model\Documents\DocumentsSupremeCourtRepository;
@@ -29,7 +29,7 @@ use Nextras\Orm\Model\Model;
  * @property-read DocumentsRepository $documents
  * @property-read DocumentsSupremeCourtRepository $documentsSupremeCourt
  * @property-read DocumentsSupremeAdministrativeCourtRepository $documentsSupremeAdministrativeCourt
- * @property-read DocumentsLawCourtRepository $documentsLawCourt
+ * @property-read DocumentsConstitutionalCourtRepository $documentsConstitutionalCourt
  * @property-read AdvocatesRepository $advocates
  * @property-read AdvocateInfosRepository $advocatesInfo
  * @property-read TaggingCaseResultsRepository $taggingCaseResults

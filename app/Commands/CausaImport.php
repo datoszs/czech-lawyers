@@ -1,10 +1,12 @@
 <?php
+
 namespace App\Commands;
 
 
 use App\Enums\Court;
 use App\Model\Court\Court as CourtEntity;
 use App\Model\Documents\Document;
+use App\Model\Documents\DocumentConstitutionalCourt;
 use App\Model\Documents\DocumentLawCourt;
 use App\Model\Documents\DocumentSupremeAdministrativeCourt;
 use App\Model\Documents\DocumentSupremeCourt;
@@ -141,27 +143,6 @@ class CausaImport extends Command
 		return $code;
 	}
 
-	private function getCourt($courtId)
-	{
-		if (!$this->court || $this->court->id != $courtId) {
-			$this->court = $this->courtService->getById($courtId);
-		}
-		return $this->court;
-	}
-
-	/**
-	 * Update case dates (proposition_date, decision_date) from document's metadata
-	 * only for ÚS and NSS
-	 */
-	private function updateCauseDate($case, $row) {
-		if (!$case->decisionDate && $row['decision_date']) {$case->decisionDate = $row['decision_date'];}
-		if (!$case->propositionDate) {
-			$case->propositionDate = ($this->court->id == 1) ? $row['proposition_date'] : $row['filing_date'];}
-		if (!$case->propositionDate || !$case->decisionDate) {
-			$this->causeService->save($case);
-		}
-	}
-
 	/**
 	 * Expects validate directory with data to import.
 	 * Note: executed in transaction
@@ -172,6 +153,7 @@ class CausaImport extends Command
 	 * @param boolean $overwrite whether the files should be overwritten
 	 * @param boolean $update whether the records should be updated
 	 * @return array where first is number of imported and second number of duplicated items.
+	 * @throws \Nette\Utils\JsonException
 	 */
 	public function processDirectory(OutputInterface $consoleOutput, &$output, $courtId, $directory, $overwrite, $update)
 	{
@@ -210,10 +192,12 @@ class CausaImport extends Command
 				// Year in ECLI can be different from date in registry_mark
 				$document->case = $this->causeService->findOrCreate($court, Normalize::registryMark($row['registry_mark']), $this->getYear($row), $this->jobRun);
 				$document->jobRun = $this->jobRun;
-
 			} elseif ($entity && $update) {
 				// if update and exist document find extra data
 				$document = $entity;
+				$document->webPath = (string)$row['web_path'];
+				$document->localPath = $destinationDirRelative . (string)$row['local_path'];
+				$document->decisionDate = new DateTime($row['decision_date']);
 				$toUpdate = $this->documentService->findExtraData($document);
 			}
 			if ($courtId == Court::TYPE_NS) {
@@ -229,49 +213,12 @@ class CausaImport extends Command
 					continue;
 				}
 				$extras = ($update) ? $toUpdate : new DocumentSupremeAdministrativeCourt();
-				$extras->document = $document;
-				$extras->orderNumber = $row['order_number'];
-				$extras->decision = $row['decision'];
-				$extras->decisionType = $row['decision_type'];
-				// More metadata
-				$extras->complaint = ($row['complaint'] != "") ? $row['complaint'] : null;
-				$extras->sides = ($row['sides'] != "") ? Json::decode($row['sides'], true) : null;
-				$extras->prejudicate = ($row['prejudicate'] != "") ? Json::decode($row['prejudicate'], true) : null;
-
+				$this->setSupremeAdministrativeCourtDocument($document, $extras, $row);
 				$this->updateCauseDate($document->case, $row);
 			} elseif ($courtId == Court::TYPE_US) {
-				$extras = ($update) ? $toUpdate : new DocumentLawCourt();
-				$extras->document = $document;
-				$extras->ecli = $row['ecli'];
-				$extras->formDecision = $row['form_decision'];
-				$extras->decisionResult = $row['decision_result'];
-				// More metadata
-				$extras->paralelReferenceLaws = ($row['paralel_reference_laws'] != '') ? $row['paralel_reference_laws'] : null;
-				$extras->paralelReferenceJudgements = ($row['paralel_reference_judgements'] != '') ? $row['paralel_reference_judgements'] : null;
-				$extras->popularTitle = ($row['popular_title'] != '') ? $row['popular_title'] : null;
-				$extras->deliveryDate = ($row['delivery_date'] != '') ? new DateTime($row['delivery_date']) : null;
-				$extras->decisionDate = ($row['decision_date'] != '') ? new DateTime($row['decision_date']) : null;
-				$extras->filingDate = ($row['filing_date'] != '') ? new DateTime($row['filing_date']) : null;
-				$extras->publicationDate = ($row['publication_date'] != '') ? new DateTime($row['publication_date']) : null;
-				$extras->proceedingsType = ($row['proceedings_type'] != '') ? $row['proceedings_type'] : null;
-				$extras->importance = ($row['importance'] != '') ? $row['importance'] : null;
-				$extras->proposer = ($row['proposer'] != '') ? Json::decode($row['proposer'], true) : null;
-				$extras->institutionConcerned = ($row['institution_concerned'] != '') ? Json::decode($row['institution_concerned'], true) : null;
-				$extras->justiceRapporteur = ($row['justice_rapporteur'] != '') ? $row['justice_rapporteur'] : null;
-				$extras->contestedAct = ($row['contested_act'] != '') ? Json::decode($row['contested_act'], true) : null;
-				$extras->concernedLaws = ($row['concerned_laws'] != '') ? Json::decode($row['concerned_laws'], true) : null;
-				$extras->concernedOther = ($row['concerned_other'] != '') ? Json::decode($row['concerned_other'], true) : null;
-				$extras->dissentingOpinion = ($row['dissenting_opinion'] != '') ? Json::decode($row['dissenting_opinion'], true) : null;
-				$extras->proceedingsSubject = ($row['proceedings_subject'] != '') ? Json::decode($row['proceedings_subject'], true | JSON_NUMERIC_CHECK) : null;
-				$extras->subjectIndex = ($row['subject_index'] != '') ? Json::decode($row['subject_index'], true) : null;
-				$extras->rulingLanguage = ($row['ruling_language'] != '') ? $row['ruling_language'] : null;
-				$extras->note = ($row['note'] != '') ? $row['note'] : null;
-				$extras->names = ($row['names'] != '') ? Json::decode($row['names'], true) : null;
-
+				$extras = ($update) ? $toUpdate : new DocumentConstitutionalCourt();
+				$this->setConstitutionalCourtDocument($document, $extras, $row);
 				$this->updateCauseDate($document->case, $row);
-
-
-
 			}
 			// Store to database
 			$this->documentService->insert($document, $extras);
@@ -287,6 +234,34 @@ class CausaImport extends Command
 			copy($directory . '/documents/' . $row['local_path'], $destinationPath); // copy immediately - better to have not referenced files than documents in database without their files.
 		}
 		return [$imported, $duplicated];
+	}
+
+	private function getCourt($courtId)
+	{
+		if (!$this->court || $this->court->id != $courtId) {
+			$this->court = $this->courtService->getById($courtId);
+		}
+		return $this->court;
+	}
+
+	/**
+	 * Update case dates (proposition_date, decision_date) from document's metadata
+	 * only for ÚS and NSS
+	 */
+	private function updateCauseDate($case, $row)
+	{
+		$updated = false;
+		if (!$case->decisionDate && $row['decision_date']) {
+			$case->decisionDate = $row['decision_date'];
+			$updated = true;
+		}
+		if (!$case->propositionDate) {
+			$case->propositionDate = ($this->court->id == 1) ? $row['proposition_date'] : $row['filing_date'];
+			$updated = true;
+		}
+		if ($updated) {
+			$this->causeService->save($case);
+		}
 	}
 
 	private function getCourtDirectory($court, $projectRelative = false)
@@ -331,9 +306,63 @@ class CausaImport extends Command
 	{
 		// Explicit year
 		if (isset($row['case_year'])) {
-			return (int) $row['case_year'];
+			return (int)$row['case_year'];
 		}
 		// Guess from registry mark
 		return Helpers::determineYear($row['registry_mark']);
+	}
+
+	/**
+	 * @param $document
+	 * @param $extras
+	 * @param $row
+	 * @throws \Nette\Utils\JsonException
+	 */
+	private function setSupremeAdministrativeCourtDocument($document, $extras, $row): void
+	{
+		$extras->document = $document;
+		$extras->orderNumber = $row['order_number'];
+		$extras->decision = $row['decision'];
+		$extras->decisionType = $row['decision_type'];
+		// More metadata
+		$extras->complaint = ($row['complaint'] != "") ? $row['complaint'] : null;
+		$extras->sides = ($row['sides'] != "") ? Json::decode($row['sides'], true) : null;
+		$extras->prejudicate = ($row['prejudicate'] != "") ? Json::decode($row['prejudicate'], true) : null;
+	}
+
+	/**
+	 * @param $document
+	 * @param $extras
+	 * @param $row
+	 * @throws \Nette\Utils\JsonException
+	 */
+	private function setConstitutionalCourtDocument($document, $extras, $row): void
+	{
+		$extras->document = $document;
+		$extras->ecli = $row['ecli'];
+		$extras->formDecision = $row['form_decision'];
+		$extras->decisionResult = $row['decision_result'];
+		// More metadata
+		$extras->paralelReferenceLaws = ($row['paralel_reference_laws'] != '') ? $row['paralel_reference_laws'] : null;
+		$extras->paralelReferenceJudgements = ($row['paralel_reference_judgements'] != '') ? $row['paralel_reference_judgements'] : null;
+		$extras->popularTitle = ($row['popular_title'] != '') ? $row['popular_title'] : null;
+		$extras->deliveryDate = ($row['delivery_date'] != '') ? new DateTime($row['delivery_date']) : null;
+		$extras->decisionDate = ($row['decision_date'] != '') ? new DateTime($row['decision_date']) : null;
+		$extras->filingDate = ($row['filing_date'] != '') ? new DateTime($row['filing_date']) : null;
+		$extras->publicationDate = ($row['publication_date'] != '') ? new DateTime($row['publication_date']) : null;
+		$extras->proceedingsType = ($row['proceedings_type'] != '') ? $row['proceedings_type'] : null;
+		$extras->importance = ($row['importance'] != '') ? $row['importance'] : null;
+		$extras->proposer = ($row['proposer'] != '') ? Json::decode($row['proposer'], true) : null;
+		$extras->institutionConcerned = ($row['institution_concerned'] != '') ? Json::decode($row['institution_concerned'], true) : null;
+		$extras->justiceRapporteur = ($row['justice_rapporteur'] != '') ? $row['justice_rapporteur'] : null;
+		$extras->contestedAct = ($row['contested_act'] != '') ? Json::decode($row['contested_act'], true) : null;
+		$extras->concernedLaws = ($row['concerned_laws'] != '') ? Json::decode($row['concerned_laws'], true) : null;
+		$extras->concernedOther = ($row['concerned_other'] != '') ? Json::decode($row['concerned_other'], true) : null;
+		$extras->dissentingOpinion = ($row['dissenting_opinion'] != '') ? Json::decode($row['dissenting_opinion'], true) : null;
+		$extras->proceedingsSubject = ($row['proceedings_subject'] != '') ? Json::decode($row['proceedings_subject'], true | JSON_NUMERIC_CHECK) : null;
+		$extras->subjectIndex = ($row['subject_index'] != '') ? Json::decode($row['subject_index'], true) : null;
+		$extras->rulingLanguage = ($row['ruling_language'] != '') ? $row['ruling_language'] : null;
+		$extras->note = ($row['note'] != '') ? $row['note'] : null;
+		$extras->names = ($row['names'] != '') ? Json::decode($row['names'], true) : null;
 	}
 }
