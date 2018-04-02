@@ -16,8 +16,13 @@ use Nextras\Orm\Entity\Entity;
  * @property DateTime			$inserted			{default now}
  * @property JobRun|null		$jobRun				{m:1 JobRun, oneSided=true}
  * @property int				$year
+ * @property DateTime|null		$modified
  */
 class Cause extends Entity
 {
-
+	protected function onBeforeUpdate()
+	{
+		parent::onBeforeUpdate();
+		$this->modified = new DateTime();
+	}
 }
