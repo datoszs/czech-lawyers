@@ -74,7 +74,6 @@ abstract class AdvocateTagger extends Command
 		} else {
 			$message = sprintf("Nothing from [%s] was tagged.\n", $this->court->name);
 			$consoleOutput->write($message);
-			$code = static::RETURN_CODE_FAILURE;
 		}
 
 		$this->finalize($code, $output, $message);
