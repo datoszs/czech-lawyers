@@ -66,8 +66,8 @@ class AdvocateCasesPresenter extends Presenter
 	 *                 "tagging_result": "negative",
 	 *                 "proposition_date": "2016-03-01T01:00:00+01:00",
 	 *                 "decision_date": null,
-	 *                 "annuled": true,
-	 *                 "annuled_by_id_cases": [2, null],
+	 *                 "tagging_result_annuled": true,
+	 *                 "tagging_result_annuled_by_id_cases": [2, null],
 	 *             }
 	 *         ]
 	 *     }
@@ -212,8 +212,8 @@ class AdvocateCasesPresenter extends Presenter
 				'tagging_result' => isset($results[$case->id]) ? $results[$case->id]->caseResult : null,
 				'decision_date' => $case->decisionDate ? $case->decisionDate->format(DateTime::ATOM) : null,
 				'proposition_date' => $case->propositionDate ? $case->propositionDate->format(DateTime::ATOM) : null,
-				'annuled' => isset($annulments[$case->id]) && count($annulments[$case->id]) > 0 ? true : false,
-				'annuled_by_id_cases' => $annulments[$case->id] ?? [],
+				'tagging_result_annuled' => isset($annulments[$case->id]) && count($annulments[$case->id]) > 0 ? true : false,
+				'tagging_result_annuled_by_id_cases' => $annulments[$case->id] ?? [],
 			];
 		}
 		return $output;
