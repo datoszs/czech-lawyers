@@ -437,7 +437,7 @@ def fill_form(date_from: str, records_per_page: int, date_to=None, days=None):
     :return: Bool
     """
     session.open(search_url, wait=True)
-    if days or int(date_from.strip()[-5:]) > 2006:
+    if days or int(date_from.split(".")[-1].strip()) > 2006:
         # print(session.content)
         logger.debug("Set typ_rizeni as 'O ústavních stížnostech'")
         session.open(
