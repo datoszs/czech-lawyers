@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!usr/bin/env python
 # -*- encoding: utf-8 -*-
 # coding=utf-8
 
@@ -24,9 +24,9 @@ import subprocess
 import sys
 from datetime import datetime
 from optparse import OptionParser
-from os.path import join
 from urllib.parse import urljoin
 
+from os.path import join
 from tqdm import tqdm
 
 try:
@@ -43,14 +43,18 @@ search_url = urljoin(base_action_url, "Search.aspx")
 results_url = urljoin(base_action_url, "Results.aspx")
 hash_id = datetime.now().strftime("%d-%m-%Y")
 # set view progress bar and view browser window
-# progress, view = (True, False)
+progress, view = (False, False)
 working_dir = "working"
 screens_dir = "screens"
 documents_dir = "documents"
+out_dir, documents_dir_path, result_dir_path, screens_dir_path, b_screens = (None,) * 5
+output_file = None
 log_dir = "log_us"
 logger, writer_records, ghost, session, list_of_links = (None,) * 5
 global_ncols = 120  # width of progressbar
 main_timeout = 10000
+records_per_page = 80
+
 
 #
 # service functions
@@ -114,7 +118,7 @@ def clean_directory(root):
             os.remove(join(root, f))
 
 
-def create_directories():
+def create_directories(b_screens):
     """
     create working directories
     """
@@ -164,6 +168,7 @@ def parameters():
     run_options = vars(run_options)
 
     return run_options
+
 
 #
 # help functions
@@ -245,18 +250,19 @@ def make_soup(path):
 def extract_name(text):
     """
     Extracts the name of the lawyer from the decision text
+    *Not used*
 
     :param text: decision text
     :return: list of extracted names
     """
     if text and text.contents[0]:
         m = re.findall(
-            # r'zast[.|\w]+(?<!zastupitelství)\s([^A-Z]+)?\s?(([A-Ž]\w+\.?\s?)+)(?=se\ssídlem|,)',
-            # r'zast[.|\w]+(?<![zastupitelství,zastavením])\s([^A-Z]+)?\s?(([A-Ž]\w+\.?\s?)+)(?=se\ssídlem|,)',
-            # r'(?<!ne)zast(\.|(oupen(ého|ých|ým|ými|ému|ém|ou|é|ý|i)?))\s*(advokát(em|kou)\s*)?(([A-Ž]\w+\.?,?\s?)+)(?=se\ssídlem|,)',
-            # r'(?<!ne)zast(\.|(oupen(ého|ých|ým|ými|ému|ém|ou|é|ý|i)?))\s*(advokát(em|kou)\s*)?(([A-Ž]\w+\.?\s?)+)(?=se\ssídlem|,)',
-            r'(?<!ne)zast(\.|(oupen(ého|ých|ým|ými|ému|ém|ou|é|ý|i)?))\s*(advokát(em|kou)\s*)?(([A-Ž]\w+\.?\s?)+)(?=sídlem|,)',
-            text.contents[0], re.UNICODE | re.MULTILINE)
+                # r'zast[.|\w]+(?<!zastupitelství)\s([^A-Z]+)?\s?(([A-Ž]\w+\.?\s?)+)(?=se\ssídlem|,)',
+                # r'zast[.|\w]+(?<![zastupitelství,zastavením])\s([^A-Z]+)?\s?(([A-Ž]\w+\.?\s?)+)(?=se\ssídlem|,)',
+                # r'(?<!ne)zast(\.|(oupen(ého|ých|ým|ými|ému|ém|ou|é|ý|i)?))\s*(advokát(em|kou)\s*)?(([A-Ž]\w+\.?,?\s?)+)(?=se\ssídlem|,)',
+                # r'(?<!ne)zast(\.|(oupen(ého|ých|ým|ými|ému|ém|ou|é|ý|i)?))\s*(advokát(em|kou)\s*)?(([A-Ž]\w+\.?\s?)+)(?=se\ssídlem|,)',
+                r'(?<!ne)zast(\.|(oupen(ého|ých|ým|ými|ému|ém|ou|é|ý|i)?))\s*(advokát(em|kou)\s*)?(([A-Ž]\w+\.?\s?)+)(?=sídlem|,)',
+                text.contents[0], re.UNICODE | re.MULTILINE)
         if m:
             logger.debug("re.findall() -> {}".format(m))
             buffer = [x[5] for x in m]
@@ -269,28 +275,30 @@ def extract_name(text):
             return ""
 
 
-def extract_data(html_file, response):
+def process_detail_page(html_file: str, response: object):
     """save detail page as HTML file for later extraction
 
     :param html_file: name of saving file
     :param response: HTML code for saving
     """
     response = BeautifulSoup(response, "html.parser")
-    del response.find("div", id="docContentPanel")[
-        "style"]  # remove inline style
-    del response.find("div", id="recordCardPanel")[
-        "style"]  # remove inline style
-    link_elem = response.select_one(
-        "#recordCardPanel > table > tbody > tr:nth-of-type(26) > td:nth-of-type(2)")
+
+    del response.find("div", id="docContentPanel")["style"]  # remove inline style
+    del response.find("div", id="recordCardPanel")["style"]  # remove inline style
+
+    link_elem = response.select_one("#recordCardPanel > table > tbody > tr:nth-of-type(26) > td:nth-of-type(2)")
+
     if link_elem and link_elem.string:
         link_elem.string.wrap(response.new_tag("a", href=link_elem.string))
     else:
         logger.warning(link_elem)
+
     # remove script, which manipulate size of document
     response.body.script.decompose()
     del response.body["onload"]  # remove calling script on loading page
+
     logger.debug("Saving file '%s'" % html_file)
-    with codecs.open(join(documents_dir_path, html_file), "w", encoding="utf-8") as f:
+    with codecs.open(join(documents_dir_path, html_file), "wb", encoding="utf-8") as f:
         f.write(str(response))
 
 
@@ -307,19 +315,18 @@ def get_links(response):
 
     links = soup.find_all("a", class_=re.compile("resultData[0,1]"))
 
-    if len(links) > 0:
-        logger.debug("Found links on page (%s)" % len(links))
-        for link in links:
-            # list_of_links.append(urljoin(base_action_url, link.get('href')))
-            list_of_links.append(link.get('href'))
-            # session.open(urljoin(results_url, "?page="+str(page)))
-    else:
+    if len(links) == 0:
         logger.warning("Not found links on page")
+        return []
+
+    logger.debug("Found links on page (%s)" % len(links))
+    for link in links:
+        list_of_links.append(link.get('href'))
 
     return list_of_links
 
 
-def how_many(response, records_per_page):
+def how_many(response: object, records_per_page: int):
     """
     find number of records and compute count of pages
 
@@ -328,24 +335,90 @@ def how_many(response, records_per_page):
     """
     soup = BeautifulSoup(response, "html.parser")
     # print(soup.prettify())
-    pages = None
+    label = None
     number_of_records = None
+    count_of_pages = None
     result_table = soup.select_one("#Content")
-    if result_table is not None:
-        info = result_table.select_one(
-            "table > tbody > tr:nth-of-type(1) > td > table > tbody > tr > td")
-        if info is not None:
-            pages = info.text
-            m = re.compile("\w+ (\d+) - (\d+) z \w+ (\d+).*").search(pages)
-            if m is not None:
-                # print(m.group(3))
-                number_of_records = m.group(3)
-                count_of_pages = math.ceil(
-                    int(number_of_records) / records_per_page)
-                # print(count_of_pages)
-                if pages is not None:
-                    pages = int(count_of_pages)
-    return pages, number_of_records
+    if result_table is None:
+        return count_of_pages, number_of_records
+
+    info = result_table.select_one("table > tbody > tr:nth-of-type(1) > td > table > tbody > tr > td")
+    if info is None:
+        logger.error("info element is None")
+        return count_of_pages, number_of_records
+
+    label = info.text
+
+    if label is None:
+        logger.error("")
+        return count_of_pages, number_of_records
+
+    m = re.compile("\w+ (\d+) - (\d+) z \w+ (\d+).*").search(label)
+
+    if m is None:
+        logger.error("Not found numbers about records")
+        return count_of_pages, number_of_records
+
+    number_of_records = m.group(3)
+    count_of_pages = math.ceil(int(number_of_records) / records_per_page)
+
+    return int(count_of_pages), int(number_of_records)
+
+
+def make_screen(name: str, selector: str = None):
+    if b_screens:
+        session.capture_to(join(screens_dir_path, "{}.png".format(name)), selector=selector)
+
+
+def save_record(record: dict):
+    logger.debug("{} - {}".format(record["local_path"], record["record_id"]))
+    writer_records.writerow(record)  # write record to CSV
+
+
+def go_to_next_page(page: int):
+    session.open(urljoin(results_url, "?page={}".format(page + 1)), wait=True)  # go to next page
+
+
+def get_application_options(options):
+    out_dir = options["dir"]
+    date_from = options["date_from"]
+    date_to = options["date_to"]
+    b_screens = options["screens"]
+    b_delete = options["delete"]
+    output_file = options["filename"]
+    days = options["last"]
+    return b_delete, date_from, date_to, days, out_dir, output_file, b_screens
+
+
+def get_running_options(options):
+    progress = options["progress"]
+    view = options["view"]
+    return view, progress
+
+
+def get_directory_path(out_dir):
+    result_dir_path = join(out_dir, "result")
+    out_dir = join(out_dir, working_dir)  # new out_dir is working directory
+    documents_dir_path = join(out_dir, documents_dir)
+    return documents_dir_path, out_dir, result_dir_path
+
+
+def only_extract():
+    logger.info("Only extract informations")
+    extract_information(records=None)
+    logger.info("DONE - extraction")
+
+
+def set_environment(view):
+    global ghost
+    ghost = Ghost()
+    global session
+    session = ghost.start(download_images=False, java_enabled=False,
+                          show_scrollbars=False, wait_timeout=main_timeout,
+                          display=False, plugins_enabled=False)
+    if view:
+        session.display = True
+        session.show()
 
 
 #
@@ -353,7 +426,7 @@ def how_many(response, records_per_page):
 #
 
 
-def view_data(date_from, records_per_page, date_to=None, days=None):
+def fill_form(date_from: str, records_per_page: int, date_to=None, days=None):
     """
     set form for searching
 
@@ -368,65 +441,49 @@ def view_data(date_from, records_per_page, date_to=None, days=None):
         # print(session.content)
         logger.debug("Set typ_rizeni as 'O ústavních stížnostech'")
         session.open(
-            "http://nalus.usoud.cz/dialogs/PopupCiselnik.aspx?control=ctl00_MainContent_typ_rizeni&type=typ_rizeni")
+                "http://nalus.usoud.cz/dialogs/PopupCiselnik.aspx?control=ctl00_MainContent_typ_rizeni&type=typ_rizeni")
         session.evaluate("javascript:saveSelected('0')", expect_loading=True)
-        if b_screens:
-            session.capture_to(join(screens_dir_path, "dialog_check.png"))
+        make_screen("dialog_check")
         result, resources = session.click("#bSave", expect_loading=True)
         session.open(search_url)
 
     if days and session.exists("#ctl00_MainContent_dle_data_zpristupneni"):
         logger.debug("Select check button")
-        # session.set_field_value("#ctl00_MainContent_dle_data_zpristupneni",
-        # True)
-        session.click("#ctl00_MainContent_dle_data_zpristupneni",
-                      expect_loading=False)
+        session.click("#ctl00_MainContent_dle_data_zpristupneni", expect_loading=False)
         if session.exists("#ctl00_MainContent_zpristupneno_pred"):
             logger.info("Select last %s days" % days)
-            session.set_field_value(
-                "#ctl00_MainContent_zpristupneno_pred", days)
+            session.set_field_value("#ctl00_MainContent_zpristupneno_pred", days)
     else:
         if session.exists("#ctl00_MainContent_availableFrom"):
             logger.debug("Set date_from '%s'" % date_from)
-            session.set_field_value(
-                "#ctl00_MainContent_submissionFrom", date_from)
-            # datetime.strptime(date_from, '%d.%m.%Y').strftime('%Y/%m/%d'))
-            if b_screens:
-                session.capture_to(join(screens_dir_path, "set_from.png"))
+            session.set_field_value("#ctl00_MainContent_submissionFrom", date_from)
+            make_screen("set_from")
+
             if date_to is not None:  # ctl00_MainContent_decidedFrom
                 logger.debug("Set date_to '%s'" % date_to)
-                session.set_field_value(
-                    "#ctl00_MainContent_submissionTo", date_to)
-                # datetime.strptime(date_to, '%d.%m.%Y').strftime('%Y/%m/%d'))
+                session.set_field_value("#ctl00_MainContent_submissionTo", date_to)
             logger.info("Records from the period %s -> %s", date_from, date_to)
-            if b_screens:
-                session.capture_to(join(screens_dir_path, "set_to.png"))
+            make_screen("set_to")
+
     logger.debug("Set sorting criteria")
     session.set_field_value("#ctl00_MainContent_razeni", "3")
+
     logger.debug("Set counter records per page")
-    session.set_field_value(
-        "#ctl00_MainContent_resultsPageSize", str(records_per_page))
-    if b_screens:
-        session.capture_to(join(screens_dir_path, "set_form.png"))
+    session.set_field_value("#ctl00_MainContent_resultsPageSize", str(records_per_page))
+    make_screen("set_form")
 
     if session.exists("#ctl00_MainContent_but_search"):
-        try:
-            logger.debug("Click to search button")
-            session.click("#ctl00_MainContent_but_search", expect_loading=True)
-        except Exception:
-            logger.warning("Exception")
-            return False
-    if b_screens:
-        session.capture_to(join(screens_dir_path, "result.png"))
-    return True
+        logger.debug("Click to search button")
+        session.click("#ctl00_MainContent_but_search", expect_loading=True)
+    make_screen("results")
 
 
-def make_record(soup, id):
+def make_record(soup: object, file_name: str):
     """
     extract relevant informations from document and writing on CSV file
 
     :param soup: bs4 soup object
-    :param id: indetificator of record
+    :param file_name: indetificator of record
     """
 
     item = {}
@@ -444,50 +501,60 @@ def make_record(soup, id):
     table = soup.find("div", id="recordCardPanel")
     try:
         if "NALUS" in soup.title.string:  # soup.string
-            logger.debug("{}, {}, {}".format(
-                soup.title.string, id, type(table)))
+            logger.debug("{}, {}, {}".format(soup.title.string, file_name, type(table)))
             return
     except AttributeError:
-        logger.error("{} (soup.title) - {}".format(soup.title, id))
+        logger.error("{} (soup.title) - {}".format(soup.title, file_name))
         return
 
-    if (table is not None) and (table.tbody is not None):
-        for key, index in zip(entities[:-4], range(1, 27)):
-            item[key] = table.select_one(
-                "table > tbody > tr:nth-of-type({}) > td:nth-of-type(2)".format(index)).text.strip()
-            if 'date' in key and item[key]:
-                item[key] = convert_date(item[key]) if item[key] != '' else ''
-            elif key in only_text_elements or key in only_list_elements:
-                item[key] = table.select_one(
-                    "table > tbody > tr:nth-of-type({}) > td:nth-of-type(2)".format(index))
-                # print('{}, {} - {}'.format(key, item[key], index))
-        item['record_id'] = item['ecli']
-        item['local_path'] = id
-        item['case_year'] = item['filing_date'].split('-')[0]
+    if (table is None) and (table.tbody is None):
+        logger.error("table is None")
+        return
 
-        # extract:
-        # Ruling Type - decisions
-        # Proceedings Subject
-        # Subject Index
-        # Institution Concerned
-        # Contested Act
-        # Proposer
-        # Dissenting Opinion
-        for key in only_text_elements:
-            item[key] = itemize_text(item[key])
+    for key, index in zip(entities[:-4], range(1, 27)):
+        path_to_element = "table > tbody > tr:nth-of-type({}) > td:nth-of-type(2)".format(index)
+        item[key] = table.select_one(path_to_element).text.strip()
+        if 'date' in key and item[key]:
+            item[key] = convert_date(item[key]) if item[key] != '' else ''
+        elif key in only_text_elements or key in only_list_elements:
+            item[key] = table.select_one(path_to_element)
+    item['record_id'] = item['ecli']
+    item['local_path'] = file_name
+    item['case_year'] = item['filing_date'].split('-')[0]
 
-        # extract:
-        # Constitutional Laws and International Agreements Concerned
-        # Other Regulations Concerned
-        for key in only_list_elements:
-            item[key] = itemize_list(item[key])
+    # extract:
+    # Ruling Type - decisions
+    # Proceedings Subject
+    # Subject Index
+    # Institution Concerned
+    # Contested Act
+    # Proposer
+    # Dissenting Opinion
+    for key in only_text_elements:
+        item[key] = itemize_text(item[key])
 
-        # extract names from text
-        # text = soup.select_one("#uc_vytah_cellContent > span")
-        logger.debug("\n{} -> {}".format(item["web_path"], item["local_path"]))
-        item['names'] = None #extract_name(text)
-    logger.debug(item)
-    writer_records.writerow(item)  # write item to CSV
+    # extract:
+    # Constitutional Laws and International Agreements Concerned
+    # Other Regulations Concerned
+    for key in only_list_elements:
+        item[key] = itemize_list(item[key])
+
+    item['names'] = None  #extract_name(text)
+    return item
+
+
+def process_link(link: str):
+    """
+    Go to link and save page
+    :param link: detail page link
+    :return:
+    """
+    id = link.split("?")[1].split("&")[0]
+    html_file = id + ".html"
+    if not os.path.exists(join(documents_dir_path, html_file)):
+        logger.debug("Go to link to detail")
+        session.open(urljoin(results_url, link), wait=True)
+        process_detail_page(html_file, response=session.content)
 
 
 def extract_information(records):
@@ -496,11 +563,15 @@ def extract_information(records):
 
     :param records: number of all records
     """
-    html_files = [join(documents_dir_path, fn)
-                  for fn in next(os.walk(documents_dir_path))[2]]
-    # print(len(html_files))
+    html_files = [join(documents_dir_path, file_name) for file_name in next(os.walk(documents_dir_path))[2]]
+
     if records is None:
         records = len(html_files)
+
+    if len(html_files) != int(records):
+        logger.info("{} != {} ({})".format(len(html_files), records, type(records)))
+        return False
+
     fieldnames = ['court_name', 'record_id', 'registry_mark', 'decision_date', 'case_year', 'web_path', 'local_path',
                   'form_decision', 'decision_result', 'ecli', 'paralel_reference_laws', 'paralel_reference_judgements',
                   'popular_title', 'delivery_date', 'filing_date', 'publication_date', 'proceedings_type', 'importance',
@@ -510,71 +581,97 @@ def extract_information(records):
 
     global writer_records
 
-    if len(html_files) == int(records):
-        logger.info("%s files to extract" % len(html_files))
-        csv_records = open(join(out_dir, output_file), 'w',
-                           newline='', encoding="utf-8")
+    logger.info("%s files to extract" % len(html_files))
+    csv_records = open(join(out_dir, output_file), 'w', newline='', encoding="utf-8")
 
-        writer_records = csv.DictWriter(
+    writer_records = csv.DictWriter(
             csv_records, fieldnames=fieldnames, delimiter=";", quoting=csv.QUOTE_ALL, quotechar='"')
-        writer_records.writeheader()
+    writer_records.writeheader()
 
-        # i = 0
-        t = html_files
-        if progress:
-            t = tqdm(html_files, ncols=global_ncols)  # view progress bar
-        for html_f in t:
-            id = os.path.basename(html_f)
-            make_record(make_soup(html_f), id)
-            # t.update()
-        # t.close()
-        csv_records.close()
-        return True
-    else:
-        logger.info("{} != {} ({})".format(
-            len(html_files), records, type(records)))
-        return False
+    t = html_files
+    if progress:
+        t = tqdm(html_files, ncols=global_ncols)  # view progress bar
+
+    for html_f in t:
+        file_name = os.path.basename(html_f)
+        record = make_record(make_soup(html_f), file_name)
+        save_record(record)
+
+    csv_records.close()
+    return True
 
 
-def walk_pages(page_from, pages):
+def walk_details():
+    """
+    make a walk through pages of detail
+    
+    """
+    links_to_info = get_links(session.content)
+    session.open(urljoin(results_url, links_to_info[0]), wait=True)
+    while not session.exists("#lbError"):
+        response = session.content
+        soup = BeautifulSoup(response, "html.parser")
+        page_id = "id=" + soup.select_one("#docIdHidden").get("value")
+
+        html_file = page_id + ".html"
+        if not os.path.exists(join(documents_dir_path, html_file)):
+            logger.debug("Go to link to detail")
+            process_detail_page(html_file, response=response)
+        session.click("#GotoNextId", expect_loading=True)
+
+
+def walk_pages(page_from: int, pages: int):
     """
     make a walk through pages of results
 
     :param page_from: from which page start the walk
     :param pages: over how many pages we have to go
-    :return page: last page which is processed
 
     """
-    page_from = page_from if page_from > 0 else 0
-    logger.debug("{}, {} -> {}".format(page_from,
-                                       pages, range(page_from, pages)))
+    logger.debug("{}, {} -> {}".format(page_from, pages, range(page_from, pages)))
     t = range(page_from, pages)
     if progress:
         t = tqdm(t, ncols=global_ncols)  # view progress bar
-    page = -1
+
     for page in t:
-        # t.set_description("({}/{} => {:3f}%%)".format(
-        #                 page + 1, pages, (page + 1) / pages * 100))
-        logger.debug("-------------------------")
-        logger.debug("page={} <=> Page: {}".format(page, page + 1))
-        response = session.content
-        links_to_info = get_links(response)
+        process_records_page(page)
+        go_to_next_page(page)
 
-        if len(links_to_info) > 0:
-            for link in links_to_info:
-                id = link.split("?")[1].split("&")[0]
-                html_file = id + ".html"
-                if not os.path.exists(join(documents_dir_path, html_file)):
-                    logger.debug("Go to link to detail")
-                    session.open(urljoin(results_url, link), wait=True)
-                    extract_data(html_file, response=session.content)
-        session.open(urljoin(results_url, "?page={}".format(
-            page + 1)), wait=True)  # go to next page
-        # save number of processing page
-        with codecs.open(join(out_dir, "current_page.ini"), "w", encoding="utf-8") as f:
-            f.write(str(page))
 
-    return page
+def process_records_page(page: int):
+    """
+    Process page with all records links
+
+    :param page: index of page
+    :return:
+
+    """
+    logger.debug("-" * 25)
+    logger.debug("page={} <=> Page: {}".format(page, page + 1))
+    response = session.content
+    links_to_info = get_links(response)
+    if len(links_to_info) > 0:
+        for link in links_to_info:
+            process_link(link)
+
+
+def process_web():
+    pages, records = how_many(session.content, records_per_page)
+    logger.info("pages: {}, records {}".format(pages, records))
+    page_from = 0
+    if records < 1000:
+        logger.info("walk details")
+        walk_details()
+    elif pages is not None and records is not None:
+        logger.info("walk pages")
+        walk_pages(page_from, pages)
+        logger.info("DONE - download")
+    else:
+        logger.debug("I am complete!")
+    logger.info("Extract information...")
+    result = extract_information(records)
+    if result:
+        logger.info("DONE - extraction")
 
 
 def main():
@@ -583,74 +680,17 @@ def main():
 
     :return: bool
     """
-    global ghost
-    ghost = Ghost()
-    global session
-    session = ghost.start(download_images=False, java_enabled=False,
-                          show_scrollbars=False, wait_timeout=main_timeout,
-                          display=False, plugins_enabled=False)
-    if view:
-        session.display = True
-        session.show()
-    records_per_page = 80
-    if view_data(date_from, records_per_page, date_to, days):
-        response = session.content
-        if b_screens:
-            session.capture_to(
-                join(screens_dir_path, "errors.png"), selector=".searchValidator")
-        records = 0
-        if not session.exists("#ctl00_MainContent_lbError"):
-            pages, records = how_many(response, records_per_page)
-            # print(pages)
-            logger.info("pages: {}, records {}".format(pages, records))
+    global out_dir
+    global documents_dir_path
+    global result_dir_path
+    global screens_dir_path
+    global b_screens
+    global output_file
+    global progress
 
-            page_from = 0
-            # pages = 20
-
-            # load starting page
-            logger.debug("Search file 'current_page.ini'...")
-            if os.path.exists(join(out_dir, "current_page.ini")):
-                with codecs.open(join(out_dir, "current_page.ini"), "r") as cr:
-                    page_from = int(cr.read().strip())
-                logger.debug("'current_page.ini' found")
-                logger.debug("Start on page {}".format(page_from))
-
-            if pages is not None and records is not None:
-                if (page_from + 1) > pages:
-                    logger.debug(
-                        "Loaded page number is greater than count of pages")
-                    page_from = 0
-                if pages != (page_from + 1) or (pages == 1):  # parameter page is from zero
-                    last_page = page_from if page_from else -1
-                    while (last_page + 1) != pages:
-                        last_page = walk_pages(last_page, pages)
-                    logger.info("DONE - download")
-                else:
-                    logger.debug("I am complete!")
-            else:
-                logger.error("View error - 'pages' or 'records' are None")
-                return False
-        else:
-            logger.info("Not found new records")
-        logger.info("Extract information...")
-        result = extract_information(records)
-        if result and os.path.exists(join(out_dir, "current_page.ini")):
-            logger.info("DONE - extraction")
-            os.remove(join(out_dir, "current_page.ini"))
-
-        return True
-
-if __name__ == "__main__":
     options = parameters()
-    out_dir = options["dir"]
-    date_from = options["date_from"]
-    date_to = options["date_to"]
-    b_screens = options["screens"]
-    b_delete = options["delete"]
-    output_file = options["filename"]
-    days = options["last"]
-    progress = options["progress"]
-    view = options["view"]
+    b_delete, date_from, date_to, days, out_dir, output_file, b_screens = get_application_options(options)
+    view, progress = get_running_options(options)
 
     if ".csv" not in output_file:
         output_file += ".csv"
@@ -664,35 +704,42 @@ if __name__ == "__main__":
     logger.info(U"Start US")
     logger.debug(options)
 
-    result_dir_path = join(out_dir, "result")
-    out_dir = join(out_dir, working_dir)  # new out_dir is working directory
-    documents_dir_path = join(out_dir, documents_dir)
-
-    screens_dir_path = create_directories()
-
+    documents_dir_path, out_dir, result_dir_path = get_directory_path(out_dir)
+    screens_dir_path = create_directories(b_screens)
     if options["extraction"]:
-        logger.info("Only extract informations")
-        extract_information(records=None)
-        logger.info("DONE - extraction")
-        logger.info("Moving files")
+        only_extract()
+        logger.info("Moving CSV file")
         shutil.copy(join(out_dir, output_file), result_dir_path)
-
+        sys.exit(0)
     else:
-        if main():
-            # move results of crawling
-            if not os.listdir(result_dir_path):
-                if os.path.exists(join(out_dir, output_file)):
-                    logger.info("Moving files")
-                    shutil.copytree(documents_dir_path, join(
-                        result_dir_path, documents_dir))
-                    shutil.move(join(out_dir, output_file), result_dir_path)
-                    if not b_delete:
-                        logger.debug("Cleaning working directory")
-                        clean_directory(out_dir)
+        set_environment(view)
+        try:
+            fill_form(date_from, records_per_page, date_to, days)
+        except Exception:
+            logger.error("View error - 'pages' or 'records' are None", exc_info=True)
+            make_screen("view_error")
 
-            else:
-                logger.error("Result directory isn't empty.")
-                sys.exit(-1)
-            sys.exit(0)
-        else:
+        if session.exists("#ctl00_MainContent_lbError"):
+            logger.info("Not found new records")
+            make_screen("error", ".searchValidator")
+        try:
+            process_web()
+        except Exception:
             sys.exit(-1)
+        # move results of crawling
+        if not os.listdir(result_dir_path):
+            if os.path.exists(join(out_dir, output_file)):
+                logger.info("Moving files")
+                shutil.copytree(documents_dir_path, join(result_dir_path, documents_dir))
+                shutil.move(join(out_dir, output_file), result_dir_path)
+                if not b_delete:
+                    logger.debug("Cleaning working directory")
+                    clean_directory(out_dir)
+                sys.exit(0)
+        else:
+            logger.error("Result directory isn't empty.")
+            sys.exit(-1)
+
+
+if __name__ == "__main__":
+    main()
