@@ -152,12 +152,12 @@ form.error.email: Toto pole musí obsahovat validní e-mailovou adresu
 
 unavailable.warning: Omlouváme se, tato stránka je dočasně nedostupná. Zkuste to, prosím, za chvíli znova.
 
-statement.cases: "Průměrný advokát se ke třem vrcholným soudům obrací v\xA072\xA0%% případů zbytečně%(ending)s"
+statement.cases: "Průměrný advokát se ke třem vrcholným soudům obrací v\xA075\xA0%% případů zbytečně%(ending)s"
 statement.cases.long: |
   V řízení o dovolání u Nejvyššího soudu, o kasační stížnosti u Nejvyššího správního soudu i o ústavní stížnosti u Ústavního soudu
   je zpravidla nutné nechat se zastoupit advokátem. Ani zapojení advokáta ovšem samo o sobě nezaručuje, že tyto soudy daný případ
-  přezkoumají věcně (tj. vydají meritorní konečné rozhodnutí). Průměrný advokát totiž v 72 % řízeních o dovolání, kasační stížnosti
-  či ústavní stížnosti svému klientu zajistí toliko nemeritorní konečné rozhodnutí (69 %) nebo rozhodnutí o zastavení řízení (zbylá 3 %).
+  přezkoumají věcně (tj. vydají meritorní konečné rozhodnutí). Průměrný advokát totiž v 75 % řízeních o dovolání, kasační stížnosti
+  či ústavní stížnosti svému klientu zajistí toliko nemeritorní konečné rozhodnutí (72 %) nebo rozhodnutí o zastavení řízení (zbylá 3 %).
   Klienti tak poměrně často tím, že se na některý z vrcholných soudů obrátí, nic nezískají. Naopak ztratí čas a většinou i peníze.
 
   Díky nám máte nyní možnost vědět, kteří advokáti se od onoho průměrného advokáta odlišují. Ať už v dobrém, anebo špatném směru.
@@ -167,10 +167,10 @@ statement.cases.long: |
 
   Poznámka k výpočtu statistik: Statistiky jsme spočetli díky přiřazení konečných rozhodnutí vydaných ve výše vyjmenovaných řízeních
   konkrétním advokátům. Upozorňujeme ovšem, že zpracováváme výlučně zveřejněná konečná rozhodnutí a že některá z nich se nám nepodařilo
-  konkrétnímu advokátu z různých důvodů přiřadit (více viz [O projektu](/about)). Výpočet proběhl na základě stavu naší databáze k 17. 7. 2017.
+  konkrétnímu advokátu z různých důvodů přiřadit (více viz [O projektu](/about)). Výpočet proběhl na základě stavu naší databáze k 23. 4. 2018.
 statement.proceedings: |
-  V roce 2015 byla zahájena řízení o 13 965 dovoláních, kasačních stížnostech a ústavních stížnostech.
-  Jen asi ve 25 %% z těchto řízení se ale soudy zabývaly obsahem případu%(ending)s
+  V roce 2016 byla zahájena řízení o 15 455 dovoláních, kasačních stížnostech a ústavních stížnostech.
+  Jen asi ve 22 %% z těchto řízení se ale soudy zabývaly obsahem případu%(ending)s
 statement.proceedings.long: |
   V řízeních o dovoláních u Nejvyššího soudu, o kasačních stížnostech u Nejvyššího správního soudu i o ústavních stížnostech
   u Ústavního soudu může dojít k tomu, že se soudy odmítnou zabývat obsahem případu (vydají tzv. nemeritorní konečné rozhodnutí).
@@ -185,18 +185,18 @@ statement.proceedings.long: |
   Důvody mohou být různé. Od nepoctivého přístupu k práci a společenské roli advokáta, přes snahu co nejvíce vyhovět
   přání klientů, až po oprávněnou zmatenost způsobenou nejednotnou rozhodovací praxí těchto soudů.
 
-  Poznámka k výpočtu statistik: Statistiky jsme spočetli díky přiřazení jednotlivých typů výsledku řízení (meritorní, nemeritorní, zastaveno)
+  Poznámka k výpočtu statistik: Statistiky jsme spočetli díky přiřazení jednotlivých typů výsledku řízení (meritorní, nemeritorní, zastaveno, zrušeno)
   ke konečným rozhodnutím vydaným ve výše vyjmenovaných řízeních. Upozorňujeme ovšem, že zpracováváme výlučně zveřejněná konečná
   rozhodnutí a že k některým z nich se nám nepodařilo typ výsledku přiřadit (více viz [O projektu](/about)). Výpočet proběhl na základě stavu
-  naší databáze k 27. 8. 2017.
+  naší databáze k 23. 4. 2018.
 statement.advocates: Pouze 1 ze 7 advokátů podal více věcně projednaných dovolání, kasačních stížností a ústavních stížností, než těch odmítnutých%(ending)s
 statement.advocates.long: |
   V řízení o dovolání u Nejvyššího soudu, o kasační stížnosti u Nejvyššího správního soudu i o ústavní stížnosti u Ústavního soudu
   je zpravidla nutné nechat se zastoupit advokátem. Soudy nicméně na advokátovo posouzení případu ohledně vhodnosti k jeho věcnému projednání
   nespoléhají a mají možnost odmítnout se obsahem případu zabývat. K takovému kroku přistupují zejména tehdy, když je advokátovo podání
   (dovolání/stížnost) opožděné nebo vadné, anebo kdy ho advokát například učiní tehdy, kdy to zákon vůbec neumožňuje. Je to dobře,
-  jelikož advokátů, kterým by mohly soudy důvěřovat, že se na ně neobrací se "zbytečnostmi", je poměrně málo. Konkrétně jen 1 435
-  z 8 588 advokátů, kteří se ve výše vyjmenovaných řízeních na tři vrcholné soudy v minulosti obraceli, tak častěji činilo
+  jelikož advokátů, kterým by mohly soudy důvěřovat, že se na ně neobrací se "zbytečnostmi", je poměrně málo. Konkrétně jen 1 262
+  z 9 027 advokátů, kteří se ve výše vyjmenovaných řízeních na tři vrcholné soudy v minulosti obraceli, tak častěji činilo
   v případech smysluplných, než v těch zbytečných (tj. častěji dosáhlo vydání meritorního konečného rozhodnutí, než nemeritorního).
 
   Díky nám máte nyní možnost vědět, kteří advokáti mají největší převahu meritorních rozhodnutí vydaných v řízeních o dovolání,
@@ -206,7 +206,7 @@ statement.advocates.long: |
   Poznámka k výpočtu statistik: Statistiky jsme spočetli díky přiřazení konečných rozhodnutí vydaných ve výše vyjmenovaných
   řízeních konkrétním advokátům. Upozorňujeme ovšem, že zpracováváme výlučně zveřejněná konečná rozhodnutí a že některá
   z nich se nám nepodařilo konkrétnímu advokátu z různých důvodů přiřadit (více viz [O projektu](/about)). Výpočet proběhl na základě
-  stavu naší databáze k 17. 7. 2017.
+  stavu naší databáze k 23. 4. 2018.
 redirect.title: Přejmenování stránek
 redirect.text: |
   Na základě vzájemné dohody s Českou advokátní komorou byl obsah webu **cestiadvokati.cz** přesunut (z důvodu tvrzeně zavádějící
