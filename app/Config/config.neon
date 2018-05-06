@@ -101,6 +101,7 @@ console:
 		- App\Commands\CrawlerManual
 		- App\Commands\SendBatchEmail
 		- App\Commands\AnnuledCaseImport
+		- App\Commands\DocumentFileRedownloader
 
 
 orm:

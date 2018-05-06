@@ -3,6 +3,7 @@ namespace App\Model\Services;
 
 use App\Model\Documents\Document;
 use App\Model\Orm;
+use Nextras\Dbal\Connection;
 use Nextras\Orm\Collection\ICollection;
 use App\Enums\Court as CourtEnum;
 use Nextras\Orm\Entity\IEntity;
@@ -13,9 +14,13 @@ class DocumentService
 	/** @var Orm */
 	private $orm;
 
-	public function __construct(Orm $orm)
+	/** @var Connection */
+	private $connection;
+
+	public function __construct(Orm $orm, Connection $connection)
 	{
 		$this->orm = $orm;
+		$this->connection = $connection;
 	}
 
 	public function insert(Document $document, $document2 = null, $flush = false)
@@ -85,5 +90,9 @@ class DocumentService
 
 	public function findExtraByOrderNumber($orderNumber) {
 		return $this->orm->documentsSupremeAdministrativeCourt->getBy(['orderNumber' => $orderNumber]);
+	}
+
+	public function findDocumentsWithoutFile () {
+		return $this->connection->query("SELECT record_id FROM document WHERE court_id = 1 AND web_path = '' ORDER BY random() LIMIT 5000")->fetchAll();
 	}
 }
