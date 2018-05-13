@@ -1,8 +1,10 @@
 import {combineReducers} from 'redux-immutable';
 import {List, Map} from 'immutable';
 import {AdvocateAutocomplete} from '../model';
-import {SET_INPUT_VALUE, SET_AUTOCOMPLETE_RESULTS,
-    SUBMIT, MOVE_SELECTION_INTERNAL, SET_SELECTION, setSelection} from './actions';
+import {
+    SET_INPUT_VALUE, SET_AUTOCOMPLETE_RESULTS,
+    SUBMIT, MOVE_SELECTION_INTERNAL, SET_SELECTION, setSelection,
+} from './actions';
 
 const inputReducer = (state = '', action) => (action.type === SET_INPUT_VALUE ? action.value : state);
 

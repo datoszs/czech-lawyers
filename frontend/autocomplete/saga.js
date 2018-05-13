@@ -1,8 +1,10 @@
 import {all, call, put, select, takeEvery, takeLatest} from 'redux-saga/effects';
 import {advocateAPI} from '../serverAPI';
 import {mapDtoToAdvocateAutocomplete} from '../model';
-import {SET_INPUT_VALUE, SUBMIT, SHOW_DROPDOWN, MOVE_SELECTION,
-    moveSelectionInternal, setAutocompleteResults, setQuery, setAdvocate} from './actions';
+import {
+    SET_INPUT_VALUE, SUBMIT, SHOW_DROPDOWN, MOVE_SELECTION,
+    moveSelectionInternal, setAutocompleteResults, setQuery, setAdvocate,
+} from './actions';
 import {getInputValue, getSelectedItem, hasResults} from './selectors';
 
 const loadOptionsSaga = function* loadOptions() {
