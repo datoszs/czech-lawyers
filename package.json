@@ -81,7 +81,7 @@
     "html-webpack-plugin": "3.2.0",
     "ignore-styles": "5.0.1",
     "json-loader": "0.5.7",
-    "less": "2.7.3",
+    "less": "3.0.4",
     "less-loader": "4.1.0",
     "merge2": "^1.0.2",
     "mocha": "5.1.1",
