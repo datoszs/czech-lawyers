@@ -15,7 +15,9 @@ const createStyleLoader = (dev, ...loaders) => dev
         use: loaders,
     });
 
-export default ({dev}) => ({
+const wrapConfig = (config) => (env, {mode}) => config(mode === 'development');
+
+export default wrapConfig((dev) => ({
     entry: array(
         dev && 'react-hot-loader/patch',
         'babel-polyfill',
@@ -34,12 +36,7 @@ export default ({dev}) => ({
         new webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify(dev ? 'development' : 'production'),
         }),
-        !dev && new webpack.NoEmitOnErrorsPlugin(),
-        !dev && new webpack.optimize.UglifyJsPlugin({
-            output: {
-                comments: false,
-            },
-        }),
+        dev && new webpack.HotModuleReplacementPlugin(),
         !dev && new ExtractTextPlugin('style.[chunkhash].css'),
     ),
     module: {
@@ -124,4 +121,7 @@ export default ({dev}) => ({
             '/api': 'http://[::1]:8000',
         }
     },
-});
+    optimization: {
+        noEmitOnErrors: true,
+    },
+}));
