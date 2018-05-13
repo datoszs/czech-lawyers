@@ -8,14 +8,17 @@ const ASSET_OUTPUT_PATH = '../assets/webapp';
 /** removes falsy items from array */
 const array = (...target) => target.filter((item) => item);
 
-const createStyleLoader = (dev, ...loaders) => dev
+const createStyleLoader = (dev, extractTextPlugin, ...loaders) => dev
     ? ['style-loader'].concat(loaders)
-    : ExtractTextPlugin.extract({
+    : extractTextPlugin.extract({
         fallback: 'style-loader',
         use: loaders,
     });
 
 const wrapConfig = (config) => (env, {mode}) => config(mode === 'development');
+
+const libStyle = new ExtractTextPlugin('include.css');
+const ownStyle = new ExtractTextPlugin('style.[chunkhash].css');
 
 export default wrapConfig((dev) => ({
     entry: array(
@@ -37,7 +40,8 @@ export default wrapConfig((dev) => ({
             'process.env.NODE_ENV': JSON.stringify(dev ? 'development' : 'production'),
         }),
         dev && new webpack.HotModuleReplacementPlugin(),
-        !dev && new ExtractTextPlugin('style.[chunkhash].css'),
+        !dev && libStyle,
+        !dev && ownStyle,
     ),
     module: {
         rules: [
@@ -57,13 +61,13 @@ export default wrapConfig((dev) => ({
             {
                 test: /\.(less|css)$/,
                 include: /node_modules/,
-                loader: createStyleLoader(dev, 'css-loader', 'less-loader'),
+                loader: createStyleLoader(dev, libStyle, 'css-loader', 'less-loader'),
             },
             {
                 test: /\.less$/,
                 include: /frontend/,
                 exclude: /include.less/,
-                loader: createStyleLoader(dev, {
+                loader: createStyleLoader(dev, ownStyle, {
                         loader: 'css-loader',
                         query: {
                             modules: true,
@@ -75,7 +79,7 @@ export default wrapConfig((dev) => ({
             },
             {
                 test: /include.less/,
-                loader: createStyleLoader(dev, 'css-loader', 'less-loader'),
+                loader: createStyleLoader(dev, libStyle, 'css-loader', 'less-loader'),
             },
             {
                 test: /\.eot$/,
