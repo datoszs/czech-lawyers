@@ -59,9 +59,13 @@ export default wrapConfig((dev) => ({
                 },
             },
             {
-                test: /\.(less|css)$/,
+                test: /\.(less)$/,
                 include: /node_modules/,
                 loader: createStyleLoader(dev, libStyle, 'css-loader', 'less-loader'),
+            },{
+                test: /\.(css)$/,
+                include: /node_modules/,
+                loader: createStyleLoader(dev, libStyle, 'css-loader'),
             },
             {
                 test: /\.less$/,
