@@ -106,7 +106,7 @@ class DocumentFileRedownloader extends Command
 			return null;
 		$records = implode(";\n", array_column($documents, "record_id"));
 		$content = "registry_mark;\n" . $records . ';';
-		$filePath = $directory . '\list_for_download.csv';
+		$filePath = $directory . '/list_for_download.csv';
 		$file = fopen($filePath, "w");
 		fwrite($file, $content);
 		return $filePath;
