@@ -47,7 +47,7 @@ class DocumentFileRedownloader extends Command
 	protected function getCommand($directory, $inputFile)
 	{
 		return sprintf(
-			'%s %s --output-directory %s -s "%s"2>&1',
+			'%s %s --output-directory %s -s "%s" 2>&1',
 			'python3',
 			__DIR__ . '/../../externals/nss_crawler.py',
 			escapeshellarg($directory),
@@ -60,7 +60,6 @@ class DocumentFileRedownloader extends Command
 		$this->prepare();
 		$directory = $input->getArgument(static::ARGUMENT_DIRECTORY);
 		$code = 0;
-		$consoleOutput->writeln($directory);
 		$output = null;
 		$message = null;
 		$filePath = $this->prepareDataForDownload($directory);
@@ -78,6 +77,7 @@ class DocumentFileRedownloader extends Command
 			$code = static::NO_DATA;
 		} else {
 			// run crawler
+			$consoleOutput->writeln("Input file was generated - '" . $filePath . "'.");
 			$command = $this->getCommand($directory, $filePath);
 			exec($command, $outputArray, $code);
 			$output = implode("\n", $outputArray);
