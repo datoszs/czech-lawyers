@@ -1,6 +1,6 @@
 import path from 'path';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
-import ExtractTextPlugin from 'extract-text-webpack-plugin';
+import ExtractTextPlugin from 'mini-css-extract-plugin';
 import webpack from 'webpack';
 
 const ASSET_OUTPUT_PATH = '../assets/webapp';
@@ -8,17 +8,11 @@ const ASSET_OUTPUT_PATH = '../assets/webapp';
 /** removes falsy items from array */
 const array = (...target) => target.filter((item) => item);
 
-const createStyleLoader = (dev, extractTextPlugin, ...loaders) => dev
+const createStyleLoader = (dev, ...loaders) => dev
     ? ['style-loader'].concat(loaders)
-    : extractTextPlugin.extract({
-        fallback: 'style-loader',
-        use: loaders,
-    });
+    : [ExtractTextPlugin.loader].concat(loaders);
 
 const wrapConfig = (config) => (env, {mode}) => config(mode === 'development');
-
-const libStyle = new ExtractTextPlugin('include.css');
-const ownStyle = new ExtractTextPlugin('style.[chunkhash].css');
 
 export default wrapConfig((dev) => ({
     entry: array(
@@ -40,8 +34,7 @@ export default wrapConfig((dev) => ({
             'process.env.NODE_ENV': JSON.stringify(dev ? 'development' : 'production'),
         }),
         dev && new webpack.HotModuleReplacementPlugin(),
-        !dev && libStyle,
-        !dev && ownStyle,
+        !dev && new ExtractTextPlugin({filename: 'style.[chunkhash].css'}),
     ),
     module: {
         rules: [
@@ -61,17 +54,17 @@ export default wrapConfig((dev) => ({
             {
                 test: /\.(less)$/,
                 include: /node_modules/,
-                loader: createStyleLoader(dev, libStyle, 'css-loader', 'less-loader'),
+                loader: createStyleLoader(dev, 'css-loader', 'less-loader'),
             },{
                 test: /\.(css)$/,
                 include: /node_modules/,
-                loader: createStyleLoader(dev, libStyle, 'css-loader'),
+                loader: createStyleLoader(dev, 'css-loader'),
             },
             {
                 test: /\.less$/,
                 include: /frontend/,
                 exclude: /include.less/,
-                loader: createStyleLoader(dev, ownStyle, {
+                loader: createStyleLoader(dev, {
                         loader: 'css-loader',
                         query: {
                             modules: true,
@@ -83,7 +76,7 @@ export default wrapConfig((dev) => ({
             },
             {
                 test: /include.less/,
-                loader: createStyleLoader(dev, libStyle, 'css-loader', 'less-loader'),
+                loader: createStyleLoader(dev, 'css-loader', 'less-loader'),
             },
             {
                 test: /\.eot$/,
