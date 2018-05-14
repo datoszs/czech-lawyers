@@ -1,6 +1,6 @@
 import path from 'path';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
-import ExtractTextPlugin from 'extract-text-webpack-plugin';
+import ExtractTextPlugin from 'mini-css-extract-plugin';
 import webpack from 'webpack';
 
 const ASSET_OUTPUT_PATH = '../assets/webapp';
@@ -10,12 +10,11 @@ const array = (...target) => target.filter((item) => item);
 
 const createStyleLoader = (dev, ...loaders) => dev
     ? ['style-loader'].concat(loaders)
-    : ExtractTextPlugin.extract({
-        fallback: 'style-loader',
-        use: loaders,
-    });
+    : [ExtractTextPlugin.loader].concat(loaders);
 
-export default ({dev}) => ({
+const wrapConfig = (config) => (env, {mode}) => config(mode === 'development');
+
+export default wrapConfig((dev) => ({
     entry: array(
         dev && 'react-hot-loader/patch',
         'babel-polyfill',
@@ -34,13 +33,8 @@ export default ({dev}) => ({
         new webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify(dev ? 'development' : 'production'),
         }),
-        !dev && new webpack.NoEmitOnErrorsPlugin(),
-        !dev && new webpack.optimize.UglifyJsPlugin({
-            output: {
-                comments: false,
-            },
-        }),
-        !dev && new ExtractTextPlugin('style.[chunkhash].css'),
+        dev && new webpack.HotModuleReplacementPlugin(),
+        !dev && new ExtractTextPlugin({filename: 'style.[chunkhash].css'}),
     ),
     module: {
         rules: [
@@ -58,9 +52,13 @@ export default ({dev}) => ({
                 },
             },
             {
-                test: /\.(less|css)$/,
+                test: /\.(less)$/,
                 include: /node_modules/,
                 loader: createStyleLoader(dev, 'css-loader', 'less-loader'),
+            },{
+                test: /\.(css)$/,
+                include: /node_modules/,
+                loader: createStyleLoader(dev, 'css-loader'),
             },
             {
                 test: /\.less$/,
@@ -124,4 +122,7 @@ export default ({dev}) => ({
             '/api': 'http://[::1]:8000',
         }
     },
-});
+    optimization: {
+        noEmitOnErrors: true,
+    },
+}));

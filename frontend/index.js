@@ -18,5 +18,5 @@ const renderApp = (RootComponent) => {
 renderApp(Root);
 
 if (module.hot) {
-    module.hot.accept('./Root', () => System.import('./Root').then((root) => renderApp(root.default)));
+    module.hot.accept('./Root', () => import('./Root').then((root) => renderApp(root.default)));
 }

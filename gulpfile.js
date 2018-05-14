@@ -97,8 +97,8 @@ gulp.task('scripts-minify', function() {
         .pipe(uglify())
         .pipe(gulp.dest(destinations.scripts));
 });
-gulp.task('scripts-full', ['scripts']);
-gulp.task('scripts-mini', ['scripts']); // For now backend scripts are not minified, due to bug in uglify (which destroys output)
+gulp.task('scripts-full', gulp.series('scripts'));
+gulp.task('scripts-mini', gulp.series('scripts')); // For now backend scripts are not minified, due to bug in uglify (which destroys output)
 
 // ====== Other actions =======
 gulp.task('watch', function() {
@@ -112,8 +112,8 @@ gulp.task('watch', function() {
 
 });
 
-gulp.task('default', ['styles', 'scripts-full', 'images', 'fonts']);
-gulp.task('default-mini', ['styles', 'scripts-mini', 'images', 'fonts']);
+gulp.task('default', gulp.parallel('styles', 'scripts-full', 'images', 'fonts'));
+gulp.task('default-mini', gulp.parallel('styles', 'scripts-mini', 'images', 'fonts'));
 
-gulp.task('development', ['default', 'watch']);
-gulp.task('production', ['default-mini']);
+gulp.task('development', gulp.series('default', 'watch'));
+gulp.task('production', gulp.series('default-mini'));
