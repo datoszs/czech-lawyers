@@ -1,6 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import AutoComplete from 'react-autocomplete';
+import {ListGroupItem, ListGroup} from 'react-bootstrap';
 import {goToAdvocate, setQuery} from './actions';
 import {getQuery, getItems} from './selectors';
 
@@ -20,7 +21,8 @@ const mergeProps = ({value, items}, {onChange, onSelect}) => ({
     onSelect,
     items: items.toJS(),
     getItemValue: (item) => String(item.id),
-    renderItem: (item) => <div>{item.name}</div>,
+    renderItem: (item, isHighlighted) => <ListGroupItem active={isHighlighted}>{item.name}</ListGroupItem>,
+    renderMenu: (children, _, style) => <ListGroup style={{...style, position: 'fixed', zIndex: 10}}>{children}</ListGroup>,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(AutoComplete);
