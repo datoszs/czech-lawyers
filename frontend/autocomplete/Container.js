@@ -26,6 +26,7 @@ const mergeProps = ({query, items, msgSearch}, {onChange, onSelect, onSearch}) =
     items: items.toJS(),
     getItemValue: (item) => String(item.id),
     renderItem: (item, isHighlighted) => <ListGroupItem key={item.id} active={isHighlighted}>{item.name}</ListGroupItem>,
+    /* Unable to render with own component */
     renderMenu: (children, _, style) => <ListGroup style={{...style, position: 'fixed', zIndex: 10}}>{children}</ListGroup>,
     renderInput: Input,
     inputProps: {msgSearch, onSearch: () => onSearch(query)},
