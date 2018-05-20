@@ -6,6 +6,26 @@ import Captcha from 'react-google-recaptcha';
 import {wrapEventStop} from '../../util';
 import {siteKey} from '../../serverAPI';
 
+const CaptchaComponent = ({input, handleSubmit, captchaRef}) => (
+    <Captcha
+        onChange={(value) => {
+            input.onChange(value);
+            handleSubmit();
+        }}
+        sitekey={siteKey}
+        size="invisible"
+        ref={captchaRef}
+    />
+);
+
+CaptchaComponent.propTypes = {
+    input: PropTypes.shape({
+        onChange: PropTypes.func.isRequired,
+    }).isRequired,
+    handleSubmit: PropTypes.func.isRequired,
+    captchaRef: PropTypes.func.isRequired,
+};
+
 const CaptchaFormComponent = ({inline, children, handleSubmit}) => {
     let captcha;
     return (
@@ -13,19 +33,11 @@ const CaptchaFormComponent = ({inline, children, handleSubmit}) => {
             {children}
             <Field
                 name="captcha_token"
-                component={({input}) => (
-                    <Captcha
-                        onChange={(value) => {
-                            input.onChange(value);
-                            handleSubmit();
-                        }}
-                        sitekey={siteKey}
-                        size="invisible"
-                        ref={(component) => {
-                            captcha = component;
-                        }}
-                    />
-                )}
+                component={CaptchaComponent}
+                handleSubmit={handleSubmit}
+                captchaRef={(component) => {
+                    captcha = component;
+                }}
             />
         </Form>
     );
