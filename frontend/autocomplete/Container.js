@@ -1,19 +1,26 @@
-import {compose} from 'redux';
+import React from 'react';
 import {connect} from 'react-redux';
-import {LifecycleListener} from '../util';
-import translate from '../translate';
-import Component from './Component';
-import {submit, hideDropdown} from './actions';
-import {getInputValue} from './selectors';
+import AutoComplete from 'react-autocomplete';
+import {goToAdvocate, setQuery} from './actions';
+import {getQuery, getItems} from './selectors';
 
 const mapStateToProps = (state) => ({
-    value: getInputValue(state),
-    msgSearch: translate.getMessage(state, 'search.button'),
+    value: getQuery(state),
+    items: getItems(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    onSubmit: compose(dispatch, submit),
-    onUnmount: compose(dispatch, hideDropdown),
+    onChange: (event) => dispatch(setQuery(event.target.value)),
+    onSelect: (id) => dispatch(goToAdvocate(id)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(LifecycleListener(Component));
+const mergeProps = ({value, items}, {onChange, onSelect}) => ({
+    value,
+    onChange,
+    onSelect,
+    items: items.toJS(),
+    getItemValue: (item) => String(item.id),
+    renderItem: (item) => <div>{item.name}</div>,
+});
+
+export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(AutoComplete);

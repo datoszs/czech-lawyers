@@ -2,48 +2,18 @@ import router from '../router';
 import {ADVOCATE_SEARCH, ADVOCATE_DETAIL} from '../routes';
 import {NAME} from './constants';
 
-export const SET_INPUT_VALUE = `${NAME}/SET_INPUT_VALUE`;
-export const SUBMIT = `${NAME}/SUBMIT`;
-export const SET_AUTOCOMPLETE_RESULTS = `${NAME}/SET_AUTOCOMPLETE_RESULTS`;
-export const SHOW_DROPDOWN = `${NAME}/SHOW_DROPDOWN`;
-export const MOVE_SELECTION = `${NAME}/MOVE_SELECTION`;
-export const SET_SELECTION = `${NAME}/SET_SELECTION`;
-export const MOVE_SELECTION_INTERNAL = `${NAME}/MOVE_SELECTION/internal`;
+export const SET_QUERY = `${NAME}/SET_QUERY`;
+export const SET_ITEMS = `${NAME}/SET_ITEMS`;
 
-export const submit = () => ({
-    type: SUBMIT,
+export const setQuery = (query) => ({
+    type: SET_QUERY,
+    query,
 });
 
-export const setInputValue = (value) => ({
-    type: SET_INPUT_VALUE,
-    value,
+export const setItems = (items) => ({
+    type: SET_ITEMS,
+    items,
 });
 
-export const setAutocompleteResults = (results) => ({
-    type: SET_AUTOCOMPLETE_RESULTS,
-    results,
-});
-
-export const hideDropdown = () => setAutocompleteResults([]);
-
-export const showDropdown = () => ({
-    type: SHOW_DROPDOWN,
-});
-
-const moveSelection = (increment) => ({
-    type: MOVE_SELECTION,
-    increment,
-});
-export const moveSelectionUp = () => moveSelection(-1);
-export const moveSelectionDown = () => moveSelection(+1);
-export const setSelection = (id) => ({
-    type: SET_SELECTION,
-    id,
-});
-export const moveSelectionInternal = (increment) => ({
-    type: MOVE_SELECTION_INTERNAL,
-    increment,
-});
-
-export const setQuery = (query) => router.transition(ADVOCATE_SEARCH, undefined, {query});
-export const setAdvocate = (id) => router.transition(ADVOCATE_DETAIL, {id});
+export const goToSearch = (query) => router.transition(ADVOCATE_SEARCH, undefined, {query});
+export const goToAdvocate = (id) => router.transition(ADVOCATE_DETAIL, {id});
