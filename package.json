@@ -29,6 +29,7 @@
     "query-string": "6.1.0",
     "react": "16.3.2",
     "react-async-script": "0.9.1",
+    "react-autocomplete": "1.8.1",
     "react-bootstrap": "0.31.5",
     "react-dom": "16.3.2",
     "react-ga": "2.5.0",

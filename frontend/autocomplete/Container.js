@@ -1,19 +1,35 @@
-import {compose} from 'redux';
+import React from 'react';
 import {connect} from 'react-redux';
-import {LifecycleListener} from '../util';
+import AutoComplete from 'react-autocomplete';
+import {ListGroupItem, ListGroup} from 'react-bootstrap';
 import translate from '../translate';
-import Component from './Component';
-import {submit, hideDropdown} from './actions';
-import {getInputValue} from './selectors';
+import {goToAdvocate, setQuery, goToSearch} from './actions';
+import {getQuery, getItems} from './selectors';
+import Input from './Input';
 
 const mapStateToProps = (state) => ({
-    value: getInputValue(state),
+    query: getQuery(state),
+    items: getItems(state),
     msgSearch: translate.getMessage(state, 'search.button'),
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    onSubmit: compose(dispatch, submit),
-    onUnmount: compose(dispatch, hideDropdown),
+    onChange: (event) => dispatch(setQuery(event.target.value)),
+    onSelect: (id) => dispatch(goToAdvocate(id)),
+    onSearch: (query) => dispatch(goToSearch(query)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(LifecycleListener(Component));
+const mergeProps = ({query, items, msgSearch}, {onChange, onSelect, onSearch}) => ({
+    value: query,
+    onChange,
+    onSelect,
+    items: items.toJS(),
+    getItemValue: (item) => String(item.id),
+    renderItem: (item, isHighlighted) => <ListGroupItem key={item.id} active={isHighlighted}>{item.name}</ListGroupItem>,
+    /* Unable to render with own component */
+    renderMenu: (children, _, style) => <ListGroup style={{...style, position: 'fixed', zIndex: 10}}>{children}</ListGroup>,
+    renderInput: Input,
+    inputProps: {msgSearch, onSearch: () => onSearch(query)},
+});
+
+export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(AutoComplete);
