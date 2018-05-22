@@ -93,6 +93,6 @@ class DocumentService
 	}
 
 	public function findDocumentsWithoutFile () {
-		return $this->connection->query("SELECT record_id FROM document WHERE court_id = 1 AND web_path = '' ORDER BY random() LIMIT 5000")->fetchAll();
+		return $this->connection->query("SELECT record_id FROM document WHERE court_id = 1 AND web_path = '' ORDER BY random() LIMIT 500")->fetchAll();
 	}
 }
