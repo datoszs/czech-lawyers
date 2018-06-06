@@ -87,7 +87,7 @@ class CauseService
 		return $entity;
 	}
 
-	public function save(IEntity $entity)
+	public function save(Cause $entity)
 	{
 		$this->orm->persist($entity);
 	}

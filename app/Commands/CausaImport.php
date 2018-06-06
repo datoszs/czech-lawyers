@@ -4,6 +4,7 @@ namespace App\Commands;
 
 
 use App\Enums\Court;
+use App\Model\Cause\Cause;
 use App\Model\Court\Court as CourtEntity;
 use App\Model\Documents\Document;
 use App\Model\Documents\DocumentConstitutionalCourt;
@@ -248,7 +249,7 @@ class CausaImport extends Command
 	 * Update case dates (proposition_date, decision_date) from document's metadata
 	 * only for ÚS and NSS
 	 */
-	private function updateCauseDate($case, $row)
+	private function updateCauseDate(Cause $case, $row)
 	{
 		$updated = false;
 		if (!$case->decisionDate && $row['decision_date']) {
