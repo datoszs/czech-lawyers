@@ -215,11 +215,15 @@ class CausaImport extends Command
 				}
 				$extras = ($update) ? $toUpdate : new DocumentSupremeAdministrativeCourt();
 				$this->setSupremeAdministrativeCourtDocument($document, $extras, $row);
-				$this->updateCauseDate($document->case, $row);
+				if ($document->case) {
+					$this->updateCauseDate($document->case, $row);
+				}
 			} elseif ($courtId == Court::TYPE_US) {
 				$extras = ($update) ? $toUpdate : new DocumentConstitutionalCourt();
 				$this->setConstitutionalCourtDocument($document, $extras, $row);
-				$this->updateCauseDate($document->case, $row);
+				if ($document->case) {
+					$this->updateCauseDate($document->case, $row);
+				}
 			}
 			// Store to database
 			$this->documentService->insert($document, $extras);
