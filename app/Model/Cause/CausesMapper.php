@@ -56,10 +56,26 @@ class CausesMapper extends Mapper
 		return $this->builder()->where('court_id = %i AND id_case NOT IN (SELECT case_id FROM tagging_case_result WHERE is_final)', $courtId);
 	}
 
+	/**
+	 * Returns all cases which can be success tagged (the cases with is_final flag set to true are ignored).
+	 *
+	 * @param int $courtId
+	 * @return QueryBuilder
+	 */
+	public function findForSuccessTagging($courtId)
+	{
+		return $this->builder()->where('court_id = %i AND id_case NOT IN (SELECT case_id FROM tagging_case_success WHERE is_final)', $courtId);
+	}
+
     public function findTaggingResultsByCourt($courtId)
     {
         return $this->builder()->where('court_id = %i AND id_case IN (SELECT distinct(case_id) FROM tagging_case_result WHERE is_final=FALSE) AND official_data IS NOT NULL',$courtId)->orderBy('id_case');
     }
+
+	public function findTaggingSuccessesByCourt($courtId)
+	{
+		return $this->builder()->where('court_id = %i AND id_case IN (SELECT distinct(case_id) FROM tagging_case_success WHERE is_final=FALSE) AND official_data IS NOT NULL',$courtId)->orderBy('id_case');
+	}
 
 	/**
 	 * Returns all cases which can be advocate tagged (the cases with is_final flag set to true are ignored).

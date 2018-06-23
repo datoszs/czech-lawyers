@@ -5,6 +5,7 @@ use App\Enums\TaggingStatus;
 use App\Model\Advocates\Advocate;
 use App\Model\Cause\Cause;
 use App\Model\Taggings\TaggingCaseResult;
+use App\Model\Taggings\TaggingCaseSuccess;
 use App\Model\Taggings\TaggingAdvocate;
 use App\Model\Orm;
 use Nextras\Dbal\Connection;
@@ -47,11 +48,26 @@ class TaggingService
 		$this->orm->flush();
 	}
 
+	/**
+	 * @return IEntity[]
+	 */
 	public function findAll()
 	{
 		return $this
 			->orm
 			->taggingCaseResults
+			->findAll()
+			->fetchAll();
+	}
+
+	/**
+	 * @return IEntity[]
+	 */
+	public function findAllCaseSuccess()
+	{
+		return $this
+			->orm
+			->taggingCaseSuccess
 			->findAll()
 			->fetchAll();
 	}
@@ -64,6 +80,18 @@ class TaggingService
 			->getBy(['document' => $document]);
 	}
 
+	/**
+	 * @param IEntity $document
+	 * @return mixed|IEntity|null
+	 */
+	public function findCaseSuccessByDocument(IEntity $document)
+	{
+		return $this
+			->orm
+			->taggingCaseSuccess
+			->getBy(['document' => $document]);
+	}
+
 	public function findAdvocateTaggingsByCase(Cause $case)
 	{
 		return $this
@@ -73,6 +101,10 @@ class TaggingService
 			->fetchAll();
 	}
 
+	/**
+	 * @param Cause $cause
+	 * @return IEntity[]
+	 */
 	public function findCaseResultTaggingsByCase(Cause $cause)
 	{
 		return $this
@@ -82,7 +114,23 @@ class TaggingService
 			->fetchAll();
 	}
 
+	/**
+	 * @param Cause $cause
+	 * @return IEntity[]
+	 */
+	public function findCaseSuccessTaggingsByCase(Cause $cause)
+	{
+		return $this
+			->orm
+			->taggingCaseSuccess
+			->findBy(['case' => $cause])
+			->fetchAll();
+	}
 
+	/**
+	 * @param array $cases
+	 * @return array
+	 */
 	public function findCaseResultLatestTaggingByCases(array $cases)
 	{
 		$casesIds = array_map(function (Cause $case) {
@@ -92,6 +140,21 @@ class TaggingService
 			return [];
 		}
 		return $this->orm->taggingCaseResults->findLatestTagging($casesIds)->fetchAll();
+	}
+
+	/**
+	 * @param array $cases
+	 * @return array
+	 */
+	public function findCaseSuccessLatestTaggingByCases(array $cases)
+	{
+		$casesIds = array_map(function (Cause $case) {
+			return $case->id;
+		}, $cases);
+		if (count($casesIds) == 0) {
+			return [];
+		}
+		return $this->orm->taggingCaseSuccess->findLatestTagging($casesIds)->fetchAll();
 	}
 
 	public function findLatestTaggingByAdvocate(array $advocate)
@@ -223,7 +286,6 @@ class TaggingService
 		return $output;
 	}
 
-
 	/**
 	 * Persist (but not flush) given entity if it is new case result tagging (i.e. when no such previous exists).
 	 * @param TaggingCaseResult $entity
@@ -233,6 +295,21 @@ class TaggingService
 	{
 		$old = $this->orm->taggingCaseResults->getLastTagging($entity->case->id)->fetch();
 		if ($this->isTaggingDifferent($entity, $old)) {
+			$this->persist($entity);
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Persist (but not flush) given entity if it is new case success tagging (i.e. when no such previous exists).
+	 * @param TaggingCaseSuccess $entity
+	 * @return bool
+	 */
+	public function persistCaseSuccessIfDiffers(TaggingCaseSuccess $entity)
+	{
+		$old = $this->orm->taggingCaseSuccess->getLastTagging($entity->case->id)->fetch();
+		if ($this->isTaggingSuccessDifferent($entity, $old)) {
 			$this->persist($entity);
 			return true;
 		}
@@ -258,6 +335,17 @@ class TaggingService
 	private function isTaggingDifferent(TaggingCaseResult $new, $old)
 	{
 		return $old === null || !($old instanceof TaggingCaseResult) || $new->case != $old->case || $new->document != $old->document || $new->isFinal != $old->isFinal || $new->caseResult != $old->caseResult || $new->status != $old->status || $new->debug != $old->debug;
+	}
+
+	/**
+	 * Returns true/false according to semantic difference of tagging.
+	 * @param TaggingCaseSuccess $new New case tagging
+	 * @param TaggingCaseSuccess|null $old Old case tagging (or null when no such tagging exists)
+	 * @return bool
+	 */
+	private function isTaggingSuccessDifferent(TaggingCaseSuccess $new, $old)
+	{
+		return $old === null || !($old instanceof TaggingCaseSuccess) || $new->case != $old->case || $new->document != $old->document || $new->isFinal != $old->isFinal || $new->caseSuccess != $old->caseSuccess || $new->status != $old->status || $new->debug != $old->debug;
 	}
 
     /**

@@ -107,6 +107,11 @@ class CauseService
 		return $this->orm->causes->findForResultTagging($court->id);
 	}
 
+	public function findForSuccessTagging(Court $court)
+	{
+		return $this->orm->causes->findForSuccessTagging($court->id);
+	}
+
 	public function findForAdvocateTagging(Court $court)
 	{
 		return $this->orm->causes->findForAdvocateTagging($court->id);

@@ -13,6 +13,7 @@ use App\Model\Documents\DocumentsSupremeAdministrativeCourtRepository;
 use App\Model\Documents\DocumentsSupremeCourtRepository;
 use App\Model\Documents\TaggingAdvocatesRepository;
 use App\Model\Documents\TaggingCaseResultsRepository;
+use App\Model\Documents\TaggingCaseSuccessesRepository;
 use App\Model\Jobs\JobRunsRepository;
 use App\Model\Jobs\JobsRepository;
 use App\Model\Users\UsersRepository;
@@ -33,6 +34,7 @@ use Nextras\Orm\Model\Model;
  * @property-read AdvocatesRepository $advocates
  * @property-read AdvocateInfosRepository $advocatesInfo
  * @property-read TaggingCaseResultsRepository $taggingCaseResults
+ * @property-read TaggingCaseSuccessesRepository $taggingCaseSuccess
  * @property-read TaggingAdvocatesRepository $taggingAdvocates
  */
 class Orm extends Model
