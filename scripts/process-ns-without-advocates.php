@@ -18,13 +18,13 @@ include_once __DIR__ . '/../app/Utils/Normalize.php';
  */
 
 // Load blacklist
-$csv = Reader::createFromPath('/Users/jan/Desktop/2018_02_19.csv', 'r');
+$csv = Reader::createFromPath('/Users/jan/Downloads/2018-05-11_2/18_05_11_poskytnutí informace_advokáti 10 až 12 2017.csv', 'r');
 $blacklist = array_flip(array_map(function ($input) { return Normalize::registryMark($input); } , array_column($csv->setOffset(1)->fetchAll(), 0)));
 
 
 $output = [];
 // Process civil
-$csv = Reader::createFromPath('/Users/jan/Desktop/18_02_15_poskytnutí informace_výsledky řízení_civilni.csv', 'r');
+$csv = Reader::createFromPath('/Users/jan/Downloads/2018-05-11_2/18_05_11_poskytnutí informace_výsledky řízení_civilní.csv', 'r');
 $res = $csv->setOffset(1)->fetchAssoc(['number', 'date_creation', 'registry_mark_1','registry_mark_2','registry_mark_3','registry_mark_4', 'date_decision', 'result']);
 foreach ($res as $row) {
 	$row['registry_mark'] = Normalize::registryMark(sprintf('%s %s %s/%s', $row['registry_mark_1'], $row['registry_mark_2'], $row['registry_mark_3'], $row['registry_mark_4']));
@@ -39,7 +39,7 @@ foreach ($res as $row) {
 }
 
 // Process penalty
-$csv = Reader::createFromPath('/Users/jan/Desktop/18_02_15_poskytnutí informace_výsledky řízení_trestni.csv', 'r');
+$csv = Reader::createFromPath('/Users/jan/Downloads/2018-05-11_2/18_05_11_poskytnutí informace_výsledky řízení_trestní.csv', 'r');
 $res = $csv->setOffset(1)->fetchAssoc(['registry_mark_1','registry_mark_2','registry_mark_3','registry_mark_4', 'date_creation', 'subject', 'date_decision', 'result']);
 foreach ($res as $row) {
 	$row['registry_mark'] = Normalize::registryMark(sprintf('%s %s %s/%s', $row['registry_mark_1'], $row['registry_mark_2'], $row['registry_mark_3'], $row['registry_mark_4']));

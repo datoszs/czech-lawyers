@@ -4,8 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "70731d975c4a9d0cf56abb01d07745ba",
-    "content-hash": "55b409792924554032562c8116c2f78d",
+    "content-hash": "55cbb0225d46b2f28f38e843259193ef",
     "packages": [
         {
             "name": "datoscz/content-transformer",
@@ -47,7 +46,48 @@
                 "source": "https://github.com/datoszs/content-transformer/tree/0.5",
                 "issues": "https://github.com/datoszs/content-transformer/issues"
             },
-            "time": "2017-02-02 15:57:23"
+            "time": "2017-02-02T15:57:23+00:00"
+        },
+        {
+            "name": "datoscz/mapy.cz-geocoder",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/datoszs/mapy.cz-geocoder.git",
+                "reference": "5f2ac4745edd9f897ccd0dae0363c8de6eebc356"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/datoszs/mapy.cz-geocoder/zipball/5f2ac4745edd9f897ccd0dae0363c8de6eebc356",
+                "reference": "5f2ac4745edd9f897ccd0dae0363c8de6eebc356",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-xml": "*",
+                "php": "~7.1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "DATOSCZ\\MapyCzGeocoder\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Jan Drábek",
+                    "email": "me@jandrabek.cz"
+                }
+            ],
+            "description": "Unofficial PHP geocoder using mapy.cz public API",
+            "time": "2018-06-23T09:47:57+00:00"
         },
         {
             "name": "doctrine/annotations",
@@ -115,7 +155,7 @@
                 "docblock",
                 "parser"
             ],
-            "time": "2017-07-22 10:58:02"
+            "time": "2017-07-22T10:58:02+00:00"
         },
         {
             "name": "doctrine/cache",
@@ -185,7 +225,7 @@
                 "cache",
                 "caching"
             ],
-            "time": "2017-07-22 12:49:21"
+            "time": "2017-07-22T12:49:21+00:00"
         },
         {
             "name": "doctrine/instantiator",
@@ -239,7 +279,7 @@
                 "constructor",
                 "instantiate"
             ],
-            "time": "2017-07-22 11:58:36"
+            "time": "2017-07-22T11:58:36+00:00"
         },
         {
             "name": "doctrine/lexer",
@@ -293,7 +333,7 @@
                 "lexer",
                 "parser"
             ],
-            "time": "2014-09-09 13:34:57"
+            "time": "2014-09-09T13:34:57+00:00"
         },
         {
             "name": "ezyang/htmlpurifier",
@@ -340,7 +380,7 @@
             "keywords": [
                 "html"
             ],
-            "time": "2017-06-03 02:28:16"
+            "time": "2017-06-03T02:28:16+00:00"
         },
         {
             "name": "heureka/inflection",
@@ -394,7 +434,7 @@
                 "language",
                 "linguistics"
             ],
-            "time": "2016-01-06 15:24:04"
+            "time": "2016-01-06T15:24:04+00:00"
         },
         {
             "name": "ipub/visual-paginator",
@@ -460,7 +500,7 @@
                 "paging",
                 "tools"
             ],
-            "time": "2017-07-12 09:42:19"
+            "time": "2017-07-12T09:42:19+00:00"
         },
         {
             "name": "kdyby/console",
@@ -546,7 +586,7 @@
                 "kdyby",
                 "nette"
             ],
-            "time": "2017-05-13 21:42:11"
+            "time": "2017-05-13T21:42:11+00:00"
         },
         {
             "name": "latte/latte",
@@ -618,7 +658,7 @@
                 "template",
                 "twig"
             ],
-            "time": "2017-08-29 08:24:52"
+            "time": "2017-08-29T08:24:52+00:00"
         },
         {
             "name": "league/csv",
@@ -675,7 +715,7 @@
                 "read",
                 "write"
             ],
-            "time": "2017-07-12 07:18:20"
+            "time": "2017-07-12T07:18:20+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -717,7 +757,7 @@
                 "object",
                 "object graph"
             ],
-            "time": "2017-04-12 18:52:22"
+            "time": "2017-04-12T18:52:22+00:00"
         },
         {
             "name": "nette/application",
@@ -804,7 +844,7 @@
                 "routing",
                 "seo"
             ],
-            "time": "2017-08-24 21:30:36"
+            "time": "2017-08-24T21:30:36+00:00"
         },
         {
             "name": "nette/bootstrap",
@@ -880,7 +920,7 @@
                 "configurator",
                 "nette"
             ],
-            "time": "2017-08-20 17:36:59"
+            "time": "2017-08-20T17:36:59+00:00"
         },
         {
             "name": "nette/caching",
@@ -949,7 +989,7 @@
                 "nette",
                 "sqlite"
             ],
-            "time": "2017-08-18 15:20:18"
+            "time": "2017-08-18T15:20:18+00:00"
         },
         {
             "name": "nette/component-model",
@@ -1006,7 +1046,7 @@
             ],
             "description": "Nette Component Model",
             "homepage": "https://nette.org",
-            "time": "2017-07-11 08:59:35"
+            "time": "2017-07-11T08:59:35+00:00"
         },
         {
             "name": "nette/database",
@@ -1078,7 +1118,7 @@
                 "queries",
                 "sqlite"
             ],
-            "time": "2017-07-27 10:58:17"
+            "time": "2017-07-27T10:58:17+00:00"
         },
         {
             "name": "nette/di",
@@ -1138,7 +1178,7 @@
             ],
             "description": "Nette Dependency Injection Component",
             "homepage": "https://nette.org",
-            "time": "2017-07-11 17:55:11"
+            "time": "2017-07-11T17:55:11+00:00"
         },
         {
             "name": "nette/finder",
@@ -1194,7 +1234,7 @@
             ],
             "description": "Nette Finder: Files Searching",
             "homepage": "https://nette.org",
-            "time": "2017-07-10 23:47:08"
+            "time": "2017-07-10T23:47:08+00:00"
         },
         {
             "name": "nette/forms",
@@ -1262,7 +1302,7 @@
                 "nette",
                 "validation"
             ],
-            "time": "2017-08-25 12:45:48"
+            "time": "2017-08-25T12:45:48+00:00"
         },
         {
             "name": "nette/http",
@@ -1334,7 +1374,7 @@
                 "session",
                 "url"
             ],
-            "time": "2017-08-24 21:04:00"
+            "time": "2017-08-24T21:04:00+00:00"
         },
         {
             "name": "nette/mail",
@@ -1395,7 +1435,7 @@
             ],
             "description": "Nette Mail: Sending E-mails",
             "homepage": "https://nette.org",
-            "time": "2017-07-13 16:51:28"
+            "time": "2017-07-13T16:51:28+00:00"
         },
         {
             "name": "nette/neon",
@@ -1449,7 +1489,7 @@
             ],
             "description": "Nette NEON: parser & generator for Nette Object Notation",
             "homepage": "http://ne-on.org",
-            "time": "2017-07-11 18:29:08"
+            "time": "2017-07-11T18:29:08+00:00"
         },
         {
             "name": "nette/php-generator",
@@ -1511,7 +1551,7 @@
                 "php",
                 "scaffolding"
             ],
-            "time": "2017-07-11 19:07:13"
+            "time": "2017-07-11T19:07:13+00:00"
         },
         {
             "name": "nette/reflection",
@@ -1575,7 +1615,7 @@
                 "nette",
                 "reflection"
             ],
-            "time": "2017-07-11 19:28:57"
+            "time": "2017-07-11T19:28:57+00:00"
         },
         {
             "name": "nette/robot-loader",
@@ -1634,7 +1674,7 @@
             ],
             "description": "Nette RobotLoader: comfortable autoloading",
             "homepage": "https://nette.org",
-            "time": "2017-07-11 00:21:10"
+            "time": "2017-07-11T00:21:10+00:00"
         },
         {
             "name": "nette/safe-stream",
@@ -1695,7 +1735,7 @@
                 "nette",
                 "safe"
             ],
-            "time": "2017-07-13 18:20:37"
+            "time": "2017-07-13T18:20:37+00:00"
         },
         {
             "name": "nette/security",
@@ -1753,7 +1793,7 @@
             ],
             "description": "Nette Security: Access Control Component",
             "homepage": "https://nette.org",
-            "time": "2017-07-11 09:41:59"
+            "time": "2017-07-11T09:41:59+00:00"
         },
         {
             "name": "nette/tokenizer",
@@ -1803,7 +1843,7 @@
             ],
             "description": "Nette Tokenizer",
             "homepage": "https://nette.org",
-            "time": "2017-07-11 19:30:23"
+            "time": "2017-07-11T19:30:23+00:00"
         },
         {
             "name": "nette/utils",
@@ -1882,7 +1922,7 @@
                 "utility",
                 "validation"
             ],
-            "time": "2017-08-20 17:32:29"
+            "time": "2017-08-20T17:32:29+00:00"
         },
         {
             "name": "nextras/dbal",
@@ -1939,7 +1979,7 @@
                 "dbal",
                 "nextras"
             ],
-            "time": "2016-12-09 13:10:17"
+            "time": "2016-12-09T13:10:17+00:00"
         },
         {
             "name": "nextras/mail-panel",
@@ -2001,7 +2041,7 @@
                 "mailing",
                 "mailpanel"
             ],
-            "time": "2016-06-08 09:45:07"
+            "time": "2016-06-08T09:45:07+00:00"
         },
         {
             "name": "nextras/migrations",
@@ -2057,7 +2097,7 @@
                 "BSD-3-Clause"
             ],
             "description": "Database migrations runner",
-            "time": "2017-07-28 18:19:10"
+            "time": "2017-07-28T18:19:10+00:00"
         },
         {
             "name": "nextras/orm",
@@ -2118,7 +2158,7 @@
                 "nextras",
                 "orm"
             ],
-            "time": "2017-02-19 22:29:06"
+            "time": "2017-02-19T22:29:06+00:00"
         },
         {
             "name": "phar-io/manifest",
@@ -2173,7 +2213,7 @@
                 }
             ],
             "description": "Component for reading phar.io manifest information from a PHP Archive (PHAR)",
-            "time": "2017-03-05 18:14:27"
+            "time": "2017-03-05T18:14:27+00:00"
         },
         {
             "name": "phar-io/version",
@@ -2220,7 +2260,7 @@
                 }
             ],
             "description": "Library for handling version information and constraints",
-            "time": "2017-03-05 17:38:23"
+            "time": "2017-03-05T17:38:23+00:00"
         },
         {
             "name": "phpdocumentor/reflection-common",
@@ -2274,7 +2314,7 @@
                 "reflection",
                 "static analysis"
             ],
-            "time": "2015-12-27 11:43:31"
+            "time": "2015-12-27T11:43:31+00:00"
         },
         {
             "name": "phpdocumentor/reflection-docblock",
@@ -2319,7 +2359,7 @@
                 }
             ],
             "description": "With this component, a library can provide support for annotations via DocBlocks or otherwise retrieve information that is embedded in a DocBlock.",
-            "time": "2017-08-30 18:51:59"
+            "time": "2017-08-30T18:51:59+00:00"
         },
         {
             "name": "phpdocumentor/type-resolver",
@@ -2366,7 +2406,7 @@
                     "email": "me@mikevanriel.com"
                 }
             ],
-            "time": "2017-07-14 14:27:02"
+            "time": "2017-07-14T14:27:02+00:00"
         },
         {
             "name": "phpspec/prophecy",
@@ -2429,7 +2469,7 @@
                 "spy",
                 "stub"
             ],
-            "time": "2017-09-04 11:05:03"
+            "time": "2017-09-04T11:05:03+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -2493,7 +2533,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2017-08-03 12:40:43"
+            "time": "2017-08-03T12:40:43+00:00"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -2540,7 +2580,7 @@
                 "filesystem",
                 "iterator"
             ],
-            "time": "2016-10-03 07:40:28"
+            "time": "2016-10-03T07:40:28+00:00"
         },
         {
             "name": "phpunit/php-text-template",
@@ -2581,7 +2621,7 @@
             "keywords": [
                 "template"
             ],
-            "time": "2015-06-21 13:50:34"
+            "time": "2015-06-21T13:50:34+00:00"
         },
         {
             "name": "phpunit/php-timer",
@@ -2630,7 +2670,7 @@
             "keywords": [
                 "timer"
             ],
-            "time": "2017-02-26 11:10:40"
+            "time": "2017-02-26T11:10:40+00:00"
         },
         {
             "name": "phpunit/php-token-stream",
@@ -2679,7 +2719,7 @@
             "keywords": [
                 "tokenizer"
             ],
-            "time": "2017-08-20 05:47:52"
+            "time": "2017-08-20T05:47:52+00:00"
         },
         {
             "name": "phpunit/phpunit",
@@ -2763,7 +2803,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2017-08-04 05:20:39"
+            "time": "2017-08-04T05:20:39+00:00"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -2822,7 +2862,7 @@
                 "mock",
                 "xunit"
             ],
-            "time": "2017-08-03 14:08:16"
+            "time": "2017-08-03T14:08:16+00:00"
         },
         {
             "name": "psr/log",
@@ -2869,7 +2909,7 @@
                 "psr",
                 "psr-3"
             ],
-            "time": "2016-10-10 12:19:37"
+            "time": "2016-10-10T12:19:37+00:00"
         },
         {
             "name": "roave/security-advisories",
@@ -3014,7 +3054,7 @@
                 }
             ],
             "description": "Prevents installation of composer packages with known security vulnerabilities: no API, simply require it",
-            "time": "2018-01-03 11:17:07"
+            "time": "2018-01-03T11:17:07+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
@@ -3059,7 +3099,7 @@
             ],
             "description": "Looks up which function or method a line of code belongs to",
             "homepage": "https://github.com/sebastianbergmann/code-unit-reverse-lookup/",
-            "time": "2017-03-04 06:30:41"
+            "time": "2017-03-04T06:30:41+00:00"
         },
         {
             "name": "sebastian/comparator",
@@ -3123,7 +3163,7 @@
                 "compare",
                 "equality"
             ],
-            "time": "2017-08-03 07:14:59"
+            "time": "2017-08-03T07:14:59+00:00"
         },
         {
             "name": "sebastian/diff",
@@ -3175,7 +3215,7 @@
             "keywords": [
                 "diff"
             ],
-            "time": "2017-08-03 08:09:46"
+            "time": "2017-08-03T08:09:46+00:00"
         },
         {
             "name": "sebastian/environment",
@@ -3225,7 +3265,7 @@
                 "environment",
                 "hhvm"
             ],
-            "time": "2017-07-01 08:51:00"
+            "time": "2017-07-01T08:51:00+00:00"
         },
         {
             "name": "sebastian/exporter",
@@ -3292,7 +3332,7 @@
                 "export",
                 "exporter"
             ],
-            "time": "2017-04-03 13:19:02"
+            "time": "2017-04-03T13:19:02+00:00"
         },
         {
             "name": "sebastian/global-state",
@@ -3343,7 +3383,7 @@
             "keywords": [
                 "global state"
             ],
-            "time": "2017-04-27 15:39:26"
+            "time": "2017-04-27T15:39:26+00:00"
         },
         {
             "name": "sebastian/object-enumerator",
@@ -3390,7 +3430,7 @@
             ],
             "description": "Traverses array structures and object graphs to enumerate all referenced objects",
             "homepage": "https://github.com/sebastianbergmann/object-enumerator/",
-            "time": "2017-08-03 12:35:26"
+            "time": "2017-08-03T12:35:26+00:00"
         },
         {
             "name": "sebastian/object-reflector",
@@ -3435,7 +3475,7 @@
             ],
             "description": "Allows reflection of object attributes, including inherited and non-public ones",
             "homepage": "https://github.com/sebastianbergmann/object-reflector/",
-            "time": "2017-03-29 09:07:27"
+            "time": "2017-03-29T09:07:27+00:00"
         },
         {
             "name": "sebastian/recursion-context",
@@ -3488,7 +3528,7 @@
             ],
             "description": "Provides functionality to recursively process PHP variables",
             "homepage": "http://www.github.com/sebastianbergmann/recursion-context",
-            "time": "2017-03-03 06:23:57"
+            "time": "2017-03-03T06:23:57+00:00"
         },
         {
             "name": "sebastian/resource-operations",
@@ -3530,7 +3570,7 @@
             ],
             "description": "Provides a list of PHP built-in functions that operate on resources",
             "homepage": "https://www.github.com/sebastianbergmann/resource-operations",
-            "time": "2015-07-28 20:34:47"
+            "time": "2015-07-28T20:34:47+00:00"
         },
         {
             "name": "sebastian/version",
@@ -3573,7 +3613,7 @@
             ],
             "description": "Library that helps with managing the version number of Git-hosted PHP projects",
             "homepage": "https://github.com/sebastianbergmann/version",
-            "time": "2016-10-03 07:35:21"
+            "time": "2016-10-03T07:35:21+00:00"
         },
         {
             "name": "symfony/console",
@@ -3641,7 +3681,7 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2017-08-27 14:52:21"
+            "time": "2017-08-27T14:52:21+00:00"
         },
         {
             "name": "symfony/debug",
@@ -3697,7 +3737,7 @@
             ],
             "description": "Symfony Debug Component",
             "homepage": "https://symfony.com",
-            "time": "2017-08-27 14:52:21"
+            "time": "2017-08-27T14:52:21+00:00"
         },
         {
             "name": "symfony/polyfill-mbstring",
@@ -3756,7 +3796,7 @@
                 "portable",
                 "shim"
             ],
-            "time": "2017-06-14 15:44:48"
+            "time": "2017-06-14T15:44:48+00:00"
         },
         {
             "name": "theseer/tokenizer",
@@ -3796,7 +3836,7 @@
                 }
             ],
             "description": "A small library for converting tokenized PHP source code into XML and potentially other formats",
-            "time": "2017-04-07 12:08:54"
+            "time": "2017-04-07T12:08:54+00:00"
         },
         {
             "name": "tracy/tracy",
@@ -3863,7 +3903,7 @@
                 "nette",
                 "profiler"
             ],
-            "time": "2017-08-16 17:13:36"
+            "time": "2017-08-16T17:13:36+00:00"
         },
         {
             "name": "ublaboo/api-docu",
@@ -3918,7 +3958,7 @@
                 "rest",
                 "routes"
             ],
-            "time": "2016-09-21 11:52:36"
+            "time": "2016-09-21T11:52:36+00:00"
         },
         {
             "name": "ublaboo/api-router",
@@ -3977,7 +4017,7 @@
                 "routes",
                 "routing"
             ],
-            "time": "2017-07-20 09:11:57"
+            "time": "2017-07-20T09:11:57+00:00"
         },
         {
             "name": "webmozart/assert",
@@ -4027,7 +4067,7 @@
                 "check",
                 "validate"
             ],
-            "time": "2016-11-23 20:04:58"
+            "time": "2016-11-23T20:04:58+00:00"
         }
     ],
     "packages-dev": [],

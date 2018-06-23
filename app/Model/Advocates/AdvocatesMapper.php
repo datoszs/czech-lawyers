@@ -1,6 +1,7 @@
 <?php
 namespace App\Model\Advocates;
 
+use DateTime;
 use Nextras\Dbal\QueryBuilder\QueryBuilder;
 use Nextras\Orm\Mapper\Mapper;
 
@@ -63,5 +64,19 @@ class AdvocatesMapper extends Mapper
 			->limitBy($count, $start)
 			->orderBy('score ' . ($reverse ? 'ASC' : 'DESC'));
 
+	}
+
+	/**
+	 * Return advocates with advocate info which were changed since given time.
+	 *
+	 * @param DateTime $from
+	 * @return QueryBuilder
+	 */
+	public function findWithChangedInfos(DateTime $from)
+	{
+		return $this
+			->builder()
+			->innerJoin('advocate', 'advocate_info', 'advocate_info', 'advocate.id_advocate = advocate_info.advocate_id')
+			->where('advocate_info.inserted >= %dt', $from);
 	}
 }

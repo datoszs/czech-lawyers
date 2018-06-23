@@ -45,7 +45,8 @@
 		"ublaboo/api-router": "^1.2",
 		"ublaboo/api-docu": "^1.2",
 		"heureka/inflection": "^2.0",
-		"roave/security-advisories": "dev-master"
+		"roave/security-advisories": "dev-master",
+		"datoscz/mapy.cz-geocoder": "^1.0"
 	},
 	"repositories": [
 		{

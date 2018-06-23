@@ -4,13 +4,12 @@ namespace App\Model\Services;
 use App\Model\Advocates\Advocate;
 use App\Model\Advocates\AdvocateInfo;
 use App\Model\Orm;
+use DateTime;
 use DateTimeImmutable;
-use Nette\NotImplementedException;
 use Nextras\Dbal\Connection;
 use Nextras\Dbal\QueryException;
 use Nextras\Orm\Collection\ICollection;
 use Nextras\Orm\Entity\IEntity;
-use PDOException;
 use Tracy\Debugger;
 
 class AdvocateService
@@ -67,6 +66,16 @@ class AdvocateService
 	public function search($phrase, int $start = 0, ?int $limit = null)
 	{
 		return $this->orm->advocates->search($phrase, $start, $limit)->fetchAll();
+	}
+
+	public function findAll()
+	{
+		return $this->orm->advocates->findAll();
+	}
+
+	public function findWithChangedInfos(DateTime $from)
+	{
+		return $this->orm->advocates->findWithChangedInfos($from);
 	}
 
 	/**

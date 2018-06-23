@@ -34,4 +34,15 @@ class Advocate extends Entity
 		}
 		return null;
 	}
+
+	public function getCurrentAdvocateInfo(): ?AdvocateInfo
+	{
+		$now = new DateTime();
+		foreach ($this->advocateInfo as $advocateInfo) {
+			if ($now >= $advocateInfo->validFrom && (!isset($advocateInfo->validTo) || $advocateInfo === null || $now <= $advocateInfo->validTo)) {
+				return $advocateInfo;
+			}
+		}
+		return null;
+	}
 }

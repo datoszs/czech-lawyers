@@ -2,12 +2,14 @@
 
 namespace Mikulas\OrmExt;
 
+use DATOSCZ\MapyCzGeocoder\Utils\Coordinates;
 use Mikulas\OrmExt\Pg\PgArray;
 use Nette\Utils\Json;
 use Nextras\Orm\Entity\Reflection\EntityMetadata;
 use Nextras\Orm\InvalidArgumentException;
 use Nextras\Orm\Mapper\Dbal\StorageReflection\IStorageReflection;
 use Nextras\Orm\Mapper\Dbal\StorageReflection\StorageReflection;
+use function substr;
 
 
 class MappingFactory
@@ -47,6 +49,35 @@ class MappingFactory
 					return null;
 				}
 				return Json::encode($value);
+			}
+		);
+	}
+
+	/**
+	 * @param string $propertyName
+	 * @throws InvalidPropertyException
+	 */
+	public function addCoordinatesMapping($propertyName)
+	{
+		$this->validateProperty($propertyName);
+		$this->storageReflection->setMapping(
+			$propertyName,
+			$this->storageReflection->convertEntityToStorageKey($propertyName),
+			function ($value) {
+				if ($value === null) {
+					return null;
+				}
+				$temp = explode(',', substr($value,1, -1));
+				return new Coordinates($temp[0], $temp[1]);
+			},
+			function ($value) {
+				if ($value === null) {
+					return null;
+				}
+				if ($value instanceof Coordinates) {
+					return sprintf('(%f,%f)', $value->getLatitude(), $value->getLongitude());
+				}
+				throw new \InvalidArgumentException('Unexpected value');
 			}
 		);
 	}

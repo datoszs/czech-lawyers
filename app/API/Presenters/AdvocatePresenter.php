@@ -59,6 +59,10 @@ class AdvocatePresenter extends Presenter
 	 *             "petr.omacka@example.com"
 	 *         ],
 	 *         "state": "active",
+	 *         "location: {
+	 *             "lat": 49.1234,
+	 *             "long": 16.1234
+	 *         },
 	 *         "remote_page": "http://vyhledavac.cak.cz/Contact/Details/77b3dbfb-f855-4170-9d5b-dc30757a0204",
 	 *         "statistics": {
 	 *             "negative": 12,
@@ -115,7 +119,7 @@ class AdvocatePresenter extends Presenter
 	 *
 	 * Note: when advocate is in state <b>removed</b>, then emails field is null.
 	 *
-	 * Note: when advocate (queried or with same name) is in state <b>removed<b>, then fields street and postal_area are null.
+	 * Note: when advocate (queried or with same name) is in state <b>removed<b>, then fields street and postal_area as well as location are null.
 	 *
 	 * Note: statistics take into account only cases which are relevant for advocates portal.
 	 *
@@ -187,6 +191,7 @@ class AdvocatePresenter extends Presenter
 			],
 			'emails' => $currentInfo->status === AdvocateStatus::STATUS_REMOVED ? null : $currentInfo->email,
 			'state' => $currentInfo->status,
+			'location' => $currentInfo->status !== AdvocateStatus::STATUS_REMOVED && $currentInfo->location ? ['lat' => $currentInfo->location->getLatitude(), 'long' => $currentInfo->location->getLongitude()] : null,
 			'remote_page' => sprintf('http://vyhledavac.cak.cz/Contact/Details/%s', $advocate->remoteIdentificator),
 			'statistics' => [
 				CaseResult::RESULT_NEGATIVE => $statistics[CaseResult::RESULT_NEGATIVE] ?? 0,

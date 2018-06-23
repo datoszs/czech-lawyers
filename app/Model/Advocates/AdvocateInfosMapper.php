@@ -13,6 +13,7 @@ class AdvocateInfosMapper extends Mapper
         $factory = new MappingFactory(parent::createStorageReflection(), $this->getRepository()->getEntityMetadata());
         $factory->addStringArrayMapping('email');
         $factory->addStringArrayMapping('specialization');
+        $factory->addCoordinatesMapping('location');
 
         return $factory->getStorageReflection();
     }

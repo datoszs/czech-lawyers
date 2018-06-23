@@ -6,6 +6,7 @@ use App\Model\Users\User;
 use App\Enums\AdvocateStatus;
 use App\Utils\Diffable;
 use DateTime;
+use DATOSCZ\MapyCzGeocoder\Utils\Coordinates;
 use Nextras\Orm\Entity\Entity;
 
 /**
@@ -27,6 +28,7 @@ use Nextras\Orm\Entity\Entity;
  * @property string|null		$wayOfPracticingAdvocacy
  * @property DateTime			$validFrom			{default now}
  * @property DateTime|null		$validTo
+ * @property Coordinates|null	$location
  * @property DateTime			$inserted			{default now}
  * @property User				$insertedBy			{m:1 User, oneSided=true}
  * @property JobRun|null		$jobRun				{m:1 JobRun, oneSided=true}

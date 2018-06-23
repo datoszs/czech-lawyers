@@ -102,6 +102,7 @@ console:
 		- App\Commands\SendBatchEmail
 		- App\Commands\AnnuledCaseImport
 		- App\Commands\DocumentFileRedownloader
+		- App\Commands\GeocodeAdvocates
 
 
 orm:
