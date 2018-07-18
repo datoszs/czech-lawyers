@@ -200,6 +200,9 @@ class CausaImport extends Command
 				$document->localPath = $destinationDirRelative . (string)$row['local_path'];
 				$document->decisionDate = new DateTime($row['decision_date']);
 				$toUpdate = $this->documentService->findExtraData($document);
+			} elseif ($entity == null) {
+				$output .= sprintf("Warning: Not found document for '%s'.", $recordId);
+				continue;
 			}
 			if ($courtId == Court::TYPE_NS) {
 				$extras = new DocumentSupremeCourt();
