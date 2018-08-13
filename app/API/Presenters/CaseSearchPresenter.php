@@ -11,6 +11,7 @@ use App\Model\Services\AnnulmentService;
 use App\Model\Services\CauseService;
 use App\Model\Services\TaggingService;
 use App\Model\Taggings\TaggingCaseResult;
+use App\Model\Taggings\TaggingCaseSuccess;
 use App\Utils\TemplateFilters;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Presenter;
@@ -49,6 +50,8 @@ class CaseSearchPresenter extends Presenter
 	 *             "registry_mark": "22 Cdo 2045/2012",
 	 *             "tagging_result": "positive",
 	 *             "tagging_result_final": true,
+	 *             "tagging_success_result": "positive",
+	 *             "tagging_success_result_final": true,
 	 *             "tagging_result_annuled": true,
 	 *             "tagging_result_annuled_by_id_cases": [2, null],
 	 *         },
@@ -110,9 +113,10 @@ class CaseSearchPresenter extends Presenter
 		// Load data
 		$cases = $this->caseService->search($query, $start, $count, $strategy);
 		$taggings = $this->prepareCasesResults($cases);
+		$taggingsSuccesses = $this->prepareCasesSuccessesResults($cases);
 		$annulments = $this->annulmentService->findComputedAnnulmentOfCases($cases);
-		$output = array_map(function (Cause $cause) use ($annulments, $taggings) {
-			return $this->mapCause($cause, $taggings[$cause->id] ?? null, $annulments);
+		$output = array_map(function (Cause $cause) use ($annulments, $taggings, $taggingsSuccesses) {
+			return $this->mapCause($cause, $taggings[$cause->id] ?? null, $taggingsSuccesses[$cause->id] ?? null,  $annulments);
 		}, $cases, $annulments);
 		// Send output
 		$this->sendJson($output);
@@ -128,7 +132,17 @@ class CaseSearchPresenter extends Presenter
 		return $output;
 	}
 
-	private function mapCause(Cause $cause, ?TaggingCaseResult $result, array $annulments)
+	private function prepareCasesSuccessesResults($data)
+	{
+		$output = [];
+		$temp = $this->taggingService->findCaseSuccessLatestTaggingByCases($data);
+		foreach ($temp as $row) {
+			$output[$row->case->id] = $row;
+		}
+		return $output;
+	}
+
+	private function mapCause(Cause $cause, ?TaggingCaseResult $result, ?TaggingCaseSuccess $resultSuccess, array $annulments)
 	{
 		return [
 			'id_case' => $cause->id,
@@ -136,6 +150,8 @@ class CaseSearchPresenter extends Presenter
 			'registry_mark' => TemplateFilters::formatRegistryMark($cause->registrySign),
 			'tagging_result' => ($result && $result->status === TaggingStatus::STATUS_PROCESSED) ? $result->caseResult : null,
 			'tagging_result_final' => $result ? $result->isFinal : null,
+			'tagging_success_result' => ($resultSuccess && $resultSuccess->status === TaggingStatus::STATUS_PROCESSED) ? $resultSuccess->caseSuccess : null,
+			'tagging_success_result_final' => $resultSuccess ? $resultSuccess->isFinal : null,
 			'tagging_result_annuled' => isset($annulments[$cause->id]) && count($annulments[$cause->id]) > 0 ? true : false,
 			'tagging_result_annuled_by_id_cases' => $annulments[$cause->id] ?? [],
 		];

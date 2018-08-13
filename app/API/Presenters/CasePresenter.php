@@ -9,6 +9,7 @@ use App\Auditing\AuditedSubject;
 use App\Auditing\ILogger;
 use App\Enums\AdvocateStatus;
 use App\Enums\CaseResult;
+use App\Enums\CaseSuccess;
 use App\Enums\TaggingStatus;
 use App\Model\Advocates\Advocate;
 use App\Model\Advocates\AdvocateInfo;
@@ -22,6 +23,7 @@ use App\Model\Services\DocumentService;
 use App\Model\Services\TaggingService;
 use App\Model\Taggings\TaggingAdvocate;
 use App\Model\Taggings\TaggingCaseResult;
+use App\Model\Taggings\TaggingCaseSuccess;
 use App\Utils\TemplateFilters;
 use DateTime;
 use Nette\Application\AbortException;
@@ -72,6 +74,8 @@ class CasePresenter extends Presenter
 	 *         "tagging_advocate_final": true,
 	 *         "tagging_result": "negative",
 	 *         "tagging_result_final": false,
+	 *         "tagging_success_result": "negative",
+	 *         "tagging_success_result_final": false,
 	 *         "proposition_date": "2016-03-01T01:00:00+01:00",
 	 *         "decision_date": null,
 	 *         "documents": [
@@ -98,6 +102,13 @@ class CasePresenter extends Presenter
 	 *  - <b>negative</b>
 	 *  - <b>neutral</b>
 	 *  - <b>positive</b>
+	 *  - <b>null</b> - when tagging is invalid
+	 *
+	 * Potential tagging success result (@see CaseSuccess):
+	 *  - <b>negative</b>
+	 *  - <b>neutral</b>
+	 *  - <b>positive</b>
+	 *  - <b>unknown</b>
 	 *  - <b>null</b> - when tagging is invalid
 	 *
 	 * Potential tagging final result:
@@ -147,6 +158,7 @@ class CasePresenter extends Presenter
 		}
 		$documents = $this->documentService->findByCaseId($case->id);
 		$results = $this->prepareCasesResults([$case]);
+		$resultSuccesses = $this->prepareCasesSuccessesResults([$case]);
 		$advocateTagging = $this->taggingService->getLatestAdvocateTaggingFor($case);
 
 		/* @var Annulment $annulment */
@@ -154,7 +166,7 @@ class CasePresenter extends Presenter
 		$annuling = $this->annulmentService->findComputedAnnulingOfCases([$case]);
 
 		// Transform to output
-		$output = $this->mapDataToOutput($case, $documents, $results[$id] ?? null, $advocateTagging, $annulments, $annuling);
+		$output = $this->mapDataToOutput($case, $documents, $results[$id] ?? null, $resultSuccesses[$id] ?? null, $advocateTagging, $annulments, $annuling);
 		// Auditing
 		$advocateTaggingId = $advocateTagging ? $advocateTagging->id : null;
 		$advocateId = $advocateTagging && $advocateTagging->advocate ? $advocateTagging->advocate->id : null;
@@ -177,7 +189,17 @@ class CasePresenter extends Presenter
 		return $output;
 	}
 
-	private function mapDataToOutput(Cause $case, array $documents, ?TaggingCaseResult $result, ?TaggingAdvocate $taggingAdvocate, array $annulments, array $annuling)
+	private function prepareCasesSuccessesResults($data)
+	{
+		$output = [];
+		$temp = $this->taggingService->findCaseSuccessLatestTaggingByCases($data);
+		foreach ($temp as $row) {
+			$output[$row->case->id] = $row;
+		}
+		return $output;
+	}
+
+	private function mapDataToOutput(Cause $case, array $documents, ?TaggingCaseResult $result, ?TaggingCaseSuccess $resultSuccess, ?TaggingAdvocate $taggingAdvocate, array $annulments, array $annuling)
 	{
 		/** @var AdvocateInfo $currentInfo */
 		$advocate = null;
@@ -196,6 +218,8 @@ class CasePresenter extends Presenter
 			'tagging_advocate_final' => $taggingAdvocate ? $taggingAdvocate->isFinal : null,
 			'tagging_result' => ($result && $result->status === TaggingStatus::STATUS_PROCESSED) ? $result->caseResult : null,
 			'tagging_result_final' => $result ? $result->isFinal : null,
+			'tagging_success_result' => ($resultSuccess && $resultSuccess->status === TaggingStatus::STATUS_PROCESSED) ? $resultSuccess->caseSuccess : null,
+			'tagging_success_result_final' => $resultSuccess ? $resultSuccess->isFinal : null,
 			'decision_date' => $case->decisionDate ? $case->decisionDate->format(DateTime::ATOM) : null,
 			'proposition_date' => $case->propositionDate ? $case->propositionDate->format(DateTime::ATOM) : null,
 			'documents' => array_map(function (Document $document) {

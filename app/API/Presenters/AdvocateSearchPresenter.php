@@ -9,6 +9,7 @@ use App\Auditing\AuditedSubject;
 use App\Auditing\ILogger;
 use App\Enums\AdvocateStatus;
 use App\Enums\CaseResult;
+use App\Enums\CaseSuccess;
 use App\Model\Advocates\Advocate;
 use App\Model\Advocates\AdvocateInfo;
 use App\Model\Services\AdvocateService;
@@ -62,7 +63,13 @@ class AdvocateSearchPresenter extends Presenter
 	 *             "statistics": {
 	 *                 "negative": 12,
 	 *                 "neutral": 2,
-	 *                 "positive": 59,
+	 *                 "positive": 59
+	 *             },
+	 *             "success_statistics": {
+	 *                 "negative": 10,
+	 *                 "neutral": 2,
+	 *                 "positive": 3,
+	 *                 "unknown": 2
 	 *             }
 	 *         }
 	 *     ]
@@ -77,6 +84,12 @@ class AdvocateSearchPresenter extends Presenter
 	 *  - <b>negative</b>
 	 *  - <b>neutral</b>
 	 *  - <b>positive</b>
+	 *
+	 * Available success statistics results (@see CaseResult):
+	 *  - <b>negative</b>
+	 *  - <b>neutral</b>
+	 *  - <b>positive</b>
+	 *  - <b>unknown</b>
 	 *
 	 * Note: when advocate (queried or with same name) is in state <b>removed<b>, then fields street and postal_area are null.
 	 *
@@ -128,9 +141,10 @@ class AdvocateSearchPresenter extends Presenter
 		$advocates = $this->advocateService->search($query, $start, $count);
 		$advocatesIds = array_map(function (Advocate $advocate) { return $advocate->id; }, $advocates);
 		$statistics = $this->taggingService->computeAdvocatesStatisticsPerCourt($advocatesIds);
+		$successStatistics = $this->taggingService->computeAdvocatesSuccessStatisticsPerCourt($advocatesIds);
 		// Transform to output
-		$output = array_map(function (Advocate $advocate) use ($query, $statistics) {
-			return $this->mapAdvocate($advocate, $query, $statistics[$advocate->id][TaggingService::ALL] ?? []);
+		$output = array_map(function (Advocate $advocate) use ($query, $statistics, $successStatistics) {
+			return $this->mapAdvocate($advocate, $query, $statistics[$advocate->id][TaggingService::ALL] ?? [], $successStatistics[$advocate->id][TaggingService::ALL] ?? []);
 		}, $advocates);
 		// Auditing
 		/** @var Advocate $advocate */
@@ -141,7 +155,7 @@ class AdvocateSearchPresenter extends Presenter
 		$this->sendJson($output);
 	}
 
-	private function mapAdvocate(Advocate $advocate, string $query, array $statistics)
+	private function mapAdvocate(Advocate $advocate, string $query, array $statistics, array $successStatistics)
 	{
 		$currentInfo = null;
 		$matchedType = null;
@@ -185,6 +199,12 @@ class AdvocateSearchPresenter extends Presenter
 				CaseResult::RESULT_NEGATIVE => $statistics[CaseResult::RESULT_NEGATIVE] ?? 0,
 				CaseResult::RESULT_NEUTRAL => $statistics[CaseResult::RESULT_NEUTRAL] ?? 0,
 				CaseResult::RESULT_POSITIVE => $statistics[CaseResult::RESULT_POSITIVE] ?? 0,
+			],
+			'success_statistics' => [
+				CaseSuccess::RESULT_NEGATIVE => $successStatistics[CaseSuccess::RESULT_NEGATIVE] ?? 0,
+				CaseSuccess::RESULT_NEUTRAL => $successStatistics[CaseSuccess::RESULT_NEUTRAL] ?? 0,
+				CaseSuccess::RESULT_POSITIVE => $successStatistics[CaseSuccess::RESULT_POSITIVE] ?? 0,
+				CaseSuccess::RESULT_UNKNOWN => $successStatistics[CaseSuccess::RESULT_UNKNOWN] ?? 0,
 			]
 		];
 	}

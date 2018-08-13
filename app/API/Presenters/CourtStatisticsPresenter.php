@@ -24,7 +24,7 @@ class CourtStatisticsPresenter extends Presenter
 	public $taggingService;
 
 	/**
-	 * Get statistics of all courts.
+	 * Get statistics of each tagged case results type (@see CaseResult) grouped by court.
 	 *
 	 * <json>
 	 *     {

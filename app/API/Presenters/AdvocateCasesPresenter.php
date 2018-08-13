@@ -64,6 +64,7 @@ class AdvocateCasesPresenter extends Presenter
 	 *                 "id_court": 2,
 	 *                 "registry_mark": "42 CDO 4000/2016",
 	 *                 "tagging_result": "negative",
+	 *                 "tagging_success_result": "negative",
 	 *                 "proposition_date": "2016-03-01T01:00:00+01:00",
 	 *                 "decision_date": null,
 	 *                 "tagging_result_annuled": true,
@@ -82,6 +83,13 @@ class AdvocateCasesPresenter extends Presenter
 	 *  - <b>negative</b>
 	 *  - <b>neutral</b>
 	 *  - <b>positive</b>
+	 *  - <b><i>null</i></b> when no result available
+	 *
+	 * Available results (@see CaseResult):
+	 *  - <b>negative</b>
+	 *  - <b>neutral</b>
+	 *  - <b>positive</b>
+	 *  - <b>unknown</b>
 	 *  - <b><i>null</i></b> when no result available
 	 *
 	 * Annuling of cases:
@@ -149,9 +157,10 @@ class AdvocateCasesPresenter extends Presenter
 		}
 		$cases = $this->causeService->findFromAdvocate($advocate, $court, $year, $result);
 		$results = $this->prepareCasesResults($cases->fetchAll());
+		$resultSuccesses = $this->prepareCasesSuccessesResults($cases->fetchAll());
 		$annulments = $this->annulmentService->findComputedAnnulmentOfCases($cases->fetchAll());
 		// Transform to output
-		$output = $this->mapAdvocateCases($advocateEntity, $cases, $results, $court, $year, $result, $annulments);
+		$output = $this->mapAdvocateCases($advocateEntity, $cases, $results, $resultSuccesses, $court, $year, $result, $annulments);
 		// Auditing
 		$advocateTaggings = $this->prepareAdvocateTaggings($cases->fetchAll());
 		/** @var Cause $case */
@@ -177,6 +186,16 @@ class AdvocateCasesPresenter extends Presenter
 		return $output;
 	}
 
+	private function prepareCasesSuccessesResults($data)
+	{
+		$output = [];
+		$temp = $this->taggingService->findCaseSuccessLatestTaggingByCases($data);
+		foreach ($temp as $row) {
+			$output[$row->case->id] = $row;
+		}
+		return $output;
+	}
+
 	private function prepareAdvocateTaggings(array $causes): array
 	{
 		$output = [];
@@ -187,7 +206,7 @@ class AdvocateCasesPresenter extends Presenter
 		return $output;
 	}
 
-	private function mapAdvocateCases(Advocate $advocate, ICollection $cases, array $results, ?int $court, ?int $year, ?string $result, array $annulments)
+	private function mapAdvocateCases(Advocate $advocate, ICollection $cases, array $results, array $resultSuccesses, ?int $court, ?int $year, ?string $result, array $annulments)
 	{
 		$output = [
 			'id_advocate' => $advocate->id,
@@ -210,6 +229,7 @@ class AdvocateCasesPresenter extends Presenter
 				'id_court' => $case->court->id,
 				'registry_mark' => TemplateFilters::formatRegistryMark($case->registrySign),
 				'tagging_result' => isset($results[$case->id]) ? $results[$case->id]->caseResult : null,
+				'tagging_success_result' => isset($resultSuccesses[$case->id]) ? $resultSuccesses[$case->id]->caseSuccess : null,
 				'decision_date' => $case->decisionDate ? $case->decisionDate->format(DateTime::ATOM) : null,
 				'proposition_date' => $case->propositionDate ? $case->propositionDate->format(DateTime::ATOM) : null,
 				'tagging_result_annuled' => isset($annulments[$case->id]) && count($annulments[$case->id]) > 0 ? true : false,

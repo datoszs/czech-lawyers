@@ -227,6 +227,45 @@ class TaggingService
 	 * @param array $advocatesIds
 	 * @return array
 	 */
+	public function computeAdvocatesSuccessStatisticsPerCourt(array $advocatesIds)
+	{
+		if (count($advocatesIds) === 0) {
+			$advocatesIds[] = null;
+		}
+		$data = $this->connection->query('
+		SELECT
+			"case".court_id,
+			advocate_id,
+			case_success,
+			COUNT(*) AS count
+		FROM "case"
+		JOIN vw_case_for_advocates ON "case".id_case = "vw_case_for_advocates".id_case 
+		JOIN vw_latest_tagging_case_success AS last_taggings ON "case".id_case = last_taggings.case_id AND last_taggings.status = %s
+		JOIN vw_latest_tagging_advocate AS last_taggings_advocate ON "case".id_case = last_taggings_advocate.case_id AND last_taggings_advocate.status = %s
+		LEFT JOIN vw_computed_case_annulment AS case_anulled ON case_anulled.annuled_case = "case".id_case
+		WHERE advocate_id IN %?i[] AND case_anulled.annuled_case IS NULL
+		GROUP BY "case".court_id, advocate_id, case_success
+		',
+			TaggingStatus::STATUS_PROCESSED,
+			TaggingStatus::STATUS_PROCESSED,
+			$advocatesIds
+		)->fetchAll();
+		$output = [];
+		foreach ($data as $row) {
+			$output[$row->advocate_id][$row->court_id][$row->case_success] = $row->count;
+			if (!isset($output[$row->advocate_id][static::ALL][$row->case_success])) {
+				$output[$row->advocate_id][static::ALL][$row->case_success] = 0;
+			}
+			$output[$row->advocate_id][static::ALL][$row->case_success] += $row->count;
+		}
+		return $output;
+	}
+
+	/**
+	 * Note: filters cases only to allowed ones for advocate portal
+	 * @param array $advocatesIds
+	 * @return array
+	 */
 	public function computeCourtStatisticsPerCourt()
 	{
 		$data = $this->connection->query('

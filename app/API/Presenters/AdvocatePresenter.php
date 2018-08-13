@@ -9,6 +9,7 @@ use App\Auditing\AuditedSubject;
 use App\Auditing\ILogger;
 use App\Enums\AdvocateStatus;
 use App\Enums\CaseResult;
+use App\Enums\CaseSuccess;
 use App\Model\Advocates\Advocate;
 use App\Model\Advocates\AdvocateInfo;
 use App\Model\Services\AdvocateService;
@@ -67,18 +68,37 @@ class AdvocatePresenter extends Presenter
 	 *         "statistics": {
 	 *             "negative": 12,
 	 *             "neutral": 2,
-	 *             "positive": 59,
+	 *             "positive": 59
+	 *         },
+	 *         "success_statistics": {
+	 *             "negative": 64,
+	 *             "neutral": 2,
+	 *             "positive": 5,
+	 *             "unknown": 2
 	 *         },
 	 *         "court_statistics": {
 	 *             "1": {
 	 *                 "negative": 11,
 	 *                 "neutral": 1,
-	 *                 "positive": 57,
+	 *                 "positive": 57
+	 *             },
+	 *             "2": {
+	 *                 "negative": 1,
+	 *                 "neutral": 1,
+	 *                 "positive": 2
+	 *             }
+	 *         }
+	 *         "court_success_statistics": {
+	 *             "1": {
+	 *                 "negative": 63,
+	 *                 "neutral": 1,
+	 *                 "positive": 3
 	 *             },
 	 *             "2": {
 	 *                 "negative": 1,
 	 *                 "neutral": 1,
 	 *                 "positive": 2,
+	 *                 "unknown": 2
 	 *             }
 	 *         }
 	 *         "advocates_with_same_name": [
@@ -117,11 +137,17 @@ class AdvocatePresenter extends Presenter
 	 *  - <b>neutral</b>
 	 *  - <b>positive</b>
 	 *
+	 * Available statistics success results (@see CaseSuccess):
+	 *  - <b>negative</b>
+	 *  - <b>neutral</b>
+	 *  - <b>positive</b>
+	 *  - <b>unknown</b>
+	 *
 	 * Note: when advocate is in state <b>removed</b>, then emails field is null.
 	 *
 	 * Note: when advocate (queried or with same name) is in state <b>removed<b>, then fields street and postal_area as well as location are null.
 	 *
-	 * Note: statistics take into account only cases which are relevant for advocates portal.
+	 * Note: both statistics take into account only cases which are relevant for advocates portal.
 	 *
 	 * Note: advocates with same name also match historic names on both sides, but shows only up-to-date names.
 	 * In example Petr Ostrý was previously named Petr Omáčka or the queried advocate was names Petr Ostrý.
@@ -160,9 +186,18 @@ class AdvocatePresenter extends Presenter
 		}
 		$advocatesOfSameName = $this->advocateService->findOfSameName($advocate);
 		$statistics = $this->taggingService->computeAdvocatesStatisticsPerCourt([$id]);
+		$successStatistics = $this->taggingService->computeAdvocatesSuccessStatisticsPerCourt([$id]);
 		$decile = $this->advocateService->getAdvocateDecile($advocate);
 		// Transform to output
-		$output = $this->mapAdvocate($advocate, $statistics[$advocate->id][TaggingService::ALL] ?? [], $statistics[$advocate->id] ?? [], $advocatesOfSameName, $decile);
+		$output = $this->mapAdvocate(
+			$advocate,
+			$statistics[$advocate->id][TaggingService::ALL] ?? [],
+			$successStatistics[$advocate->id][TaggingService::ALL] ?? [],
+			$statistics[$advocate->id] ?? [],
+			$successStatistics[$advocate->id] ?? [],
+			$advocatesOfSameName,
+			$decile
+		);
 		// Auditing
 		$this->auditing->logAccess(AuditedSubject::ADVOCATE_INFO, "Load advocate [{$advocate->getCurrentName()}] with ID [{$advocate->id}].", AuditedReason::REQUESTED_INDIVIDUAL);
 		/** @var Advocate $advocateOfSameName */
@@ -173,9 +208,10 @@ class AdvocatePresenter extends Presenter
 		$this->sendJson($output);
 	}
 
-	private function mapAdvocate(Advocate $advocate, array $statistics, array $courtStatistics, array $advocatesOfSameName, ?int $decile)
+	private function mapAdvocate(Advocate $advocate, array $statistics, array $successStatistics, array $courtStatistics, array $courtSuccessStatistics, array $advocatesOfSameName, ?int $decile)
 	{
 		unset($courtStatistics[TaggingService::ALL]);
+		unset($courtSuccessStatistics[TaggingService::ALL]);
 		/** @var AdvocateInfo $currentInfo */
 		$currentInfo = $advocate->advocateInfo->get()->fetch();
 		return [
@@ -198,7 +234,14 @@ class AdvocatePresenter extends Presenter
 				CaseResult::RESULT_NEUTRAL => $statistics[CaseResult::RESULT_NEUTRAL] ?? 0,
 				CaseResult::RESULT_POSITIVE => $statistics[CaseResult::RESULT_POSITIVE] ?? 0,
 			],
+			'success_statistics' => [
+				CaseSuccess::RESULT_NEGATIVE => $successStatistics[CaseSuccess::RESULT_NEGATIVE] ?? 0,
+				CaseSuccess::RESULT_NEUTRAL => $successStatistics[CaseSuccess::RESULT_NEUTRAL] ?? 0,
+				CaseSuccess::RESULT_POSITIVE => $successStatistics[CaseSuccess::RESULT_POSITIVE] ?? 0,
+				CaseSuccess::RESULT_UNKNOWN => $successStatistics[CaseSuccess::RESULT_UNKNOWN] ?? 0,
+			],
 			'court_statistics' => $courtStatistics,
+			'court_success_statistics' => $courtSuccessStatistics,
 			'advocates_with_same_name' => $this->mapAdvocateWithSameName($advocatesOfSameName),
 			'rankings' => [
 				'decile' => $decile
