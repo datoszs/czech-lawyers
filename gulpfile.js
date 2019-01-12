@@ -50,7 +50,7 @@ gulp.task('clean', function () {
             arr.push(destinations[i]);
         }
     }
-    return gulp.src(arr, {read: false})
+    return gulp.src(arr, {read: false, allowEmpty: true})
         .pipe(clean());
 });
 
@@ -102,13 +102,13 @@ gulp.task('scripts-mini', gulp.series('scripts')); // For now backend scripts ar
 
 // ====== Other actions =======
 gulp.task('watch', function() {
-    gulp.watch(paths.styles, ['styles']);
-    gulp.watch(paths.stylesLess, ['styles']);
+    gulp.watch(paths.styles, gulp.series('styles'));
+    gulp.watch(paths.stylesLess, gulp.series('styles'));
 
-    gulp.watch(paths.scripts, ['scripts']);
+    gulp.watch(paths.scripts, gulp.series('scripts'));
 
-    gulp.watch(paths.fonts, ['fonts']);
-    gulp.watch(paths.images, ['images']);
+    gulp.watch(paths.fonts, gulp.series('fonts'));
+    gulp.watch(paths.images, gulp.series('images'));
 
 });
 
