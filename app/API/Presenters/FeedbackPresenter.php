@@ -84,7 +84,8 @@ class FeedbackPresenter extends Presenter
 		$message = $this->mailService->createMessage('feedback', ['content' => $content]);
 		$message->setSubject('[Čeští advokáti]: zpráva z webu');
 		$message->addTo($this->mailService->getSupportAddress());
-		$message->setFrom($from, $fullname);
+		$message->setFrom($this->mailService->getNoReplyAddress());
+		$message->addReplyTo($from, $fullname);
 		try {
 			$this->mailService->send($message);
 		} catch (SendException $exception) {
