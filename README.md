@@ -6,13 +6,10 @@
  - PostgreSQL >= 9.5
  - Node Package Manager (aka `npm`)
  - Composer
- - Web server and hosting site configured to allow Nette applications
+ - For production: web server and hosting site configured to allow Nette applications
+ - For local development: docker and docker-compose
 
-## On Ubuntu
-
- - Install packages ``php-pgsql``, ``php-xml`` and ``php-posix``.
-
-## Installation
+## Installation (for production usage)
 
 1. Make directories `temp/` and `log/` writable.
 2. Run `composer install` to install backend dependencies.
@@ -46,28 +43,55 @@ Note: branches starting with `wip-` prefix are contains unfinished and incomplet
 
 ### Development
 
-You can use either full standalone server such as Apache and configure VirtualHost properly, or you can use PHP built-in webserver for which just run `php -S localhost:8000 -t www` in the root of the project. Then the website is available at `http://localhost:8000`.
+Due to specific libraries versions the development environment is prepared and maintained in docker containers managed by the docker-compose.
 
-You can start front-end application in development mode by runnning `npm start` in the project root. Web application is then available at `http://localhost:8080`. 
+1. Make directories `temp/` and `log/` writable.
+2. Run `composer install` to install backend dependencies.
+3. Run `npm install` to install runtime dependencies.
+4. Run `gulp`
+5. Create local config `app/Config/config.local.neon` (see example file `config.local.neon.example`).
+6. Create file `.env` in project root and populate it with:
+   ```bash
+   IP=127.0.0.1 # IP address when the Docker container ports (80, 443...) should be binded
+   PROJECT_PATH=. # On MacOS provide full absolute directory starting with /System/Volumes/Data, provide . otherwise
+   COMPOSE_PROJECT_NAME=datoscz
+   ```
+7. Perform `docker-compose up` to build and run containers, on change in containers append `--build` param to force rebuild (otherwise old will be used).
+8. Migrate database by running `php www/index.php migrations:continue` inside the container where you get by running `docker-compose exec webserver bash`.
+9. Change your `hosts` file to map the selected IP to the name `czech-lawyers.test` and `www.czech-lawyers.test`. 
+10. Open page at web server via `https://czech-lawyers.test` URL.
+
+If you experience issue with reading/writing PHP session data add `session.savePath: null` to your `config.local.neon`.
+
+To enter the container use `docker-compose exec webserver bash` in the project root dir.
+
+Access Adminer at `http://czech-lawyer.test:8080` (protocol matters!), database itself is available on the given IP address under `5432` port.
+Database data are persisted in the Docker volume (see `docker-compose.yml`). If you need to reset the database use `docker volumes rm datoscz_datos_db_data`
+
+You can start front-end application in development mode by running `npm start` in the project root. Web application is then available at `http://localhost:8080`. 
 
 
 When having installation done, these steps needs to be performed to get up-to-date version:
 
-1. Run `git pull` of proper branch (`master`, `develop`...)
-2. Install PHP dependencies: `composer install`
-3. Install building asset dependencies: `npm install`
-4. Migrate database: `php index.php migrate-database`
-5. Rebuild assets using `gulp development`
+1. Update containers by `docker-compose pull`.
+2. Run `git pull` of proper branch (`master`, `develop`...)
+3. Install PHP dependencies: `composer install`
+4. Install building asset dependencies: `npm install`
+5. Run docker composition `docker-compose up`
+5. Migrate database: `php www/index.php migrations:continue` inside `docker-compose exec webserver bash`.
+6. Rebuild assets using `gulp development`
 
 The `gulp development` commands automatically builds assets (css, js, images...) and watch for their modification which triggers build immediatelly.
 
 ### Production
 
-For production use only a full standalone server such as Apache should be used!
+For production use only a full standalone server such as Apache should be used! (Docker is not suitable for production usage!)
 
 For automated build of dependencies there is prepared script `deploy.php` which take care about everything done by hand in development mode with that difference that migration of database and gulp task are done for production (no dummy data and no watching for changes in assets).
 
 Doing update: just run `php deploy.php` in proper folder (see the configuration section).
+
+Do not forget to especially install and activate ``php-pgsql``, ``php-xml`` and ``php-posix`` packages in order to prevent failures.
 
 ### (Example) configuration
 

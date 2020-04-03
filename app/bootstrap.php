@@ -17,7 +17,11 @@ if (PHP_SAPI !== 'cli' && (file_exists(__DIR__ . '/../.deployment-in-progress') 
 	}
 }
 
-//$configurator->setDebugMode('23.75.345.200'); // enable for your remote IP
+$allowedDebugAddresses = ['127.0.0.1', '::1', '192.168.99.1', '10.211.55.2'];
+if (((bool) getenv('TRACY_DEBUG_ENABLE')) === true) {
+	$allowedDebugAddresses[] = $_SERVER['REMOTE_ADDR'];
+}
+$configurator->setDebugMode($allowedDebugAddresses);
 $configurator->enableDebugger(__DIR__ . '/../log');
 
 $configurator->setTimeZone('Europe/Prague');
