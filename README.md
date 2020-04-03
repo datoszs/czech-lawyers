@@ -68,8 +68,9 @@ To enter the container use `docker-compose exec webserver bash` in the project r
 Access Adminer at `http://czech-lawyer.test:8080` (protocol matters!), database itself is available on the given IP address under `5432` port.
 Database data are persisted in the Docker volume (see `docker-compose.yml`). If you need to reset the database use `docker volumes rm datoscz_datos_db_data`
 
-You can start front-end application in development mode by running `npm start` in the project root. Web application is then available at `http://localhost:8080`. 
+To import database dump use `psql -h czech-lawyers.test -U datos_user datos_db < advokati-production.sql` when the target database was emptied (or freshly created).
 
+You can start front-end application in development mode by running `npm start` in the project root. Web application is then available at `http://localhost:8080`. 
 
 When having installation done, these steps needs to be performed to get up-to-date version:
 
