@@ -24,7 +24,7 @@ class NSCrawler extends CauseCrawler
 	{
 		return sprintf(
 			'java -jar %s --publication-date --directory %s --fetch-attempts %s --from %s --to %s --registry-marks %s 2>&1',
-			__DIR__ . '/../../externals/cz-supreme-court-crawler-all-1.2.jar',
+			__DIR__ . '/../../externals/cz-supreme-court-crawler-all-1.3.jar',
 			escapeshellarg($directory . '/working'),
 			3,
 			(new DateTime('Monday previous week'))->format('Y-m-d'),
