@@ -1,0 +1,32 @@
+version: "3.3"
+services:
+  webserver:
+    build: .
+    ports:
+      - ${IP}:80:80
+      - ${IP}:443:443
+    volumes:
+      - ${PROJECT_PATH}:/var/www/html/
+    environment:
+      TRACY_DEBUG_ENABLE: 1
+  db:
+    image: postgres:11
+    restart: always
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    user: postgres
+    ports:
+      - ${IP}:5432:5432
+    environment:
+      POSTGRES_USER: datos_user
+      POSTGRES_DB: datos_db
+      POSTGRES_PASSWORD: password
+      PGDATA: /var/lib/postgresql/data/pgdata
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - ${IP}:8080:8080
+
+volumes:
+  db_data:

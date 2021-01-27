@@ -119,7 +119,10 @@ export default wrapConfig((dev) => ({
     devServer: {
         historyApiFallback: true,
         proxy: {
-            '/api': 'http://[::1]:8000',
+            '/api': {
+                target: 'https://czech-lawyers.test',
+                secure: false,
+            },
         }
     },
     optimization: {
