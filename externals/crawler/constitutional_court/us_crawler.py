@@ -29,12 +29,7 @@ from urllib.parse import urljoin
 from os.path import join
 from tqdm import tqdm
 
-try:
-    from bs4 import BeautifulSoup, SoupStrainer
-except ImportError:
-    from beautifulsoup4 import BeautifulSoup, SoupStrainer
-
-from ghost import Ghost
+from bs4 import BeautifulSoup, SoupStrainer
 
 only_a_tags = SoupStrainer("a")
 
@@ -174,20 +169,6 @@ def parameters():
 # help functions
 #
 
-
-def convert_date(date, formats=('%d. %m. %Y', '%Y-%m-%d')):
-    """
-    Converts a date from one format to another - specified by the format parameter
-
-    :param date: string with date to convert
-    :type date: str
-    :param formats: input and output format
-    :type formats: tuple
-    :return: converted date
-    """
-    return datetime.strptime(date, formats[0]).strftime(formats[1])
-
-
 def itemize_text(item):
     """
     Converts the text with the <br> element to the list of individual rows
@@ -247,32 +228,32 @@ def make_soup(path):
     return soup
 
 
-def extract_name(text):
-    """
-    Extracts the name of the lawyer from the decision text
-    *Not used*
-
-    :param text: decision text
-    :return: list of extracted names
-    """
-    if text and text.contents[0]:
-        m = re.findall(
-                # r'zast[.|\w]+(?<!zastupitelství)\s([^A-Z]+)?\s?(([A-Ž]\w+\.?\s?)+)(?=se\ssídlem|,)',
-                # r'zast[.|\w]+(?<![zastupitelství,zastavením])\s([^A-Z]+)?\s?(([A-Ž]\w+\.?\s?)+)(?=se\ssídlem|,)',
-                # r'(?<!ne)zast(\.|(oupen(ého|ých|ým|ými|ému|ém|ou|é|ý|i)?))\s*(advokát(em|kou)\s*)?(([A-Ž]\w+\.?,?\s?)+)(?=se\ssídlem|,)',
-                # r'(?<!ne)zast(\.|(oupen(ého|ých|ým|ými|ému|ém|ou|é|ý|i)?))\s*(advokát(em|kou)\s*)?(([A-Ž]\w+\.?\s?)+)(?=se\ssídlem|,)',
-                r'(?<!ne)zast(\.|(oupen(ého|ých|ým|ými|ému|ém|ou|é|ý|i)?))\s*(advokát(em|kou)\s*)?(([A-Ž]\w+\.?\s?)+)(?=sídlem|,)',
-                text.contents[0], re.UNICODE | re.MULTILINE)
-        if m:
-            logger.debug("re.findall() -> {}".format(m))
-            buffer = [x[5] for x in m]
-            logger.debug(buffer)
-
-            return json.dumps(dict(zip(range(1, len(buffer) + 1), buffer)), sort_keys=True,
-                              ensure_ascii=False)
-
-        else:
-            return ""
+# def extract_name(text):
+#     """
+#     Extracts the name of the lawyer from the decision text
+#     *Not used*
+#
+#     :param text: decision text
+#     :return: list of extracted names
+#     """
+#     if text and text.contents[0]:
+#         m = re.findall(
+#                 # r'zast[.|\w]+(?<!zastupitelství)\s([^A-Z]+)?\s?(([A-Ž]\w+\.?\s?)+)(?=se\ssídlem|,)',
+#                 # r'zast[.|\w]+(?<![zastupitelství,zastavením])\s([^A-Z]+)?\s?(([A-Ž]\w+\.?\s?)+)(?=se\ssídlem|,)',
+#                 # r'(?<!ne)zast(\.|(oupen(ého|ých|ým|ými|ému|ém|ou|é|ý|i)?))\s*(advokát(em|kou)\s*)?(([A-Ž]\w+\.?,?\s?)+)(?=se\ssídlem|,)',
+#                 # r'(?<!ne)zast(\.|(oupen(ého|ých|ým|ými|ému|ém|ou|é|ý|i)?))\s*(advokát(em|kou)\s*)?(([A-Ž]\w+\.?\s?)+)(?=se\ssídlem|,)',
+#                 r'(?<!ne)zast(\.|(oupen(ého|ých|ým|ými|ému|ém|ou|é|ý|i)?))\s*(advokát(em|kou)\s*)?(([A-Ž]\w+\.?\s?)+)(?=sídlem|,)',
+#                 text.contents[0], re.UNICODE | re.MULTILINE)
+#         if m:
+#             logger.debug("re.findall() -> {}".format(m))
+#             buffer = [x[5] for x in m]
+#             logger.debug(buffer)
+#
+#             return json.dumps(dict(zip(range(1, len(buffer) + 1), buffer)), sort_keys=True,
+#                               ensure_ascii=False)
+#
+#         else:
+#             return ""
 
 
 def process_detail_page(html_file: str, response: object):
@@ -301,83 +282,15 @@ def process_detail_page(html_file: str, response: object):
     with codecs.open(join(documents_dir_path, html_file), "wb", encoding="utf-8") as f:
         f.write(str(response))
 
+#
+# def make_screen(name: str, selector: str = None):
+#     if b_screens:
+#         session.capture_to(join(screens_dir_path, "{}.png".format(name)), selector=selector)
 
-def get_links(response):
-    """
-    get all relevant links to detail's page of record
-
-    :param response: HTML code current page
-    :return: last page
-
-    """
-    list_of_links = []
-    soup = BeautifulSoup(response, "html.parser", parse_only=only_a_tags)
-
-    links = soup.find_all("a", class_=re.compile("resultData[0,1]"))
-
-    if len(links) == 0:
-        logger.warning("Not found links on page")
-        return []
-
-    logger.debug("Found links on page (%s)" % len(links))
-    for link in links:
-        list_of_links.append(link.get('href'))
-
-    return list_of_links
-
-
-def how_many(response: object, records_per_page: int):
-    """
-    find number of records and compute count of pages
-
-    :param response: HTML code
-    :param records_per_page: number of displayed records
-    """
-    soup = BeautifulSoup(response, "html.parser")
-    # print(soup.prettify())
-    label = None
-    number_of_records = None
-    count_of_pages = None
-    result_table = soup.select_one("#Content")
-    if result_table is None:
-        return count_of_pages, number_of_records
-
-    info = result_table.select_one("table > tbody > tr:nth-of-type(1) > td > table > tbody > tr > td")
-    if info is None:
-        logger.error("info element is None")
-        return count_of_pages, number_of_records
-
-    label = info.text
-
-    if label is None:
-        logger.error("")
-        return count_of_pages, number_of_records
-
-    m = re.compile("\w+ (\d+) - (\d+) z \w+ (\d+).*").search(label)
-
-    if m is None:
-        logger.error("Not found numbers about records")
-        return count_of_pages, number_of_records
-
-    number_of_records = m.group(3)
-    count_of_pages = math.ceil(int(number_of_records) / records_per_page)
-
-    return int(count_of_pages), int(number_of_records)
-
-
-def make_screen(name: str, selector: str = None):
-    if b_screens:
-        session.capture_to(join(screens_dir_path, "{}.png".format(name)), selector=selector)
-
-
-def save_record(record: dict):
-    logger.debug("{} - {}".format(record["local_path"], record["record_id"]))
-    writer_records.writerow(record)  # write record to CSV
-
-
-def go_to_next_page(page: int):
-    session.open(urljoin(results_url, "?page={}".format(page + 1)), wait=True)  # go to next page
-
+#
+# def save_record(record: dict):
+#     logger.debug("{} - {}".format(record["local_path"], record["record_id"]))
+#     writer_records.writerow(record)  # write record to CSV
 
 def get_application_options(options):
     out_dir = options["dir"]
@@ -424,58 +337,6 @@ def set_environment(view):
 #
 # process functions
 #
-
-
-def fill_form(date_from: str, records_per_page: int, date_to=None, days=None):
-    """
-    set form for searching
-
-    :param days: how many days ago
-    :param date_from: start date of range
-    :param date_to: end date of range
-    :param records_per_page: how many records is on one page
-    :return: Bool
-    """
-    session.open(search_url, wait=True)
-    if days or int(date_from.split(".")[-1].strip()) > 2006:
-        # print(session.content)
-        logger.debug("Set typ_rizeni as 'O ústavních stížnostech'")
-        session.open(
-                "http://nalus.usoud.cz/dialogs/PopupCiselnik.aspx?control=ctl00_MainContent_typ_rizeni&type=typ_rizeni")
-        session.evaluate("javascript:saveSelected('0')", expect_loading=True)
-        make_screen("dialog_check")
-        result, resources = session.click("#bSave", expect_loading=True)
-        session.open(search_url)
-
-    if days and session.exists("#ctl00_MainContent_dle_data_zpristupneni"):
-        logger.debug("Select check button")
-        session.click("#ctl00_MainContent_dle_data_zpristupneni", expect_loading=False)
-        if session.exists("#ctl00_MainContent_zpristupneno_pred"):
-            logger.info("Select last %s days" % days)
-            session.set_field_value("#ctl00_MainContent_zpristupneno_pred", days)
-    else:
-        if session.exists("#ctl00_MainContent_availableFrom"):
-            logger.debug("Set date_from '%s'" % date_from)
-            session.set_field_value("#ctl00_MainContent_submissionFrom", date_from)
-            make_screen("set_from")
-
-            if date_to is not None:  # ctl00_MainContent_decidedFrom
-                logger.debug("Set date_to '%s'" % date_to)
-                session.set_field_value("#ctl00_MainContent_submissionTo", date_to)
-            logger.info("Records from the period %s -> %s", date_from, date_to)
-            make_screen("set_to")
-
-    logger.debug("Set sorting criteria")
-    session.set_field_value("#ctl00_MainContent_razeni", "3")
-
-    logger.debug("Set counter records per page")
-    session.set_field_value("#ctl00_MainContent_resultsPageSize", str(records_per_page))
-    make_screen("set_form")
-
-    if session.exists("#ctl00_MainContent_but_search"):
-        logger.debug("Click to search button")
-        session.click("#ctl00_MainContent_but_search", expect_loading=True)
-    make_screen("results")
 
 
 def make_record(soup: object, file_name: str):
@@ -539,7 +400,7 @@ def make_record(soup: object, file_name: str):
     for key in only_list_elements:
         item[key] = itemize_list(item[key])
 
-    item['names'] = None  #extract_name(text)
+    item['names'] = None  # extract_name(text)
     return item
 
 
@@ -585,7 +446,7 @@ def extract_information(records):
     csv_records = open(join(out_dir, output_file), 'w', newline='', encoding="utf-8")
 
     writer_records = csv.DictWriter(
-            csv_records, fieldnames=fieldnames, delimiter=";", quoting=csv.QUOTE_ALL, quotechar='"')
+        csv_records, fieldnames=fieldnames, delimiter=";", quoting=csv.QUOTE_ALL, quotechar='"')
     writer_records.writeheader()
 
     t = html_files
@@ -618,24 +479,6 @@ def walk_details():
             logger.debug("Go to link to detail")
             process_detail_page(html_file, response=response)
         session.click("#GotoNextId", expect_loading=True)
-
-
-def walk_pages(page_from: int, pages: int):
-    """
-    make a walk through pages of results
-
-    :param page_from: from which page start the walk
-    :param pages: over how many pages we have to go
-
-    """
-    logger.debug("{}, {} -> {}".format(page_from, pages, range(page_from, pages)))
-    t = range(page_from, pages)
-    if progress:
-        t = tqdm(t, ncols=global_ncols)  # view progress bar
-
-    for page in t:
-        process_records_page(page)
-        go_to_next_page(page)
 
 
 def process_records_page(page: int):
