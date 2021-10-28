@@ -233,11 +233,11 @@ class TagResults extends Command
 		$this->prepare();
 		$consoleOutput->writeln($court);
 		$courtId = Court::$types[$court];
-		$courtEntity = $this->courtService->getById($courtId);
 
 		$nextIteration = true;
 		$offset = 0;
 		do {
+			$courtEntity = $this->courtService->getById($courtId);
 			if ($successTagging) {
 				$causes = $this->causeService->findForSuccessTagging($courtEntity)->limitBy(1000, $offset);
 			} else {
