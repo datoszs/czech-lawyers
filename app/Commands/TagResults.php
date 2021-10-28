@@ -5,6 +5,7 @@ namespace App\Commands;
 use App\Enums\CaseResult;
 use App\Enums\Court;
 use App\Enums\TaggingStatus;
+use App\Model\Orm;
 use App\Model\Services\CourtService;
 use App\Model\Services\TaggingService;
 use App\Model\Services\CauseService;
@@ -21,6 +22,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use function gc_collect_cycles;
 
 class TagResults extends Command
 {
@@ -141,10 +143,10 @@ class TagResults extends Command
 			}
 		} else {
 			return
-				"Processed: {$this->processed}, 
-                Ignored: {$this->ignored}, 
-                Failed: {$this->failed},  
-                Empty: {$this->empty}, 
+				"Processed: {$this->processed},
+                Ignored: {$this->ignored},
+                Failed: {$this->failed},
+                Empty: {$this->empty},
                 Different: {$this->different}";
 		}
 	}
@@ -228,6 +230,7 @@ class TagResults extends Command
 			$causes = $this->causeService->findForResultTagging($courtEntity);
 		}
 
+		$i = 0;
 		foreach ($causes as $cause) {
 			$documents = $this->documentService->findByCaseId($cause->id);
 
@@ -291,9 +294,20 @@ class TagResults extends Command
 				$this->makeStatistic($status, false);
 				$this->taggingService->insert($result);
 			}
+			// Flush immediately
+			$this->taggingService->flush();
+			// Detach from unit map what we can (should not be referenced in any future processed item!)
+			$this->causeService->detach($cause);
+			unset($cause);
+			foreach ($documents as $document) {
+				$this->documentService->detach($document);
+				unset($document);
+			}
 
+			if ($i++ % 100 === 0) {
+				gc_collect_cycles();
+			}
 		}
-		$this->taggingService->flush();
 		$message = $this->makeStatistic(null, true) . " (" . strtoupper($court) . ")";
 		$this->finalize(0, $output, $message);
 		return 0;

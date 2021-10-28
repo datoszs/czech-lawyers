@@ -95,4 +95,9 @@ class DocumentService
 	public function findDocumentsWithoutFile () {
 		return $this->connection->query("SELECT record_id FROM document WHERE court_id = 1 AND web_path = '' ORDER BY random() LIMIT 500")->fetchAll();
 	}
+
+	public function detach(Document $document): void
+	{
+		$this->orm->documents->detach($document);
+	}
 }

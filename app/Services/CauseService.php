@@ -44,6 +44,11 @@ class CauseService
 		return $this->orm->causes->findAll()->fetchAll();
 	}
 
+	public function detach(Cause $cause): void
+	{
+		$this->orm->causes->detach($cause);
+	}
+
 	/**
 	 * Finds causes according to given conditions
 	 *
