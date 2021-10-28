@@ -17,12 +17,19 @@ use App\Utils\JobCommand;
 use App\Utils\TemplateFilters;
 use Nette\Utils\Strings;
 use Nette\Utils\Json;
+use Nextras\Orm\Model\Model;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use function array_column;
+use function array_unique;
+use function explode;
 use function gc_collect_cycles;
+use function implode;
+use function sprintf;
+use function trim;
 
 class TagResults extends Command
 {
@@ -58,6 +65,9 @@ class TagResults extends Command
 
 	/** @var TaggingService @inject */
 	public $taggingService;
+
+	/** @var Orm @inject */
+	public $orm;
 
 	protected function configure()
 	{
@@ -224,90 +234,96 @@ class TagResults extends Command
 		$consoleOutput->writeln($court);
 		$courtId = Court::$types[$court];
 		$courtEntity = $this->courtService->getById($courtId);
-		if ($successTagging) {
-			$causes = $this->causeService->findForSuccessTagging($courtEntity);
-		} else {
-			$causes = $this->causeService->findForResultTagging($courtEntity);
-		}
 
-		$i = 0;
-		foreach ($causes as $cause) {
-			$documents = $this->documentService->findByCaseId($cause->id);
-
-			if ($documents == null) {
-				$this->makeStatistic(null, false);
-				continue;
-			}
-			list($document, $caseResult, $debug, $status) = $this->processDocument($documents, $courtId, $consoleOutput, $successTagging);
-			if ($document == null) {
-				$this->makeStatistic($status, false);
-				continue;
-			}
-
-			if ($cause->officialData && $cause->court->id == Court::TYPE_NSS) {
-				$json_input = implode("; ", array_unique(array_column($cause->officialData, "result")));
-				$part = trim(explode(", ", $debug)[1]);
-				if (!Strings::contains($json_input, $part)) {
-					$this->makeStatistic(static::DIFFERENT, false);
-					$message = TemplateFilters::formatRegistryMark($cause->registrySign) . " - Court: '" . $json_input . "'; Web: '" . $debug . "'\n";
-					$consoleOutput->write($message);
-					$output .= $message;
-				}
-			}
-
-			if ($document) {
-				if ($cause->decisionDate == null && $document->decisionDate) {
-					$cause->decisionDate = $document->decisionDate;
-					$this->causeService->save($cause);
-				}
-			}
-			$result = $successTagging ? new TaggingCaseSuccess() : new TaggingCaseResult();
+		$nextIteration = true;
+		$offset = 0;
+		do {
 			if ($successTagging) {
-				$result->caseSuccess = $caseResult;
+				$causes = $this->causeService->findForSuccessTagging($courtEntity)->limitBy(1000, $offset);
 			} else {
-				$result->caseResult = $caseResult;
+				$causes = $this->causeService->findForResultTagging($courtEntity)->limitBy(1000, $offset);
 			}
 
-			$result->debug = $debug;
-			$result->document = $document;
-			$result->case = $cause;
-			$result->status = $status;
-			$result->isFinal = false;
-			$result->insertedBy = $this->user;
-			$result->jobRun = $this->jobRun;
-			$output .= sprintf("Tagging case result for case [%s] of [%s]\n", TemplateFilters::formatRegistryMark($cause->registrySign), $cause->court->name);
-			if ($successTagging) {
-				$entity = $this->taggingService->findCaseSuccessByDocument($document);
-			} else {
-				$entity = $this->taggingService->findByDocument($document);
+			if ($causes->countStored() === 0) {
+				$nextIteration = false;
 			}
 
-			if ($entity) {
+			foreach ($causes as $cause) {
+				$documents = $this->documentService->findByCaseId($cause->id);
+
+				if ($documents == null) {
+					$this->makeStatistic(null, false);
+					continue;
+				}
+				list($document, $caseResult, $debug, $status) = $this->processDocument($documents, $courtId, $consoleOutput, $successTagging);
+				if ($document == null) {
+					$this->makeStatistic($status, false);
+					continue;
+				}
+
+				if ($cause->officialData && $cause->court->id == Court::TYPE_NSS) {
+					$json_input = implode("; ", array_unique(array_column($cause->officialData, "result")));
+					$part = trim(explode(", ", $debug)[1]);
+					if (!Strings::contains($json_input, $part)) {
+						$this->makeStatistic(static::DIFFERENT, false);
+						$message = TemplateFilters::formatRegistryMark($cause->registrySign) . " - Court: '" . $json_input . "'; Web: '" . $debug . "'\n";
+						$consoleOutput->write($message);
+						$output .= $message;
+					}
+				}
+
+				if ($document) {
+					if ($cause->decisionDate == null && $document->decisionDate) {
+						$cause->decisionDate = $document->decisionDate;
+						$this->causeService->save($cause);
+					}
+				}
+				$result = $successTagging ? new TaggingCaseSuccess() : new TaggingCaseResult();
 				if ($successTagging) {
-					if ($this->taggingService->persistCaseSuccessIfDiffers($result)) {
+					$result->caseSuccess = $caseResult;
+				} else {
+					$result->caseResult = $caseResult;
+				}
+
+				$result->debug = $debug;
+				$result->document = $document;
+				$result->case = $cause;
+				$result->status = $status;
+				$result->isFinal = false;
+				$result->insertedBy = $this->user;
+				$result->jobRun = $this->jobRun;
+				$output .= sprintf("Tagging case result for case [%s] of [%s]\n", TemplateFilters::formatRegistryMark($cause->registrySign), $cause->court->name);
+				if ($successTagging) {
+					$entity = $this->taggingService->findCaseSuccessByDocument($document);
+				} else {
+					$entity = $this->taggingService->findByDocument($document);
+				}
+
+				if ($entity) {
+					if ($successTagging) {
+						if ($this->taggingService->persistCaseSuccessIfDiffers($result)) {
+							$this->updated++;
+						}
+					} elseif ($this->taggingService->persistCaseResultIfDiffers($result)) {
 						$this->updated++;
 					}
-				} elseif ($this->taggingService->persistCaseResultIfDiffers($result)) {
-					$this->updated++;
+				} else {
+					$this->makeStatistic($status, false);
+					$this->taggingService->insert($result);
 				}
-			} else {
-				$this->makeStatistic($status, false);
-				$this->taggingService->insert($result);
-			}
-			// Flush immediately
-			$this->taggingService->flush();
-			// Detach from unit map what we can (should not be referenced in any future processed item!)
-			$this->causeService->detach($cause);
-			unset($cause);
-			foreach ($documents as $document) {
-				$this->documentService->detach($document);
-				unset($document);
+				// Flush immediately
+				$this->taggingService->flush();
 			}
 
-			if ($i++ % 100 === 0) {
-				gc_collect_cycles();
-			}
-		}
+			// Clear identity map to allow proper GC
+			$this->orm->clearIdentityMapAndCaches(Model::I_KNOW_WHAT_I_AM_DOING);
+			$this->orm->courts->attach($courtEntity);
+			$this->orm->jobRuns->attach($this->jobRun);
+			$this->orm->jobs->attach($this->job);
+			gc_collect_cycles();
+			$offset += 1000;
+		} while ($nextIteration);
+
 		$message = $this->makeStatistic(null, true) . " (" . strtoupper($court) . ")";
 		$this->finalize(0, $output, $message);
 		return 0;
