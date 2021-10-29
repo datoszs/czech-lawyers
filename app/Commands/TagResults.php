@@ -241,9 +241,6 @@ class TagResults extends Command
 		$offset = 0;
 		do {
 			$courtEntity = $this->courtService->getById($courtId);
-			$this->job = $this->jobService->get($jobId);
-			$this->jobRun = $this->orm->jobRuns->getById($jobRunId);
-			$this->user = $this->userService->get($userId);
 			if ($successTagging) {
 				$causes = $this->causeService->findForSuccessTagging($courtEntity)->limitBy(1000, $offset);
 			} else {
@@ -325,6 +322,12 @@ class TagResults extends Command
 			$this->orm->clearIdentityMapAndCaches(Model::I_KNOW_WHAT_I_AM_DOING);
 			gc_collect_cycles();
 			$offset += 1000;
+
+			// Reload data into new identity map
+			$this->job = $this->jobService->get($jobId);
+			$this->jobRun = $this->orm->jobRuns->getById($jobRunId);
+			$this->user = $this->userService->get($userId);
+			$this->auditing->setCurrentUser($this->user);
 		} while ($nextIteration);
 
 		$message = $this->makeStatistic(null, true) . " (" . strtoupper($court) . ")";
