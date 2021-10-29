@@ -233,11 +233,15 @@ class TagResults extends Command
 		$this->prepare();
 		$consoleOutput->writeln($court);
 		$courtId = Court::$types[$court];
+		$jobId = $this->job->id;
+		$jobRunId = $this->jobRun->id;
 
 		$nextIteration = true;
 		$offset = 0;
 		do {
 			$courtEntity = $this->courtService->getById($courtId);
+			$this->job = $this->jobService->get($jobId);
+			$this->jobRun = $this->orm->jobRuns->getById($jobRunId);
 			if ($successTagging) {
 				$causes = $this->causeService->findForSuccessTagging($courtEntity)->limitBy(1000, $offset);
 			} else {
@@ -317,9 +321,6 @@ class TagResults extends Command
 
 			// Clear identity map to allow proper GC
 			$this->orm->clearIdentityMapAndCaches(Model::I_KNOW_WHAT_I_AM_DOING);
-			$this->orm->courts->attach($courtEntity);
-			$this->orm->jobRuns->attach($this->jobRun);
-			$this->orm->jobs->attach($this->job);
 			gc_collect_cycles();
 			$offset += 1000;
 		} while ($nextIteration);
