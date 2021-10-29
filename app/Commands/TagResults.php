@@ -235,6 +235,7 @@ class TagResults extends Command
 		$courtId = Court::$types[$court];
 		$jobId = $this->job->id;
 		$jobRunId = $this->jobRun->id;
+		$userId = $this->user->id;
 
 		$nextIteration = true;
 		$offset = 0;
@@ -242,6 +243,7 @@ class TagResults extends Command
 			$courtEntity = $this->courtService->getById($courtId);
 			$this->job = $this->jobService->get($jobId);
 			$this->jobRun = $this->orm->jobRuns->getById($jobRunId);
+			$this->user = $this->userService->get($userId);
 			if ($successTagging) {
 				$causes = $this->causeService->findForSuccessTagging($courtEntity)->limitBy(1000, $offset);
 			} else {
