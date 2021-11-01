@@ -1,12 +1,10 @@
 from selenium.webdriver.support.select import Select
-from datetime import datetime
 from selenium.webdriver.chrome.webdriver import WebDriver
-from ..Utils import Utils
 from externals.crawler.constitutional_court.Pages.ResultsPage import ResultsPage
 from ...searching_criteria import SearchingCriteria
 
 
-class HomePage(object):
+class HomePage:
     def __init__(self, driver: WebDriver):
         self.__driver = driver
 

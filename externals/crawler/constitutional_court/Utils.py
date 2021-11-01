@@ -28,3 +28,7 @@ class Utils:
         text_without_pagination = description.split(";")[0]
         sum_of_records = text_without_pagination.split()[-1]
         return int(sum_of_records)
+
+    @staticmethod
+    def get_page_id_from_url(url: str):
+        return url.split("?")[-1].split("&")[0]
