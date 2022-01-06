@@ -1,7 +1,7 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
     "content-hash": "55cbb0225d46b2f28f38e843259193ef",
@@ -590,39 +590,47 @@
         },
         {
             "name": "latte/latte",
-            "version": "v2.4.6",
+            "version": "v2.10.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/latte.git",
-                "reference": "6d560edc49b052de6821acb48a1f438862d5b48b"
+                "reference": "8a9bd8af76557fc35abae639ab7b966af706fec9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/latte/zipball/6d560edc49b052de6821acb48a1f438862d5b48b",
-                "reference": "6d560edc49b052de6821acb48a1f438862d5b48b",
+                "url": "https://api.github.com/repos/nette/latte/zipball/8a9bd8af76557fc35abae639ab7b966af706fec9",
+                "reference": "8a9bd8af76557fc35abae639ab7b966af706fec9",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "ext-tokenizer": "*",
-                "php": ">=5.4.4"
+                "php": ">=7.1 <8.2"
             },
             "conflict": {
                 "nette/application": "<2.4.1"
             },
             "require-dev": {
-                "nette/tester": "~1.7",
+                "nette/php-generator": "^3.3.4",
+                "nette/tester": "~2.0",
+                "nette/utils": "^3.0",
+                "phpstan/phpstan": "^0.12",
                 "tracy/tracy": "^2.3"
             },
             "suggest": {
                 "ext-fileinfo": "to use filter |datastream",
+                "ext-iconv": "to use filters |reverse, |substring",
                 "ext-mbstring": "to use filters like lower, upper, capitalize, ...",
+                "nette/php-generator": "to use tag {templatePrint}",
                 "nette/utils": "to use filter |webalize"
             },
+            "bin": [
+                "bin/latte-lint"
+            ],
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.4-dev"
+                    "dev-master": "2.10-dev"
                 }
             },
             "autoload": {
@@ -633,8 +641,8 @@
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause",
-                "GPL-2.0",
-                "GPL-3.0"
+                "GPL-2.0-only",
+                "GPL-3.0-only"
             ],
             "authors": [
                 {
@@ -658,7 +666,11 @@
                 "template",
                 "twig"
             ],
-            "time": "2017-08-29T08:24:52+00:00"
+            "support": {
+                "issues": "https://github.com/nette/latte/issues",
+                "source": "https://github.com/nette/latte/tree/v2.10.6"
+            },
+            "time": "2021-11-26T22:56:21+00:00"
         },
         {
             "name": "league/csv",
@@ -4084,5 +4096,6 @@
         "ext-xml": "*",
         "ext-pgsql": "*"
     },
-    "platform-dev": []
+    "platform-dev": [],
+    "plugin-api-version": "2.1.0"
 }
