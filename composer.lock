@@ -1,7 +1,7 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
     "content-hash": "55cbb0225d46b2f28f38e843259193ef",
@@ -441,12 +441,12 @@
             "version": "v1.0.5",
             "source": {
                 "type": "git",
-                "url": "https://github.com/iPublikuj/visual-paginator.git",
+                "url": "https://github.com/ipublikuj-ui/visual-paginator.git",
                 "reference": "3e5d51fdf80feca5cf4e2c7413a90a6ff46a2962"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/iPublikuj/visual-paginator/zipball/3e5d51fdf80feca5cf4e2c7413a90a6ff46a2962",
+                "url": "https://api.github.com/repos/ipublikuj-ui/visual-paginator/zipball/3e5d51fdf80feca5cf4e2c7413a90a6ff46a2962",
                 "reference": "3e5d51fdf80feca5cf4e2c7413a90a6ff46a2962",
                 "shasum": ""
             },
@@ -500,6 +500,7 @@
                 "paging",
                 "tools"
             ],
+            "abandoned": true,
             "time": "2017-07-12T09:42:19+00:00"
         },
         {
@@ -590,39 +591,47 @@
         },
         {
             "name": "latte/latte",
-            "version": "v2.4.6",
+            "version": "v2.10.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/latte.git",
-                "reference": "6d560edc49b052de6821acb48a1f438862d5b48b"
+                "reference": "596b28bf098ebb852732d60b00538139a009c4db"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/latte/zipball/6d560edc49b052de6821acb48a1f438862d5b48b",
-                "reference": "6d560edc49b052de6821acb48a1f438862d5b48b",
+                "url": "https://api.github.com/repos/nette/latte/zipball/596b28bf098ebb852732d60b00538139a009c4db",
+                "reference": "596b28bf098ebb852732d60b00538139a009c4db",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "ext-tokenizer": "*",
-                "php": ">=5.4.4"
+                "php": ">=7.1 <8.2"
             },
             "conflict": {
                 "nette/application": "<2.4.1"
             },
             "require-dev": {
-                "nette/tester": "~1.7",
+                "nette/php-generator": "^3.3.4",
+                "nette/tester": "~2.0",
+                "nette/utils": "^3.0",
+                "phpstan/phpstan": "^0.12",
                 "tracy/tracy": "^2.3"
             },
             "suggest": {
                 "ext-fileinfo": "to use filter |datastream",
+                "ext-iconv": "to use filters |reverse, |substring",
                 "ext-mbstring": "to use filters like lower, upper, capitalize, ...",
+                "nette/php-generator": "to use tag {templatePrint}",
                 "nette/utils": "to use filter |webalize"
             },
+            "bin": [
+                "bin/latte-lint"
+            ],
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.4-dev"
+                    "dev-master": "2.10-dev"
                 }
             },
             "autoload": {
@@ -633,8 +642,8 @@
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause",
-                "GPL-2.0",
-                "GPL-3.0"
+                "GPL-2.0-only",
+                "GPL-3.0-only"
             ],
             "authors": [
                 {
@@ -658,7 +667,7 @@
                 "template",
                 "twig"
             ],
-            "time": "2017-08-29T08:24:52+00:00"
+            "time": "2022-01-04T14:13:28+00:00"
         },
         {
             "name": "league/csv",
@@ -830,7 +839,7 @@
                     "homepage": "https://nette.org/contributors"
                 }
             ],
-            "description": "🏆 Nette Application: a full-stack component-based MVC kernel for PHP that helps you write powerful and modern web applications. Write less, have cleaner code and your work will bring you joy.",
+            "description": "? Nette Application: a full-stack component-based MVC kernel for PHP that helps you write powerful and modern web applications. Write less, have cleaner code and your work will bring you joy.",
             "homepage": "https://nette.org",
             "keywords": [
                 "Forms",
@@ -1615,6 +1624,7 @@
                 "nette",
                 "reflection"
             ],
+            "abandoned": true,
             "time": "2017-07-11T19:28:57+00:00"
         },
         {
@@ -2719,6 +2729,7 @@
             "keywords": [
                 "tokenizer"
             ],
+            "abandoned": true,
             "time": "2017-08-20T05:47:52+00:00"
         },
         {
@@ -2862,6 +2873,7 @@
                 "mock",
                 "xunit"
             ],
+            "abandoned": true,
             "time": "2017-08-03T14:08:16+00:00"
         },
         {
@@ -3958,6 +3970,7 @@
                 "rest",
                 "routes"
             ],
+            "abandoned": "contributte/api-docu",
             "time": "2016-09-21T11:52:36+00:00"
         },
         {
@@ -4017,6 +4030,7 @@
                 "routes",
                 "routing"
             ],
+            "abandoned": "contributte/api-router",
             "time": "2017-07-20T09:11:57+00:00"
         },
         {
@@ -4024,12 +4038,12 @@
             "version": "1.2.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/webmozart/assert.git",
+                "url": "https://github.com/webmozarts/assert.git",
                 "reference": "2db61e59ff05fe5126d152bd0655c9ea113e550f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webmozart/assert/zipball/2db61e59ff05fe5126d152bd0655c9ea113e550f",
+                "url": "https://api.github.com/repos/webmozarts/assert/zipball/2db61e59ff05fe5126d152bd0655c9ea113e550f",
                 "reference": "2db61e59ff05fe5126d152bd0655c9ea113e550f",
                 "shasum": ""
             },
