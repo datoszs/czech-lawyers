@@ -47,7 +47,7 @@
     "redux-saga": "0.16.0",
     "sprintf-js": "1.1.1",
     "superagent": "3.8.3",
-    "validator": "10.2.0"
+    "validator": "13.7.0"
   },
   "devDependencies": {
     "babel-core": "6.26.3",
