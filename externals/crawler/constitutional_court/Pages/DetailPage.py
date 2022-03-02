@@ -10,7 +10,7 @@ class DetailPage:
 
     def __init__(self, driver: WebDriver):
         self.__driver = driver
-        self.__page_id = self._get_page_id()
+        self.page_id = self.__get_page_id()
 
     def __iter__(self):
         return self
@@ -25,7 +25,7 @@ class DetailPage:
     def get_content(self) -> str:
         return self.__driver.page_source
 
-    def _get_page_id(self):
+    def __get_page_id(self) -> str:
         return self.__driver.find_element_by_id(self.__page_id).get_attribute("value")
 
     def _stop_if_error_present(self):

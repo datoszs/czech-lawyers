@@ -1,7 +1,6 @@
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.chrome.webdriver import WebDriver
-
-from ..Utils import Utils
+from typing import List
 
 
 class ResultsPage(object):
@@ -26,7 +25,7 @@ class ResultsPage(object):
         next_button.click()
         return ResultsPage(self.__driver)
 
-    def get_links(self) -> list:
+    def get_links(self) -> List[str]:
         elements = self.__driver.find_elements_by_xpath(self.__result_link)
         return [link.get_attribute("href") for link in elements]
 
@@ -35,4 +34,10 @@ class ResultsPage(object):
 
     def get_count_of_results(self) -> int:
         description = self.__driver.find_element_by_xpath(self.__counter).text
-        return Utils.get_sum_from_description(description)
+        return self._get_sum_from_description(description)
+
+    @staticmethod
+    def _get_sum_from_description(description: str) -> int:
+        text_without_pagination = description.split(";")[0]
+        sum_of_records = text_without_pagination.split()[-1]
+        return int(sum_of_records)
