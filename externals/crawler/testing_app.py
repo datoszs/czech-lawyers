@@ -5,6 +5,7 @@ from selenium.webdriver import ChromeOptions
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
+from webdriver_manager.chrome import ChromeType
 
 from browser_function import BrowserFunction
 from crawler import Crawler
@@ -12,17 +13,22 @@ from file import FileProvider
 from searching_criteria import SearchingCriteria
 from strategy import StrategyFactory
 
+
 def set_up() -> WebDriver:
     # bez obrazku to neni
     options = ChromeOptions()
-    chrome_prefs: Dict[str, Dict[str, int]] = {
+    chrome_prefs: Dict[str, any] = {
         # "profile.default_content_settings": {"images": 2},
         # "profile.managed_default_content_settings": {"images": 2}
+        # "excludeSwitches": ["enable-logging"]
     }
     # options.add_argument("--headless")
+    options.add_argument('--ignore-certificate-errors')
+    options.add_argument("--disable-webgl")
+    options.add_experimental_option("excludeSwitches", ["enable-logging"])
     options.experimental_options["prefs"] = chrome_prefs
     browser = webdriver.Chrome(service=Service(
-        ChromeDriverManager().install()), options=options)
+        ChromeDriverManager(chrome_type=ChromeType.GOOGLE).install()), options=options)
     browser.implicitly_wait(5)
     return browser
 
@@ -39,6 +45,7 @@ def main():
     crawler = Crawler(strategy_factory=strategy_factory,
                       searching_criteria=criteria, browser_function=browser_function)
     crawler.run()
+    print("Download files - DONE")
 
     # some processor
     # - make settings by command line parameters
