@@ -3,7 +3,7 @@ from logging import Logger
 from selenium.webdriver.support.select import Select
 from selenium.webdriver.chrome.webdriver import WebDriver
 from .ResultsPage import ResultsPage
-from ...searching_criteria import SearchingCriteria
+from searching_criteria import SearchingCriteria
 
 
 class HomePage:

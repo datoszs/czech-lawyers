@@ -2,8 +2,8 @@ from typing import List, Tuple
 
 from selenium.webdriver.chrome.webdriver import WebDriver
 
-from externals.crawler.constitutional_court.Pages.DetailPage import DetailPage
-from externals.crawler.constitutional_court.Pages.ResultsPage import ResultsPage
+from constitutional_court.Pages.DetailPage import DetailPage
+from constitutional_court.Pages.ResultsPage import ResultsPage
 
 
 class BrowserFunction:

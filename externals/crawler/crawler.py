@@ -1,11 +1,11 @@
 from selenium.webdriver.chrome.webdriver import WebDriver
 
-from externals.crawler.browser_function import BrowserFunction
-from externals.crawler.constitutional_court.Pages.HomePage import HomePage
-from externals.crawler.constitutional_court.Pages.ResultsPage import ResultsPage
-from externals.crawler.searching_criteria import SearchingCriteria
-from externals.crawler.strategy.strategies import IStrategy
-from externals.crawler.strategy.strategy_factory import StrategyFactory
+from browser_function import BrowserFunction
+from constitutional_court.Pages.HomePage import HomePage
+from constitutional_court.Pages.ResultsPage import ResultsPage
+from searching_criteria import SearchingCriteria
+from strategy import IStrategy
+from strategy import StrategyFactory
 
 
 class Crawler:

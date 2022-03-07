@@ -4,11 +4,14 @@ from urllib.parse import urljoin
 
 from httpx import Client, Response, Cookies
 
-from ..browser_function import BrowserFunction
-from ..constitutional_court.Pages.ResultsPage import ResultsPage
-from ..constitutional_court.Utils import Utils
-from ..constitutional_court.us_crawler import results_url
-from ..file import FileProvider
+from browser_function import BrowserFunction
+from constitutional_court.Pages.ResultsPage import ResultsPage
+from constitutional_court.Utils import Utils
+from file import FileProvider
+
+base_action_url = "http://nalus.usoud.cz/Search/"
+search_url = urljoin(base_action_url, "Search.aspx")
+results_url = urljoin(base_action_url, "Results.aspx")
 
 
 class IStrategy(Protocol):
@@ -17,6 +20,20 @@ class IStrategy(Protocol):
 
     def run(self, result_page: ResultsPage) -> None:
         ...
+
+
+class StrategyFactory:
+    def __init__(self, browser_function: BrowserFunction, file_provider: FileProvider):
+        self.browser_function = browser_function
+        self.file_provider = file_provider
+
+    def get_strategy(self, count_of_results: int) -> IStrategy:
+        if isinstance(count_of_results, int) and count_of_results < 1000:
+            return WalkThroughDetailsStrategy(self.browser_function, self.file_provider)
+        elif isinstance(count_of_results, int):
+            return OpenDetailLinkStrategy(self.browser_function, self.file_provider)
+        elif count_of_results is None:
+            return UsingViewStateStrategy(self.browser_function, self.file_provider)
 
 
 class WalkThroughDetailsStrategy(IStrategy):
@@ -45,7 +62,8 @@ class OpenDetailLinkStrategy(IStrategy):
         links = self.browser_function.browse_results(result_page)
         for link in links:
             file_identificator = Utils.get_page_id_from_url(link)
-            detail_page = self.browser_function.open_detail_page_from_link(urljoin(results_url, link))
+            detail_page = self.browser_function.open_detail_page_from_link(
+                urljoin(results_url, link))
             content = detail_page.get_content()
             self.file_provider.store_file(file_identificator, content)
 
