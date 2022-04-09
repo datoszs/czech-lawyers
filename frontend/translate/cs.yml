@@ -166,9 +166,9 @@ statement.cases.long: |
 
   Poznámka k výpočtu statistik: Statistiky jsme spočetli díky přiřazení konečných rozhodnutí vydaných ve výše vyjmenovaných řízeních
   konkrétním advokátům. Upozorňujeme ovšem, že zpracováváme výlučně zveřejněná konečná rozhodnutí a že některá z nich se nám nepodařilo
-  konkrétnímu advokátu z různých důvodů přiřadit (více viz [O projektu](/about)). Výpočet proběhl na základě stavu naší databáze k 4. 11. 2019.
+  konkrétnímu advokátu z různých důvodů přiřadit (více viz [O projektu](/about)). Výpočet proběhl na základě stavu naší databáze k 9. 4. 2022.
 statement.proceedings: |
-  V roce 2017 byla zahájena řízení o 15 631 dovoláních, kasačních stížnostech a ústavních stížnostech.
+  V roce 2020 byla zahájena řízení o 12 782 dovoláních, kasačních stížnostech a ústavních stížnostech.
   Jen asi ve 23 %% z těchto řízení se ale soudy zabývaly obsahem případu%(ending)s
 statement.proceedings.long: |
   V řízeních o dovoláních u Nejvyššího soudu, o kasačních stížnostech u Nejvyššího správního soudu i o ústavních stížnostech
@@ -187,15 +187,15 @@ statement.proceedings.long: |
   Poznámka k výpočtu statistik: Statistiky jsme spočetli díky přiřazení jednotlivých typů výsledku řízení (meritorní, nemeritorní, zastaveno, zrušeno)
   ke konečným rozhodnutím vydaným ve výše vyjmenovaných řízeních. Upozorňujeme ovšem, že zpracováváme výlučně zveřejněná konečná
   rozhodnutí a že k některým z nich se nám nepodařilo typ výsledku přiřadit (více viz [O projektu](/about)). Výpočet proběhl na základě stavu
-  naší databáze k 4. 11. 2019.
+  naší databáze k 9. 4. 2022.
 statement.advocates: Pouze 1 z 8 advokátů podal více věcně projednaných dovolání, kasačních stížností a ústavních stížností, než těch odmítnutých%(ending)s
 statement.advocates.long: |
   V řízení o dovolání u Nejvyššího soudu, o kasační stížnosti u Nejvyššího správního soudu i o ústavní stížnosti u Ústavního soudu
   je zpravidla nutné nechat se zastoupit advokátem. Soudy nicméně na advokátovo posouzení případu ohledně vhodnosti k jeho věcnému projednání
   nespoléhají a mají možnost odmítnout se obsahem případu zabývat. K takovému kroku přistupují zejména tehdy, když je advokátovo podání
-  (dovolání/stížnost) opožděné nebo vadné, anebo kdy ho advokát například učiní tehdy, kdy to zákon vůbec neumožňuje. Je to dobře,
-  jelikož advokátů, kterým by mohly soudy důvěřovat, že se na ně neobrací se "zbytečnostmi", je poměrně málo. Konkrétně jen 1 282
-  z 9 537 advokátů, kteří se ve výše vyjmenovaných řízeních na tři vrcholné soudy v minulosti obraceli, tak častěji činilo
+  (dovolání/stížnost) opožděné nebo vadné, anebo když ho advokát například učiní tehdy, kdy to zákon vůbec neumožňuje. Je to dobře,
+  jelikož advokátů, kterým by mohly soudy důvěřovat, že se na ně neobrací se "zbytečnostmi", je poměrně málo. Konkrétně jen 1 342
+  z 10 234 advokátů, kteří se ve výše vyjmenovaných řízeních na tři vrcholné soudy v minulosti obraceli, tak častěji činilo
   v případech smysluplných, než v těch zbytečných (tj. častěji dosáhlo vydání meritorního konečného rozhodnutí, než nemeritorního).
 
   Díky nám máte nyní možnost vědět, kteří advokáti mají největší převahu meritorních rozhodnutí vydaných v řízeních o dovolání,
@@ -205,12 +205,11 @@ statement.advocates.long: |
   Poznámka k výpočtu statistik: Statistiky jsme spočetli díky přiřazení konečných rozhodnutí vydaných ve výše vyjmenovaných
   řízeních konkrétním advokátům. Upozorňujeme ovšem, že zpracováváme výlučně zveřejněná konečná rozhodnutí a že některá
   z nich se nám nepodařilo konkrétnímu advokátu z různých důvodů přiřadit (více viz [O projektu](/about)). Výpočet proběhl na základě
-  stavu naší databáze k 4. 11. 2019.
+  stavu naší databáze k 9. 4. 2022.
 redirect.title: Přejmenování stránek
 redirect.text: |
   Na základě vzájemné dohody s Českou advokátní komorou byl obsah webu **cestiadvokati.cz** přesunut (z důvodu tvrzeně zavádějící
-  povahy názvu původní domény) na novou doménu **ospravedlnosti.cz**, a to, prozatím, bez dalších změn. Web zpřístupňující statistiky
-  o vystupování českých advokátů před soudy nicméně v budoucnu hodláme neustále graficky i obsahově vylepšovat.
+  povahy názvu původní domény) na novou doménu **ospravedlnosti.cz**.
 export.nav: Data
 export.title: Otevřená data
 export.legend: |
