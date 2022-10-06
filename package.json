@@ -18,7 +18,7 @@
     "test:watch": "npm run test:base -- --reporter min --watch"
   },
   "dependencies": {
-    "bootstrap": "^3.4.0",
+    "bootstrap": "^3.4.1",
     "classnames": "2.2.5",
     "history": "4.7.2",
     "immutable": "3.8.2",
